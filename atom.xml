@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[My Octopress Blog]]></title>
+  <title><![CDATA[長草的筆記本]]></title>
   <link href="http://Swind.github.com/atom.xml" rel="self"/>
   <link href="http://Swind.github.com/"/>
-  <updated>2011-10-18T16:25:46+08:00</updated>
+  <updated>2011-10-18T17:03:02+08:00</updated>
   <id>http://Swind.github.com/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
