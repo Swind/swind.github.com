@@ -3,9 +3,9 @@
 # ----------------------- #
 
 url: http://Swind.github.com
-title: My Octopress Blog
-subtitle: A blogging framework for hackers.
-author: Your Name
+title: 長草的筆記本
+subtitle: 我還是想不出來要叫什麼 
+author: Swind
 simple_search: http://google.com/search
 
 # RSS / Email (optional) subscription links (change if using something like Feedburner)
@@ -82,7 +82,7 @@ delicious_user:
 delicious_count: 3
 
 # Disqus Comments
-disqus_short_name:
+disqus_short_name: swindgithub
 disqus_show_comment_count: false
 
 # Google Analytics
