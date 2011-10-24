@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[長草的筆記本]]></title>
-  <link href="http://Swind.github.com/atom.xml" rel="self"/>
+  <title><![CDATA[Category: octopress | 長草的筆記本]]></title>
+  <link href="http://Swind.github.com/blog/categories/octopress/atom.xml" rel="self"/>
   <link href="http://Swind.github.com/"/>
   <updated>2011-10-24T11:18:15+08:00</updated>
   <id>http://Swind.github.com/</id>
@@ -30,17 +30,13 @@
 <hr />
 
 <p>終於可以進入octopress的安裝了，在這裡安裝的順暢與否就取決於你的平台了(誤)。詳細安裝方式可以參考Octopress官網的[Octopress Setup][]。
-使用gem安裝所需要的Ruby套件與設定octopress</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+使用gem安裝所需要的Ruby套件與設定octopress
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>gem install bundler
 </span><span class='line'>bundle install
-</span><span class='line'>rake install</span></code></pre></td></tr></table></div></figure>
-
-
-
+</span><span class='line'>rake install</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 ]]></content>
   </entry>
   
