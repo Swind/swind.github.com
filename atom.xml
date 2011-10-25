@@ -4,7 +4,7 @@
   <title><![CDATA[長草的筆記本]]></title>
   <link href="http://Swind.github.com/atom.xml" rel="self"/>
   <link href="http://Swind.github.com/"/>
-  <updated>2011-10-25T21:58:13+08:00</updated>
+  <updated>2011-10-25T22:03:09+08:00</updated>
   <id>http://Swind.github.com/</id>
   <author>
     <name><![CDATA[Swind]]></name>
@@ -34,9 +34,8 @@
 
 <p>安裝完畢之後你會發現RubyInstaller連gem都幫你安裝好了(Linux我都用RVM裝，所以我不知道gem是不是安裝Ruby一定會有的)，但是這個版本的gem有點舊，所以需要下指令升級一下。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>gem update --system</span></code></pre></td></tr></table></div></figure>
-
+<pre><code>gem update --system
+</code></pre>
 
 <p>再來就是需要另外安裝一個<a href="http://rubyinstaller.org/add-ons/devkit/">DevKit</a>，這是Windows特有的老實說我也不知道這個要做啥。但是如果沒裝的話，你在使用gem安裝某些東西的時候他會跳出訊息要你安裝。</p>
 
@@ -51,19 +50,15 @@
 
 <p>首先先使用git將octopress cloe下來</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git clone git://github.com/imathis/octopress.git octopress</span></code></pre></td></tr></table></div></figure>
-
+<pre><code>git clone git://github.com/imathis/octopress.git octopress
+</code></pre>
 
 <p>進入octopress資料夾，使用gem安裝所需要的Ruby套件與設定octopress</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>gem install bundler
-</span><span class='line'>bundle install
-</span><span class='line'>rake install</span></code></pre></td></tr></table></div></figure>
-
+<pre><code>gem install bundler
+bundle install
+rake install
+</code></pre>
 
 <p>到這邊我們終於踏進了八奇思考領域的第一步 Orz &#8230; (我好久沒有看火鳳了)</p>
 
@@ -86,11 +81,10 @@
 <pre><code>swind.github.com
 </code></pre>
 
-<p>接著呢要跟Octopress你的Repository的路徑，進入Octopress的資料夾，輸入下面的指令</p>
+<p>接著呢要跟Octopress說你的Repository的路徑，進入Octopress的資料夾，輸入下面的指令</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>rake setup_github_pages</span></code></pre></td></tr></table></div></figure>
-
+<pre><code>rake setup_github_pages
+</code></pre>
 
 <p>Octopress會要你輸入Repository的路徑，這時請將Github上面SSH的路徑複製下來貼上，例如我的就是</p>
 
@@ -99,11 +93,9 @@
 
 <p>完成之後你就可以輸入</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>rake generate
-</span><span class='line'>    rake deploy</span></code></pre></td></tr></table></div></figure>
-
+<pre><code>rake generate
+rake deploy
+</code></pre>
 
 <p>來測試是否可以正常deploy了。</p>
 
