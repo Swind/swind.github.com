@@ -1,24 +1,104 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[長草的筆記本]]></title>
-  <link href="http://Swind.github.com/atom.xml" rel="self"/>
-  <link href="http://Swind.github.com/"/>
-  <updated>2011-11-29T23:07:47+08:00</updated>
-  <id>http://Swind.github.com/</id>
-  <author>
-    <name><![CDATA[Swind]]></name>
-    
-  </author>
-  <generator uri="http://octopress.org/">Octopress</generator>
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>好用的HTML Parser-jsoup - 長草的筆記本</title>
+  <meta name="author" content="Swind">
 
   
-  <entry>
-    <title type="html"><![CDATA[好用的HTML Parser-jsoup]]></title>
-    <link href="http://Swind.github.com/blog/2011/10/27/jsoup/"/>
-    <updated>2011-10-27T08:47:00+08:00</updated>
-    <id>http://Swind.github.com/blog/2011/10/27/jsoup</id>
-    <content type="html"><![CDATA[<p>HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
+  <meta name="description" content="HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。為了要從網頁中可以取出內容,我曾經用過不少方式,包括直接硬幹用字串搜尋、修改Scala本身內部的XML Parser等。但是一直都找不到一個滿意又順手的解決方式,一直到後來在CSDN...">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://Swind.github.com/blog/2011/10/27/jsoup/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="長草的筆記本" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-15910682-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">長草的筆記本</a></h1>
+  
+    <h2>前一本筆記本的草已經長得這麼長了 Orz</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:Swind.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">好用的HTML Parser-jsoup</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-10-27T08:47:00+08:00" pubdate  data-updated="true" >Oct 27<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
 為了要從網頁中可以取出內容,我曾經用過不少方式,包括直接硬幹用字串搜尋、修改Scala本身內部的XML Parser等。
 但是一直都找不到一個滿意又順手的解決方式,一直到後來在<a href="http://www.oschina.net/">CSDN</a>沒錯就是那個大陸網站<a href="http://www.oschina.net/">CSDN</a>
 (雖然說CSDN訊息太多太雜亂,但是偶爾還是可以看到一些不錯的東西),才找到jsoup這個library。</p>
@@ -229,117 +309,155 @@ LastPost  : 2011-10-30 03:13 PM
 FunSuite跟ShouldMatchers是兩個testEnvyExample所繼承的Class，這兩個Class主要讓我下面的程式可以使用test跟should be兩種語法。</p>
 
 <p>到這邊程式執行完畢之後我就有目前此頁面每一篇文章的所有內容了。下一步就是要分析這些文章內容了。</p>
-]]></content>
-  </entry>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
-  <entry>
-    <title type="html"><![CDATA[搬家後的第一篇文章-Octopress安裝筆記]]></title>
-    <link href="http://Swind.github.com/blog/2011/10/19/ban-jia-hou-di-1pian/"/>
-    <updated>2011-10-19T11:17:00+08:00</updated>
-    <id>http://Swind.github.com/blog/2011/10/19/ban-jia-hou-di-1pian</id>
-    <content type="html"><![CDATA[<h2>在Ubuntu上面實在是有夠難安裝的</h2>
 
-<hr />
+<span class="byline author vcard">Posted by <span class="fn">Swind</span></span>
 
-<p>目前使用的環境是在Ubuntu上面，並且使用rvm安裝Ruby 1.9.2與Gem。但是就是那個但是這樣安裝的Ruby其實是不能用的，還需要用rvm安裝zlib與openssl才能使用。</p>
+      
 
-<p>安裝方法可以參考 <a href="http://www.distancetohere.com/how-to-deploy-jekyll-slash-octopress-to-heroku/">How to Install Octopress on Ubuntu 11.04 and Deploy on GitHub</a>，若前面這個網站有不清楚的部分或者想要找指令來源的可以到<a href="http://beginrescueend.com/">RVM</a>的網站查詢。</p>
 
-<h2>在Windows上面也沒有好裝多少，但是我好像成功了</h2>
 
-<hr />
 
-<p>Windows上面沒有好用的RVM可以用，而且Ruby安裝包比較不一樣，叫做<a href="http://rubyinstaller.org/">RubyInstaller</a>。RubyInstaller的安裝方式蠻簡單的，就一直下一步就可以了。</p>
 
-<p>安裝完畢之後你會發現RubyInstaller連gem都幫你安裝好了(Linux我都用RVM裝，所以我不知道gem是不是安裝Ruby一定會有的)，但是這個版本的gem有點舊，所以需要下指令升級一下。</p>
-
-<pre><code>gem update --system
-</code></pre>
-
-<p>再來就是需要另外安裝一個<a href="http://rubyinstaller.org/add-ons/devkit/">DevKit</a>，這是Windows特有的老實說我也不知道這個要做啥。但是如果沒裝的話，你在使用gem安裝某些東西的時候他會跳出訊息要你安裝。</p>
-
-<p>P.S 附帶一提，這是未確認事項不過在Windows上面安裝Git的時候，請選擇讓他將Git的執行檔路徑加入Path裡面的選項，也就是說讓你可以在命令提示字元上使用Git指令。
-因為我想Octopress應該沒有聰明到會自己去抓Git的安裝路徑。</p>
-
-<h2>安裝與設定octopress</h2>
-
-<hr />
-
-<p>終於可以進入octopress的安裝了，在這裡安裝的順暢與否就取決於你的平台了(誤)。詳細安裝方式可以參考Octopress官網的<a href="http://octopress.org/docs/setup/">Octopress Setup</a>。</p>
-
-<p>首先先使用git將octopress cloe下來</p>
-
-<pre><code>git clone git://github.com/imathis/octopress.git octopress
-</code></pre>
-
-<p>進入octopress資料夾，使用gem安裝所需要的Ruby套件與設定octopress</p>
-
-<pre><code>gem install bundler
-bundle install
-rake install
-</code></pre>
-
-<p>到這邊我們終於踏進了八奇思考領域的第一步 Orz &#8230; (我好久沒有看火鳳了)</p>
-
-<h2>Deploy到GitHub上面</h2>
-
-<hr />
-
-<p>Octopress的官網有提供<a href="http://octopress.org/docs/deploying/github">Github Pages</a>、<a href="http://octopress.org/docs/deploying/heroku">Heroku</a>與<a href="http://octopress.org/docs/deploying/rsync">Rsync</a>的上傳教學。Heroku還蠻多人使用的，在網路上也可以找到不少教學。
-但是我還是對Github比較熟悉，所以這邊只列出Github的設定方式</p>
-
-<p>Github Pages的功能老實說我也是因為看到Octopress才知道的，所以不清楚他能做啥，反正他可以放網頁就是了(大誤)。</p>
-
-<p>首先請先在Github上面開啟一個Repository，Repository的名稱格式為：</p>
-
-<pre><code>帳號名稱.github.com
-</code></pre>
-
-<p>例如我的id是swind，所以名稱就如你現在網址列所看到的為</p>
-
-<pre><code>swind.github.com
-</code></pre>
-
-<p>接著呢要跟Octopress說你的Repository的路徑，進入Octopress的資料夾，輸入下面的指令</p>
-
-<pre><code>rake setup_github_pages
-</code></pre>
-
-<p>Octopress會要你輸入Repository的路徑，這時請將Github上面SSH的路徑複製下來貼上，例如我的就是</p>
-
-<pre><code>git@github.com:Swind/swind.github.com.git
-</code></pre>
-
-<p>完成之後你就可以輸入</p>
-
-<pre><code>rake generate
-rake deploy
-</code></pre>
-
-<p>來測試是否可以正常deploy了。</p>
-
-<p>P.S如果是使用Windows的朋友，然後你的文章檔案又是使用UTF-8存檔的話，應該會在rake generate的指令上遇到編碼問題。這是Jekyll的問題，可以透過設定環境變數來解決。
-在執行rake generate的指令之前先輸入:</p>
-
-<pre><code>set LC_ALL=zh_TW.UTF-8
-set LANG=zh_TW.UTF-8
-</code></pre>
-
-<h2>同場加映-同步與版本控管的方式</h2>
-
-<p><a href="http://octopress.org/docs/deploying/github">Github Pages</a>上教學的最後有教你使用Git的Branch來將Octopress的原始碼以及Blog的頁面同時儲存在同一個Repository上，我有這樣用，而且還蠻有趣的。
-Octopress會將_deploy資料夾中的檔案Push到主分支，也就是Master。而你可以透過在Octopress的資料夾中輸入</p>
-
-<pre><code>git add .
-git commit -m 'your message'
-git push origin source
-</code></pre>
-
-<p>這樣就會將Octopress的原始碼Commit到source的分支上面，而不會影響到Blog的內容。但是這樣我在其他電腦要使用的時候都還要clone兩次(Octopress一次，_deploy一次)實在很麻煩。
-所以我最後還是使用Dropbox來進行同步，我乾脆就將整個Octopress放在Dropbox裡面，這樣不管我Linux或Windows都可以隨時編輯我的文章。</p>
-
-<p>以上心得分享完畢，那個某人不要再來找我要心得了阿 XD</p>
-]]></content>
-  </entry>
   
-</feed>
+
+
+
+<time datetime="2011-10-27T08:47:00+08:00" pubdate  data-updated="true" >Oct 27<span>th</span>, 2011</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/java-scala/'>Java,Scala</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://Swind.github.com/blog/2011/10/27/jsoup/" data-via="" data-counturl="http://Swind.github.com/blog/2011/10/27/jsoup/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+       
+        <a class="basic-alignment left" href="/blog/2011/10/19/ban-jia-hou-di-1pian/" title="Previous Post: 搬家後的第一篇文章-Octopress安裝筆記">&laquo; 搬家後的第一篇文章-Octopress安裝筆記</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2011/10/27/jsoup/">好用的HTML Parser-jsoup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/10/19/ban-jia-hou-di-1pian/">搬家後的第一篇文章-Octopress安裝筆記</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2011 - Swind -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+    
+      var disqus_shortname = 'swindgithub';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://Swind.github.com/blog/2011/10/27/jsoup/';
+        var disqus_url = 'http://Swind.github.com/blog/2011/10/27/jsoup/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
