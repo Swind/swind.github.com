@@ -4,7 +4,7 @@
 
 url: http://Swind.github.com
 title: 長草的筆記本
-subtitle: 我還是想不出來要叫什麼 
+subtitle: 前一本筆記本的草已經長得這麼長了 Orz 
 author: Swind
 simple_search: http://google.com/search
 
@@ -86,7 +86,7 @@ disqus_short_name: swindgithub
 disqus_show_comment_count: false
 
 # Google Analytics
-google_analytics_tracking_id:
+google_analytics_tracking_id: UA-15910682-2
    
 # Facebook Like
 facebook_like: true   

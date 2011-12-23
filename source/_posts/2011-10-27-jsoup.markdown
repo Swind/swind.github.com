@@ -1,0 +1,204 @@
+---
+layout: post
+title: "好用的HTML Parser-jsoup"
+date: 2011-10-27 08:47
+comments: true
+categories: Java,Scala
+---
+
+#What is jsoup#
+
+----
+
+HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
+為了要從網頁中可以取出內容,我曾經用過不少方式,包括直接硬幹用字串搜尋、修改Scala本身內部的XML Parser等。
+但是一直都找不到一個滿意又順手的解決方式,一直到後來在[CSDN][]沒錯就是那個大陸網站[CSDN][]
+(雖然說CSDN訊息太多太雜亂,但是偶爾還是可以看到一些不錯的東西),才找到jsoup這個library。
+
+[jsoup的官方網站][1]
+
+[jsoup的教學文件][2]
+
+但是其實最重要的是這一[教學文件][3],介紹了他與別人最不一樣的的地方。
+一般的HTML Parser還是比較傾向於跟XML Parser的作法一樣,把HTML分析完之後建成樹
+然後操作Node將資料取出,但是除了這種操作方式之外josue還有一種是類似JQuery的Selector的操作方式。
+
+{%codeblock lang:scala%}
+File input = new File("/tmp/input.html");
+Document doc = Jsoup.parse(input, "UTF-8", "http://example.com/");
+
+//Document doc = Jsoup.connect("http://example.com/");
+
+//取出擁有herf屬性的<a>
+Elements links = doc.select("a[href]");
+//取出擁有src屬性且值是以png結尾的<img>
+Elements pngs = doc.select("img[src$=.png]");
+{%endcodeblock%}
+
+上面是官網的範例,從這邊就可以看到jsoup不同於一般HTML Parser的地方。
+jsoup除了有支援讀取檔案之外,也可以直接輸入網址讓他自己去連線與Parser,
+**最重要的是可以透過selector-syntax來取出想要的內容。**接下來我會整理一些我常用的用法。
+
+P.S我所使用的語言是Scala，但是我會盡量不要用Scala的<del>奇淫技巧</del>特殊語法讓他看起來跟Java差不多。
+
+出發總要有個方向,這邊就以一個我想幹的壞事情來當作例子好了，順便強迫我自己把東西寫完。
+
+###說出你的願望，否則不會讓你如願###
+
+我想要一個可以自動檢查[某大論壇][4]的動畫討論區新番是否有更新的機器人。
+（因為它新番更新在同一個文章裡面，每周找新番真的好麻煩）
+哈利路亞 ! Chance !
+
+#Prepare#
+
+----
+
+首先呢，我習慣先將網頁內容儲存成HTML檔案,放到測試資料夾中。
+然後，寫個測試先決定整個程式的主要介面。
+因為我不喜歡一直連線到網站做測試。
+因為:
+
+1. 浪費流量
+2. 我要驗證程式執行結果的時候必須要開網頁才能驗證。
+    (因為文章會一直新增第一頁的內容會被擠到後面去)
+3. 你不一定隨時都有網路可以用
+
+因此先將今天的文章列表儲存起來，然後寫個測試來驗證我最後的輸出結果是否如我所預期。
+有人會想說這是不是什麼軟體工程技巧阿，是不是什麼測試先行（TDD）的開發方式之類的？
+其實也沒有特別想說要使用什麼樣的開發方式或開發技巧，單純就只是因為我覺得這樣比較方便而已。
+我覺得沒有必要被偉大或者是只要這樣做就對了等口號給迷惑，選擇自己需要且足夠的方式就好了。
+
+###要分析擷取的網頁內容###
+
+這邊是網頁的部份內容，我在做測試資料的時候是將整份的網頁原始碼都儲存起來，下面的內容是為了後面的說明需要。
+
+    <tbody id="normalthread_6961970">
+     <tr onmouseover="l_pic_6961970.style.display='block'" onmouseout="l_pic_6961970.style.display='none'">
+      <td class="folder">
+        <a href="viewthread.php?tid=6961970&amp;extra=page%3D1%26amp%3Borderby%3Ddateline" title="新窗口打開" target="_blank">
+            <img src="images/default/folder_new.gif" />
+        </a>
+     </td>
+      <td class="icon"><img src="http://a18.file-static.com/attachments/lib_picture/19/70/6961970.jpg" width="50" height="40" class="l_bPic" />
+       <div class="l_sPic" id="l_pic_6961970">
+        <img src="http://a18.file-static.com/attachments/lib_picture/19/70/6961970.jpg" width="100" height="80" class="l_bPic" />
+       </div></td>
+      <th class="subject new">
+        <label>&nbsp;</label> 
+        <em>[<a href="forumdisplay.php?fid=22&amp;filter=type&amp;typeid=2">分享</a>]</em>
+        <span id="thread_6961970">
+            <a href="viewthread.php?tid=6961970&amp;extra=page%3D1%26amp%3Borderby%3Ddateline">
+            (MU@繁體@RMVB)OnePiece海賊王 第521話 (1P)</a>
+        </span>
+      </th>
+      <td class="author"><cite><a href="space.php?uid=933315">likesea</a></cite><em>2011-10-30</em></td>
+      <td class="nums"><strong>0</strong>/<em>2</em></td>
+      <td class="lastpost">
+      <cite>
+        <a href="space.php?username=likesea">likesea</a>
+      </cite>
+      <em><a href="redirect.php?tid=6961970&amp;goto=lastpost#lastpost"><span title="2011-10-30 03:13 PM">1&nbsp;分鐘前</span></a></em></td>
+     </tr>
+    </tbody>
+
+###想要的輸出結果###
+
+    UID       : 933315
+    Title     : OnePiece海賊王 第521話
+    LastPost  : 2011-10-30 03:13 PM
+
+###程式的介面###
+
+雖然jsoup可以直接接收網址去取得網頁內容，但測試程式有讀取檔案的需求所以這邊會提供兩種介面。
+一種允許使用者直接傳入String型態的參數，也就是網址。另外一種則是讓使用者傳入File型態的參數。
+而回傳值的形態則是存放Data Object的List，這邊Data Object的名稱就先定義為EnvyPost好了。
+
+{%codeblock lang:scala%}
+class EnvyPost{
+    val UID:Integer
+    val title:String
+    val lastPostTime:Date
+}
+
+def parse(url:String):List[EnvyPost]={}
+def parse(file:File):List[EnvyPost]={}
+{%endcodeblock%}
+
+#開始用jsoup分析網頁資訊吧#
+
+----
+
+###找出所有文章###
+
+雖然jsoup有提供很多種分析的方式，但是我最喜歡用的還是[Selector][]的語法。因為簡單明瞭又好閱讀！！
+執行效率我則完全不在意，反正我的需求也不是一秒幾十萬上下的東西。能夠讓我愉快又快速的寫好才是重要的。
+
+{%codeblock lang:scala%}
+object EnvyExample {
+  def parse(file:File,encode:String="Big5"):List[EnvyPost]={
+    val doc = Jsoup.parse(file,encode,envyURL)
+    val posts = parsePage(doc)
+  }
+  def parsePage(page:Document)={
+    doc.select("tbody[id^=normalthread]")
+  }
+}
+{%endcodeblock%}
+
+由於該論壇的每一篇文章都被一個tbody的tag包圍，且此tbody的id開頭為normalthread。因此我的第一步就是先找出此頁中每一篇文章的Element。
+
+雖然說jsoup跟jquery一樣對於tag的id與class屬性都有特殊的語法例如 tag#id 或 tag.class 但是由於我需要使用正規表示是來找出id為normalthread開頭的tbody。
+所以這邊使用 
+
+    tbody[id^=normalthread]
+
+因為若使用 # 的語法就沒有辦法使用正規表示式（至少我目前在官網的說明文件還沒有找到 Orz）
+有沒有覺得這個語法真的超級方便的，如果是用其他工具的話，我現在應該還在處理把id屬性取出來，然後用String的startWith來判斷是不是normalthread開頭。
+
+另外，我喜歡把每一個步驟分解成很多小函式，因為這樣方便我進行測試。例如上面這一段程式碼，我相對應的測試程式碼會長這樣。
+
+{%codeblock lang:scala%}
+class testEnvyExample extends FunSuite with ShouldMatchers{
+  test("There should be 10 post in the test file"){
+    val doc = Jsoup.parse(new File("./testData/envy.html"),"Big5",EnvyExample.envyURL)
+    val posts = EnvyExample.parsePage(doc)
+    posts.size should be (18)
+  }
+}
+{%endcodeblock%}
+
+順便說明一下語法，我所使用的測試Framework是[ScalaTest][]，這邊使用Java的JUnit也是可以。
+testEnvyExample繼承FunSuite跟ShouldMatchers兩個Class，這兩個Class主要讓測試程式可以使用**test**跟**should be**兩種語法。
+
+到這邊程式執行完畢之後我就有目前此頁面每一篇文章的所有內容了。下一步就是要分析這些文章內容了。
+
+###分析文章的內容-取得Id、Title、Author與Link###
+
+取得Post的功能再另外獨立一個parsePost的Function，傳入的參數則為包含所有文章內容的Element，並且希望這個Function可以回傳一個EnvyPost物件。
+
+{%codeblock lang:scala%}
+def parsePost(post:Element):EnvyPost={
+}
+{%endcodeblock%}
+
+Link跟Title其實是一起取得的，它們可以從id為thread_xxxxxx的span tag中取得。
+{%codeblock lang:scala%}
+def parsePost(post:Element):EnvyPost={
+    val id 
+    val (title,link) = parsePost_IdAndTitle(post)
+    
+}
+
+private def parsePost_IdAndTitle(post:Element)={
+    val titleElement = post.select("span")
+    val id = titleElement.attr("id").replace("thread_","")
+}
+{%endcodeblock%}
+
+[1]:http://jsoup.org/
+[2]:http://jsoup.org/cookbook/
+[3]:http://jsoup.org/cookbook/extracting-data/selector-syntax
+[4]:http://www.cwb.gov.tw/V7/forecast/taiwan/Taipei_City.htm
+[CSDN]:http://www.oschina.net/
+[Selector]:http://jsoup.org/cookbook/extracting-data/selector-syntax
+[ScalaTest]:http://www.scalatest.org/
