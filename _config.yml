@@ -7,6 +7,13 @@ title: 長草的筆記本
 subtitle: 前一本筆記本的草已經長得這麼長了 Orz 
 author: Swind
 simple_search: http://google.com/search
+description:
+
+# Default date format is "ordinal" (resulting in "July 22nd 2007")
+# You can customize the format as defined in
+# http://www.ruby-doc.org/core-1.9.2/Time.html#method-i-strftime
+# Additionally, %o will give you the ordinal representation of the day
+date_format: "ordinal"
 
 # RSS / Email (optional) subscription links (change if using something like Feedburner)
 subscribe_rss: /atom.xml
@@ -65,7 +72,7 @@ twitter_show_follower_count: false
 twitter_tweet_button: true
 
 # Google +1
-google_plus_one: true
+google_plus_one: false
 google_plus_one_size: medium
 
 # Google Plus Profile
@@ -89,4 +96,4 @@ disqus_show_comment_count: false
 google_analytics_tracking_id: UA-15910682-2
    
 # Facebook Like
-facebook_like: true   
+facebook_like: false
