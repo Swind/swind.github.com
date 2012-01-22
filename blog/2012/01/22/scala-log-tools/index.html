@@ -1,0 +1,303 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Scala log 工具筆記 - 長草的筆記本</title>
+  <meta name="author" content="Swind">
+
+  
+  <meta name="description" content="之前偷懶都直接使用println來輸出訊息，但是最近在玩Akka，我發現如果沒有使用log tool的話我根本不知道是哪個Actor印訊息的。
+只好搜尋一下Scala上面有沒有什麼好用的Log工具。 slf4s + slf4j + logback 一般依照以往的習慣基本就是log4j + &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://Swind.github.com/blog/2012/01/22/scala-log-tools">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="長草的筆記本" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-15910682-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">長草的筆記本</a></h1>
+  
+    <h2>前一本筆記本的草已經長得這麼長了 Orz</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:Swind.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Scala Log 工具筆記</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-22T15:59:00+08:00" pubdate data-updated="true">Jan 22<span>nd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>之前偷懶都直接使用println來輸出訊息，但是最近在玩<a href="http://akka.io/">Akka</a>，我發現如果沒有使用log tool的話我根本不知道是哪個Actor印訊息的。
+只好搜尋一下Scala上面有沒有什麼好用的Log工具。</p>
+
+<h2>slf4s + slf4j + logback</h2>
+
+<p>一般依照以往的習慣基本就是<a href="http://logging.apache.org/log4j/">log4j</a> + <a href="http://www.slf4j.org/">slf4j</a>，這算是最通用的工具組了。但是Scala有這麼多特異功能，說不定會有更神奇的Log工具，
+於是就抱著這樣的心態跟Google大神詢問求籤。最後看到logback這個工具（雖然跟Scala完全沒有關係）但是人都是喜新厭舊 XD，所以
+我就從slf4j+log4j轉到slf4j+logback，附帶一提logback是slf4j預設的log工具，因此使用這兩個的組合不需要另外抓Adapter。（ex.slf4j-log4j12-1.6.4.jar之類的）</p>
+
+<p>設定檔的部分目前我看到最不一樣的就是格式了，log4j是採用properities的方式記錄，也就是key=value的格式，而logback則是使用xml。
+設定檔一直是讓我懶得使用Log工具的地方，好在網路上真的很多好心人，在<a href="http://werdna1222coldcodes.blogspot.com/2011/10/logback-log4j.html">符號記憶-Logback,Log4j設定檔自動產生器</a>有介紹了<a href="http://wizardforge.org/pc?action=displayFlowchartVersionPublic&amp;id=42">協助產生設定檔的網站</a>
+可以讓設定的工作減少很多。下面是我隨便產生的一個範例</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?xml version="1.0" encoding="UTF-8"?>
+</span><span class='line'>
+</span><span class='line'>&lt;configuration debug="true">
+</span><span class='line'>  &lt;appender name="RootConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+</span><span class='line'>    &lt;filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+</span><span class='line'>      &lt;level>debug&lt;/level>
+</span><span class='line'>    &lt;/filter>
+</span><span class='line'>    &lt;layout class="ch.qos.logback.classic.PatternLayout">
+</span><span class='line'>      &lt;pattern>%d{yyyy-MM-dd HH:mm:ss}, %p, %t, %L, %C{1}, %M %m%n&lt;/pattern>
+</span><span class='line'>    &lt;/layout>
+</span><span class='line'>  &lt;/appender>
+</span><span class='line'>
+</span><span class='line'>&lt;root>&lt;level value="debug"/>
+</span><span class='line'>     &lt;appender-ref ref="RootConsoleAppender"/>
+</span><span class='line'>   &lt;/root>
+</span><span class='line'>
+</span><span class='line'>&lt;/configuration></span></code></pre></td></tr></table></div></figure>
+
+
+<p>之後我還有多使用<a href="https://github.com/weiglewilczek/slf4s">slf4s</a>來讓slf4j的使用更有Scala的味道，不過其實也就只是多了一個trait讓你的scala class可以直接繼承，讓你省下一些麻煩
+例如：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class MyClazz with Logging
+</span><span class='line'>{
+</span><span class='line'>    logger.debug("Creator")
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最後是額外找到的<a href="http://www.ac.net.blog.163.com/blog/static/1364905620111023304126/">打一句log時間不到一納秒！完爆log4j、logback、slf4j</a>，但是我沒有用因為還沒有效能上的需求，不過我有稍微看一下程式碼，加上下面留言者給的提示。
+在使用logger印出訊息之前，先進行logger.isTraceEnabled、logger.isDebugEnable等的判斷，就可以在編譯的時候進行最佳化。</p>
+
+<p>目前使用的Log工具大概就這樣了，logback如果有玩到什麼好玩的會在上來報告。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Swind</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-22T15:59:00+08:00" pubdate data-updated="true">Jan 22<span>nd</span>, 2012</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://Swind.github.com/blog/2012/01/22/scala-log-tools/" data-via="" data-counturl="http://Swind.github.com/blog/2012/01/22/scala-log-tools/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/10/27/jsoup/" title="Previous Post: 好用的HTML Parser-jsoup">&laquo; 好用的HTML Parser-jsoup</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/01/22/scala-log-tools/">Scala log 工具筆記</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/10/27/jsoup/">好用的HTML Parser-jsoup</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2011/10/19/ban-jia-hou-di-1pian/">搬家後的第一篇文章-Octopress安裝筆記</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - Swind -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'swindgithub';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://Swind.github.com/blog/2012/01/22/scala-log-tools/';
+        var disqus_url = 'http://Swind.github.com/blog/2012/01/22/scala-log-tools/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
