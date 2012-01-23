@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Scala | 長草的筆記本]]></title>
+  <link href="http://Swind.github.com/blog/categories/scala/atom.xml" rel="self"/>
+  <link href="http://Swind.github.com/"/>
+  <updated>2012-01-23T09:51:58+08:00</updated>
+  <id>http://Swind.github.com/</id>
+  <author>
+    <name><![CDATA[Swind]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[好用的HTML Parser-jsoup]]></title>
+    <link href="http://Swind.github.com/blog/2011/10/27/jsoup/"/>
+    <updated>2011-10-27T08:47:00+08:00</updated>
+    <id>http://Swind.github.com/blog/2011/10/27/jsoup</id>
+    <content type="html"><![CDATA[<h1>What is jsoup</h1>
+
+<hr />
+
+<p>HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
+為了要從網頁中可以取出內容,我曾經用過不少方式,包括直接硬幹用字串搜尋、修改Scala本身內部的XML Parser等。
+但是一直都找不到一個滿意又順手的解決方式,一直到後來在<a href="http://www.oschina.net/">CSDN</a>沒錯就是那個大陸網站<a href="http://www.oschina.net/">CSDN</a>
+(雖然說CSDN訊息太多太雜亂,但是偶爾還是可以看到一些不錯的東西),才找到jsoup這個library。</p>
+
+<p><a href="http://jsoup.org/">jsoup的官方網站</a></p>
+
+<p><a href="http://jsoup.org/cookbook/">jsoup的教學文件</a></p>
+
+<p>但是其實最重要的是這一<a href="http://jsoup.org/cookbook/extracting-data/selector-syntax">教學文件</a>,介紹了他與別人最不一樣的的地方。
+一般的HTML Parser還是比較傾向於跟XML Parser的作法一樣,把HTML分析完之後建成樹
+然後操作Node將資料取出,但是除了這種操作方式之外josue還有一種是類似JQuery的Selector的操作方式。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="nc">File</span> <span class="n">input</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="s">&quot;/tmp/input.html&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="nc">Document</span> <span class="n">doc</span> <span class="k">=</span> <span class="nc">Jsoup</span><span class="o">.</span><span class="n">parse</span><span class="o">(</span><span class="n">input</span><span class="o">,</span> <span class="s">&quot;UTF-8&quot;</span><span class="o">,</span> <span class="s">&quot;http://example.com/&quot;</span><span class="o">);&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;//</span><span class="nc">Document</span> <span class="n">doc</span> <span class="k">=</span> <span class="nc">Jsoup</span><span class="o">.</span><span class="n">connect</span><span class="o">(</span><span class="s">&quot;http://example.com/&quot;</span><span class="o">);&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;//</span><span class="n">取出擁有herf屬性的</span><span class="o">&lt;</span><span class="n">a</span><span class="o">&gt;</span>
+</span><span class='line'><span class="nc">Elements</span> <span class="n">links</span> <span class="k">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="s">&quot;a[href]&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="c1">//取出擁有src屬性且值是以png結尾的&lt;img&gt;</span>
+</span><span class='line'><span class="nc">Elements</span> <span class="n">pngs</span> <span class="k">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="s">&quot;img[src$=.png]&quot;</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>上面是官網的範例,從這邊就可以看到jsoup不同於一般HTML Parser的地方。
+jsoup除了有支援讀取檔案之外,也可以直接輸入網址讓他自己去連線與Parser,
+<strong>最重要的是可以透過selector-syntax來取出想要的內容。</strong>接下來我會整理一些我常用的用法。</p>
+
+<p>P.S我所使用的語言是Scala，但是我會盡量不要用Scala的<del>奇淫技巧</del>特殊語法讓他看起來跟Java差不多。</p>
+
+<p>出發總要有個方向,這邊就以一個我想幹的壞事情來當作例子好了，順便強迫我自己把東西寫完。</p>
+
+<h3>說出你的願望，否則不會讓你如願</h3>
+
+<p>我想要一個可以自動檢查<a href="http://www.cwb.gov.tw/V7/forecast/taiwan/Taipei_City.htm">某大論壇</a>的動畫討論區新番是否有更新的機器人。
+（因為它新番更新在同一個文章裡面，每周找新番真的好麻煩）
+哈利路亞 ! Chance !</p>
+
+<h1>Prepare</h1>
+
+<hr />
+
+<p>首先呢，我習慣先將網頁內容儲存成HTML檔案,放到測試資料夾中。
+然後，寫個測試先決定整個程式的主要介面。
+因為我不喜歡一直連線到網站做測試。
+因為:</p>
+
+<ol>
+<li>浪費流量</li>
+<li>我要驗證程式執行結果的時候必須要開網頁才能驗證。
+ (因為文章會一直新增第一頁的內容會被擠到後面去)</li>
+<li>你不一定隨時都有網路可以用</li>
+</ol>
+
+
+<p>因此先將今天的文章列表儲存起來，然後寫個測試來驗證我最後的輸出結果是否如我所預期。
+有人會想說這是不是什麼軟體工程技巧阿，是不是什麼測試先行（TDD）的開發方式之類的？
+其實也沒有特別想說要使用什麼樣的開發方式或開發技巧，單純就只是因為我覺得這樣比較方便而已。
+我覺得沒有必要被偉大或者是只要這樣做就對了等口號給迷惑，選擇自己需要且足夠的方式就好了。</p>
+
+<h3>要分析擷取的網頁內容</h3>
+
+<p>這邊是網頁的部份內容，我在做測試資料的時候是將整份的網頁原始碼都儲存起來，下面的內容是為了後面的說明需要。</p>
+
+<pre><code>&lt;tbody id="normalthread_6961970"&gt;
+ &lt;tr onmouseover="l_pic_6961970.style.display='block'" onmouseout="l_pic_6961970.style.display='none'"&gt;
+  &lt;td class="folder"&gt;
+    &lt;a href="viewthread.php?tid=6961970&amp;amp;extra=page%3D1%26amp%3Borderby%3Ddateline" title="新窗口打開" target="_blank"&gt;
+        &lt;img src="images/default/folder_new.gif" /&gt;
+    &lt;/a&gt;
+ &lt;/td&gt;
+  &lt;td class="icon"&gt;&lt;img src="http://a18.file-static.com/attachments/lib_picture/19/70/6961970.jpg" width="50" height="40" class="l_bPic" /&gt;
+   &lt;div class="l_sPic" id="l_pic_6961970"&gt;
+    &lt;img src="http://a18.file-static.com/attachments/lib_picture/19/70/6961970.jpg" width="100" height="80" class="l_bPic" /&gt;
+   &lt;/div&gt;&lt;/td&gt;
+  &lt;th class="subject new"&gt;
+    &lt;label&gt;&amp;nbsp;&lt;/label&gt; 
+    &lt;em&gt;[&lt;a href="forumdisplay.php?fid=22&amp;amp;filter=type&amp;amp;typeid=2"&gt;分享&lt;/a&gt;]&lt;/em&gt;
+    &lt;span id="thread_6961970"&gt;
+        &lt;a href="viewthread.php?tid=6961970&amp;amp;extra=page%3D1%26amp%3Borderby%3Ddateline"&gt;
+        (MU@繁體@RMVB)OnePiece海賊王 第521話 (1P)&lt;/a&gt;
+    &lt;/span&gt;
+  &lt;/th&gt;
+  &lt;td class="author"&gt;&lt;cite&gt;&lt;a href="space.php?uid=933315"&gt;likesea&lt;/a&gt;&lt;/cite&gt;&lt;em&gt;2011-10-30&lt;/em&gt;&lt;/td&gt;
+  &lt;td class="nums"&gt;&lt;strong&gt;0&lt;/strong&gt;/&lt;em&gt;2&lt;/em&gt;&lt;/td&gt;
+  &lt;td class="lastpost"&gt;
+  &lt;cite&gt;
+    &lt;a href="space.php?username=likesea"&gt;likesea&lt;/a&gt;
+  &lt;/cite&gt;
+  &lt;em&gt;&lt;a href="redirect.php?tid=6961970&amp;amp;goto=lastpost#lastpost"&gt;&lt;span title="2011-10-30 03:13 PM"&gt;1&amp;nbsp;分鐘前&lt;/span&gt;&lt;/a&gt;&lt;/em&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+&lt;/tbody&gt;
+</code></pre>
+
+<h3>想要的輸出結果</h3>
+
+<pre><code>UID       : 933315
+Title     : OnePiece海賊王 第521話
+Author    : likesea
+Link      : http://.............
+</code></pre>
+
+<h3>程式的介面</h3>
+
+<p>雖然jsoup可以直接接收網址去取得網頁內容，但測試程式有讀取檔案的需求所以這邊會提供兩種介面。
+一種允許使用者直接傳入String型態的參數，也就是網址。另外一種則是讓使用者傳入File型態的參數。
+而回傳值的形態則是存放Data Object的List，這邊Data Object的名稱就先定義為EnvyPost好了。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">EnvyPost</span><span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">val</span> <span class="nc">UID</span><span class="k">:</span><span class="kt">Integer</span>
+</span><span class='line'><span class="k">val</span> <span class="n">title</span><span class="k">:</span><span class="kt">String</span>
+</span><span class='line'><span class="k">val</span> <span class="n">lastPostTime</span><span class="k">:</span><span class="kt">Date</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">def</span> <span class="n">parse</span><span class="o">(</span><span class="n">url</span><span class="k">:</span><span class="kt">String</span><span class="o">)</span><span class="k">:</span><span class="kt">List</span><span class="o">[</span><span class="kt">EnvyPost</span><span class="o">]={}</span>
+</span><span class='line'><span class="k">def</span> <span class="n">parse</span><span class="o">(</span><span class="n">file</span><span class="k">:</span><span class="kt">File</span><span class="o">)</span><span class="k">:</span><span class="kt">List</span><span class="o">[</span><span class="kt">EnvyPost</span><span class="o">]={}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h1>開始用jsoup分析網頁資訊吧</h1>
+
+<hr />
+
+<h3>找出所有文章</h3>
+
+<p>雖然jsoup有提供很多種分析的方式，但是我最喜歡用的還是<a href="http://jsoup.org/cookbook/extracting-data/selector-syntax">Selector</a>的語法。因為簡單明瞭又好閱讀！！
+執行效率我則完全不在意，反正我的需求也不是一秒幾十萬上下的東西。能夠讓我愉快又快速的寫好才是重要的。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">object</span> <span class="nc">EnvyExample</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">def</span> <span class="n">parse</span><span class="o">(</span><span class="n">file</span><span class="k">:</span><span class="kt">File</span><span class="o">,</span><span class="n">encode</span><span class="k">:</span><span class="kt">String</span><span class="o">=</span><span class="s">&quot;Big5&quot;</span><span class="o">)</span><span class="k">:</span><span class="kt">List</span><span class="o">[</span><span class="kt">EnvyPost</span><span class="o">]={&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">val</span> <span class="n">doc</span> <span class="k">=</span> <span class="nc">Jsoup</span><span class="o">.</span><span class="n">parse</span><span class="o">(</span><span class="n">file</span><span class="o">,</span><span class="n">encode</span><span class="o">,</span><span class="n">envyURL</span><span class="o">)</span>
+</span><span class='line'><span class="k">val</span> <span class="n">posts</span> <span class="k">=</span> <span class="n">parsePage</span><span class="o">(</span><span class="n">doc</span><span class="o">)</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
+</span><span class='line'>  <span class="k">def</span> <span class="n">parsePage</span><span class="o">(</span><span class="n">page</span><span class="k">:</span><span class="kt">Document</span><span class="o">)={&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">doc</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="s">&quot;tbody[id^=normalthread]&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>由於該論壇的每一篇文章都被一個tbody的tag包圍，且此tbody的id開頭為normalthread。因此我的第一步就是先找出此頁中每一篇文章的Element。</p>
+
+<p>雖然說jsoup跟jquery一樣對於tag的id與class屬性都有特殊的語法例如 tag#id 或 tag.class 但是由於我需要使用正規表示是來找出id為normalthread開頭的tbody。
+所以這邊使用</p>
+
+<pre><code>tbody[id^=normalthread]
+</code></pre>
+
+<p>因為若使用 # 的語法就沒有辦法使用正規表示式（至少我目前在官網的說明文件還沒有找到 Orz）
+有沒有覺得這個語法真的超級方便的，如果是用其他工具的話，我現在應該還在處理把id屬性取出來，然後用String的startWith來判斷是不是normalthread開頭。</p>
+
+<p>另外，我喜歡把每一個步驟分解成很多小函式，因為這樣方便我進行測試。例如上面這一段程式碼，我相對應的測試程式碼會長這樣。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">testEnvyExample</span> <span class="k">extends</span> <span class="nc">FunSuite</span> <span class="k">with</span> <span class="nc">ShouldMatchers</span><span class="o">{</span>
+</span><span class='line'>  <span class="n">test</span><span class="o">(</span><span class="s">&quot;There should be 10 post in the test file&quot;</span><span class="o">){&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">val</span> <span class="n">doc</span> <span class="k">=</span> <span class="nc">Jsoup</span><span class="o">.</span><span class="n">parse</span><span class="o">(</span><span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="s">&quot;./testData/envy.html&quot;</span><span class="o">),</span><span class="s">&quot;Big5&quot;</span><span class="o">,</span><span class="nc">EnvyExample</span><span class="o">.</span><span class="n">envyURL</span><span class="o">)</span>
+</span><span class='line'><span class="k">val</span> <span class="n">posts</span> <span class="k">=</span> <span class="nc">EnvyExample</span><span class="o">.</span><span class="n">parsePage</span><span class="o">(</span><span class="n">doc</span><span class="o">)</span>
+</span><span class='line'><span class="n">posts</span><span class="o">.</span><span class="n">size</span> <span class="n">should</span> <span class="n">be</span> <span class="o">(</span><span class="mi">18</span><span class="o">)</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>順便說明一下語法，我所使用的測試Framework是<a href="http://www.scalatest.org/">ScalaTest</a>，這邊使用Java的JUnit也是可以。
+testEnvyExample繼承FunSuite跟ShouldMatchers兩個Class，這兩個Class主要讓測試程式可以使用<strong>test</strong>跟<strong>should be</strong>兩種語法。</p>
+
+<p>到這邊程式執行完畢之後我就有目前此頁面每一篇文章的所有內容了。下一步就是要分析這些文章內容了。</p>
+
+<h3>分析文章的內容-取得Id、Title、Author與Link</h3>
+
+<p>取得Post的功能再另外獨立一個parsePost的Function，傳入的參數則為包含所有文章內容的Element，並且希望這個Function可以回傳一個EnvyPost物件。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">parsePost</span><span class="o">(</span><span class="n">post</span><span class="k">:</span><span class="kt">Element</span><span class="o">)</span><span class="k">:</span><span class="kt">EnvyPost</span><span class="o">={</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>文章Id的取得是透過tbody本身的id屬性，他的格式是normalthread_xxxxxx，後面的xxxxxx就是此篇文章的id，
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">parsePost</span><span class="o">(</span><span class="n">post</span><span class="k">:</span><span class="kt">Element</span><span class="o">)={&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">val</span> <span class="n">id</span> <span class="k">=</span> <span class="n">post</span><span class="o">.</span><span class="n">attr</span><span class="o">(</span><span class="s">&quot;id&quot;</span><span class="o">).</span><span class="n">replace</span><span class="o">(</span><span class="s">&quot;normalthread_&quot;</span><span class="o">,</span><span class="s">&quot;&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="k">val</span> <span class="o">(</span><span class="n">title</span><span class="o">,</span><span class="n">link</span><span class="o">)</span> <span class="k">=</span> <span class="n">parserPost_TitleAndLink</span><span class="o">(</span><span class="n">id</span><span class="o">,</span><span class="n">post</span><span class="o">)</span>
+</span><span class='line'><span class="k">val</span> <span class="n">author</span> <span class="k">=</span> <span class="n">parserPost_Author</span><span class="o">(</span><span class="n">post</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">new</span> <span class="nc">EnvyPost</span><span class="o">(</span><span class="n">id</span><span class="o">,</span><span class="n">title</span><span class="o">,</span><span class="n">author</span><span class="o">,</span><span class="n">link</span><span class="o">)</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Link跟Title其實是一起取得的，它們可以從id為thread_xxxxxx的span tag中取得。
+<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">parserPost_TitleAndLink</span><span class="o">(</span><span class="n">id</span><span class="k">:</span><span class="kt">String</span><span class="o">,</span><span class="n">post</span><span class="k">:</span><span class="kt">Element</span><span class="o">)={&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">val</span> <span class="n">element</span> <span class="k">=</span> <span class="n">post</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="s">&quot;span#thread_&quot;</span><span class="o">+</span><span class="n">id</span><span class="o">).</span><span class="n">first</span>
+</span><span class='line'><span class="o">(</span><span class="n">element</span><span class="o">.</span><span class="n">text</span><span class="o">,</span><span class="n">element</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="s">&quot;a&quot;</span><span class="o">).</span><span class="n">first</span><span class="o">.</span><span class="n">attr</span><span class="o">(</span><span class="s">&quot;href&quot;</span><span class="o">))</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Author的名字則在class為author的td tag內cite中因此取的時候使用</p>
+
+<pre><code>tag1 tag2
+</code></pre>
+
+<p>的語法，這代表搜尋tag1底下所有的tag2</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">parserPost_Author</span><span class="o">(</span><span class="n">post</span><span class="k">:</span><span class="kt">Element</span><span class="o">)={&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">post</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="s">&quot;td.author cite&quot;</span><span class="o">).</span><span class="n">first</span><span class="o">.</span><span class="n">text</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>打完收工，這樣的短短的程式碼就把一個網站都分析完了，真的太棒了 QQ
+以前要分析一個網站超血淚的，真的感謝Open Source的眾多好心人，願意分享他們的成果與程式碼。
+當然後續還有換頁讀取或者是比對之前的內容看是否有更新之類的工作，但是這都是後話了。</p>
+
+<p>P.S一篇文章我竟然要打快兩個月，真佩服那些有辦法每天都有產出的人</p>
+]]></content>
+  </entry>
+  
+</feed>
