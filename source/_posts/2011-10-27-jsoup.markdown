@@ -3,7 +3,7 @@ layout: post
 title: "好用的HTML Parser-jsoup"
 date: 2011-10-27 08:47
 comments: true
-categories: Java,Scala
+categories: [Java,Scala]
 ---
 
 #What is jsoup#
@@ -105,7 +105,8 @@ P.S我所使用的語言是Scala，但是我會盡量不要用Scala的<del>奇�
 
     UID       : 933315
     Title     : OnePiece海賊王 第521話
-    LastPost  : 2011-10-30 03:13 PM
+    Author    : likesea
+    Link      : http://.............
 
 ###程式的介面###
 
@@ -181,19 +182,42 @@ def parsePost(post:Element):EnvyPost={
 }
 {%endcodeblock%}
 
-Link跟Title其實是一起取得的，它們可以從id為thread_xxxxxx的span tag中取得。
+文章Id的取得是透過tbody本身的id屬性，他的格式是normalthread_xxxxxx，後面的xxxxxx就是此篇文章的id，
 {%codeblock lang:scala%}
-def parsePost(post:Element):EnvyPost={
-    val id 
-    val (title,link) = parsePost_IdAndTitle(post)
-    
-}
+def parsePost(post:Element)={
+    val id = post.attr("id").replace("normalthread_","")
+    val (title,link) = parserPost_TitleAndLink(id,post)
+    val author = parserPost_Author(post)
 
-private def parsePost_IdAndTitle(post:Element)={
-    val titleElement = post.select("span")
-    val id = titleElement.attr("id").replace("thread_","")
+    new EnvyPost(id,title,author,link)
 }
 {%endcodeblock%}
+
+Link跟Title其實是一起取得的，它們可以從id為thread_xxxxxx的span tag中取得。
+{%codeblock lang:scala%}
+def parserPost_TitleAndLink(id:String,post:Element)={
+    val element = post.select("span#thread_"+id).first
+    (element.text,element.select("a").first.attr("href"))
+}
+{%endcodeblock%}
+
+Author的名字則在class為author的td tag內cite中因此取的時候使用
+
+    tag1 tag2
+
+的語法，這代表搜尋tag1底下所有的tag2
+
+{%codeblock lang:scala%}
+def parserPost_Author(post:Element)={
+    post.select("td.author cite").first.text
+}
+{%endcodeblock%}
+
+打完收工，這樣的短短的程式碼就把一個網站都分析完了，真的太棒了 QQ 
+以前要分析一個網站超血淚的，真的感謝Open Source的眾多好心人，願意分享他們的成果與程式碼。
+當然後續還有換頁讀取或者是比對之前的內容看是否有更新之類的工作，但是這都是後話了。
+
+P.S一篇文章我竟然要打快兩個月，真佩服那些有辦法每天都有產出的人
 
 [1]:http://jsoup.org/
 [2]:http://jsoup.org/cookbook/

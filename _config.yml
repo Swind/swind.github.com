@@ -3,11 +3,11 @@
 # ----------------------- #
 
 url: http://Swind.github.com
-title: 長草的筆記本
-subtitle: 前一本筆記本的草已經長得這麼長了 Orz 
+title: Corleonis
+subtitle: I am Swind
 author: Swind
 simple_search: http://google.com/search
-description:
+description: 
 
 # Default date format is "ordinal" (resulting in "July 22nd 2007")
 # You can customize the format as defined in
@@ -45,7 +45,7 @@ titlecase: true       # Converts page and post titles to tilecase
 
 # list each of the sidebar modules you want to include, in the order you want them to appear.
 # To add custom asides, create files in /source/_includes/custom/asides/ and add them to the list like 'custom/asides/custom_aside_name.html'
-default_asides: [asides/recent_posts.html, asides/github.html, asides/twitter.html, asides/delicious.html, asides/pinboard.html, asides/googleplus.html]
+default_asides: [asides/recent_posts.html, asides/github.html, asides/twitter.html, asides/delicious.html, asides/pinboard.html, custom/asides/tag_cloud.html]
 
 # Each layout uses the default asides, but they can have their own asides instead. Simply uncomment the lines below
 # and add an array with the asides you want to use.
@@ -90,7 +90,7 @@ delicious_count: 3
 
 # Disqus Comments
 disqus_short_name: swindgithub
-disqus_show_comment_count: false
+disqus_show_comment_count: true 
 
 # Google Analytics
 google_analytics_tracking_id: UA-15910682-2
