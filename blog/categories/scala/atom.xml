@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Scala | Corleonis]]></title>
   <link href="http://Swind.github.com/blog/categories/scala/atom.xml" rel="self"/>
   <link href="http://Swind.github.com/"/>
-  <updated>2012-02-07T15:43:09+08:00</updated>
+  <updated>2012-03-12T23:44:07+08:00</updated>
   <id>http://Swind.github.com/</id>
   <author>
     <name><![CDATA[Swind]]></name>
@@ -191,6 +191,14 @@ set(String attribute,Object value)
 <h1>放棄activejdbc</h1>
 
 <p>他還有一個instrumentation的步驟，這個步驟我覺得影響太多了，不適合拿來跟Scala一起合用。</p>
+
+<hr />
+
+<h1>Squeryl</h1>
+
+<hr />
+
+<p>Squeryl是最常被拿來與</p>
 ]]></content>
   </entry>
   
