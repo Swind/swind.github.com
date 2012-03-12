@@ -130,7 +130,13 @@ P.S 幹悲劇了，由於activejdbc裡面的Model的set有三種傳值方式。
 #放棄activejdbc#
 他還有一個instrumentation的步驟，這個步驟我覺得影響太多了，不適合拿來跟Scala一起合用。
 
+---
 
+#Squeryl#
+
+---
+
+Squeryl是最常被拿來與
 
 [Circumflex]:http://circumflex.ru/
 [activejdbc]:http://code.google.com/p/activejdbc/
