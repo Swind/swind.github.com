@@ -4,7 +4,7 @@
   <title><![CDATA[Corleonis]]></title>
   <link href="http://Swind.github.com/atom.xml" rel="self"/>
   <link href="http://Swind.github.com/"/>
-  <updated>2012-03-12T23:58:40+08:00</updated>
+  <updated>2012-05-10T22:11:18+08:00</updated>
   <id>http://Swind.github.com/</id>
   <author>
     <name><![CDATA[Swind]]></name>
@@ -43,44 +43,14 @@ c3p0-0.9.1.1.jar
 
 <p>Circumflex的設計，主要是在是產生一個對應的資料物件，例如</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">Country</span> <span class="k">extends</span> <span class="nc">Record</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Country</span><span class="o">]</span> <span class="o">{</span>
-</span><span class='line'>  <span class="k">val</span> <span class="n">code</span> <span class="k">=</span> <span class="s">&quot;code&quot;</span><span class="o">.</span><span class="nc">VARCHAR</span><span class="o">(</span><span class="mi">2</span><span class="o">).</span><span class="nc">NOT_NULL</span><span class="o">.</span><span class="nc">DEFAULT</span><span class="o">(</span><span class="s">&quot;&#39;ch&#39;&quot;</span><span class="o">)</span>
-</span><span class='line'>  <span class="k">val</span> <span class="n">name</span> <span class="k">=</span> <span class="s">&quot;name&quot;</span><span class="o">.</span><span class="nc">TEXT</span><span class="o">.</span><span class="nc">NOT_NULL</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="n">cities</span> <span class="k">=</span> <span class="n">inverseMany</span><span class="o">(</span><span class="nc">City</span><span class="o">.</span><span class="n">country</span><span class="o">)</span>
-</span><span class='line'>  <span class="k">def</span> <span class="n">relation</span> <span class="k">=</span> <span class="nc">Country</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nc">PRIMARY_KEY</span> <span class="k">=</span> <span class="n">code</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">object</span> <span class="nc">Country</span> <span class="k">extends</span> <span class="nc">Country</span> <span class="k">with</span> <span class="nc">Table</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Country</span><span class="o">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<p>Liquid error: undefined method `Py_IsInitialized&#8217; for RubyPython::Python:Module</p>
 
 <p>其中class與object兩者皆為必要的，但是在object Country的繼承型態宣告，連續繼承了Country與Table。
 我覺得這部分會讓人有點困惑為何需要如此處理，但是這還是其次的。</p>
 
 <p>在建立好資料物件之後，就可以利用此資料物件Create Table。</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'>    <span class="k">val</span> <span class="n">ddl</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">DDLUnit</span><span class="o">(</span><span class="nc">Country</span><span class="o">)</span>
-</span><span class='line'>    <span class="n">ddl</span><span class="o">.</span><span class="nc">CREATE</span>
-</span><span class='line'>    <span class="n">ddl</span><span class="o">.</span><span class="nc">DROP</span>
-</span><span class='line'>    <span class="n">ddl</span><span class="o">.</span><span class="nc">DROP_CREATE</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<p>Liquid error: undefined method `Py_IsInitialized&#8217; for RubyPython::Python:Module</p>
 
 <p>建立Table的部分非常方便。</p>
 
@@ -89,22 +59,7 @@ c3p0-0.9.1.1.jar
 <p>關聯式資料庫的架構非常常見，不管是One-to-One、One-to-Many等結構，我的小程式也很需要這方面功能的支持。
 Circumflex的設定方式是將變數宣告成inverseMany或inverseOne的型態，他目前沒有支援Many-to-Many。</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">City</span> <span class="k">extends</span> <span class="nc">Record</span><span class="o">[</span><span class="kt">Long</span>, <span class="kt">City</span><span class="o">]</span> <span class="o">{</span>
-</span><span class='line'>  <span class="k">val</span> <span class="n">country</span> <span class="k">=</span> <span class="s">&quot;country_code&quot;</span><span class="o">.</span><span class="nc">TEXT</span><span class="o">.</span><span class="nc">REFERENCES</span><span class="o">(</span><span class="nc">Country</span><span class="o">).</span><span class="nc">ON_DELETE</span><span class="o">(</span><span class="nc">CASCADE</span><span class="o">).</span><span class="nc">ON_UPDATE</span><span class="o">(</span><span class="nc">NO_ACTION</span><span class="o">)</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">Country</span> <span class="k">extends</span> <span class="nc">Record</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Country</span><span class="o">]</span> <span class="o">{</span>
-</span><span class='line'>  <span class="k">def</span> <span class="n">cities</span> <span class="k">=</span> <span class="n">inverseMany</span><span class="o">(</span><span class="nc">City</span><span class="o">.</span><span class="n">country</span><span class="o">)</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<p>Liquid error: undefined method `Py_IsInitialized&#8217; for RubyPython::Python:Module</p>
 
 <p>inverseMany會回傳一個inverseMany的物件，呼叫inverseMany.get之後可以得到一個seq的物件。這個物件是immutable的
 ，因此你沒有辦法插入資料。所以我想像中的使用方式是Country與City兩個都是各自去儲存的，
@@ -139,12 +94,7 @@ ehcache-core-2.4.5
 activejdbc會自動對應複數名詞的Table與單數名詞的Model。(不知道對於es之類的這種變化他是不是也可以處理)。
 當然如果有需要的話，也可以使用<strong>@Table</strong>來指定Table名稱。</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'>    <span class="nd">@Table</span><span class="o">(</span><span class="s">&quot;TABLE_NAME&quot;</span><span class="o">)</span>
-</span><span class='line'>    <span class="k">class</span> <span class="nc">employe</span> <span class="k">extends</span> <span class="nc">Model</span><span class="o">{}</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<p>Liquid error: undefined method `Py_IsInitialized&#8217; for RubyPython::Python:Module</p>
 
 <p>P.S 幹悲劇了，由於activejdbc裡面的Model的set有三種傳值方式。</p>
 
@@ -175,14 +125,6 @@ set(String attribute,Object value)
 <h1>放棄activejdbc</h1>
 
 <p>他還有一個instrumentation的步驟，這個步驟我覺得影響太多了，不適合拿來跟Scala一起合用。</p>
-
-<hr />
-
-<h1>Squeryl</h1>
-
-<hr />
-
-<p>Squeryl是最常被拿來與</p>
 ]]></content>
   </entry>
   
@@ -204,56 +146,12 @@ set(String attribute,Object value)
 設定檔一直是讓我懶得使用Log工具的地方，好在網路上真的很多好心人，在<a href="http://werdna1222coldcodes.blogspot.com/2011/10/logback-log4j.html">符號記憶-Logback,Log4j設定檔自動產生器</a>有介紹了<a href="http://wizardforge.org/pc?action=displayFlowchartVersionPublic&amp;id=42">協助產生設定檔的網站</a>
 可以讓設定的工作減少很多。下面是我隨便產生的一個範例</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;configuration</span> <span class="na">debug=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;appender</span> <span class="na">name=</span><span class="s">&quot;RootConsoleAppender&quot;</span> <span class="na">class=</span><span class="s">&quot;ch.qos.logback.core.ConsoleAppender&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;filter</span> <span class="na">class=</span><span class="s">&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;level&gt;</span>debug<span class="nt">&lt;/level&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/filter&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;layout</span> <span class="na">class=</span><span class="s">&quot;ch.qos.logback.classic.PatternLayout&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'>      <span class="nt">&lt;pattern&gt;</span>%d{yyyy-MM-dd HH:mm:ss}, %p, %t, %L, %C{1}, %M %m%n<span class="nt">&lt;/pattern&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/layout&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;/appender&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;root&gt;&lt;level</span> <span class="na">value=</span><span class="s">&quot;debug&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>     <span class="nt">&lt;appender-ref</span> <span class="na">ref=</span><span class="s">&quot;RootConsoleAppender&quot;</span><span class="nt">/&gt;</span>
-</span><span class='line'>   <span class="nt">&lt;/root&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="nt">&lt;/configuration&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<p>Liquid error: No such file or directory - python -c &#8220;import sys; print sys.executable&#8221;</p>
 
 <p>之後我還有多使用<a href="https://github.com/weiglewilczek/slf4s">slf4s</a>來讓slf4j的使用更有Scala的味道，不過其實也就只是多了一個trait讓你的scala class可以直接繼承，讓你省下一些麻煩
 例如：</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">MyClazz</span> <span class="k">with</span> <span class="nc">Logging</span>
-</span><span class='line'><span class="o">{</span>
-</span><span class='line'>    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="o">(</span><span class="s">&quot;Creator&quot;</span><span class="o">)</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<p>Liquid error: undefined method `Py_IsInitialized&#8217; for RubyPython::Python:Module</p>
 
 <p>最後是額外找到的<a href="http://www.ac.net.blog.163.com/blog/static/1364905620111023304126/">打一句log時間不到一納秒！完爆log4j、logback、slf4j</a>，但是我沒有用因為還沒有效能上的需求，不過我有稍微看一下程式碼，加上下面留言者給的提示。
 在使用logger印出訊息之前，先進行logger.isTraceEnabled、logger.isDebugEnable等的判斷，就可以在編譯的時候進行最佳化。</p>
