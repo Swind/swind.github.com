@@ -9,7 +9,8 @@
   <meta name="author" content="Swind">
 
   
-  <meta name="description" content="在Ubuntu上面實在是有夠難安裝的 目前使用的環境是在Ubuntu上面，並且使用rvm安裝Ruby 1.9.2與Gem。但是就是那個但是這樣安裝的Ruby其實是不能用的，還需要用rvm安裝zlib與openssl才能使用。 安裝方法可以參考 How to Install Octopress on &hellip;">
+  <meta name="description" content="2012.05.21 更新這次好像真的解決在 Win7 上面的問題了 其實在 Windows 上面使用 Octopress 沒有什麼特別大的問題，注意文章的編碼就好。
+但是有一點一直非常困擾著我的就是， Codeblock 的問題。由於 rake generator 所提供的錯誤訊息非常的少， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -127,21 +128,33 @@
   </header>
 
 
-<div class="entry-content"><h2>在Ubuntu上面實在是有夠難安裝的</h2>
+<div class="entry-content"><h2>2012.05.21 更新這次好像真的解決在 Win7 上面的問題了</h2>
+
+<p>其實在 Windows 上面使用 Octopress 沒有什麼特別大的問題，注意文章的編碼就好。
+但是有一點一直非常困擾著我的就是， Codeblock 的問題。由於 rake generator 所提供的錯誤訊息非常的少，所以很難找出錯誤。
+最常在網頁上面看到的就是這個</p>
+
+<pre><code>  Liquid error: undefined method `Py_IsInitialized’ for RubyPython::Python:Module
+</code></pre>
+
+<p>一直到我今天無意間搜尋到這篇文章 (話說 Octopress 的安裝教學文真的越來越多了)
+<a href="http://hivan.me/octopress-install-to-windows8/">Windows 8 安裝 Octopress 紀錄</a>他真的找出問題了，原因就在於！ <strong>Python 請安裝 32-bit 的版本</strong>。
+真的這樣就讓 Codeblock 可以正常運作了 T_T
+真的是太讓人心酸了。</p>
+
+<h2>在Ubuntu上面實在是有夠難安裝的</h2>
 
 <hr />
 
-<p>目前使用的環境是在Ubuntu上面，並且使用rvm安裝Ruby 1.9.2與Gem。但是就是那個但是這樣安裝的Ruby其實是不能用的，還需要用rvm安裝zlib與openssl才能使用。</p>
-
-<p>安裝方法可以參考 <a href="http://www.distancetohere.com/how-to-deploy-jekyll-slash-octopress-to-heroku/">How to Install Octopress on Ubuntu 11.04 and Deploy on GitHub</a>，若前面這個網站有不清楚的部分或者想要找指令來源的可以到<a href="http://beginrescueend.com/">RVM</a>的網站查詢。</p>
+<p>目前使用的環境是在Ubuntu上面，並且使用rvm安裝Ruby 1.9.2與Gem。但是就是那個但是這樣安裝的Ruby其實是不能用的，還需要用rvm安裝zlib與openssl才能使用。
+安裝方法可以參考 <a href="http://www.distancetohere.com/how-to-deploy-jekyll-slash-octopress-to-heroku/">How to Install Octopress on Ubuntu 11.04 and Deploy on GitHub</a>，若前面這個網站有不清楚的部分或者想要找指令來源的可以到<a href="http://beginrescueend.com/">RVM</a>的網站查詢。</p>
 
 <h2>在Windows上面也沒有好裝多少，但是我好像成功了</h2>
 
 <hr />
 
-<p>Windows上面沒有好用的RVM可以用，而且Ruby安裝包比較不一樣，叫做<a href="http://rubyinstaller.org/">RubyInstaller</a>。RubyInstaller的安裝方式蠻簡單的，就一直下一步就可以了。</p>
-
-<p>安裝完畢之後你會發現RubyInstaller連gem都幫你安裝好了(Linux我都用RVM裝，所以我不知道gem是不是安裝Ruby一定會有的)，但是這個版本的gem有點舊，所以需要下指令升級一下。</p>
+<p>Windows上面沒有好用的RVM可以用，而且Ruby安裝包比較不一樣，叫做<a href="http://rubyinstaller.org/">RubyInstaller</a>。RubyInstaller的安裝方式蠻簡單的，就一直下一步就可以了。
+安裝完畢之後你會發現RubyInstaller連gem都幫你安裝好了(Linux我都用RVM裝，所以我不知道gem是不是安裝Ruby一定會有的)，但是這個版本的gem有點舊，所以需要下指令升級一下。</p>
 
 <pre><code>gem update --system
 </code></pre>

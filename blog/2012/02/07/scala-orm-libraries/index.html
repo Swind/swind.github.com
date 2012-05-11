@@ -151,37 +151,67 @@ c3p0-0.9.1.1.jar
 
 <p>Circumflex全部載入約2.3MB左右，比其他LightWeight的Library要大的很多。</p>
 
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">EnvyPost</span><span class="o">{</span>
+</span><span class='line'>    <span class="k">val</span> <span class="nc">UID</span><span class="k">:</span><span class="kt">Integer</span>
+</span><span class='line'>    <span class="k">val</span> <span class="n">title</span><span class="k">:</span><span class="kt">String</span>
+</span><span class='line'>    <span class="k">val</span> <span class="n">lastPostTime</span><span class="k">:</span><span class="kt">Date</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">def</span> <span class="n">parse</span><span class="o">(</span><span class="n">url</span><span class="k">:</span><span class="kt">String</span><span class="o">)</span><span class="k">:</span><span class="kt">List</span><span class="o">[</span><span class="kt">EnvyPost</span><span class="o">]={}</span>
+</span><span class='line'><span class="k">def</span> <span class="n">parse</span><span class="o">(</span><span class="n">file</span><span class="k">:</span><span class="kt">File</span><span class="o">)</span><span class="k">:</span><span class="kt">List</span><span class="o">[</span><span class="kt">EnvyPost</span><span class="o">]={}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
 <h2>Create Table</h2>
 
 <p>Circumflex的設計，主要是在是產生一個對應的資料物件，例如</p>
 
-<p>{%codeblock lang:scala%}
-class Country extends Record[String, Country] {
-  val code = &#8220;code&#8221;.VARCHAR(2).NOT_NULL.DEFAULT(&#8220;&#8216;ch&#8217;&#8221;)
-  val name = &#8220;name&#8221;.TEXT.NOT_NULL</p>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">Country</span> <span class="k">extends</span> <span class="nc">Record</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Country</span><span class="o">]</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">val</span> <span class="n">code</span> <span class="k">=</span> <span class="s">&quot;code&quot;</span><span class="o">.</span><span class="nc">VARCHAR</span><span class="o">(</span><span class="mi">2</span><span class="o">).</span><span class="nc">NOT_NULL</span><span class="o">.</span><span class="nc">DEFAULT</span><span class="o">(</span><span class="s">&quot;&#39;ch&#39;&quot;</span><span class="o">)</span>
+</span><span class='line'>  <span class="k">val</span> <span class="n">name</span> <span class="k">=</span> <span class="s">&quot;name&quot;</span><span class="o">.</span><span class="nc">TEXT</span><span class="o">.</span><span class="nc">NOT_NULL</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">def</span> <span class="n">cities</span> <span class="k">=</span> <span class="n">inverseMany</span><span class="o">(</span><span class="nc">City</span><span class="o">.</span><span class="n">country</span><span class="o">)</span>
+</span><span class='line'>  <span class="k">def</span> <span class="n">relation</span> <span class="k">=</span> <span class="nc">Country</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nc">PRIMARY_KEY</span> <span class="k">=</span> <span class="n">code</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">object</span> <span class="nc">Country</span> <span class="k">extends</span> <span class="nc">Country</span> <span class="k">with</span> <span class="nc">Table</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Country</span><span class="o">]</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p>  def cities = inverseMany(City.country)
-  def relation = Country
-  def PRIMARY_KEY = code
-}</p>
-
-<p>object Country extends Country with Table[String, Country]
-{%endcodeblock%}</p>
 
 <p>其中class與object兩者皆為必要的，但是在object Country的繼承型態宣告，連續繼承了Country與Table。
 我覺得這部分會讓人有點困惑為何需要如此處理，但是這還是其次的。</p>
 
 <p>在建立好資料物件之後，就可以利用此資料物件Create Table。</p>
 
-<p>{%codeblock lang:scala%}</p>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'>    <span class="k">val</span> <span class="n">ddl</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">DDLUnit</span><span class="o">(</span><span class="nc">Country</span><span class="o">)</span>
+</span><span class='line'>    <span class="n">ddl</span><span class="o">.</span><span class="nc">CREATE</span>
+</span><span class='line'>    <span class="n">ddl</span><span class="o">.</span><span class="nc">DROP</span>
+</span><span class='line'>    <span class="n">ddl</span><span class="o">.</span><span class="nc">DROP_CREATE</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<pre><code>val ddl = new DDLUnit(Country)
-ddl.CREATE
-ddl.DROP
-ddl.DROP_CREATE
-</code></pre>
-
-<p>{%endcodeblock%}</p>
 
 <p>建立Table的部分非常方便。</p>
 
@@ -190,15 +220,22 @@ ddl.DROP_CREATE
 <p>關聯式資料庫的架構非常常見，不管是One-to-One、One-to-Many等結構，我的小程式也很需要這方面功能的支持。
 Circumflex的設定方式是將變數宣告成inverseMany或inverseOne的型態，他目前沒有支援Many-to-Many。</p>
 
-<p>{%codeblock lang:scala%}
-class City extends Record[Long, City] {
-  val country = &#8220;country_code&#8221;.TEXT.REFERENCES(Country).ON_DELETE(CASCADE).ON_UPDATE(NO_ACTION)
-}</p>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">City</span> <span class="k">extends</span> <span class="nc">Record</span><span class="o">[</span><span class="kt">Long</span>, <span class="kt">City</span><span class="o">]</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">val</span> <span class="n">country</span> <span class="k">=</span> <span class="s">&quot;country_code&quot;</span><span class="o">.</span><span class="nc">TEXT</span><span class="o">.</span><span class="nc">REFERENCES</span><span class="o">(</span><span class="nc">Country</span><span class="o">).</span><span class="nc">ON_DELETE</span><span class="o">(</span><span class="nc">CASCADE</span><span class="o">).</span><span class="nc">ON_UPDATE</span><span class="o">(</span><span class="nc">NO_ACTION</span><span class="o">)</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">Country</span> <span class="k">extends</span> <span class="nc">Record</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Country</span><span class="o">]</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">def</span> <span class="n">cities</span> <span class="k">=</span> <span class="n">inverseMany</span><span class="o">(</span><span class="nc">City</span><span class="o">.</span><span class="n">country</span><span class="o">)</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p>class Country extends Record[String, Country] {
-  def cities = inverseMany(City.country)
-}
-{%endcodeblock%}</p>
 
 <p>inverseMany會回傳一個inverseMany的物件，呼叫inverseMany.get之後可以得到一個seq的物件。這個物件是immutable的
 ，因此你沒有辦法插入資料。所以我想像中的使用方式是Country與City兩個都是各自去儲存的，
@@ -233,13 +270,12 @@ ehcache-core-2.4.5
 activejdbc會自動對應複數名詞的Table與單數名詞的Model。(不知道對於es之類的這種變化他是不是也可以處理)。
 當然如果有需要的話，也可以使用<strong>@Table</strong>來指定Table名稱。</p>
 
-<p>{%codeblock lang:scala%}</p>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'>    <span class="nd">@Table</span><span class="o">(</span><span class="s">&quot;TABLE_NAME&quot;</span><span class="o">)</span>
+</span><span class='line'>    <span class="k">class</span> <span class="nc">employe</span> <span class="k">extends</span> <span class="nc">Model</span><span class="o">{}</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<pre><code>@Table("TABLE_NAME")
-class employe extends Model{}
-</code></pre>
-
-<p>{%endcodeblock%}</p>
 
 <p>P.S 幹悲劇了，由於activejdbc裡面的Model的set有三種傳值方式。</p>
 
