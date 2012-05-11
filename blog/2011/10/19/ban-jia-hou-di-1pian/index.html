@@ -134,8 +134,9 @@
 但是有一點一直非常困擾著我的就是， Codeblock 的問題。由於 rake generator 所提供的錯誤訊息非常的少，所以很難找出錯誤。
 最常在網頁上面看到的就是這個</p>
 
-<pre><code>  Liquid error: undefined method `Py_IsInitialized’ for RubyPython::Python:Module
-</code></pre>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Liquid error: undefined method `Py_IsInitialized’ for RubyPython::Python:Module</span></code></pre></td></tr></table></div></figure>
+
 
 <p>一直到我今天無意間搜尋到這篇文章 (話說 Octopress 的安裝教學文真的越來越多了)
 <a href="http://hivan.me/octopress-install-to-windows8/">Windows 8 安裝 Octopress 紀錄</a>他真的找出問題了，原因就在於！ <strong>Python 請安裝 32-bit 的版本</strong>。
