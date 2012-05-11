@@ -9,8 +9,8 @@
   <meta name="author" content="Swind">
 
   
-  <meta name="description" content="其實標題是騙人的，這其實是Scala Curry的筆記 不過我很怕走在路上被蓋布袋 QQ 所以我還是先給小工具的載點好了。
-EPUBConverter 0.0.1 這個版號我覺得也沒有機會到 0.0.2 了，不過還是讓我命名個版號滿足小小的虛榮心好了。 不負責任的使用教學 &hellip;">
+  <meta name="description" content="EPUBConverter 0.0.1 這個版號我覺得也沒有機會到 0.0.2 了，不過還是讓我命名個版號滿足小小的虛榮心好了。 不負責任的使用教學 這只是一個非常簡單的小工具，用 Scala 撰寫而成，因此執行環境需要使用 JVM。
+我只有測試過 JDK 7 的環境，理論上 JDK 6 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -128,10 +128,7 @@ EPUBConverter 0.0.1 這個版號我覺得也沒有機會到 0.0.2 了，不過�
   </header>
 
 
-<div class="entry-content"><h1>其實標題是騙人的，這其實是Scala Curry的筆記</h1>
-
-<p>不過我很怕走在路上被蓋布袋 QQ 所以我還是先給小工具的載點好了。
-<a href="https://github.com/Swind/EPUBConverter/downloads">EPUBConverter 0.0.1</a> 這個版號我覺得也沒有機會到 0.0.2 了，不過還是讓我命名個版號滿足小小的虛榮心好了。</p>
+<div class="entry-content"><p><a href="https://github.com/Swind/EPUBConverter/downloads">EPUBConverter 0.0.1</a> 這個版號我覺得也沒有機會到 0.0.2 了，不過還是讓我命名個版號滿足小小的虛榮心好了。</p>
 
 <h2>不負責任的使用教學</h2>
 
@@ -169,51 +166,6 @@ EPUBConverter 0.0.1 這個版號我覺得也沒有機會到 0.0.2 了，不過�
 
 <p>hcutf8.txt 是個對應表，他列出了簡體字跟繁體字的對應。所以如果想自行更改轉換字的話，可以修改這個檔案（應該可以）。
 要使用只要執行 Converter.bat 就會自動將 Source 資料夾底下 <strong> 所有 </strong> 的檔案，轉換到 Result 資料夾底下，就這樣而已了。</p>
-
-<h1>好吧，我要開始筆記一下這次的實作心得了</h1>
-
-<p>其實在學 Scala 的這一段時間中，我最困擾的就是到底怎樣才是好的 Scala 寫作風格。
-因為 Scala 最吸引我的部份就是在於他的語法可以不斷的精鍊再精鍊，最後變成<strong>魔法文字</strong> Orz。
-所以要怎樣善用 Scala 的語言特性，卻又不失可讀性，我覺得真的很難。
-所以這次的小工具，我主要是要熟悉 Curry 的用法。</p>
-
-<h2>Curry</h2>
-
-<p>說到教學文件，就一定要推一下 <a href="http://caterpillar.onlyfun.net/Gossip/Scala/index.html">良葛格的學習筆記</a> 裡面他有提到 <a href="http://caterpillar.onlyfun.net/Gossip/Scala/Curry.html">Curry</a> 的語法與何謂 Curry 。
-但是我比較喜歡忘記在看到的 Curry 解釋</p>
-
-<p>Curry 可以想成以前數學的多項式，舉例來說現在有一個多項式</p>
-
-<pre><code>  F(X,Y) = X + Y
-</code></pre>
-
-<p>那麼 Curry 的感覺就是我現在已知 X 為 10 之類的，然後將其代入，所以上面的多項式又變成另外一個多項式</p>
-
-<pre><code>  F(Y) = 10 + Y
-</code></pre>
-
-<p>如果將這段用 Scala 來表示就是</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="c1">// 這是 F(X,Y)</span>
-</span><span class='line'><span class="k">def</span> <span class="n">F</span><span class="o">(</span><span class="n">X</span><span class="k">:</span><span class="kt">Int</span><span class="o">)(</span><span class="n">Y</span><span class="k">:</span><span class="kt">Int</span><span class="o">)={</span>
-</span><span class='line'>   <span class="n">X</span> <span class="o">+</span> <span class="n">Y</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// 帶入 X = 10</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">val</span> <span class="n">F1</span> <span class="k">=</span> <span class="n">F</span><span class="o">(</span><span class="mi">10</span><span class="o">)</span><span class="k">_</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
 </div>
 
 
