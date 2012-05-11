@@ -141,12 +141,32 @@
 設定檔一直是讓我懶得使用Log工具的地方，好在網路上真的很多好心人，在<a href="http://werdna1222coldcodes.blogspot.com/2011/10/logback-log4j.html">符號記憶-Logback,Log4j設定檔自動產生器</a>有介紹了<a href="http://wizardforge.org/pc?action=displayFlowchartVersionPublic&amp;id=42">協助產生設定檔的網站</a>
 可以讓設定的工作減少很多。下面是我隨便產生的一個範例</p>
 
-<p>Liquid error: No such file or directory - python -c &#8220;import sys; print sys.executable&#8221;</p>
+<pre><code>  &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+  &lt;configuration debug="true"&gt;
+    &lt;appender name="RootConsoleAppender" class="ch.qos.logback.core.ConsoleAppender"&gt;
+      &lt;filter class="ch.qos.logback.classic.filter.ThresholdFilter"&gt;
+        &lt;level&gt;debug&lt;/level&gt;
+      &lt;/filter&gt;
+      &lt;layout class="ch.qos.logback.classic.PatternLayout"&gt;
+        &lt;pattern&gt;%d{yyyy-MM-dd HH:mm:ss}, %p, %t, %L, %C{1}, %M %m%n&lt;/pattern&gt;
+      &lt;/layout&gt;
+    &lt;/appender&gt;
+
+     &lt;root&gt;
+        &lt;level value="debug"/&gt;
+        &lt;appender-ref ref="RootConsoleAppender"/&gt;
+     &lt;/root&gt;
+  &lt;/configuration&gt;
+</code></pre>
 
 <p>之後我還有多使用<a href="https://github.com/weiglewilczek/slf4s">slf4s</a>來讓slf4j的使用更有Scala的味道，不過其實也就只是多了一個trait讓你的scala class可以直接繼承，讓你省下一些麻煩
 例如：</p>
 
-<p>Liquid error: undefined method `Py_IsInitialized&#8217; for RubyPython::Python:Module</p>
+<pre><code>  class MyClazz with Logging
+  {
+      logger.debug("Creator")
+  }
+</code></pre>
 
 <p>最後是額外找到的<a href="http://www.ac.net.blog.163.com/blog/static/1364905620111023304126/">打一句log時間不到一納秒！完爆log4j、logback、slf4j</a>，但是我沒有用因為還沒有效能上的需求，不過我有稍微看一下程式碼，加上下面留言者給的提示。
 在使用logger印出訊息之前，先進行logger.isTraceEnabled、logger.isDebugEnable等的判斷，就可以在編譯的時候進行最佳化。</p>
@@ -179,7 +199,7 @@
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/scala/'>Scala</a>
+    <a class='category' href='/blog/categories/java/'>Java</a>, <a class='category' href='/blog/categories/scala/'>Scala</a>
   
 </span>
 
@@ -247,7 +267,7 @@
 
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/java' style='font-size: 120.0%'>Java(1)</a> <a href='/blog/categories/octopress' style='font-size: 120.0%'>Octopress(1)</a> <a href='/blog/categories/scala' style='font-size: 160.0%'>Scala(3)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/java' style='font-size: 140.0%'>Java(2)</a> <a href='/blog/categories/octopress' style='font-size: 120.0%'>Octopress(1)</a> <a href='/blog/categories/scala' style='font-size: 160.0%'>Scala(3)</a> </span>
 </section>
 
   
