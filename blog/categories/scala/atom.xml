@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Scala | Corleonis]]></title>
   <link href="http://Swind.github.com/blog/categories/scala/atom.xml" rel="self"/>
   <link href="http://Swind.github.com/"/>
-  <updated>2012-05-11T17:56:38+08:00</updated>
+  <updated>2012-05-15T23:15:29+08:00</updated>
   <id>http://Swind.github.com/</id>
   <author>
     <name><![CDATA[Swind]]></name>
@@ -14,19 +14,252 @@
 
   
   <entry>
+    <title type="html"><![CDATA[實作 EPUBConverter 的筆記]]></title>
+    <link href="http://Swind.github.com/blog/2012/05/11/epubconverter-implement-note/"/>
+    <updated>2012-05-11T18:19:00+08:00</updated>
+    <id>http://Swind.github.com/blog/2012/05/11/epubconverter-implement-note</id>
+    <content type="html"><![CDATA[<h1>好吧，我要開始筆記一下這次的實作心得了</h1>
+
+<p>其實在學 Scala 的這一段時間中，我最困擾的就是到底怎樣才是好的 Scala 寫作風格。
+因為 Scala 最吸引我的部份就是在於他的語法可以不斷的精鍊再精鍊，最後變成<strong>魔法文字</strong> Orz。
+所以要怎樣善用 Scala 的語言特性，卻又不失可讀性，我覺得真的很難。
+因此在這次的小工具實作中，我試著摸索 Curry 的用法。</p>
+
+<h2>Curry</h2>
+
+<p>說到教學文件，就一定要推一下 <a href="http://caterpillar.onlyfun.net/Gossip/Scala/index.html">良葛格的學習筆記</a> 裡面他有提到 <a href="http://caterpillar.onlyfun.net/Gossip/Scala/Curry.html">Curry</a> 的語法與何謂 Curry 。
+但是我更喜歡在 jserv's blog <a href="http://blog.linux.org.tw/~jserv/archives/002029.html">以 C 語言實做 Functional Language 的 Currying</a> 看到的說明。</p>
+
+<p>Curry 可以看成數學的多項式，舉例來說現在有一個多項式</p>
+
+<pre><code>  F(X,Y) = X + Y
+</code></pre>
+
+<p>那麼 Curry 的感覺就是我現在已知 X 為 10 之類的，然後將其代入，所以上面的多項式又變成另外一個多項式</p>
+
+<pre><code>  F(Y) = 10 + Y
+</code></pre>
+
+<p>如果將這段用 Scala 來表示就是</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="c1">// 這是 F(X,Y)</span>
+</span><span class='line'><span class="k">def</span> <span class="n">F</span><span class="o">(</span><span class="n">X</span><span class="k">:</span><span class="kt">Int</span><span class="o">)(</span><span class="n">Y</span><span class="k">:</span><span class="kt">Int</span><span class="o">)={</span>
+</span><span class='line'>   <span class="n">X</span> <span class="o">+</span> <span class="n">Y</span>
+</span><span class='line'><span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;//</span> <span class="n">帶入</span> <span class="n">X</span> <span class="k">=</span> <span class="mi">10</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">val</span> <span class="n">F1</span> <span class="k">=</span> <span class="n">F</span><span class="o">(</span><span class="mi">10</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>Curry 的使用案例</h2>
+
+<p>使用案例聽起來就像是命案現場一樣 Orz。
+在 jserv 的文章有提到一個 Ruby 目錄樹尋訪的範例，剛好我在這次有實作類似的東西，但是功力不足沒有辦法寫的像 Ruby 那麼優雅。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">walkDir</span><span class="o">(</span><span class="n">fileList</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">File</span><span class="o">]</span> <span class="o">{})(</span><span class="n">expr</span><span class="k">:</span> <span class="o">(</span><span class="kt">File</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="nc">Unit</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">fileList</span> <span class="k">match</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">case</span> <span class="n">file</span> <span class="o">::</span> <span class="n">files</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="o">;</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">file</span><span class="o">.</span><span class="n">isDirectory</span><span class="o">)</span>
+</span><span class='line'>      <span class="n">walkDir</span><span class="o">(</span><span class="n">file</span><span class="o">.</span><span class="n">listFiles</span><span class="o">.</span><span class="n">toList</span> <span class="o">:::</span> <span class="n">files</span><span class="o">)(</span><span class="n">expr</span><span class="o">)</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>    <span class="o">{</span>
+</span><span class='line'>      <span class="n">expr</span><span class="o">(</span><span class="n">file</span><span class="o">)</span>
+</span><span class='line'>      <span class="n">walkDir</span><span class="o">(</span><span class="n">files</span><span class="o">)(</span><span class="n">expr</span><span class="o">)</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>  <span class="k">case</span> <span class="k">_</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>我想這樣寫最大的問題應該是會在</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'>   <span class="n">walkDir</span><span class="o">(</span><span class="n">file</span><span class="o">.</span><span class="n">listFiles</span><span class="o">.</span><span class="n">toList</span> <span class="o">:::</span> <span class="n">files</span><span class="o">)(</span><span class="n">expr</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>這邊每次都會產生一個新的 List ，這是優點也是缺點，效率我想可能會差了一點，但是我不在意，反正這個程式不是一秒幾十萬上下的東西。</p>
+
+<p>那麼這個東西可以怎麼用呢？</p>
+
+<p>例如要印出所有資料夾底下的檔案</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="n">walkDir</span><span class="o">(</span><span class="n">folder</span><span class="o">){</span><span class="n">println</span><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>刪除底下所有名稱包含 test 的檔案</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="n">walkDir</span><span class="o">(</span><span class="n">folder</span><span class="o">){</span>
+</span><span class='line'>   <span class="n">file</span><span class="o">=&gt;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>  <span class="k">if</span><span class="o">(</span><span class="n">file</span><span class="o">.</span><span class="n">getName</span><span class="o">.</span><span class="n">contains</span><span class="o">(</span><span class="s">&quot;test&quot;</span><span class="o">))</span>
+</span><span class='line'>     <span class="n">file</span><span class="o">.</span><span class="n">delete</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>我另外一個有使用的地方</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="nc">InputToOutput</span><span class="o">(</span><span class="n">buffer</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">Byte</span><span class="o">])(</span><span class="n">fis</span><span class="k">:</span> <span class="kt">InputStream</span><span class="o">,</span> <span class="n">fos</span><span class="k">:</span> <span class="kt">OutputStream</span><span class="o">)</span> <span class="k">=</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>   <span class="k">def</span> <span class="n">bufferReader</span><span class="o">(</span><span class="n">fis</span><span class="k">:</span> <span class="kt">InputStream</span><span class="o">)(</span><span class="n">buffer</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">Byte</span><span class="o">])</span> <span class="k">=</span> <span class="o">(</span><span class="n">fis</span><span class="o">.</span><span class="n">read</span><span class="o">(</span><span class="n">buffer</span><span class="o">),</span> <span class="n">buffer</span><span class="o">)&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>   <span class="k">def</span> <span class="n">writeToOutputStream</span><span class="o">(</span><span class="n">reader</span><span class="k">:</span> <span class="o">(</span><span class="kt">Array</span><span class="o">[</span><span class="kt">Byte</span><span class="o">])</span> <span class="k">=&gt;</span> <span class="nc">Tuple2</span><span class="o">[</span><span class="kt">Int</span>, <span class="kt">Array</span><span class="o">[</span><span class="kt">Byte</span><span class="o">]],</span> <span class="n">fos</span><span class="k">:</span> <span class="kt">OutputStream</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span> <span class="k">val</span> <span class="o">(</span><span class="n">length</span><span class="o">,</span> <span class="n">data</span><span class="o">)</span> <span class="k">=</span> <span class="n">reader</span><span class="o">(</span><span class="n">buffer</span><span class="o">)</span>
+</span><span class='line'> <span class="k">if</span> <span class="o">(</span><span class="n">length</span> <span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span><span class="k">=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>   <span class="n">fos</span><span class="o">.</span><span class="n">write</span><span class="o">(</span><span class="n">data</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">length</span><span class="o">)</span>
+</span><span class='line'>   <span class="n">writeToOutputStream</span><span class="o">(</span><span class="n">reader</span><span class="o">,</span> <span class="n">fos</span><span class="o">)</span>
+</span><span class='line'> <span class="o">}</span> <span class="k">else</span>
+</span><span class='line'>   <span class="kc">true</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>   <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>   <span class="n">writeToOutputStream</span><span class="o">(</span><span class="n">bufferReader</span><span class="o">(</span><span class="n">fis</span><span class="o">)</span><span class="k">_</span><span class="o">,</span> <span class="n">fos</span><span class="o">)&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span> <span class="o">(</span><span class="n">fis</span><span class="o">,</span> <span class="n">fos</span><span class="o">)</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>這個 function 主要負責將 InputStream 的資料寫到 OutputStream。
+第一個 Curry 是 InputToOutput 他讓我可以用 InputToOutput(buffer)_ 建立一個已經宣告好 buffer 的 IO 操作 function。
+這樣我就不用每次都還要找一個 buffer 才可以開始我的 IO 操作，反正 buffer 的內容讀完就可以丟了，不過這個沒有考慮 multiple thread 的情況就是。</p>
+
+<p>第二個 Curry 是讓 Read InputStream 的 function 跟傳進來的 InputStream 綁定，這單純只是想簡化之後的操作，讓我可以不用再考慮 InputStream 這個參數。
+反正我只要給一個 buffer 他就會自動讀進來，並且回傳讀取的大小與 buffer 本身。</p>
+
+<p>解壓縮的部份也用了類似的技巧</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">unzipAllFile</span><span class="o">(</span><span class="n">entryList</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">ZipEntry</span><span class="o">],</span> <span class="n">getInputStream</span><span class="k">:</span> <span class="o">(</span><span class="kt">ZipEntry</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="nc">InputStream</span><span class="o">,</span> <span class="n">targetFolder</span><span class="k">:</span> <span class="kt">File</span><span class="o">)</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">entryList</span> <span class="k">match</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">case</span> <span class="n">entry</span> <span class="o">::</span> <span class="n">entries</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">entry</span><span class="o">.</span><span class="n">isDirectory</span><span class="o">)</span>
+</span><span class='line'>      <span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="n">targetFolder</span><span class="o">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">getName</span><span class="o">).</span><span class="n">mkdirs</span>
+</span><span class='line'>    <span class="k">else</span>
+</span><span class='line'>    <span class="o">{</span>
+</span><span class='line'>      <span class="k">val</span> <span class="o">(</span><span class="n">input</span><span class="o">,</span><span class="n">output</span><span class="o">)</span> <span class="k">=</span> <span class="nc">InputToOutput</span><span class="o">(</span><span class="n">getInputStream</span><span class="o">(</span><span class="n">entry</span><span class="o">),</span> <span class="k">new</span> <span class="nc">FileOutputStream</span><span class="o">(</span><span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="n">targetFolder</span><span class="o">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">getName</span><span class="o">)))</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="n">input</span><span class="o">.</span><span class="n">close</span>
+</span><span class='line'>      <span class="n">output</span><span class="o">.</span><span class="n">close</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">unzipAllFile</span><span class="o">(</span><span class="n">entries</span><span class="o">,</span> <span class="n">getInputStream</span><span class="o">,</span> <span class="n">targetFolder</span><span class="o">)</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">case</span> <span class="k">_</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="o">;</span>
+</span><span class='line'>    <span class="kc">true</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>大概就這些了，總覺得程式還是寫的不夠多，這些 Code 應該可以寫的再更優雅一點才是。</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[EPUBConverter - epub格式簡轉繁小工具]]></title>
     <link href="http://Swind.github.com/blog/2012/05/11/epubconverter/"/>
     <updated>2012-05-11T16:56:00+08:00</updated>
     <id>http://Swind.github.com/blog/2012/05/11/epubconverter</id>
-    <content type="html"><![CDATA[<p><a href="https://github.com/Swind/EPUBConverter/downloads">EPUBConverter 0.0.1</a> 這個版號我覺得也沒有機會到 0.0.2 了，不過還是讓我命名個版號滿足小小的虛榮心好了。</p>
+    <content type="html"><![CDATA[<h1>下載點</h1>
 
-<h2>不負責任的使用教學</h2>
+<p><a href="https://github.com/Swind/EPUBConverter/downloads">EPUBConverter 0.0.1</a></p>
+
+<p>這個版號我覺得也沒有機會到 0.0.2 了，不過還是讓我命名個版號滿足小小的虛榮心好了。</p>
+
+<h1>不負責任的使用教學</h1>
 
 <p>這只是一個非常簡單的小工具，用 Scala 撰寫而成，因此執行環境需要使用 JVM。
 我只有測試過 JDK 7 的環境，理論上 JDK 6 應該也沒有問題。
 如果有人有測試到有問題的話（默...）我也不知道有沒有時間改 Orz。</p>
 
-<h3>轉換方式</h3>
+<h2>轉換方式</h2>
 
 <p>轉換方式感謝 <a href="http://jeremy.ssinrc.org/?p=327">六度數位空間 - 如何將 ePub 電子書繁體化 (簡體化)</a> 的分享。
 其實 epub 的格式是以 zip 格式壓縮，所以這個程式的執行流程是</p>
@@ -42,7 +275,7 @@
 
 <p>整個步驟就只有這樣而已。</p>
 
-<h3>使用方式</h3>
+<h2>使用方式</h2>
 
 <p>整個程式的資料夾結構如下</p>
 
