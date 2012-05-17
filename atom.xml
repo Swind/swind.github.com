@@ -4,7 +4,7 @@
   <title><![CDATA[Corleonis]]></title>
   <link href="http://Swind.github.com/atom.xml" rel="self"/>
   <link href="http://Swind.github.com/"/>
-  <updated>2012-05-17T18:38:33+08:00</updated>
+  <updated>2012-05-17T18:47:22+08:00</updated>
   <id>http://Swind.github.com/</id>
   <author>
     <name><![CDATA[Swind]]></name>
@@ -259,6 +259,9 @@ EventStream 只存在於 ActorSystem 底下，要使用 EventStream 的第一步
 所以要怎樣善用 Scala 的語言特性，卻又不失可讀性，我覺得真的很難。
 因此在這次的小工具實作中，我試著摸索 Curry 的用法。</p>
 
+<!--more-->
+
+
 <h2>Curry</h2>
 
 <p>說到教學文件，就一定要推一下 <a href="http://caterpillar.onlyfun.net/Gossip/Scala/index.html">良葛格的學習筆記</a> 裡面他有提到 <a href="http://caterpillar.onlyfun.net/Gossip/Scala/Curry.html">Curry</a> 的語法與何謂 Curry 。
@@ -473,6 +476,9 @@ EventStream 只存在於 ActorSystem 底下，要使用 EventStream 的第一步
 
 <p>這個版號我覺得也沒有機會到 0.0.2 了，不過還是讓我命名個版號滿足小小的虛榮心好了。</p>
 
+<!--more-->
+
+
 <h1>不負責任的使用教學</h1>
 
 <p>這只是一個非常簡單的小工具，用 Scala 撰寫而成，因此執行環境需要使用 JVM。
@@ -555,6 +561,11 @@ c3p0-0.9.1.1.jar
 </span><span class='line'><span class="k">def</span> <span class="n">parse</span><span class="o">(</span><span class="n">url</span><span class="k">:</span><span class="kt">String</span><span class="o">)</span><span class="k">:</span><span class="kt">List</span><span class="o">[</span><span class="kt">EnvyPost</span><span class="o">]={}</span>
 </span><span class='line'><span class="k">def</span> <span class="n">parse</span><span class="o">(</span><span class="n">file</span><span class="k">:</span><span class="kt">File</span><span class="o">)</span><span class="k">:</span><span class="kt">List</span><span class="o">[</span><span class="kt">EnvyPost</span><span class="o">]={}</span>
 </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!--more-->
 
 
 <h2>Create Table</h2>
@@ -710,6 +721,9 @@ set(String attribute,Object value)
 於是就抱著這樣的心態跟Google大神詢問求籤。最後看到logback這個工具（雖然跟Scala完全沒有關係）但是人都是喜新厭舊 XD，所以
 我就從slf4j+log4j轉到slf4j+logback，附帶一提logback是slf4j預設的log工具，因此使用這兩個的組合不需要另外抓Adapter。（ex.slf4j-log4j12-1.6.4.jar之類的）</p>
 
+<!--more-->
+
+
 <p>設定檔的部分目前我看到最不一樣的就是格式了，log4j是採用properities的方式記錄，也就是key=value的格式，而logback則是使用xml。
 設定檔一直是讓我懶得使用Log工具的地方，好在網路上真的很多好心人，在<a href="http://werdna1222coldcodes.blogspot.com/2011/10/logback-log4j.html">符號記憶-Logback,Log4j設定檔自動產生器</a>有介紹了<a href="http://wizardforge.org/pc?action=displayFlowchartVersionPublic&amp;id=42">協助產生設定檔的網站</a>
 可以讓設定的工作減少很多。下面是我隨便產生的一個範例</p>
@@ -787,6 +801,9 @@ set(String attribute,Object value)
 <p><a href="http://jsoup.org/">jsoup的官方網站</a></p>
 
 <p><a href="http://jsoup.org/cookbook/">jsoup的教學文件</a></p>
+
+<!--more-->
+
 
 <p>但是其實最重要的是這一<a href="http://jsoup.org/cookbook/extracting-data/selector-syntax">教學文件</a>,介紹了他與別人最不一樣的的地方。
 一般的HTML Parser還是比較傾向於跟XML Parser的作法一樣,把HTML分析完之後建成樹
@@ -1067,6 +1084,9 @@ testEnvyExample繼承FunSuite跟ShouldMatchers兩個Class，這兩個Class主要
 <a href="http://hivan.me/octopress-install-to-windows8/">Windows 8 安裝 Octopress 紀錄</a>他真的找出問題了，原因就在於！ <strong>Python 請安裝 32-bit 的版本</strong>。
 真的這樣就讓 Codeblock 可以正常運作了 T_T
 真的是太讓人心酸了。</p>
+
+<!--more-->
+
 
 <h2>在Ubuntu上面實在是有夠難安裝的</h2>
 

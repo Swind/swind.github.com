@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | Corleonis]]></title>
   <link href="http://Swind.github.com/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://Swind.github.com/"/>
-  <updated>2012-05-17T18:38:33+08:00</updated>
+  <updated>2012-05-17T18:47:22+08:00</updated>
   <id>http://Swind.github.com/</id>
   <author>
     <name><![CDATA[Swind]]></name>
@@ -26,6 +26,9 @@
 <p>一般依照以往的習慣基本就是<a href="http://logging.apache.org/log4j/">log4j</a> + <a href="http://www.slf4j.org/">slf4j</a>，這算是最通用的工具組了。但是Scala有這麼多特異功能，說不定會有更神奇的Log工具，
 於是就抱著這樣的心態跟Google大神詢問求籤。最後看到logback這個工具（雖然跟Scala完全沒有關係）但是人都是喜新厭舊 XD，所以
 我就從slf4j+log4j轉到slf4j+logback，附帶一提logback是slf4j預設的log工具，因此使用這兩個的組合不需要另外抓Adapter。（ex.slf4j-log4j12-1.6.4.jar之類的）</p>
+
+<!--more-->
+
 
 <p>設定檔的部分目前我看到最不一樣的就是格式了，log4j是採用properities的方式記錄，也就是key=value的格式，而logback則是使用xml。
 設定檔一直是讓我懶得使用Log工具的地方，好在網路上真的很多好心人，在<a href="http://werdna1222coldcodes.blogspot.com/2011/10/logback-log4j.html">符號記憶-Logback,Log4j設定檔自動產生器</a>有介紹了<a href="http://wizardforge.org/pc?action=displayFlowchartVersionPublic&amp;id=42">協助產生設定檔的網站</a>
@@ -116,6 +119,9 @@
 <p><a href="http://jsoup.org/">jsoup的官方網站</a></p>
 
 <p><a href="http://jsoup.org/cookbook/">jsoup的教學文件</a></p>
+
+<!--more-->
+
 
 <p>但是其實最重要的是這一<a href="http://jsoup.org/cookbook/extracting-data/selector-syntax">教學文件</a>,介紹了他與別人最不一樣的的地方。
 一般的HTML Parser還是比較傾向於跟XML Parser的作法一樣,把HTML分析完之後建成樹

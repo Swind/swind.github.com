@@ -4,7 +4,7 @@
   <title><![CDATA[Category: octopress | Corleonis]]></title>
   <link href="http://Swind.github.com/blog/categories/octopress/atom.xml" rel="self"/>
   <link href="http://Swind.github.com/"/>
-  <updated>2012-05-17T18:38:33+08:00</updated>
+  <updated>2012-05-17T18:47:22+08:00</updated>
   <id>http://Swind.github.com/</id>
   <author>
     <name><![CDATA[Swind]]></name>
@@ -41,6 +41,9 @@
 <a href="http://hivan.me/octopress-install-to-windows8/">Windows 8 安裝 Octopress 紀錄</a>他真的找出問題了，原因就在於！ <strong>Python 請安裝 32-bit 的版本</strong>。
 真的這樣就讓 Codeblock 可以正常運作了 T_T
 真的是太讓人心酸了。</p>
+
+<!--more-->
+
 
 <h2>在Ubuntu上面實在是有夠難安裝的</h2>
 

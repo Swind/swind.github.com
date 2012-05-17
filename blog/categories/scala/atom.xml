@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Scala | Corleonis]]></title>
   <link href="http://Swind.github.com/blog/categories/scala/atom.xml" rel="self"/>
   <link href="http://Swind.github.com/"/>
-  <updated>2012-05-17T18:38:33+08:00</updated>
+  <updated>2012-05-17T18:47:22+08:00</updated>
   <id>http://Swind.github.com/</id>
   <author>
     <name><![CDATA[Swind]]></name>
@@ -12,6 +12,242 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Akka 2.0 筆記 (1)]]></title>
+    <link href="http://Swind.github.com/blog/2012/05/17/akka-note-1/"/>
+    <updated>2012-05-17T18:03:00+08:00</updated>
+    <id>http://Swind.github.com/blog/2012/05/17/akka-note-1</id>
+    <content type="html"><![CDATA[<p>因為我的程式還沒有寫完，所以是筆記 (1)，寫的過程應該還會有 2 3 ... 出現 Orz。</p>
+
+<p>Akka 2.0 - 要升級了</p>
+
+<h2><strike>英雄王你的武器庫存量</strike>時間的庫存量足夠嗎 ?</h2>
+
+<p>Akka 進入了 2.0 時代，恭喜你如果你是用 1.x 的話，請準備改寫吧 ...
+先從幾個方面來看 2.0 的新增事項。</p>
+
+<p>以下算是筆記，如有錯誤請多指教</p>
+
+<!--more-->
+
+
+<h2>Actor</h2>
+
+<p>從官網範例來看，Actor 的架構還是跟之前一樣沒有什麼改變</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">akka.actor.Actor</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">akka.actor.Props</span>
+</span><span class='line'><span class="k">import</span> <span class="nn">akka.event.Logging</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">MyActor</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">val</span> <span class="n">log</span> <span class="k">=</span> <span class="nc">Logging</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="n">system</span><span class="o">,</span> <span class="k">this</span><span class="o">)</span>
+</span><span class='line'>  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">case</span> <span class="s">&quot;test&quot;</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="s">&quot;received test&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="k">case</span> <span class="k">_</span>      <span class="o">=&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="s">&quot;received unknown message&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>但是上面的程式碼你會看到一個有點陌生的東西 <strong>context.system</strong> ， 2.0 建立 Actor 的方式已經有了改變，現在的 Actor 可以有階層關係（就像老鼠會一樣 Orz）。
+從 Actor 的 context 中可以取得很多該 Actor 的資訊與操作方式。而 ActorSystem 建立出來的 Actor 就會位於最上層。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">object</span> <span class="nc">Main</span> <span class="k">extends</span> <span class="nc">App</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="k">val</span> <span class="n">system</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">(</span><span class="s">&quot;MySystem&quot;</span><span class="o">)</span>
+</span><span class='line'>  <span class="k">val</span> <span class="n">myActor</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">MyActor</span><span class="o">],</span> <span class="n">name</span> <span class="k">=</span> <span class="s">&quot;myactor&quot;</span><span class="o">)</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>延續上面的例子，如果MyActor內需要建立其他Actor</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="n">context</span><span class="o">.</span><span class="n">actorof</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">children</span><span class="o">],</span> <span class="n">name</span> <span class="k">=</span> <span class="s">&quot;children&quot;</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>利用這種階層關係有什麼好處呢？
+在之前 Akka1.3 的時代，我就經歷過非常痛苦的過程，那時候還沒有像 2.0 這樣的階層關係。
+所以如果我在停止一個 Actor 之前沒有先把他底下的 Actor 都停止的話，程式是沒有辦法正常結束的（因為還有 Actor 活著）。</p>
+
+<p>因此必須 override Actor 裡面的 function 讓他在停止之前，會先去結束他底下的 Actor。
+為了作到這件事，我還要多弄一個 List 去紀錄他有建立哪些 Actor。
+然後拼命的發 message 叫 Actor 去死去死去死去死 Orz。</p>
+
+<p>但是這些煩惱在2.0就通通不見啦！！！！！
+現在要停止只要用</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'>   <span class="n">context</span><span class="o">.</span><span class="n">stop</span><span class="o">(</span><span class="n">self</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>就會幹掉底下的部屬之後再做掉自己，真是讓人清爽又愉快（煙）</p>
+
+<h2>EventStream</h2>
+
+<p>最早知道 EventStream 或 EventBus 這種架構是在 GWT 的時後，那時候一用實在驚為天人。
+真是太方便了，雖然整體架構跟 Observer Pattern 一樣，但是人家就是用得很漂亮。
+EventStream 只存在於 ActorSystem 底下，要使用 EventStream 的第一步就是先註冊 Actor 與他要接收的物件類型。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">akka.actor.</span><span class="o">{</span> <span class="nc">Actor</span><span class="o">,</span> <span class="nc">DeadLetter</span><span class="o">,</span> <span class="nc">Props</span> <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">val</span> <span class="n">listener</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">Actor</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">case</span> <span class="n">d</span><span class="k">:</span> <span class="kt">DeadLetter</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">println</span><span class="o">(</span><span class="n">d</span><span class="o">)</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
+</span><span class='line'><span class="o">}))</span>
+</span><span class='line'><span class="n">system</span><span class="o">.</span><span class="n">eventStream</span><span class="o">.</span><span class="n">subscribe</span><span class="o">(</span><span class="n">listener</span><span class="o">,</span> <span class="n">classOf</span><span class="o">[</span><span class="kt">DeadLetter</span><span class="o">])</span> <span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>上面的程式碼產生了一個 listener 的 Actor 並且註冊說如果有 DeadLeatter 類型的物件送到 EventStream 內，就會傳送給他。
+雖然文件說主要是拿來作 Log 或者是監聽事件，但我拿來當其他的用途，例如發給所有的 Actor 讓他們自己認領工作之類的。</p>
+
+<h2>Event Handler</h2>
+
+<p>Event Handler 是拿來作 log 的工具，可以實作一個 EventListener 來監聽所有的事件。
+跟 Log4j 等工具一樣，可以分成 Error、Warning、Info與 Debug。
+看起來似乎可以拿來作為例外處理或者作一個事件重發的工具。</p>
+
+<h3>實作EventListener</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">val</span> <span class="n">errorHandlerEventListener</span> <span class="k">=</span> <span class="nc">Actor</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="k">new</span> <span class="nc">Actor</span> <span class="o">{</span>
+</span><span class='line'>  <span class="n">self</span><span class="o">.</span><span class="n">dispatcher</span> <span class="k">=</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">EventHandlerDispatcher</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">case</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">Error</span><span class="o">(</span><span class="n">cause</span><span class="o">,</span> <span class="n">instance</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="o">...</span>
+</span><span class='line'><span class="k">case</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">Warning</span><span class="o">(</span><span class="n">instance</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="o">...</span>
+</span><span class='line'><span class="k">case</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">Info</span><span class="o">(</span><span class="n">instance</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="o">...</span>
+</span><span class='line'><span class="k">case</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">Debug</span><span class="o">(</span><span class="n">instance</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="o">...</span>
+</span><span class='line'><span class="k">case</span> <span class="n">genericEvent</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="o">...</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
+</span><span class='line'><span class="o">})</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>加入EventListener </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="nc">EventHandler</span><span class="o">.</span><span class="n">addListener</span><span class="o">(</span><span class="n">errorHandlerEventListener</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>移除EventListener </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="nc">EventHandler</span><span class="o">.</span><span class="n">removeListener</span><span class="o">(</span><span class="n">errorHandlerEventListener</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Log 訊息 </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="nc">EventHandler</span><span class="o">.</span><span class="n">error</span><span class="o">(</span><span class="n">exception</span><span class="o">,</span> <span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
+</span><span class='line'><span class="nc">EventHandler</span><span class="o">.</span><span class="n">error</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
+</span><span class='line'><span class="nc">EventHandler</span><span class="o">.</span><span class="n">warning</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
+</span><span class='line'><span class="nc">EventHandler</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
+</span><span class='line'><span class="nc">EventHandler</span><span class="o">.</span><span class="n">debug</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>Scheduler</h2>
+
+<p>Akka 內有附一個簡單的 Scheduler，他可以讓你排程什麼時候要發訊息給 Actor</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">akka.actor.Scheduler</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;//</span><span class="nc">Sends</span> <span class="n">messageToBeSent</span> <span class="n">to</span> <span class="n">receiverActor</span> <span class="n">after</span> <span class="n">initialDelayBeforeSending</span> <span class="n">and</span> <span class="n">then</span> <span class="n">after</span> <span class="n">each</span> <span class="n">delayBetweenMessages</span>
+</span><span class='line'><span class="nc">Scheduler</span><span class="o">.</span><span class="n">schedule</span><span class="o">(</span><span class="n">receiverActor</span><span class="o">,</span> <span class="n">messageToBeSent</span><span class="o">,</span> <span class="n">initialDelayBeforeSending</span><span class="o">,</span> <span class="n">delayBetweenMessages</span><span class="o">,</span> <span class="n">timeUnit</span><span class="o">)&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;//</span><span class="nc">Sends</span> <span class="n">messageToBeSent</span> <span class="n">to</span> <span class="n">receiverActor</span> <span class="n">after</span> <span class="n">delayUntilSend</span>
+</span><span class='line'><span class="nc">Scheduler</span><span class="o">.</span><span class="n">scheduleOnce</span><span class="o">(</span><span class="n">receiverActor</span><span class="o">,</span> <span class="n">messageToBeSent</span><span class="o">,</span> <span class="n">delayUntilSend</span><span class="o">,</span> <span class="n">timeUnit</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h1>Event Driven</h1>
+
+<p>一直到最近在實作小玩具才想到的，我想這不是新的東西，可是用Akka或許可以把這件事情變得非常方便。以前在學Design Pattern的時候，其實整體架構算是很容易理解的東西。</p>
+
+<p>But ! 就是這個But，在寫的時候卻會常常綁手綁腳，例如MVC的Pattern，我到底要不要在Control中紀錄Model與View的位置，如果不紀錄的話我又要怎麼找到他們，然後整個執行流程又是如何？
+這是一件很麻煩的事情，雖然現在用起來是沒啥感覺，但是我也常為了Model之間的溝通流程感到困擾。</p>
+
+<p>小的在下我，寫論文的時候實作的東西其基礎架構是建立在JavaSpace上面，這個東西不要說現在沒啥人聽過了，就連我在用的時候都很悲劇。
+但是他設計概念我覺得很棒，他提供一個Pool可以讓你把Object丟進去，有興趣的Process就可以自己去那個Pool搶。
+但是這個東西就悲劇在他後來沒有在維護了，而且他的Server架設非常麻煩，API非常難用。</p>
+
+<p>一直到後來在GWT中看到Event Bus，我覺得這真是TMD的好東西，反正每個Model就是把Event丟到Event Bus裡面就好了，然後誰愛撿就撿去玩，射後不理真是男人的浪漫（誤）。
+因此最近才想到，如果利用Akka來作一個類似JavaSpace的東西如何，每個Module都是一個獨立的Actor，Module在接收到工作把工作完成就，就將結果丟回Space。</p>
+
+<p>舉個例子就像之前舉例舉到爛掉的某大論壇Parser，需要將文章內容紀錄到資料庫裡面，並且還要去下載相關的圖片。
+因此我就模仿Eva Magi系統（大誤），將Parser Module、Data Module與Download Module各自獨立成一個Actor。
+系統啟動的時候，由系統去建立Space，並且將這三個Module依照其MetaData的設定要將哪些Event傳送給他們（其實就是Observer Pattern）。</p>
+
+<p>Parser定時自動去論壇取得文章內容，並且將內容丟到Space裡面。這時Data Module就可以將文章資料寫到資料庫中，而Download Module也同時進行下載。
+這樣的架構可以視情況讓他是Single Thread或Multiple Thread的程式。只要好好管理Event的流動方式就可以了。</p>
+
+<p>至於這樣的架構好不好測試呢？我覺得這樣寫有一個好處，就是可以強迫Programmer寫出沒有副作用的程式，因為你必須要將所以處理結果都丟回Space裡面。
+因此測試的時候，只要建立該Module，並且傳送Mock Event給他就可以了，其他Module並不需要被建立起來。這樣的架構也降低了各Module之間的coupling。</p>
+
+<p>最後如果想要作所謂的雲～～～～～～～～端系統（老實說連我都不知道啥鬼才叫TMD的雲～～～～～～端系統），就可以利用Akka的Remote Actor的功能，
+將不同的Module丟到不同的機器上面作，甚至是同一個Module可以有好幾個來分工。</p>
+
+<p>Wao cow 越想感覺越夢幻，有空來實作看看到底會遇到什麼問題好了。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[實作 EPUBConverter 的筆記]]></title>
@@ -24,6 +260,9 @@
 因為 Scala 最吸引我的部份就是在於他的語法可以不斷的精鍊再精鍊，最後變成<strong>魔法文字</strong> Orz。
 所以要怎樣善用 Scala 的語言特性，卻又不失可讀性，我覺得真的很難。
 因此在這次的小工具實作中，我試著摸索 Curry 的用法。</p>
+
+<!--more-->
+
 
 <h2>Curry</h2>
 
@@ -252,6 +491,9 @@
 
 <p>這個版號我覺得也沒有機會到 0.0.2 了，不過還是讓我命名個版號滿足小小的虛榮心好了。</p>
 
+<!--more-->
+
+
 <h1>不負責任的使用教學</h1>
 
 <p>這只是一個非常簡單的小工具，用 Scala 撰寫而成，因此執行環境需要使用 JVM。
@@ -340,6 +582,9 @@ c3p0-0.9.1.1.jar
 </span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">def</span> <span class="n">parse</span><span class="o">(</span><span class="n">url</span><span class="k">:</span><span class="kt">String</span><span class="o">)</span><span class="k">:</span><span class="kt">List</span><span class="o">[</span><span class="kt">EnvyPost</span><span class="o">]={}</span>
 </span><span class='line'><span class="k">def</span> <span class="n">parse</span><span class="o">(</span><span class="n">file</span><span class="k">:</span><span class="kt">File</span><span class="o">)</span><span class="k">:</span><span class="kt">List</span><span class="o">[</span><span class="kt">EnvyPost</span><span class="o">]={}</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<!--more-->
+
 
 <h2>Create Table</h2>
 
@@ -510,6 +755,9 @@ set(String attribute,Object value)
 於是就抱著這樣的心態跟Google大神詢問求籤。最後看到logback這個工具（雖然跟Scala完全沒有關係）但是人都是喜新厭舊 XD，所以
 我就從slf4j+log4j轉到slf4j+logback，附帶一提logback是slf4j預設的log工具，因此使用這兩個的組合不需要另外抓Adapter。（ex.slf4j-log4j12-1.6.4.jar之類的）</p>
 
+<!--more-->
+
+
 <p>設定檔的部分目前我看到最不一樣的就是格式了，log4j是採用properities的方式記錄，也就是key=value的格式，而logback則是使用xml。
 設定檔一直是讓我懶得使用Log工具的地方，好在網路上真的很多好心人，在<a href="http://werdna1222coldcodes.blogspot.com/2011/10/logback-log4j.html">符號記憶-Logback,Log4j設定檔自動產生器</a>有介紹了<a href="http://wizardforge.org/pc?action=displayFlowchartVersionPublic&amp;id=42">協助產生設定檔的網站</a>
 可以讓設定的工作減少很多。下面是我隨便產生的一個範例
@@ -579,316 +827,6 @@ set(String attribute,Object value)
 在使用logger印出訊息之前，先進行logger.isTraceEnabled、logger.isDebugEnable等的判斷，就可以在編譯的時候進行最佳化。</p>
 
 <p>目前使用的Log工具大概就這樣了，logback如果有玩到什麼好玩的會在上來報告。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[好用的HTML Parser-jsoup]]></title>
-    <link href="http://Swind.github.com/blog/2011/10/27/jsoup/"/>
-    <updated>2011-10-27T08:47:00+08:00</updated>
-    <id>http://Swind.github.com/blog/2011/10/27/jsoup</id>
-    <content type="html"><![CDATA[<h1>What is jsoup</h1>
-
-<hr />
-
-<p>HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
-為了要從網頁中可以取出內容,我曾經用過不少方式,包括直接硬幹用字串搜尋、修改Scala本身內部的XML Parser等。
-但是一直都找不到一個滿意又順手的解決方式,一直到後來在<a href="http://www.oschina.net/">CSDN</a>沒錯就是那個大陸網站<a href="http://www.oschina.net/">CSDN</a>
-(雖然說CSDN訊息太多太雜亂,但是偶爾還是可以看到一些不錯的東西),才找到jsoup這個library。</p>
-
-<p><a href="http://jsoup.org/">jsoup的官方網站</a></p>
-
-<p><a href="http://jsoup.org/cookbook/">jsoup的教學文件</a></p>
-
-<p>但是其實最重要的是這一<a href="http://jsoup.org/cookbook/extracting-data/selector-syntax">教學文件</a>,介紹了他與別人最不一樣的的地方。
-一般的HTML Parser還是比較傾向於跟XML Parser的作法一樣,把HTML分析完之後建成樹
-然後操作Node將資料取出,但是除了這種操作方式之外josue還有一種是類似JQuery的Selector的操作方式。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="nc">File</span> <span class="n">input</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="s">&quot;/tmp/input.html&quot;</span><span class="o">);</span>
-</span><span class='line'><span class="nc">Document</span> <span class="n">doc</span> <span class="k">=</span> <span class="nc">Jsoup</span><span class="o">.</span><span class="n">parse</span><span class="o">(</span><span class="n">input</span><span class="o">,</span> <span class="s">&quot;UTF-8&quot;</span><span class="o">,</span> <span class="s">&quot;http://example.com/&quot;</span><span class="o">);&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;//</span><span class="nc">Document</span> <span class="n">doc</span> <span class="k">=</span> <span class="nc">Jsoup</span><span class="o">.</span><span class="n">connect</span><span class="o">(</span><span class="s">&quot;http://example.com/&quot;</span><span class="o">);&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;//</span><span class="n">取出擁有herf屬性的</span><span class="o">&lt;</span><span class="n">a</span><span class="o">&gt;</span>
-</span><span class='line'><span class="nc">Elements</span> <span class="n">links</span> <span class="k">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="s">&quot;a[href]&quot;</span><span class="o">);</span>
-</span><span class='line'><span class="c1">//取出擁有src屬性且值是以png結尾的&lt;img&gt;</span>
-</span><span class='line'><span class="nc">Elements</span> <span class="n">pngs</span> <span class="k">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="s">&quot;img[src$=.png]&quot;</span><span class="o">);</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>上面是官網的範例,從這邊就可以看到jsoup不同於一般HTML Parser的地方。
-jsoup除了有支援讀取檔案之外,也可以直接輸入網址讓他自己去連線與Parser,
-<strong>最重要的是可以透過selector-syntax來取出想要的內容。</strong>接下來我會整理一些我常用的用法。</p>
-
-<p>P.S我所使用的語言是Scala，但是我會盡量不要用Scala的<del>奇淫技巧</del>特殊語法讓他看起來跟Java差不多。</p>
-
-<p>出發總要有個方向,這邊就以一個我想幹的壞事情來當作例子好了，順便強迫我自己把東西寫完。</p>
-
-<h3>說出你的願望，否則不會讓你如願</h3>
-
-<p>我想要一個可以自動檢查<a href="http://www.cwb.gov.tw/V7/forecast/taiwan/Taipei_City.htm">某大論壇</a>的動畫討論區新番是否有更新的機器人。
-（因為它新番更新在同一個文章裡面，每周找新番真的好麻煩）
-哈利路亞 ! Chance !</p>
-
-<h1>Prepare</h1>
-
-<hr />
-
-<p>首先呢，我習慣先將網頁內容儲存成HTML檔案,放到測試資料夾中。
-然後，寫個測試先決定整個程式的主要介面。
-因為我不喜歡一直連線到網站做測試。
-因為:</p>
-
-<ol>
-<li>浪費流量</li>
-<li>我要驗證程式執行結果的時候必須要開網頁才能驗證。
- (因為文章會一直新增第一頁的內容會被擠到後面去)</li>
-<li>你不一定隨時都有網路可以用</li>
-</ol>
-
-
-<p>因此先將今天的文章列表儲存起來，然後寫個測試來驗證我最後的輸出結果是否如我所預期。
-有人會想說這是不是什麼軟體工程技巧阿，是不是什麼測試先行（TDD）的開發方式之類的？
-其實也沒有特別想說要使用什麼樣的開發方式或開發技巧，單純就只是因為我覺得這樣比較方便而已。
-我覺得沒有必要被偉大或者是只要這樣做就對了等口號給迷惑，選擇自己需要且足夠的方式就好了。</p>
-
-<h3>要分析擷取的網頁內容</h3>
-
-<p>這邊是網頁的部份內容，我在做測試資料的時候是將整份的網頁原始碼都儲存起來，下面的內容是為了後面的說明需要。</p>
-
-<pre><code>&lt;tbody id="normalthread_6961970"&gt;
- &lt;tr onmouseover="l_pic_6961970.style.display='block'" onmouseout="l_pic_6961970.style.display='none'"&gt;
-  &lt;td class="folder"&gt;
-    &lt;a href="viewthread.php?tid=6961970&amp;amp;extra=page%3D1%26amp%3Borderby%3Ddateline" title="新窗口打開" target="_blank"&gt;
-        &lt;img src="images/default/folder_new.gif" /&gt;
-    &lt;/a&gt;
- &lt;/td&gt;
-  &lt;td class="icon"&gt;&lt;img src="http://a18.file-static.com/attachments/lib_picture/19/70/6961970.jpg" width="50" height="40" class="l_bPic" /&gt;
-   &lt;div class="l_sPic" id="l_pic_6961970"&gt;
-    &lt;img src="http://a18.file-static.com/attachments/lib_picture/19/70/6961970.jpg" width="100" height="80" class="l_bPic" /&gt;
-   &lt;/div&gt;&lt;/td&gt;
-  &lt;th class="subject new"&gt;
-    &lt;label&gt;&amp;nbsp;&lt;/label&gt; 
-    &lt;em&gt;[&lt;a href="forumdisplay.php?fid=22&amp;amp;filter=type&amp;amp;typeid=2"&gt;分享&lt;/a&gt;]&lt;/em&gt;
-    &lt;span id="thread_6961970"&gt;
-        &lt;a href="viewthread.php?tid=6961970&amp;amp;extra=page%3D1%26amp%3Borderby%3Ddateline"&gt;
-        (MU@繁體@RMVB)OnePiece海賊王 第521話 (1P)&lt;/a&gt;
-    &lt;/span&gt;
-  &lt;/th&gt;
-  &lt;td class="author"&gt;&lt;cite&gt;&lt;a href="space.php?uid=933315"&gt;likesea&lt;/a&gt;&lt;/cite&gt;&lt;em&gt;2011-10-30&lt;/em&gt;&lt;/td&gt;
-  &lt;td class="nums"&gt;&lt;strong&gt;0&lt;/strong&gt;/&lt;em&gt;2&lt;/em&gt;&lt;/td&gt;
-  &lt;td class="lastpost"&gt;
-  &lt;cite&gt;
-    &lt;a href="space.php?username=likesea"&gt;likesea&lt;/a&gt;
-  &lt;/cite&gt;
-  &lt;em&gt;&lt;a href="redirect.php?tid=6961970&amp;amp;goto=lastpost#lastpost"&gt;&lt;span title="2011-10-30 03:13 PM"&gt;1&amp;nbsp;分鐘前&lt;/span&gt;&lt;/a&gt;&lt;/em&gt;&lt;/td&gt;
- &lt;/tr&gt;
-&lt;/tbody&gt;
-</code></pre>
-
-<h3>想要的輸出結果</h3>
-
-<pre><code>UID       : 933315
-Title     : OnePiece海賊王 第521話
-Author    : likesea
-Link      : http://.............
-</code></pre>
-
-<h3>程式的介面</h3>
-
-<p>雖然jsoup可以直接接收網址去取得網頁內容，但測試程式有讀取檔案的需求所以這邊會提供兩種介面。
-一種允許使用者直接傳入String型態的參數，也就是網址。另外一種則是讓使用者傳入File型態的參數。
-而回傳值的形態則是存放Data Object的List，這邊Data Object的名稱就先定義為EnvyPost好了。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">EnvyPost</span><span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">val</span> <span class="nc">UID</span><span class="k">:</span><span class="kt">Integer</span>
-</span><span class='line'><span class="k">val</span> <span class="n">title</span><span class="k">:</span><span class="kt">String</span>
-</span><span class='line'><span class="k">val</span> <span class="n">lastPostTime</span><span class="k">:</span><span class="kt">Date</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">def</span> <span class="n">parse</span><span class="o">(</span><span class="n">url</span><span class="k">:</span><span class="kt">String</span><span class="o">)</span><span class="k">:</span><span class="kt">List</span><span class="o">[</span><span class="kt">EnvyPost</span><span class="o">]={}</span>
-</span><span class='line'><span class="k">def</span> <span class="n">parse</span><span class="o">(</span><span class="n">file</span><span class="k">:</span><span class="kt">File</span><span class="o">)</span><span class="k">:</span><span class="kt">List</span><span class="o">[</span><span class="kt">EnvyPost</span><span class="o">]={}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h1>開始用jsoup分析網頁資訊吧</h1>
-
-<hr />
-
-<h3>找出所有文章</h3>
-
-<p>雖然jsoup有提供很多種分析的方式，但是我最喜歡用的還是<a href="http://jsoup.org/cookbook/extracting-data/selector-syntax">Selector</a>的語法。因為簡單明瞭又好閱讀！！
-執行效率我則完全不在意，反正我的需求也不是一秒幾十萬上下的東西。能夠讓我愉快又快速的寫好才是重要的。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">object</span> <span class="nc">EnvyExample</span> <span class="o">{</span>
-</span><span class='line'>  <span class="k">def</span> <span class="n">parse</span><span class="o">(</span><span class="n">file</span><span class="k">:</span><span class="kt">File</span><span class="o">,</span><span class="n">encode</span><span class="k">:</span><span class="kt">String</span><span class="o">=</span><span class="s">&quot;Big5&quot;</span><span class="o">)</span><span class="k">:</span><span class="kt">List</span><span class="o">[</span><span class="kt">EnvyPost</span><span class="o">]={&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">val</span> <span class="n">doc</span> <span class="k">=</span> <span class="nc">Jsoup</span><span class="o">.</span><span class="n">parse</span><span class="o">(</span><span class="n">file</span><span class="o">,</span><span class="n">encode</span><span class="o">,</span><span class="n">envyURL</span><span class="o">)</span>
-</span><span class='line'><span class="k">val</span> <span class="n">posts</span> <span class="k">=</span> <span class="n">parsePage</span><span class="o">(</span><span class="n">doc</span><span class="o">)</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
-</span><span class='line'>  <span class="k">def</span> <span class="n">parsePage</span><span class="o">(</span><span class="n">page</span><span class="k">:</span><span class="kt">Document</span><span class="o">)={&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">doc</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="s">&quot;tbody[id^=normalthread]&quot;</span><span class="o">)</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>由於該論壇的每一篇文章都被一個tbody的tag包圍，且此tbody的id開頭為normalthread。因此我的第一步就是先找出此頁中每一篇文章的Element。</p>
-
-<p>雖然說jsoup跟jquery一樣對於tag的id與class屬性都有特殊的語法例如 tag#id 或 tag.class 但是由於我需要使用正規表示是來找出id為normalthread開頭的tbody。
-所以這邊使用</p>
-
-<pre><code>tbody[id^=normalthread]
-</code></pre>
-
-<p>因為若使用 # 的語法就沒有辦法使用正規表示式（至少我目前在官網的說明文件還沒有找到 Orz）
-有沒有覺得這個語法真的超級方便的，如果是用其他工具的話，我現在應該還在處理把id屬性取出來，然後用String的startWith來判斷是不是normalthread開頭。</p>
-
-<p>另外，我喜歡把每一個步驟分解成很多小函式，因為這樣方便我進行測試。例如上面這一段程式碼，我相對應的測試程式碼會長這樣。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">testEnvyExample</span> <span class="k">extends</span> <span class="nc">FunSuite</span> <span class="k">with</span> <span class="nc">ShouldMatchers</span><span class="o">{</span>
-</span><span class='line'>  <span class="n">test</span><span class="o">(</span><span class="s">&quot;There should be 10 post in the test file&quot;</span><span class="o">){&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">val</span> <span class="n">doc</span> <span class="k">=</span> <span class="nc">Jsoup</span><span class="o">.</span><span class="n">parse</span><span class="o">(</span><span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="s">&quot;./testData/envy.html&quot;</span><span class="o">),</span><span class="s">&quot;Big5&quot;</span><span class="o">,</span><span class="nc">EnvyExample</span><span class="o">.</span><span class="n">envyURL</span><span class="o">)</span>
-</span><span class='line'><span class="k">val</span> <span class="n">posts</span> <span class="k">=</span> <span class="nc">EnvyExample</span><span class="o">.</span><span class="n">parsePage</span><span class="o">(</span><span class="n">doc</span><span class="o">)</span>
-</span><span class='line'><span class="n">posts</span><span class="o">.</span><span class="n">size</span> <span class="n">should</span> <span class="n">be</span> <span class="o">(</span><span class="mi">18</span><span class="o">)</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>順便說明一下語法，我所使用的測試Framework是<a href="http://www.scalatest.org/">ScalaTest</a>，這邊使用Java的JUnit也是可以。
-testEnvyExample繼承FunSuite跟ShouldMatchers兩個Class，這兩個Class主要讓測試程式可以使用<strong>test</strong>跟<strong>should be</strong>兩種語法。</p>
-
-<p>到這邊程式執行完畢之後我就有目前此頁面每一篇文章的所有內容了。下一步就是要分析這些文章內容了。</p>
-
-<h3>分析文章的內容-取得Id、Title、Author與Link</h3>
-
-<p>取得Post的功能再另外獨立一個parsePost的Function，傳入的參數則為包含所有文章內容的Element，並且希望這個Function可以回傳一個EnvyPost物件。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">parsePost</span><span class="o">(</span><span class="n">post</span><span class="k">:</span><span class="kt">Element</span><span class="o">)</span><span class="k">:</span><span class="kt">EnvyPost</span><span class="o">={</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>文章Id的取得是透過tbody本身的id屬性，他的格式是normalthread_xxxxxx，後面的xxxxxx就是此篇文章的id，
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">parsePost</span><span class="o">(</span><span class="n">post</span><span class="k">:</span><span class="kt">Element</span><span class="o">)={&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">val</span> <span class="n">id</span> <span class="k">=</span> <span class="n">post</span><span class="o">.</span><span class="n">attr</span><span class="o">(</span><span class="s">&quot;id&quot;</span><span class="o">).</span><span class="n">replace</span><span class="o">(</span><span class="s">&quot;normalthread_&quot;</span><span class="o">,</span><span class="s">&quot;&quot;</span><span class="o">)</span>
-</span><span class='line'><span class="k">val</span> <span class="o">(</span><span class="n">title</span><span class="o">,</span><span class="n">link</span><span class="o">)</span> <span class="k">=</span> <span class="n">parserPost_TitleAndLink</span><span class="o">(</span><span class="n">id</span><span class="o">,</span><span class="n">post</span><span class="o">)</span>
-</span><span class='line'><span class="k">val</span> <span class="n">author</span> <span class="k">=</span> <span class="n">parserPost_Author</span><span class="o">(</span><span class="n">post</span><span class="o">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">new</span> <span class="nc">EnvyPost</span><span class="o">(</span><span class="n">id</span><span class="o">,</span><span class="n">title</span><span class="o">,</span><span class="n">author</span><span class="o">,</span><span class="n">link</span><span class="o">)</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>Link跟Title其實是一起取得的，它們可以從id為thread_xxxxxx的span tag中取得。
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">parserPost_TitleAndLink</span><span class="o">(</span><span class="n">id</span><span class="k">:</span><span class="kt">String</span><span class="o">,</span><span class="n">post</span><span class="k">:</span><span class="kt">Element</span><span class="o">)={&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">val</span> <span class="n">element</span> <span class="k">=</span> <span class="n">post</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="s">&quot;span#thread_&quot;</span><span class="o">+</span><span class="n">id</span><span class="o">).</span><span class="n">first</span>
-</span><span class='line'><span class="o">(</span><span class="n">element</span><span class="o">.</span><span class="n">text</span><span class="o">,</span><span class="n">element</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="s">&quot;a&quot;</span><span class="o">).</span><span class="n">first</span><span class="o">.</span><span class="n">attr</span><span class="o">(</span><span class="s">&quot;href&quot;</span><span class="o">))</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>Author的名字則在class為author的td tag內cite中因此取的時候使用</p>
-
-<pre><code>tag1 tag2
-</code></pre>
-
-<p>的語法，這代表搜尋tag1底下所有的tag2</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">parserPost_Author</span><span class="o">(</span><span class="n">post</span><span class="k">:</span><span class="kt">Element</span><span class="o">)={&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">post</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="s">&quot;td.author cite&quot;</span><span class="o">).</span><span class="n">first</span><span class="o">.</span><span class="n">text</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>打完收工，這樣的短短的程式碼就把一個網站都分析完了，真的太棒了 QQ
-以前要分析一個網站超血淚的，真的感謝Open Source的眾多好心人，願意分享他們的成果與程式碼。
-當然後續還有換頁讀取或者是比對之前的內容看是否有更新之類的工作，但是這都是後話了。</p>
-
-<p>P.S一篇文章我竟然要打快兩個月，真佩服那些有辦法每天都有產出的人</p>
 ]]></content>
   </entry>
   
