@@ -145,7 +145,7 @@
   
   
     <footer>
-      <a rel="full-article" href="/blog/2012/05/17/akka-note-1/">Read on &rarr;</a>
+      <a rel="full-article" href="/blog/2012/05/17/akka-note-1/">繼續閱讀 &rarr;</a>
     </footer>
   
 
@@ -193,7 +193,7 @@
   
   
     <footer>
-      <a rel="full-article" href="/blog/2012/05/11/epubconverter-implement-note/">Read on &rarr;</a>
+      <a rel="full-article" href="/blog/2012/05/11/epubconverter-implement-note/">繼續閱讀 &rarr;</a>
     </footer>
   
 
@@ -240,7 +240,7 @@
   
   
     <footer>
-      <a rel="full-article" href="/blog/2012/05/11/epubconverter/">Read on &rarr;</a>
+      <a rel="full-article" href="/blog/2012/05/11/epubconverter/">繼續閱讀 &rarr;</a>
     </footer>
   
 
@@ -323,7 +323,7 @@ c3p0-0.9.1.1.jar
   
   
     <footer>
-      <a rel="full-article" href="/blog/2012/02/07/scala-orm-libraries/">Read on &rarr;</a>
+      <a rel="full-article" href="/blog/2012/02/07/scala-orm-libraries/">繼續閱讀 &rarr;</a>
     </footer>
   
 
@@ -373,7 +373,7 @@ c3p0-0.9.1.1.jar
   
   
     <footer>
-      <a rel="full-article" href="/blog/2012/01/22/scala-log-tools/">Read on &rarr;</a>
+      <a rel="full-article" href="/blog/2012/01/22/scala-log-tools/">繼續閱讀 &rarr;</a>
     </footer>
   
 
@@ -427,7 +427,7 @@ c3p0-0.9.1.1.jar
   
   
     <footer>
-      <a rel="full-article" href="/blog/2011/10/27/jsoup/">Read on &rarr;</a>
+      <a rel="full-article" href="/blog/2011/10/27/jsoup/">繼續閱讀 &rarr;</a>
     </footer>
   
 
@@ -483,7 +483,7 @@ c3p0-0.9.1.1.jar
   
   
     <footer>
-      <a rel="full-article" href="/blog/2011/10/19/ban-jia-hou-di-1pian/">Read on &rarr;</a>
+      <a rel="full-article" href="/blog/2011/10/19/ban-jia-hou-di-1pian/">繼續閱讀 &rarr;</a>
     </footer>
   
 
@@ -526,6 +526,22 @@ c3p0-0.9.1.1.jar
 </section>
 
 
+<section class="well">
+  <ul id="tweets" class="nav">
+    <li class="nav-header">Latest Tweets</li>
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("swind", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/swind" class="twitter-follow-button" data-show-count="false">Follow @swind</a>
+  
+</section>
+
 
 <section>
   <h1>Tag Cloud</h1>
@@ -561,7 +577,24 @@ c3p0-0.9.1.1.jar
 
 
 
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
 
 
 
