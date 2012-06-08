@@ -4,7 +4,7 @@
   <title><![CDATA[Corleonis]]></title>
   <link href="http://Swind.github.com/atom.xml" rel="self"/>
   <link href="http://Swind.github.com/"/>
-  <updated>2012-06-08T17:14:14+08:00</updated>
+  <updated>2012-06-08T17:19:12+08:00</updated>
   <id>http://Swind.github.com/</id>
   <author>
     <name><![CDATA[Swind]]></name>
@@ -37,7 +37,7 @@
 <blockquote><p>In Akka, a Future is a data structure used to retrieve the result of some concurrent operation.</p></blockquote>
 
 
-<p>是的，他只是一個 Data Structure 而已，<strong>Future 最主要的功能就是可以透過他可以取得 Actor 回傳的 message。</strong></p>
+<p>是的，他只是一個 Data Structure 而已，<strong>Future 最主要的功能就是可以透過他取得 Actor 回傳的 message。</strong></p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -48,7 +48,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>偷一下官網的範例，我們一行一行看上面的範例</p>
+<p>偷一下官網的範例，我們一行一行看上面的程式碼。</p>
 
 <p>一開始的</p>
 
@@ -57,9 +57,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>我沒有辦法解釋得很清楚 implicit 有什麼作用，因為我不知道為什麼對 implicit 有一種排斥感，大概是因為我看不太懂他吧。人對於未知的事物總是抱持的好奇與恐懼 XD。</p>
-
-<p>所以就先忽略 implicit 吧，因為這邊還沒有用到 implicit 的特性，現在只要知道他建立了一個 Timeout 物件，內容是 5 seconds。</p>
+<p>就先忽略 implicit 吧，因為這邊還沒有用到 implicit 的特性，現在只要知道他建立了一個 Timeout 物件，內容是 5 seconds。</p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">val</span> <span class="n">future</span> <span class="k">=</span> <span class="n">actor</span> <span class="o">?</span> <span class="n">msg</span> <span class="c1">// enabled by the &quot;ask&quot; import</span>
@@ -103,9 +101,16 @@
 
 <p>我先將工作發給 actor1 等他回傳，然後再發給 actor2 等待回傳，最後在將回傳結果發給 actor3。</p>
 
-<p>為了要取得 a、b 而使用了 Await 兩次，這樣的作法非常沒有效率，所以有 sequence 與 traverse 這兩個 function 可以簡化這種使用方式。</p>
+<p>為了要取得 a、b 而使用了 Await 兩次，這樣的作法非常沒有效率，因此有了 sequence 與 traverse 這兩個 function。</p>
 
-<p>舉例來說，如果我有一個 List<a href="" title="Tony&quot;,&quot;Lion&quot;,&quot;Teddy&quot;,&quot;Brain&quot;,&quot;Jess&quot;,&quot;Kay&quot;,&quot;Michael">String</a> 並且想要這個 List 內所有字串的長度總和。</p>
+<p>舉例來說，如果我有一個</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="nc">List</span><span class="o">[</span><span class="kt">String</span><span class="o">](</span><span class="s">&quot;Tony&quot;</span><span class="o">,</span><span class="s">&quot;Lion&quot;</span><span class="o">,</span><span class="s">&quot;Teddy&quot;</span><span class="o">,</span><span class="s">&quot;Brain&quot;</span><span class="o">,</span><span class="s">&quot;Jess&quot;</span><span class="o">,</span><span class="s">&quot;Kay&quot;</span><span class="o">,</span><span class="s">&quot;Michael&quot;</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>並且想要這個 List 內所有字串的長度總和。</p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -120,8 +125,8 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>在這邊我們得到了一個 List[Future[Int]] 的 listOfFutures，再來我們使用 sequence 轉成 Future[List[Int]]
-就可以使用 Await 來取得所有字串長度了，並且統計字數了。</p>
+<p>在這邊我們得到了一個型態為 List[Future[Int]] 的 listOfFutures，再來就可以使用 sequence 將其轉成 Future[List[Int]]
+最後就可以使用 Await 來取得所有字串長度了，並且統計字數了。</p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
