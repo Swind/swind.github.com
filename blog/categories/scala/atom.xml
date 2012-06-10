@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Scala | Corleonis]]></title>
   <link href="http://Swind.github.com/blog/categories/scala/atom.xml" rel="self"/>
   <link href="http://Swind.github.com/"/>
-  <updated>2012-06-10T00:45:17+08:00</updated>
+  <updated>2012-06-10T18:19:54+08:00</updated>
   <id>http://Swind.github.com/</id>
   <author>
     <name><![CDATA[Swind]]></name>
@@ -12,6 +12,111 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Akka 2.0 筆記(3) - Future 之實在不是我想要拖稿]]></title>
+    <link href="http://Swind.github.com/blog/2012/06/10/new-post/"/>
+    <updated>2012-06-10T17:30:00+08:00</updated>
+    <id>http://Swind.github.com/blog/2012/06/10/new-post</id>
+    <content type="html"><![CDATA[<p>而是我實在是不擅長寫作，過去作文只有 20 分真的不是拿假的。
+前一篇的 <strong>開始使用 Future</strong> 只有介紹一些基本的使用方式而已，然後依照前面的程式碼是絕對跑不起來的 Orz ...</p>
+
+<p>原因在於 Future 需要一個 Execution Contexts 類似 Java 裡面的 Executor，也就是 Thread Pool。</p>
+
+<!--more-->
+
+
+<p>因為 Future 除了跟 Actor 配合使用之外，也可以直接使用。</p>
+
+<p>例如前面與 Actor 配合使用的例子</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">val</span> <span class="n">list</span> <span class="k">=</span> <span class="nc">List</span><span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;&quot;</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;Tony&amp;quot;,&amp;quot;Lion&amp;quot;,&amp;quot;Teddy&amp;quot;,&amp;quot;Brain&amp;quot;,&amp;quot;Jess&amp;quot;,&amp;quot;Kay&amp;quot;,&amp;quot;Michael&quot;</span><span class="o">&gt;</span><span class="nc">String</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">val</span> <span class="n">listOfFutures</span> <span class="k">=</span> <span class="n">list</span> <span class="n">map</span> <span class="o">{</span>
+</span><span class='line'>   <span class="n">name</span> <span class="o">=&gt;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>  <span class="o">(</span><span class="n">countActor</span> <span class="o">?</span> <span class="n">name</span><span class="o">).</span><span class="n">mapTo</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span><span class='line'><span class="k">val</span> <span class="n">futureList</span> <span class="k">=</span> <span class="nc">Future</span><span class="o">.</span><span class="n">sequence</span><span class="o">(</span><span class="n">listOfFutures</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>其實可以改成這樣:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">val</span> <span class="n">futureList</span> <span class="k">=</span> <span class="nc">Future</span><span class="o">.</span><span class="n">sequence</span><span class="o">(</span><span class="n">list</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">name</span> <span class="k">=&gt;</span> <span class="nc">Future</span><span class="o">(</span><span class="n">name</span><span class="o">.</span><span class="n">length</span><span class="o">)))</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>這樣的結果也是會回傳一個 Future[List[Int]]。
+很明顯的這樣的作法簡單很多，因為少建立 Actor 也不需要再將 Actor 所回傳的值轉型（就是前面看到的 mapTo[Int]）。
+我是還蠻喜歡這樣做的，不過由於後面要使用到 Router 所以就沒有直接使用 Future 了。</p>
+
+<p>所以必需要讓 Future 知道他有哪個 ExecutionContext 可以讓他使用以便執行工作。
+雖然文件中有提到如果 scope 內存在 ActorSystem ，他會自己使用 ActorSystem 的 default dispatcher，
+不過很可惜的這個功能我沒有測試出來，不然就是我誤解了這段話的意思。
+如果有朝一日我突然開悟想通了再來補上這一段。</p>
+
+<p>而在 Akka 裡面所有的 Dispatcher 都是繼承自 ExecutionContext
+所以要設定這個也不太花時間。</p>
+
+<p>如果要使用 Future 的是一個 Actor，那麼只要直接設定 Actor 的 dispatcher 就可以了。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">MyActor</span> <span class="k">extends</span> <span class="nc">Actor</span><span class="o">{</span>
+</span><span class='line'><span class="k">implicit</span> <span class="k">val</span> <span class="n">defaultDispatch</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">dispatcher</span>
+</span><span class='line'><span class="o">.</span>
+</span><span class='line'><span class="o">.</span>
+</span><span class='line'><span class="o">.</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>至於為什麼要使用 implicit 呢？因為 Future 的 Function 中 dispatcher 都是用 implicit 的型態，
+所以如果沒有傳參數給他的時候，他會自動在這個 scope 裡面找尋是否有宣告成 implicit 的 ExecutionContext 變數。</p>
+
+<p>如果使用 Future 的地方不是在 Actor 內，或不想使用 Actor 的 dispatch。那麼可以自己建立 Java 的 Executor ，並且將他轉成 ExecutionContext。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">val</span> <span class="n">es</span> <span class="k">=</span> <span class="nc">Executors</span><span class="o">.</span><span class="n">newFixedThreadPool</span><span class="o">(</span><span class="n">threadSize</span><span class="o">)</span>             <span class="c1">//Java Executor</span>
+</span><span class='line'><span class="k">implicit</span> <span class="k">val</span> <span class="n">ec</span> <span class="k">=</span> <span class="nc">ExecutionContext</span><span class="o">.</span><span class="n">fromExecutorService</span><span class="o">(</span><span class="n">es</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>這樣在使用 Future 的時候他就會自動去找 ExecutionContext 來執行。</p>
+
+<h2>如果 Future 執行的過程中有發生 Exception</h2>
+
+<p>Future 用 <strong>recover</strong> 與 <strong>recoverWith</strong> 來處理 Future 執行過程中的所丟出的 Exception。</p>
+
+<p>使用方式非常的簡單，寫起來也蠻漂亮的，只要在建立 Future 時使用 recover 或 recoverWith 並且加入要處理的例外就好了。</p>
+
+<p>例如</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="nc">Future</span><span class="o">(</span><span class="n">parsePage</span><span class="o">(</span><span class="n">pageNumber</span><span class="o">))</span> <span class="n">recover</span> <span class="o">{</span> <span class="k">case</span> <span class="n">e</span><span class="k">:</span><span class="kt">Exception</span> <span class="o">=&gt;</span> <span class="nc">List</span><span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="o">&gt;</span><span class="nc">Post</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>上面表示當我執行 parsePage 時如果發生任何 Excetpion 那麼就回傳一個空的 list。</p>
+
+<p>而 recover 與 recoverWith 的差別就在於，recoverWith 內的 Function 要回傳的型態是 Future[Int] 而 recover 則是 Int。</p>
+
+<p>晚點整理一個使用 Future 的完整例子好了，現在寫的東西真的太不入流了 XDDDDDD
+我很難把程式碼直接貼上來當範例。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Akka 2.0 筆記 (2) - 開始使用 Future]]></title>
@@ -671,214 +776,6 @@ EventStream 只存在於 ActorSystem 底下，要使用 EventStream 的第一步
 
 <p>hcutf8.txt 是個對應表，他列出了簡體字跟繁體字的對應。所以如果想自行更改轉換字的話，可以修改這個檔案（應該可以）。
 要使用只要執行 Converter.bat 就會自動將 Source 資料夾底下 <strong> 所有 </strong> 的檔案，轉換到 Result 資料夾底下，就這樣而已了。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Scala ORM 工具筆記-Circumflex與ActiveJDBC]]></title>
-    <link href="http://Swind.github.com/blog/2012/02/07/scala-orm-libraries/"/>
-    <updated>2012-02-07T13:44:00+08:00</updated>
-    <id>http://Swind.github.com/blog/2012/02/07/scala-orm-libraries</id>
-    <content type="html"><![CDATA[<h1>Circumflex</h1>
-
-<hr />
-
-<h2>Prepare</h2>
-
-<p><a href="http://circumflex.ru/">Circumflex</a>我是使用SBT連到Maven repository去載入他所有的Library。
-載入的項目有</p>
-
-<pre><code>circumflex-orm-2.1.jar
-circumflex-core-2.1.jar
-commons-io-2.0.1
-circumflex-cache-2.1.jar
-slf4j-api-1.6.1
-ehcache-core-2.4.4
-jta-1.1.jar
-c3p0-0.9.1.1.jar
-</code></pre>
-
-<p>Circumflex全部載入約2.3MB左右，比其他LightWeight的Library要大的很多。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">EnvyPost</span><span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">val</span> <span class="nc">UID</span><span class="k">:</span><span class="kt">Integer</span>
-</span><span class='line'><span class="k">val</span> <span class="n">title</span><span class="k">:</span><span class="kt">String</span>
-</span><span class='line'><span class="k">val</span> <span class="n">lastPostTime</span><span class="k">:</span><span class="kt">Date</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">def</span> <span class="n">parse</span><span class="o">(</span><span class="n">url</span><span class="k">:</span><span class="kt">String</span><span class="o">)</span><span class="k">:</span><span class="kt">List</span><span class="o">[</span><span class="kt">EnvyPost</span><span class="o">]={}</span>
-</span><span class='line'><span class="k">def</span> <span class="n">parse</span><span class="o">(</span><span class="n">file</span><span class="k">:</span><span class="kt">File</span><span class="o">)</span><span class="k">:</span><span class="kt">List</span><span class="o">[</span><span class="kt">EnvyPost</span><span class="o">]={}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<!--more-->
-
-
-<h2>Create Table</h2>
-
-<p>Circumflex的設計，主要是在是產生一個對應的資料物件，例如</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">Country</span> <span class="k">extends</span> <span class="nc">Record</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Country</span><span class="o">]</span> <span class="o">{</span>
-</span><span class='line'>  <span class="k">val</span> <span class="n">code</span> <span class="k">=</span> <span class="s">&quot;code&quot;</span><span class="o">.</span><span class="nc">VARCHAR</span><span class="o">(</span><span class="mi">2</span><span class="o">).</span><span class="nc">NOT_NULL</span><span class="o">.</span><span class="nc">DEFAULT</span><span class="o">(</span><span class="s">&quot;&#39;ch&#39;&quot;</span><span class="o">)</span>
-</span><span class='line'>  <span class="k">val</span> <span class="n">name</span> <span class="k">=</span> <span class="s">&quot;name&quot;</span><span class="o">.</span><span class="nc">TEXT</span><span class="o">.</span><span class="nc">NOT_NULL</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="k">def</span> <span class="n">cities</span> <span class="k">=</span> <span class="n">inverseMany</span><span class="o">(</span><span class="nc">City</span><span class="o">.</span><span class="n">country</span><span class="o">)</span>
-</span><span class='line'>  <span class="k">def</span> <span class="n">relation</span> <span class="k">=</span> <span class="nc">Country</span>
-</span><span class='line'>  <span class="k">def</span> <span class="nc">PRIMARY_KEY</span> <span class="k">=</span> <span class="n">code</span>
-</span><span class='line'><span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">object</span> <span class="nc">Country</span> <span class="k">extends</span> <span class="nc">Country</span> <span class="k">with</span> <span class="nc">Table</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Country</span><span class="o">]</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>其中class與object兩者皆為必要的，但是在object Country的繼承型態宣告，連續繼承了Country與Table。
-我覺得這部分會讓人有點困惑為何需要如此處理，但是這還是其次的。</p>
-
-<p>在建立好資料物件之後，就可以利用此資料物件Create Table。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">val</span> <span class="n">ddl</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">DDLUnit</span><span class="o">(</span><span class="nc">Country</span><span class="o">)</span>
-</span><span class='line'><span class="n">ddl</span><span class="o">.</span><span class="nc">CREATE</span>
-</span><span class='line'><span class="n">ddl</span><span class="o">.</span><span class="nc">DROP</span>
-</span><span class='line'><span class="n">ddl</span><span class="o">.</span><span class="nc">DROP_CREATE</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>建立Table的部分非常方便。</p>
-
-<h2>讓我不會用的Association</h2>
-
-<p>關聯式資料庫的架構非常常見，不管是One-to-One、One-to-Many等結構，我的小程式也很需要這方面功能的支持。
-Circumflex的設定方式是將變數宣告成inverseMany或inverseOne的型態，他目前沒有支援Many-to-Many。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">City</span> <span class="k">extends</span> <span class="nc">Record</span><span class="o">[</span><span class="kt">Long</span>, <span class="kt">City</span><span class="o">]</span> <span class="o">{</span>
-</span><span class='line'>  <span class="k">val</span> <span class="n">country</span> <span class="k">=</span> <span class="s">&quot;country_code&quot;</span><span class="o">.</span><span class="nc">TEXT</span><span class="o">.</span><span class="nc">REFERENCES</span><span class="o">(</span><span class="nc">Country</span><span class="o">).</span><span class="nc">ON_DELETE</span><span class="o">(</span><span class="nc">CASCADE</span><span class="o">).</span><span class="nc">ON_UPDATE</span><span class="o">(</span><span class="nc">NO_ACTION</span><span class="o">)</span>
-</span><span class='line'><span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">Country</span> <span class="k">extends</span> <span class="nc">Record</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Country</span><span class="o">]</span> <span class="o">{</span>
-</span><span class='line'>  <span class="k">def</span> <span class="n">cities</span> <span class="k">=</span> <span class="n">inverseMany</span><span class="o">(</span><span class="nc">City</span><span class="o">.</span><span class="n">country</span><span class="o">)</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>inverseMany會回傳一個inverseMany的物件，呼叫inverseMany.get之後可以得到一個seq的物件。這個物件是immutable的
-，因此你沒有辦法插入資料。所以我想像中的使用方式是Country與City兩個都是各自去儲存的，
-然後可以透過Country.cities()取得所有有關的City，相對的City.country()則可以查詢取得對應的Country。
-但是這比較不符合我想要的方式，我還是希望那個Collection是可以讓我CRUD的，並且在儲存Country的時候可以一併更新City。</p>
-
-<h1>ActiveJDBC</h1>
-
-<hr />
-
-<h2>Prepare</h2>
-
-<p><a href="http://code.google.com/p/activejdbc/">activejdbc</a>所需要的Library比較多一點，因此建議使用Maven去匯入，或者使用SBT將會減少很多麻煩。
-匯入的方式可以參考<a href="http://code.google.com/p/activejdbc/wiki/GettingStarted">Getting Start</a>。
-我在這邊也簡單列出一下使用activejdbc有匯入的Library</p>
-
-<pre><code>activejdbc-1.2-SNAPSHOT.jar
-slf4j-api-1.5.10
-javalite-common-1.2-SNAPSHOT.jar
-ehcache-core-2.4.5
-</code></pre>
-
-<p>上面這幾個Library中，以ehcache最大約9xx KB</p>
-
-<h2>Create Table</h2>
-
-<p>activejdbc並沒有支援Create Table等動作，因此這些動作需要自己撰寫SQL來處理。</p>
-
-<h2>Write Model</h2>
-
-<p>寫Model的時候最主要要注意物件的名稱，如果你的Table名稱是"employees"這種複數名詞，那麼你的Model名稱就應該為"employee"。
-activejdbc會自動對應複數名詞的Table與單數名詞的Model。(不知道對於es之類的這種變化他是不是也可以處理)。
-當然如果有需要的話，也可以使用<strong>@Table</strong>來指定Table名稱。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;@</span><span class="nc">Table</span><span class="o">(</span><span class="s">&quot;TABLE_NAME&quot;</span><span class="o">)</span>
-</span><span class='line'><span class="k">class</span> <span class="nc">employe</span> <span class="k">extends</span> <span class="nc">Model</span><span class="o">{}</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>P.S 幹悲劇了，由於activejdbc裡面的Model的set有三種傳值方式。</p>
-
-<pre><code>set(Object... namesAndValues)
-set(String[] attributeNames,Object[] values)
-set(String attribute,Object value)
-</code></pre>
-
-<p>這種寫法Scala在使用的時候會認為是<strong>ambiguous reference to overloaded definition</strong>
-因為當我們使用</p>
-
-<pre><code>employe.set("name","John")
-</code></pre>
-
-<p>的時候，Scala會覺得符合set(Object... namesAndValues)與set(String attribute,Object Value)。
-不過我覺得這方面Scala蠻合理的，去查了一下似乎也傾向不會去修改這個。(抱頭 Orz)
-如果修改成使用</p>
-
-<pre><code>set(String[] attributeNames,Object[] values)
-</code></pre>
-
-<p>就不會有問題了 WTF
-另外一個解決方式就是使用setString等指定型態的設定方式，我想這應該是個不錯的解法</p>
-
-<pre><code>employe.setString("name","John")
-</code></pre>
-
-<h1>放棄activejdbc</h1>
-
-<p>他還有一個instrumentation的步驟，這個步驟我覺得影響太多了，不適合拿來跟Scala一起合用。</p>
 ]]></content>
   </entry>
   
