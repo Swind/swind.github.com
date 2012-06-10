@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Scala | Corleonis]]></title>
   <link href="http://Swind.github.com/blog/categories/scala/atom.xml" rel="self"/>
   <link href="http://Swind.github.com/"/>
-  <updated>2012-06-10T18:19:54+08:00</updated>
+  <updated>2012-06-10T18:22:10+08:00</updated>
   <id>http://Swind.github.com/</id>
   <author>
     <name><![CDATA[Swind]]></name>
@@ -25,6 +25,8 @@
 
 <!--more-->
 
+
+<h2>Execution Contexts</h2>
 
 <p>因為 Future 除了跟 Actor 配合使用之外，也可以直接使用。</p>
 
