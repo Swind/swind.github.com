@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Scala | Corleonis]]></title>
   <link href="http://Swind.github.com/blog/categories/scala/atom.xml" rel="self"/>
   <link href="http://Swind.github.com/"/>
-  <updated>2012-06-13T18:16:50+08:00</updated>
+  <updated>2012-06-13T18:19:50+08:00</updated>
   <id>http://Swind.github.com/</id>
   <author>
     <name><![CDATA[Swind]]></name>
@@ -54,7 +54,7 @@ Akka 的 Future 到底有沒有存在的意義呢？</p>
 
 <p>因為那個 Blog 的範例我估計來自於 Akka 1.3.1 之前的版本，所以我做了一些更動才能在 Akka 2.0 上面跑。</p>
 
-<p>很幸運或者是很不性的是 Dataflow 的部份則是從 Akka 1.x 就沒有變動過了，所以基本邏輯都沒有改變。</p>
+<p>很幸運或者是很不幸的是 Dataflow 的部份則是從 Akka 1.x 就沒有變動過了，所以基本邏輯都沒有改變。</p>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>This code is from Dataflow Concurrency - software anatomy </span></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
