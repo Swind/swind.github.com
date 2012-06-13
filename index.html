@@ -9,8 +9,9 @@
   <meta name="author" content="Swind">
 
   
-  <meta name="description" content="而是我實在是不擅長寫作，過去作文只有 20 分真的不是拿假的。
-前一篇的 開始使用 Future 只有介紹一些基本的使用方式而已，然後依照前面的程式碼是絕對跑不起來的 Orz &#8230; 原因在於 Future 需要一個 Execution Contexts 類似 Java 裡面的 &hellip;">
+  <meta name="description" content="因為我也看不懂 Orz &#8230; 這整篇的原因起於，洗澡的時候想到的，
+Akka 的 Future 到底有沒有存在的意義呢？ 因為當一個 Actor 用 reply 或者 sender 回傳結果的時候，其實可以再 receive 不同的型態的 Message 就好了。
+而且這樣還不會因為 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -105,7 +106,67 @@
       
   <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2012/06/10/new-post/">Akka 2.0 筆記(3) - Future 之實在不是我想要拖稿</a></h1>
+      <h1 class="entry-title"><a href="/blog/2012/06/12/akka-dataflow/">Akka 2.0 筆記(4) - Dataflow 請不要期待這篇我會提到什麼</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-12T21:55:00+08:00" pubdate data-updated="true">Jun 12<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/06/12/akka-dataflow/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1>因為我也看不懂 Orz &#8230;</h1>
+
+<p>這整篇的原因起於，洗澡的時候想到的，
+Akka 的 Future 到底有沒有存在的意義呢？</p>
+
+<p>因為當一個 Actor 用 reply 或者 sender 回傳結果的時候，其實可以再 receive 不同的型態的 Message 就好了。
+而且這樣還不會因為 Await 而需要 block thread，減少 dead lock 的發生。
+我之前就幹過很蠢的事情，因為 Actor 把 Thread Pool 裡面的 Thread 用光了，所以他底下幫他工作的 Actor 就取不到 Thread 可以執行，
+因此全部 Timeout Orz &#8230;</p>
+
+<p>目前唯一能想到的用法就是在發出訊息的地方不是一個 Actor 的時候，這時候就沒有 receive 可以接收結果了。
+所以需要使用 Future 來等待結果，也就是 Future 應該只被用在需要等待的時候，如果是在一個 Actor 被執行的時候使用 Future。
+很容易浪費掉一個 Thread，應該是要另外開一個新的 case class 來專門處理結果才是。</p>
+
+<p>但是這邊又出現了一個更複雜的問題了，因為我將工作分給不同的 Actor 去執行，必須要等到所有 Actor 都執行完畢，整合所有的結果。
+那麼如果是用 receive 我要怎樣才能知道我所有的工作都已經完成了呢？</p>
+
+<p>簡單來說，我就是需要實做一個 <a href="http://www.eaipatterns.com/BroadcastAggregate.html">Scatter-Gather</a>，才會莫名其妙的看到 Akka 的 Dataflow。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/06/12/akka-dataflow/">繼續閱讀 &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/10/akka-note-3-future/">Akka 2.0 筆記(3) - Future 之實在不是我想要拖稿</a></h1>
     
     
       <p class="meta">
@@ -123,7 +184,7 @@
 
 <time datetime="2012-06-10T17:30:00+08:00" pubdate data-updated="true">Jun 10<span>th</span>, 2012</time>
         
-         | <a href="/blog/2012/06/10/new-post/#disqus_thread">Comments</a>
+         | <a href="/blog/2012/06/10/akka-note-3-future/#disqus_thread">Comments</a>
         
       </p>
     
@@ -139,7 +200,7 @@
   
   
     <footer>
-      <a rel="full-article" href="/blog/2012/06/10/new-post/">繼續閱讀 &rarr;</a>
+      <a rel="full-article" href="/blog/2012/06/10/akka-note-3-future/">繼續閱讀 &rarr;</a>
     </footer>
   
 
@@ -597,7 +658,11 @@ c3p0-0.9.1.1.jar
     <li class="nav-header">Recent Posts</li>
     
       <li class="post">
-        <a href="/blog/2012/06/10/new-post/">Akka 2.0 筆記(3) - Future 之實在不是我想要拖稿</a>
+        <a href="/blog/2012/06/12/akka-dataflow/">Akka 2.0 筆記(4) - Dataflow 請不要期待這篇我會提到什麼</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/10/akka-note-3-future/">Akka 2.0 筆記(3) - Future 之實在不是我想要拖稿</a>
       </li>
     
       <li class="post">
@@ -610,10 +675,6 @@ c3p0-0.9.1.1.jar
     
       <li class="post">
         <a href="/blog/2012/05/11/epubconverter-implement-note/">實作 EPUBConverter 的筆記</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/05/11/epubconverter/">EPUBConverter - epub格式簡轉繁小工具</a>
       </li>
     
   </ul>
@@ -639,7 +700,7 @@ c3p0-0.9.1.1.jar
 
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/java' style='font-size: 115.0%'>Java(2)</a> <a href='/blog/categories/octopress' style='font-size: 107.5%'>Octopress(1)</a> <a href='/blog/categories/scala' style='font-size: 160.0%'>Scala(8)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/java' style='font-size: 113.33333333333333%'>Java(2)</a> <a href='/blog/categories/octopress' style='font-size: 106.66666666666667%'>Octopress(1)</a> <a href='/blog/categories/scala' style='font-size: 160.0%'>Scala(9)</a> </span>
 </section>
 
   
