@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Scala | Corleonis]]></title>
-  <link href="http://Swind.github.com/blog/categories/scala/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Akka | Corleonis]]></title>
+  <link href="http://Swind.github.com/blog/categories/akka/atom.xml" rel="self"/>
   <link href="http://Swind.github.com/"/>
   <updated>2012-06-16T23:19:47+08:00</updated>
   <id>http://Swind.github.com/</id>

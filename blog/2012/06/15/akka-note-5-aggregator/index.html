@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Corleonis</title>
+  <title>Akka 2.0 筆記(5) - Scatter Gather - Corleonis</title>
   <meta name="author" content="Swind">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://Swind.github.com">
+  <link rel="canonical" href="http://Swind.github.com/blog/2012/06/15/akka-note-5-aggregator">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/bootstrap/bootstrap.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/stylesheets/bootstrap/responsive.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -96,15 +96,13 @@
 </nav>
   <div class="container">
     <div class="row-fluid">
-      <div class="span9">
-  
-  
-  
-    <article>
       
+<article class="hentry span9" role="article">
+
+  
   <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2012/06/15/akka-note-5-aggregator/">Akka 2.0 筆記(5) - Scatter Gather</a></h1>
+      <h1 class="entry-title">Akka 2.0 筆記(5) - Scatter Gather</h1>
     
     
       <p class="meta">
@@ -122,14 +120,14 @@
 
 <time datetime="2012-06-15T08:58:00+08:00" pubdate data-updated="true">Jun 15<span>th</span>, 2012</time>
         
-         | <a href="/blog/2012/06/15/akka-note-5-aggregator/#disqus_thread">Comments</a>
+         | <a href="#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>繼上次完全看不懂的 Dataflow 之後，我還是想要一個 Akka 的 Scatter Gather 實作方式，因此想試著自己實做看看。</p>
+<div class="entry-content"><p>繼上次完全看不懂的 Dataflow 之後，我還是想要一個 Akka 的 Scatter Gather 實作方式，因此想試著自己實做看看。</p>
 
 <p>下圖是 <a href="http://www.eaipatterns.com/">Enterprise Integration Patterns</a> 書中的 Scatter-Gather 概念圖。</p>
 
@@ -402,82 +400,16 @@ Router 其實本身跟我們這邊所實做的 Master Actor 很像，透過 Rout
 
 <p><img src="https://dl.dropbox.com/u/15537823/Blog/Akka%202.0%20%E7%AD%86%E8%A8%98%285%29%20-%20Scatter%20Gather/Photo%2012-6-16%20%E4%B8%8B%E5%8D%8810%2042%2021.png"></p>
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/06/12/akka-dataflow/">Akka 2.0 筆記(4) - Dataflow 請不要期待這篇我會提到什麼</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
   
 
+<span class="byline author vcard">Posted by <span class="fn">Swind</span></span>
 
-<time datetime="2012-06-12T21:55:00+08:00" pubdate data-updated="true">Jun 12<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/06/12/akka-dataflow/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1>因為我也看不懂 Orz &#8230;</h1>
-
-<p>這整篇的原因起於，洗澡的時候想到的，
-Akka 的 Future 到底有沒有存在的意義呢？</p>
-
-<p>因為當一個 Actor 用 reply 或者 sender 回傳結果的時候，其實可以再 receive 不同的型態的 Message 就好了。
-而且這樣還不會因為 Await 而需要 block thread，減少 dead lock 的發生。
-我之前就幹過很蠢的事情，因為 Actor 把 Thread Pool 裡面的 Thread 用光了，所以他底下幫他工作的 Actor 就取不到 Thread 可以執行，
-因此全部 Timeout Orz &#8230;</p>
-
-<p>目前唯一能想到的用法就是在發出訊息的地方不是一個 Actor 的時候，這時候就沒有 receive 可以接收結果了。
-所以需要使用 Future 來等待結果，也就是 Future 應該只被用在需要等待的時候，如果是在一個 Actor 被執行的時候使用 Future。
-很容易浪費掉一個 Thread，應該是要另外開一個新的 case class 來專門處理結果才是。</p>
-
-<p>但是這邊又出現了一個更複雜的問題了，因為我將工作分給不同的 Actor 去執行，必須要等到所有 Actor 都執行完畢，整合所有的結果。
-那麼如果是用 receive 我要怎樣才能知道我所有的工作都已經完成了呢？</p>
-
-<p>簡單來說，我就是需要實做一個 <a href="http://www.eaipatterns.com/BroadcastAggregate.html">Scatter-Gather</a>，才會莫名其妙的看到 Akka 的 Dataflow。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/06/12/akka-dataflow/">繼續閱讀 &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
       
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/06/10/akka-note-3-future/">Akka 2.0 筆記(3) - Future 之實在不是我想要拖稿</a></h1>
-    
-    
-      <p class="meta">
-        
 
 
 
@@ -489,421 +421,50 @@ Akka 的 Future 到底有沒有存在的意義呢？</p>
   
 
 
-<time datetime="2012-06-10T17:30:00+08:00" pubdate data-updated="true">Jun 10<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/06/10/akka-note-3-future/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>而是我實在是不擅長寫作，過去作文只有 20 分真的不是拿假的。
-前一篇的 <strong>開始使用 Future</strong> 只有介紹一些基本的使用方式而已，然後依照前面的程式碼是絕對跑不起來的 Orz &#8230;</p>
-
-<p>原因在於 Future 需要一個 Execution Contexts 類似 Java 裡面的 Executor，也就是 Thread Pool。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/06/10/akka-note-3-future/">繼續閱讀 &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
+<time datetime="2012-06-15T08:58:00+08:00" pubdate data-updated="true">Jun 15<span>th</span>, 2012</time>
       
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/06/08/akka-note-2-eventstream/">Akka 2.0 筆記 (2) - 開始使用 Future</a></h1>
-    
-    
-      <p class="meta">
-        
 
-
-
-
-
-
-
-
+<span class="categories">
   
+    <a class='category' href='/blog/categories/akka/'>Akka</a>, <a class='category' href='/blog/categories/scala/'>Scala</a>
+  
+</span>
 
 
-<time datetime="2012-06-08T12:18:00+08:00" pubdate data-updated="true">Jun 8<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/06/08/akka-note-2-eventstream/#disqus_thread">Comments</a>
-        
-      </p>
+    </p>
     
-  </header>
-
-
-  <div class="entry-content"><p>以前再使用 Java Thread 的時候最困擾我的就是 Thread 之間的溝通。
-要怎樣讓一個 Thread 去等待另外一個 Thread？要怎樣才能讓工作分配的平均？
-最後是靠 BlockingQueue 才讓實作變得簡單一點，
-不過想當然問題當然一大堆 &#8230; Orz</p>
-
-<p>所以想來實驗看看 Akka 的 Future 與 Router 到底是如何使用，與可以做到什麼事情。</p>
-
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://Swind.github.com/blog/2012/06/15/akka-note-5-aggregator/" data-via="swind" data-counturl="http://Swind.github.com/blog/2012/06/15/akka-note-5-aggregator/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/06/08/akka-note-2-eventstream/">繼續閱讀 &rarr;</a>
-    </footer>
-  
 
-
-    </article>
-  
-  
-    <article>
+    
+    
+    <section>
+      <h1>Comments</h1>
+      <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </section>
+    
+    <ul class="pager">
       
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/17/akka-note-1/">Akka 2.0 筆記 (1)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-17T18:03:00+08:00" pubdate data-updated="true">May 17<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/05/17/akka-note-1/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>因為我的程式還沒有寫完，所以是筆記 (1)，寫的過程應該還會有 2 3 &#8230; 出現 Orz。</p>
-
-<p>Akka 2.0 - 要升級了</p>
-
-<h2><strike>英雄王你的武器庫存量</strike>時間的庫存量足夠嗎 ?</h2>
-
-<p>Akka 進入了 2.0 時代，恭喜你如果你是用 1.x 的話，請準備改寫吧 &#8230;
-先從幾個方面來看 2.0 的新增事項。</p>
-
-<p>以下算是筆記，如有錯誤請多指教</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/05/17/akka-note-1/">繼續閱讀 &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
+      <li class="previous"><a class="basic-alignment left"
+        href="/blog/2012/06/12/akka-dataflow/" title="Previous Post:
+        Akka 2.0 筆記(4) - Dataflow 請不要期待這篇我會提到什麼">&laquo; Akka 2.0 筆記(4) - Dataflow 請不要期待這篇我會提到什麼</a></li>
       
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/11/epubconverter-implement-note/">實作 EPUBConverter 的筆記</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-11T18:19:00+08:00" pubdate data-updated="true">May 11<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/05/11/epubconverter-implement-note/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1>好吧，我要開始筆記一下這次的實作心得了</h1>
-
-<p>其實在學 Scala 的這一段時間中，我最困擾的就是到底怎樣才是好的 Scala 寫作風格。
-因為 Scala 最吸引我的部份就是在於他的語法可以不斷的精鍊再精鍊，最後變成<strong>魔法文字</strong> Orz。
-所以要怎樣善用 Scala 的語言特性，卻又不失可讀性，我覺得真的很難。
-因此在這次的小工具實作中，我試著摸索 Curry 的用法。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/05/11/epubconverter-implement-note/">繼續閱讀 &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
+      <li><a href="/blog/archives">Blog Archives</a></li>
       
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/11/epubconverter/">EPUBConverter - Epub格式簡轉繁小工具</a></h1>
-    
-    
-      <p class="meta">
-        
+    </ul>
+  </footer>
+</article>
 
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-11T16:56:00+08:00" pubdate data-updated="true">May 11<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/05/11/epubconverter/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1>下載點</h1>
-
-<p><a href="https://github.com/Swind/EPUBConverter/downloads">EPUBConverter 0.0.1</a></p>
-
-<p>這個版號我覺得也沒有機會到 0.0.2 了，不過還是讓我命名個版號滿足小小的虛榮心好了。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/05/11/epubconverter/">繼續閱讀 &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/07/scala-orm-libraries/">Scala ORM 工具筆記-Circumflex與ActiveJDBC</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-07T13:44:00+08:00" pubdate data-updated="true">Feb 7<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/02/07/scala-orm-libraries/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1>Circumflex</h1>
-
-<hr />
-
-<h2>Prepare</h2>
-
-<p><a href="http://circumflex.ru/">Circumflex</a>我是使用SBT連到Maven repository去載入他所有的Library。
-載入的項目有</p>
-
-<pre><code>circumflex-orm-2.1.jar
-circumflex-core-2.1.jar
-commons-io-2.0.1
-circumflex-cache-2.1.jar
-slf4j-api-1.6.1
-ehcache-core-2.4.4
-jta-1.1.jar
-c3p0-0.9.1.1.jar
-</code></pre>
-
-<p>Circumflex全部載入約2.3MB左右，比其他LightWeight的Library要大的很多。</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">class</span> <span class="nc">EnvyPost</span><span class="o">{</span>
-</span><span class='line'>    <span class="k">val</span> <span class="nc">UID</span><span class="k">:</span><span class="kt">Integer</span>
-</span><span class='line'>    <span class="k">val</span> <span class="n">title</span><span class="k">:</span><span class="kt">String</span>
-</span><span class='line'>    <span class="k">val</span> <span class="n">lastPostTime</span><span class="k">:</span><span class="kt">Date</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">def</span> <span class="n">parse</span><span class="o">(</span><span class="n">url</span><span class="k">:</span><span class="kt">String</span><span class="o">)</span><span class="k">:</span><span class="kt">List</span><span class="o">[</span><span class="kt">EnvyPost</span><span class="o">]={}</span>
-</span><span class='line'><span class="k">def</span> <span class="n">parse</span><span class="o">(</span><span class="n">file</span><span class="k">:</span><span class="kt">File</span><span class="o">)</span><span class="k">:</span><span class="kt">List</span><span class="o">[</span><span class="kt">EnvyPost</span><span class="o">]={}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/02/07/scala-orm-libraries/">繼續閱讀 &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/01/22/scala-log-tools/">Scala Log 工具筆記</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-01-22T15:59:00+08:00" pubdate data-updated="true">Jan 22<span>nd</span>, 2012</time>
-        
-         | <a href="/blog/2012/01/22/scala-log-tools/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>之前偷懶都直接使用println來輸出訊息，但是最近在玩<a href="http://akka.io/">Akka</a>，我發現如果沒有使用log tool的話我根本不知道是哪個Actor印訊息的。
-只好搜尋一下Scala上面有沒有什麼好用的Log工具。</p>
-
-<h2>slf4s + slf4j + logback</h2>
-
-<p>一般依照以往的習慣基本就是<a href="http://logging.apache.org/log4j/">log4j</a> + <a href="http://www.slf4j.org/">slf4j</a>，這算是最通用的工具組了。但是Scala有這麼多特異功能，說不定會有更神奇的Log工具，
-於是就抱著這樣的心態跟Google大神詢問求籤。最後看到logback這個工具（雖然跟Scala完全沒有關係）但是人都是喜新厭舊 XD，所以
-我就從slf4j+log4j轉到slf4j+logback，附帶一提logback是slf4j預設的log工具，因此使用這兩個的組合不需要另外抓Adapter。（ex.slf4j-log4j12-1.6.4.jar之類的）</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/01/22/scala-log-tools/">繼續閱讀 &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2011/10/27/jsoup/">好用的HTML Parser-jsoup</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-10-27T08:47:00+08:00" pubdate data-updated="true">Oct 27<span>th</span>, 2011</time>
-        
-         | <a href="/blog/2011/10/27/jsoup/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1>What is jsoup</h1>
-
-<hr />
-
-<p>HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
-為了要從網頁中可以取出內容,我曾經用過不少方式,包括直接硬幹用字串搜尋、修改Scala本身內部的XML Parser等。
-但是一直都找不到一個滿意又順手的解決方式,一直到後來在<a href="http://www.oschina.net/">CSDN</a>沒錯就是那個大陸網站<a href="http://www.oschina.net/">CSDN</a>
-(雖然說CSDN訊息太多太雜亂,但是偶爾還是可以看到一些不錯的東西),才找到jsoup這個library。</p>
-
-<p><a href="http://jsoup.org/">jsoup的官方網站</a></p>
-
-<p><a href="http://jsoup.org/cookbook/">jsoup的教學文件</a></p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2011/10/27/jsoup/">繼續閱讀 &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  <ul class="pager">
-    
-    <li class="previous"><a href="/blog/page/2/">&larr; Older</a></li>
-    
-    <li><a href="/blog/archives">Blog Archives</a></li>
-    
-  </ul>
-</div>
 <aside class="sidebar-nav span3">
   
     <section class="well">
@@ -937,7 +498,7 @@ c3p0-0.9.1.1.jar
 <section class="well">
   <ul id="tweets" class="nav">
     <li class="nav-header">Latest Tweets</li>
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   <script type="text/javascript">
     $.domReady(function(){
@@ -959,6 +520,7 @@ c3p0-0.9.1.1.jar
   
 </aside>
 
+
     </div>
   </div>
   <footer role="contentinfo" class="page-footer"><hr>
@@ -974,7 +536,10 @@ c3p0-0.9.1.1.jar
       var disqus_shortname = 'swindgithub';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://Swind.github.com/blog/2012/06/15/akka-note-5-aggregator/';
+        var disqus_url = 'http://Swind.github.com/blog/2012/06/15/akka-note-5-aggregator/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
