@@ -4,7 +4,7 @@
   <title><![CDATA[Corleonis]]></title>
   <link href="http://Swind.github.com/atom.xml" rel="self"/>
   <link href="http://Swind.github.com/"/>
-  <updated>2012-06-16T23:19:47+08:00</updated>
+  <updated>2012-06-16T23:20:34+08:00</updated>
   <id>http://Swind.github.com/</id>
   <author>
     <name><![CDATA[Swind]]></name>
@@ -32,6 +32,9 @@
 <blockquote><p>整個 use case 是要執行一個 Job，這個 Job 由許多 Tasks 組成，在執行的過程中，會將這些 Tasks 透過 router 分派給 worker actors 執行。
 最後收集所有 worker 的執行結果，並且將他們合併之後回傳。
 除此之外， worker 在執行過程中發生錯誤時，應該要進行 retry，在進行幾次 retry 後依然有錯誤時，Worker 就會停止，並且中止整個 Job。</p></blockquote>
+
+<!--more-->
+
 
 <h2>Master Actor</h2>
 
