@@ -9,7 +9,8 @@
   <meta name="author" content="Swind">
 
   
-  <meta name="description" content="繼上次完全看不懂的 Dataflow 之後，我還是想要一個 Akka 的 Scatter Gather 實作方式，因此想試著自己實做看看。 下圖是 Enterprise Integration Patterns 書中的 Scatter-Gather 概念圖。 從圖中可以發現，中間對於 Vendor &hellip;">
+  <meta name="description" content="今天早上先簡單了依照昨天畫得架構圖做了一個雛型，整個跑起來功能是以了，但是流程整個悲劇 Orz &#8230;
+先是 Exception Handling 做的不夠好，結果就真的是 &#8220;Let it Crash&#8221; 一直死一直死一直死，好像在玩 D3 的煉獄模式一樣。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -98,6 +99,89 @@
     <div class="row-fluid">
       <div class="span9">
   
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/17/akka-note-6-my-aggregator/">Akka 2.0 筆記(6) - Dispatcher 的設定</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-17T20:19:00+08:00" pubdate data-updated="true">Jun 17<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/06/17/akka-note-6-my-aggregator/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>今天早上先簡單了依照昨天畫得架構圖做了一個雛型，整個跑起來功能是以了，但是流程整個悲劇 Orz &#8230;
+先是 Exception Handling 做的不夠好，結果就真的是 &#8220;Let it Crash&#8221; 一直死一直死一直死，好像在玩 D3 的煉獄模式一樣。</p>
+
+<p>再來是我沒有去設定 Dispatcher 所以 Thread 用了十幾個。如果我沒有看錯的話，依照 Akka <a href="https://github.com/akka/akka/blob/master/akka-actor/src/main/resources/reference.conf">reference.conf</a> 的設定，
+ Default Dispatcher 使用 fork-join-executor，他的預設設定如下</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'>
+</span><span class='line'><span class="n">fork</span><span class="o">-</span><span class="n">join</span><span class="o">-</span><span class="n">executor</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">#</span> <span class="nc">Min</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span> <span class="n">to</span> <span class="n">cap</span> <span class="n">factor</span><span class="o">-</span><span class="n">based</span> <span class="n">parallelism</span> <span class="n">number</span> <span class="n">to</span>
+</span><span class='line'>  <span class="n">parallelism</span><span class="o">-</span><span class="n">min</span> <span class="k">=</span> <span class="mi">8</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">#</span> <span class="nc">Parallelism</span> <span class="o">(</span><span class="n">threads</span><span class="o">)</span> <span class="o">...</span> <span class="n">ceil</span><span class="o">(</span><span class="n">available</span> <span class="n">processors</span> <span class="o">*</span> <span class="n">factor</span><span class="o">)</span>
+</span><span class='line'>  <span class="n">parallelism</span><span class="o">-</span><span class="n">factor</span> <span class="k">=</span> <span class="mf">3.0</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">#</span> <span class="nc">Max</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span> <span class="n">to</span> <span class="n">cap</span> <span class="n">factor</span><span class="o">-</span><span class="n">based</span> <span class="n">parallelism</span> <span class="n">number</span> <span class="n">to</span>
+</span><span class='line'>  <span class="n">parallelism</span><span class="o">-</span><span class="n">max</span> <span class="k">=</span> <span class="mi">64</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>很簡單的 parallelism-min 與 parallelism-max 的值代表著 Thread 的上下限，那麼 parallelism_factor 呢？</p>
+
+<p>他同樣也是限制 Thread 的上限，上限的計算方式為</p>
+
+<pre><code>  parallelism-factor * 你的處理器核心數
+</code></pre>
+
+<p>所以我的四核心桌機使用這個 Dispatcher 最多會開到 12 個 Thread Orz &#8230;</p>
+
+<p>難怪我的 Thread 會滿天飛了</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/06/17/akka-note-6-my-aggregator/">繼續閱讀 &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -589,60 +673,6 @@ c3p0-0.9.1.1.jar
 
     </article>
   
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2011/10/27/jsoup/">好用的HTML Parser-jsoup</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-10-27T08:47:00+08:00" pubdate data-updated="true">Oct 27<span>th</span>, 2011</time>
-        
-         | <a href="/blog/2011/10/27/jsoup/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1>What is jsoup</h1>
-
-<hr />
-
-<p>HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
-為了要從網頁中可以取出內容,我曾經用過不少方式,包括直接硬幹用字串搜尋、修改Scala本身內部的XML Parser等。
-但是一直都找不到一個滿意又順手的解決方式,一直到後來在<a href="http://www.oschina.net/">CSDN</a>沒錯就是那個大陸網站<a href="http://www.oschina.net/">CSDN</a>
-(雖然說CSDN訊息太多太雜亂,但是偶爾還是可以看到一些不錯的東西),才找到jsoup這個library。</p>
-
-<p><a href="http://jsoup.org/">jsoup的官方網站</a></p>
-
-<p><a href="http://jsoup.org/cookbook/">jsoup的教學文件</a></p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2011/10/27/jsoup/">繼續閱讀 &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <ul class="pager">
     
     <li class="previous"><a href="/blog/page/2/">&larr; Older</a></li>
@@ -658,6 +688,10 @@ c3p0-0.9.1.1.jar
     <li class="nav-header">Recent Posts</li>
     
       <li class="post">
+        <a href="/blog/2012/06/17/akka-note-6-my-aggregator/">Akka 2.0 筆記(6) - Dispatcher 的設定</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/06/15/akka-note-5-aggregator/">Akka 2.0 筆記(5) - Scatter Gather</a>
       </li>
     
@@ -671,10 +705,6 @@ c3p0-0.9.1.1.jar
     
       <li class="post">
         <a href="/blog/2012/06/08/akka-note-2-eventstream/">Akka 2.0 筆記 (2) - 開始使用 Future</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/05/17/akka-note-1/">Akka 2.0 筆記 (1)</a>
       </li>
     
   </ul>
@@ -700,7 +730,7 @@ c3p0-0.9.1.1.jar
 
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/akka' style='font-size: 130.0%'>Akka(5)</a> <a href='/blog/categories/java' style='font-size: 112.0%'>Java(2)</a> <a href='/blog/categories/octopress' style='font-size: 106.0%'>Octopress(1)</a> <a href='/blog/categories/scala' style='font-size: 160.0%'>Scala(10)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/akka' style='font-size: 132.72727272727272%'>Akka(6)</a> <a href='/blog/categories/java' style='font-size: 110.9090909090909%'>Java(2)</a> <a href='/blog/categories/octopress' style='font-size: 105.45454545454545%'>Octopress(1)</a> <a href='/blog/categories/scala' style='font-size: 160.0%'>Scala(11)</a> </span>
 </section>
 
   

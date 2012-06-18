@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Scala | Corleonis]]></title>
   <link href="http://Swind.github.com/blog/categories/scala/atom.xml" rel="self"/>
   <link href="http://Swind.github.com/"/>
-  <updated>2012-06-16T23:20:34+08:00</updated>
+  <updated>2012-06-18T21:16:34+08:00</updated>
   <id>http://Swind.github.com/</id>
   <author>
     <name><![CDATA[Swind]]></name>
@@ -12,6 +12,131 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Akka 2.0 筆記(6) - Dispatcher 的設定]]></title>
+    <link href="http://Swind.github.com/blog/2012/06/17/akka-note-6-my-aggregator/"/>
+    <updated>2012-06-17T20:19:00+08:00</updated>
+    <id>http://Swind.github.com/blog/2012/06/17/akka-note-6-my-aggregator</id>
+    <content type="html"><![CDATA[<p>今天早上先簡單了依照昨天畫得架構圖做了一個雛型，整個跑起來功能是以了，但是流程整個悲劇 Orz ...
+先是 Exception Handling 做的不夠好，結果就真的是 "Let it Crash" 一直死一直死一直死，好像在玩 D3 的煉獄模式一樣。</p>
+
+<p>再來是我沒有去設定 Dispatcher 所以 Thread 用了十幾個。如果我沒有看錯的話，依照 Akka <a href="https://github.com/akka/akka/blob/master/akka-actor/src/main/resources/reference.conf">reference.conf</a> 的設定，
+ Default Dispatcher 使用 fork-join-executor，他的預設設定如下</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="n">fork</span><span class="o">-</span><span class="n">join</span><span class="o">-</span><span class="n">executor</span> <span class="o">{</span>
+</span><span class='line'>  <span class="k">#</span> <span class="nc">Min</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span> <span class="n">to</span> <span class="n">cap</span> <span class="n">factor</span><span class="o">-</span><span class="n">based</span> <span class="n">parallelism</span> <span class="n">number</span> <span class="n">to</span>
+</span><span class='line'>  <span class="n">parallelism</span><span class="o">-</span><span class="n">min</span> <span class="k">=</span> <span class="mi">8</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="k">#</span> <span class="nc">Parallelism</span> <span class="o">(</span><span class="n">threads</span><span class="o">)</span> <span class="o">...</span> <span class="n">ceil</span><span class="o">(</span><span class="n">available</span> <span class="n">processors</span> <span class="o">*</span> <span class="n">factor</span><span class="o">)</span>
+</span><span class='line'>  <span class="n">parallelism</span><span class="o">-</span><span class="n">factor</span> <span class="k">=</span> <span class="mf">3.0</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="k">#</span> <span class="nc">Max</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span> <span class="n">to</span> <span class="n">cap</span> <span class="n">factor</span><span class="o">-</span><span class="n">based</span> <span class="n">parallelism</span> <span class="n">number</span> <span class="n">to</span>
+</span><span class='line'>  <span class="n">parallelism</span><span class="o">-</span><span class="n">max</span> <span class="k">=</span> <span class="mi">64</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>很簡單的 parallelism-min 與 parallelism-max 的值代表著 Thread 的上下限，那麼 parallelism_factor 呢？</p>
+
+<p>他同樣也是限制 Thread 的上限，上限的計算方式為</p>
+
+<pre><code>  parallelism-factor * 你的處理器核心數
+</code></pre>
+
+<p>所以我的四核心桌機使用這個 Dispatcher 最多會開到 12 個 Thread Orz ...</p>
+
+<p>難怪我的 Thread 會滿天飛了</p>
+
+<!--more-->
+
+
+<p>這邊我要先搞定我之前一直逃避的 Akka 設定檔，之前會逃避是因為我用 Eclipse 的 ScalaIDE 加上 sbt 來開發。
+不知道為什麼之前設定檔在 build 的時候一直不會自動放到編譯完成的目錄下面，所以就整個怒完全不想搞設定檔這種東西。
+那時候是偷懶直接寫在程式碼裡面。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Dispatcher設定檔 </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'> <span class="k">val</span> <span class="n">config</span> <span class="k">=</span> <span class="s">&quot;&quot;&quot;&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="s">&lt;pre&gt;&lt;code&gt;my-dispatcher {</span>
+</span><span class='line'><span class="s">  # Dispatcher is the name of the event-based dispatcher</span>
+</span><span class='line'><span class="s">  type = Dispatcher</span>
+</span><span class='line'><span class="s">  # What kind of ExecutionService to use</span>
+</span><span class='line'><span class="s">  executor = &quot;fork-join-executor&quot;</span>
+</span><span class='line'><span class="s">  # Configuration for the fork join pool</span>
+</span><span class='line'><span class="s">  fork-join-executor {</span>
+</span><span class='line'><span class="s">    # Min number of threads to cap factor-based parallelism number to</span>
+</span><span class='line'><span class="s">    parallelism-min = 2</span>
+</span><span class='line'><span class="s">    # Parallelism (threads) ... ceil(available processors * factor)</span>
+</span><span class='line'><span class="s">    parallelism-factor = 2.0</span>
+</span><span class='line'><span class="s">    # Max number of threads to cap factor-based parallelism number to</span>
+</span><span class='line'><span class="s">    parallelism-max = 10</span>
+</span><span class='line'><span class="s">  }</span>
+</span><span class='line'><span class="s">  # Throughput defines the maximum number of messages to be</span>
+</span><span class='line'><span class="s">  # processed per actor before the thread jumps to the next actor.</span>
+</span><span class='line'><span class="s">  # Set to 1 for as fair as possible.</span>
+</span><span class='line'><span class="s">  throughput = 1</span>
+</span><span class='line'><span class="s">}</span>
+</span><span class='line'><span class="s">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">system</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">(</span><span class="s">&quot;MySystem&quot;</span><span class="o">,</span><span class="nc">ConfigFactory</span><span class="o">.</span><span class="n">load</span><span class="o">(</span><span class="n">customConf</span><span class="o">))</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>上面把設定檔內容直接儲存成字串，然後用 ConfigFactory.load 就可以產生設定檔了，不過一直放在程式碼裡面也不是一件健康的事情。
+所以還是花了一點時間處理之前在 Eclipse 上面遇到的問題。</p>
+
+<p>不過俗話說得好，越難找的 Bug 越蠢 ... 我又再次驗證了這個道理 Orz</p>
+
+<p>如果你是使用 sbt 上面的 sbt-eclipse 來建立 Eclipse Project，由於 plugin 不貼心或者很貼心的設計，他在 Eclipse 裡面並不會幫你建立 resources 的 source folder，
+所以請手動在 src/main 下面建立一個 resources 的 source folder。</p>
+
+<p>接著是<del>笨點</del>重點，請進入 Project 的設定畫面，然後選擇 Java Build Path 的內 Source 的 Tab。
+請將 <strong>src/main/resources</strong> 的 <strong>Output folder</strong> 的路徑設定的跟 src/main/scala 一樣。</p>
+
+<p><img src="https://dl.dropbox.com/u/15537823/Blog/Akka%202.0%20%E7%AD%86%E8%A8%98%286%29%20-%20Dispatcher%20%E7%9A%84%E8%A8%AD%E5%AE%9A/Eclipse_Setting.png"></p>
+
+<p>之前都沒有部屬到我想要得地方就是因為他是放到 default output folder 也就是 bin 底下 Orz。</p>
+
+<p>之後就可以參考 <a href="http://doc.akka.io/docs/akka/2.0.1/general/configuration.html">Configure</a> 與 <a href="http://doc.akka.io/docs/akka/2.0.2/scala/dispatchers.html">Dispatcher</a> 的內容去設定了。</p>
+
+<p>這樣就解決了我之前一直懶得找得問題，再來應該就會詳細設定一下 Scatter-Gather 所要用的 Dispatcher 了。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Akka 2.0 筆記(5) - Scatter Gather]]></title>
@@ -886,242 +1011,6 @@ Akka 的 Future 到底有沒有存在的意義呢？</p>
 <p>用 traverse 的好處在於少產生了中間過程的 List[Future[Int]] (至少我們的程式碼看不到，背後實際上有沒有我就不確定了，不過文件是這樣說的)，而直接產生了 Future[List[Int]]。</p>
 
 <p>寫了這麼久，才寫這麼一點點 Orz ... 而且還完全沒有進入重點。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Akka 2.0 筆記 (1)]]></title>
-    <link href="http://Swind.github.com/blog/2012/05/17/akka-note-1/"/>
-    <updated>2012-05-17T18:03:00+08:00</updated>
-    <id>http://Swind.github.com/blog/2012/05/17/akka-note-1</id>
-    <content type="html"><![CDATA[<p>因為我的程式還沒有寫完，所以是筆記 (1)，寫的過程應該還會有 2 3 ... 出現 Orz。</p>
-
-<p>Akka 2.0 - 要升級了</p>
-
-<h2><strike>英雄王你的武器庫存量</strike>時間的庫存量足夠嗎 ?</h2>
-
-<p>Akka 進入了 2.0 時代，恭喜你如果你是用 1.x 的話，請準備改寫吧 ...
-先從幾個方面來看 2.0 的新增事項。</p>
-
-<p>以下算是筆記，如有錯誤請多指教</p>
-
-<!--more-->
-
-
-<h2>Actor</h2>
-
-<p>從官網範例來看，Actor 的架構還是跟之前一樣沒有什麼改變</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">akka.actor.Actor</span>
-</span><span class='line'><span class="k">import</span> <span class="nn">akka.actor.Props</span>
-</span><span class='line'><span class="k">import</span> <span class="nn">akka.event.Logging</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">class</span> <span class="nc">MyActor</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
-</span><span class='line'>  <span class="k">val</span> <span class="n">log</span> <span class="k">=</span> <span class="nc">Logging</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="n">system</span><span class="o">,</span> <span class="k">this</span><span class="o">)</span>
-</span><span class='line'>  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">case</span> <span class="s">&quot;test&quot;</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="s">&quot;received test&quot;</span><span class="o">)</span>
-</span><span class='line'><span class="k">case</span> <span class="k">_</span>      <span class="o">=&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="s">&quot;received unknown message&quot;</span><span class="o">)</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>但是上面的程式碼你會看到一個有點陌生的東西 <strong>context.system</strong> ， 2.0 建立 Actor 的方式已經有了改變，現在的 Actor 可以有階層關係（就像老鼠會一樣 Orz）。
-從 Actor 的 context 中可以取得很多該 Actor 的資訊與操作方式。而 ActorSystem 建立出來的 Actor 就會位於最上層。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">object</span> <span class="nc">Main</span> <span class="k">extends</span> <span class="nc">App</span>
-</span><span class='line'><span class="o">{</span>
-</span><span class='line'>  <span class="k">val</span> <span class="n">system</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">(</span><span class="s">&quot;MySystem&quot;</span><span class="o">)</span>
-</span><span class='line'>  <span class="k">val</span> <span class="n">myActor</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">MyActor</span><span class="o">],</span> <span class="n">name</span> <span class="k">=</span> <span class="s">&quot;myactor&quot;</span><span class="o">)</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>延續上面的例子，如果MyActor內需要建立其他Actor</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="n">context</span><span class="o">.</span><span class="n">actorof</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">children</span><span class="o">],</span> <span class="n">name</span> <span class="k">=</span> <span class="s">&quot;children&quot;</span><span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>利用這種階層關係有什麼好處呢？
-在之前 Akka1.3 的時代，我就經歷過非常痛苦的過程，那時候還沒有像 2.0 這樣的階層關係。
-所以如果我在停止一個 Actor 之前沒有先把他底下的 Actor 都停止的話，程式是沒有辦法正常結束的（因為還有 Actor 活著）。</p>
-
-<p>因此必須 override Actor 裡面的 function 讓他在停止之前，會先去結束他底下的 Actor。
-為了作到這件事，我還要多弄一個 List 去紀錄他有建立哪些 Actor。
-然後拼命的發 message 叫 Actor 去死去死去死去死 Orz。</p>
-
-<p>但是這些煩惱在2.0就通通不見啦！！！！！
-現在要停止只要用</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'>   <span class="n">context</span><span class="o">.</span><span class="n">stop</span><span class="o">(</span><span class="n">self</span><span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>就會幹掉底下的部屬之後再做掉自己，真是讓人清爽又愉快（煙）</p>
-
-<h2>EventStream</h2>
-
-<p>最早知道 EventStream 或 EventBus 這種架構是在 GWT 的時後，那時候一用實在驚為天人。
-真是太方便了，雖然整體架構跟 Observer Pattern 一樣，但是人家就是用得很漂亮。
-EventStream 只存在於 ActorSystem 底下，要使用 EventStream 的第一步就是先註冊 Actor 與他要接收的物件類型。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">akka.actor.</span><span class="o">{</span> <span class="nc">Actor</span><span class="o">,</span> <span class="nc">DeadLetter</span><span class="o">,</span> <span class="nc">Props</span> <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">val</span> <span class="n">listener</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">Actor</span> <span class="o">{</span>
-</span><span class='line'>  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">case</span> <span class="n">d</span><span class="k">:</span> <span class="kt">DeadLetter</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">println</span><span class="o">(</span><span class="n">d</span><span class="o">)</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
-</span><span class='line'><span class="o">}))</span>
-</span><span class='line'><span class="n">system</span><span class="o">.</span><span class="n">eventStream</span><span class="o">.</span><span class="n">subscribe</span><span class="o">(</span><span class="n">listener</span><span class="o">,</span> <span class="n">classOf</span><span class="o">[</span><span class="kt">DeadLetter</span><span class="o">])</span> <span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>上面的程式碼產生了一個 listener 的 Actor 並且註冊說如果有 DeadLeatter 類型的物件送到 EventStream 內，就會傳送給他。
-雖然文件說主要是拿來作 Log 或者是監聽事件，但我拿來當其他的用途，例如發給所有的 Actor 讓他們自己認領工作之類的。</p>
-
-<h2>Event Handler</h2>
-
-<p>Event Handler 是拿來作 log 的工具，可以實作一個 EventListener 來監聽所有的事件。
-跟 Log4j 等工具一樣，可以分成 Error、Warning、Info與 Debug。
-看起來似乎可以拿來作為例外處理或者作一個事件重發的工具。</p>
-
-<h3>實作EventListener</h3>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">val</span> <span class="n">errorHandlerEventListener</span> <span class="k">=</span> <span class="nc">Actor</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="k">new</span> <span class="nc">Actor</span> <span class="o">{</span>
-</span><span class='line'>  <span class="n">self</span><span class="o">.</span><span class="n">dispatcher</span> <span class="k">=</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">EventHandlerDispatcher</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">case</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">Error</span><span class="o">(</span><span class="n">cause</span><span class="o">,</span> <span class="n">instance</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="o">...</span>
-</span><span class='line'><span class="k">case</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">Warning</span><span class="o">(</span><span class="n">instance</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="o">...</span>
-</span><span class='line'><span class="k">case</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">Info</span><span class="o">(</span><span class="n">instance</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="o">...</span>
-</span><span class='line'><span class="k">case</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">Debug</span><span class="o">(</span><span class="n">instance</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="o">...</span>
-</span><span class='line'><span class="k">case</span> <span class="n">genericEvent</span> <span class="o">=&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="o">...</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
-</span><span class='line'><span class="o">})</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>加入EventListener </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="nc">EventHandler</span><span class="o">.</span><span class="n">addListener</span><span class="o">(</span><span class="n">errorHandlerEventListener</span><span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>移除EventListener </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="nc">EventHandler</span><span class="o">.</span><span class="n">removeListener</span><span class="o">(</span><span class="n">errorHandlerEventListener</span><span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Log 訊息 </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="nc">EventHandler</span><span class="o">.</span><span class="n">error</span><span class="o">(</span><span class="n">exception</span><span class="o">,</span> <span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
-</span><span class='line'><span class="nc">EventHandler</span><span class="o">.</span><span class="n">error</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
-</span><span class='line'><span class="nc">EventHandler</span><span class="o">.</span><span class="n">warning</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
-</span><span class='line'><span class="nc">EventHandler</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
-</span><span class='line'><span class="nc">EventHandler</span><span class="o">.</span><span class="n">debug</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h2>Scheduler</h2>
-
-<p>Akka 內有附一個簡單的 Scheduler，他可以讓你排程什麼時候要發訊息給 Actor</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">akka.actor.Scheduler</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;//</span><span class="nc">Sends</span> <span class="n">messageToBeSent</span> <span class="n">to</span> <span class="n">receiverActor</span> <span class="n">after</span> <span class="n">initialDelayBeforeSending</span> <span class="n">and</span> <span class="n">then</span> <span class="n">after</span> <span class="n">each</span> <span class="n">delayBetweenMessages</span>
-</span><span class='line'><span class="nc">Scheduler</span><span class="o">.</span><span class="n">schedule</span><span class="o">(</span><span class="n">receiverActor</span><span class="o">,</span> <span class="n">messageToBeSent</span><span class="o">,</span> <span class="n">initialDelayBeforeSending</span><span class="o">,</span> <span class="n">delayBetweenMessages</span><span class="o">,</span> <span class="n">timeUnit</span><span class="o">)&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;//</span><span class="nc">Sends</span> <span class="n">messageToBeSent</span> <span class="n">to</span> <span class="n">receiverActor</span> <span class="n">after</span> <span class="n">delayUntilSend</span>
-</span><span class='line'><span class="nc">Scheduler</span><span class="o">.</span><span class="n">scheduleOnce</span><span class="o">(</span><span class="n">receiverActor</span><span class="o">,</span> <span class="n">messageToBeSent</span><span class="o">,</span> <span class="n">delayUntilSend</span><span class="o">,</span> <span class="n">timeUnit</span><span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h1>Event Driven</h1>
-
-<p>一直到最近在實作小玩具才想到的，我想這不是新的東西，可是用Akka或許可以把這件事情變得非常方便。以前在學Design Pattern的時候，其實整體架構算是很容易理解的東西。</p>
-
-<p>But ! 就是這個But，在寫的時候卻會常常綁手綁腳，例如MVC的Pattern，我到底要不要在Control中紀錄Model與View的位置，如果不紀錄的話我又要怎麼找到他們，然後整個執行流程又是如何？
-這是一件很麻煩的事情，雖然現在用起來是沒啥感覺，但是我也常為了Model之間的溝通流程感到困擾。</p>
-
-<p>小的在下我，寫論文的時候實作的東西其基礎架構是建立在JavaSpace上面，這個東西不要說現在沒啥人聽過了，就連我在用的時候都很悲劇。
-但是他設計概念我覺得很棒，他提供一個Pool可以讓你把Object丟進去，有興趣的Process就可以自己去那個Pool搶。
-但是這個東西就悲劇在他後來沒有在維護了，而且他的Server架設非常麻煩，API非常難用。</p>
-
-<p>一直到後來在GWT中看到Event Bus，我覺得這真是TMD的好東西，反正每個Model就是把Event丟到Event Bus裡面就好了，然後誰愛撿就撿去玩，射後不理真是男人的浪漫（誤）。
-因此最近才想到，如果利用Akka來作一個類似JavaSpace的東西如何，每個Module都是一個獨立的Actor，Module在接收到工作把工作完成就，就將結果丟回Space。</p>
-
-<p>舉個例子就像之前舉例舉到爛掉的某大論壇Parser，需要將文章內容紀錄到資料庫裡面，並且還要去下載相關的圖片。
-因此我就模仿Eva Magi系統（大誤），將Parser Module、Data Module與Download Module各自獨立成一個Actor。
-系統啟動的時候，由系統去建立Space，並且將這三個Module依照其MetaData的設定要將哪些Event傳送給他們（其實就是Observer Pattern）。</p>
-
-<p>Parser定時自動去論壇取得文章內容，並且將內容丟到Space裡面。這時Data Module就可以將文章資料寫到資料庫中，而Download Module也同時進行下載。
-這樣的架構可以視情況讓他是Single Thread或Multiple Thread的程式。只要好好管理Event的流動方式就可以了。</p>
-
-<p>至於這樣的架構好不好測試呢？我覺得這樣寫有一個好處，就是可以強迫Programmer寫出沒有副作用的程式，因為你必須要將所以處理結果都丟回Space裡面。
-因此測試的時候，只要建立該Module，並且傳送Mock Event給他就可以了，其他Module並不需要被建立起來。這樣的架構也降低了各Module之間的coupling。</p>
-
-<p>最後如果想要作所謂的雲～～～～～～～～端系統（老實說連我都不知道啥鬼才叫TMD的雲～～～～～～端系統），就可以利用Akka的Remote Actor的功能，
-將不同的Module丟到不同的機器上面作，甚至是同一個Module可以有好幾個來分工。</p>
-
-<p>Wao cow 越想感覺越夢幻，有空來實作看看到底會遇到什麼問題好了。</p>
 ]]></content>
   </entry>
   
