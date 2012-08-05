@@ -4,7 +4,7 @@
   <title><![CDATA[Corleonis]]></title>
   <link href="http://Swind.github.com/atom.xml" rel="self"/>
   <link href="http://Swind.github.com/"/>
-  <updated>2012-06-18T21:16:34+08:00</updated>
+  <updated>2012-08-05T08:32:37+08:00</updated>
   <id>http://Swind.github.com/</id>
   <author>
     <name><![CDATA[Swind]]></name>
@@ -989,7 +989,7 @@ Akka 的 Future 到底有沒有存在的意義呢？</p>
 </pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">akka.actor.Actor</span>
 </span><span class='line'><span class="k">import</span> <span class="nn">akka.actor.Props</span>
 </span><span class='line'><span class="k">import</span> <span class="nn">akka.event.Logging</span>
-</span><span class='line'>
+</span><span class='line'> 
 </span><span class='line'><span class="k">class</span> <span class="nc">MyActor</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
 </span><span class='line'>  <span class="k">val</span> <span class="n">log</span> <span class="k">=</span> <span class="nc">Logging</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="n">system</span><span class="o">,</span> <span class="k">this</span><span class="o">)</span>
 </span><span class='line'>  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
@@ -1008,7 +1008,7 @@ Akka 的 Future 到底有沒有存在的意義呢？</p>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">object</span> <span class="nc">Main</span> <span class="k">extends</span> <span class="nc">App</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">object</span> <span class="nc">Main</span> <span class="k">extends</span> <span class="nc">App</span> 
 </span><span class='line'><span class="o">{</span>
 </span><span class='line'>  <span class="k">val</span> <span class="n">system</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">(</span><span class="s">&quot;MySystem&quot;</span><span class="o">)</span>
 </span><span class='line'>  <span class="k">val</span> <span class="n">myActor</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">MyActor</span><span class="o">],</span> <span class="n">name</span> <span class="k">=</span> <span class="s">&quot;myactor&quot;</span><span class="o">)</span>
@@ -1056,13 +1056,13 @@ EventStream 只存在於 ActorSystem 底下，要使用 EventStream 的第一步
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
 </pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">akka.actor.</span><span class="o">{</span> <span class="nc">Actor</span><span class="o">,</span> <span class="nc">DeadLetter</span><span class="o">,</span> <span class="nc">Props</span> <span class="o">}</span>
-</span><span class='line'>
+</span><span class='line'> 
 </span><span class='line'><span class="k">val</span> <span class="n">listener</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">Actor</span> <span class="o">{</span>
 </span><span class='line'>  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
 </span><span class='line'>    <span class="k">case</span> <span class="n">d</span><span class="k">:</span> <span class="kt">DeadLetter</span> <span class="o">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="n">d</span><span class="o">)</span>
 </span><span class='line'>  <span class="o">}</span>
 </span><span class='line'><span class="o">}))</span>
-</span><span class='line'><span class="n">system</span><span class="o">.</span><span class="n">eventStream</span><span class="o">.</span><span class="n">subscribe</span><span class="o">(</span><span class="n">listener</span><span class="o">,</span> <span class="n">classOf</span><span class="o">[</span><span class="kt">DeadLetter</span><span class="o">])</span>
+</span><span class='line'><span class="n">system</span><span class="o">.</span><span class="n">eventStream</span><span class="o">.</span><span class="n">subscribe</span><span class="o">(</span><span class="n">listener</span><span class="o">,</span> <span class="n">classOf</span><span class="o">[</span><span class="kt">DeadLetter</span><span class="o">])</span>   
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -1259,7 +1259,7 @@ EventStream 只存在於 ActorSystem 底下，要使用 EventStream 的第一步
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
 </pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">walkDir</span><span class="o">(</span><span class="n">fileList</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">File</span><span class="o">]</span> <span class="o">{})(</span><span class="n">expr</span><span class="k">:</span> <span class="o">(</span><span class="kt">File</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="nc">Unit</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span>
-</span><span class='line'>
+</span><span class='line'>    
 </span><span class='line'>
 </span><span class='line'>    <span class="n">fileList</span> <span class="k">match</span> <span class="o">{</span>
 </span><span class='line'>      <span class="k">case</span> <span class="n">file</span> <span class="o">::</span> <span class="n">files</span> <span class="k">=&gt;</span>
@@ -1327,7 +1327,7 @@ EventStream 只存在於 ActorSystem 底下，要使用 EventStream 的第一步
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="nc">InputToOutput</span><span class="o">(</span><span class="n">buffer</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">Byte</span><span class="o">])(</span><span class="n">fis</span><span class="k">:</span> <span class="kt">InputStream</span><span class="o">,</span> <span class="n">fos</span><span class="k">:</span> <span class="kt">OutputStream</span><span class="o">)</span> <span class="k">=</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="nc">InputToOutput</span><span class="o">(</span><span class="n">buffer</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">Byte</span><span class="o">])(</span><span class="n">fis</span><span class="k">:</span> <span class="kt">InputStream</span><span class="o">,</span> <span class="n">fos</span><span class="k">:</span> <span class="kt">OutputStream</span><span class="o">)</span> <span class="k">=</span> 
 </span><span class='line'><span class="o">{</span>
 </span><span class='line'>   <span class="k">def</span> <span class="n">bufferReader</span><span class="o">(</span><span class="n">fis</span><span class="k">:</span> <span class="kt">InputStream</span><span class="o">)(</span><span class="n">buffer</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">Byte</span><span class="o">])</span> <span class="k">=</span> <span class="o">(</span><span class="n">fis</span><span class="o">.</span><span class="n">read</span><span class="o">(</span><span class="n">buffer</span><span class="o">),</span> <span class="n">buffer</span><span class="o">)</span>
 </span><span class='line'>
@@ -1386,7 +1386,7 @@ EventStream 只存在於 ActorSystem 底下，要使用 EventStream 的第一步
 </span><span class='line'>        <span class="k">else</span>
 </span><span class='line'>        <span class="o">{</span>
 </span><span class='line'>          <span class="k">val</span> <span class="o">(</span><span class="n">input</span><span class="o">,</span><span class="n">output</span><span class="o">)</span> <span class="k">=</span> <span class="nc">InputToOutput</span><span class="o">(</span><span class="n">getInputStream</span><span class="o">(</span><span class="n">entry</span><span class="o">),</span> <span class="k">new</span> <span class="nc">FileOutputStream</span><span class="o">(</span><span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="n">targetFolder</span><span class="o">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">getName</span><span class="o">)))</span>
-</span><span class='line'>
+</span><span class='line'>          
 </span><span class='line'>          <span class="n">input</span><span class="o">.</span><span class="n">close</span>
 </span><span class='line'>          <span class="n">output</span><span class="o">.</span><span class="n">close</span>
 </span><span class='line'>        <span class="o">}</span>

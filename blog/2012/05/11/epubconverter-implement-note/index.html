@@ -27,24 +27,24 @@
   <link href="/stylesheets/syntax/syntax.css" media="screen, projection" rel="stylesheet" type="text/css">
   <style type="text/css">
     body {
-      padding-top: 60px;
       padding-bottom: 40px;
     }
     h1 {
       margin-bottom: 15px;
     }
-    .sharing, .meta {
-      margin: 20px 0px 20px 0px;
+    img {
+      max-width: 100%;
     }
-    .pager {
-      margin: 20px 0px 5px 0px;
+    .sharing, .meta, .pager {
+      margin: 20px 0px 20px 0px;
     }
     .page-footer p {
       text-align: center;
     }
   </style>
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/libs/jquery.js"></script>
+  <script src="/javascripts/libs/modernizr-2.0.js"></script>
+  <script src="/javascripts/libs/bootstrap.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <link href="/atom.xml" rel="alternate" title="Corleonis" type="application/atom+xml">
   
@@ -65,9 +65,14 @@
 </head>
 
 <body   >
-  <nav role="navigation"><div class="navbar navbar-fixed-top">
+  <nav role="navigation"><div class="navbar">
   <div class="navbar-inner">
     <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
 
       <a class="brand" href="/">Corleonis</a>
 
@@ -77,21 +82,21 @@
   <li><a href="/blog/archives">Archives</a></li>
 </ul>
 
+
+        <ul class="nav pull-right" data-subscription="rss">
+          <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+          
+        </ul>
+
+        
+          <form class="pull-right navbar-search" action="http://google.com/search" method="get">
+            <fieldset role="search">
+              <input type="hidden" name="q" value="site:Swind.github.com" />
+              <input class="search-query" type="text" name="q" results="0" placeholder="Search"/>
+            </fieldset>
+          </form>
+        
       </div>
-
-      <ul class="nav pull-right" data-subscription="rss">
-        <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-        
-      </ul>
-
-        
-      <form class="pull-right navbar-search" action="http://google.com/search" method="get">
-        <fieldset role="search">
-          <input type="hidden" name="q" value="site:Swind.github.com" />
-          <input class="search-query" type="text" name="q" results="0" placeholder="Search"/>
-        </fieldset>
-      </form>
-        
     </div>
   </div>
 </div>
@@ -197,7 +202,7 @@
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
 </pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">walkDir</span><span class="o">(</span><span class="n">fileList</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">File</span><span class="o">]</span> <span class="o">{})(</span><span class="n">expr</span><span class="k">:</span> <span class="o">(</span><span class="kt">File</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="nc">Unit</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span>
-</span><span class='line'>
+</span><span class='line'>    
 </span><span class='line'>
 </span><span class='line'>    <span class="n">fileList</span> <span class="k">match</span> <span class="o">{</span>
 </span><span class='line'>      <span class="k">case</span> <span class="n">file</span> <span class="o">::</span> <span class="n">files</span> <span class="k">=&gt;</span>
@@ -265,7 +270,7 @@
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="nc">InputToOutput</span><span class="o">(</span><span class="n">buffer</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">Byte</span><span class="o">])(</span><span class="n">fis</span><span class="k">:</span> <span class="kt">InputStream</span><span class="o">,</span> <span class="n">fos</span><span class="k">:</span> <span class="kt">OutputStream</span><span class="o">)</span> <span class="k">=</span>
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="nc">InputToOutput</span><span class="o">(</span><span class="n">buffer</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">Byte</span><span class="o">])(</span><span class="n">fis</span><span class="k">:</span> <span class="kt">InputStream</span><span class="o">,</span> <span class="n">fos</span><span class="k">:</span> <span class="kt">OutputStream</span><span class="o">)</span> <span class="k">=</span> 
 </span><span class='line'><span class="o">{</span>
 </span><span class='line'>   <span class="k">def</span> <span class="n">bufferReader</span><span class="o">(</span><span class="n">fis</span><span class="k">:</span> <span class="kt">InputStream</span><span class="o">)(</span><span class="n">buffer</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">Byte</span><span class="o">])</span> <span class="k">=</span> <span class="o">(</span><span class="n">fis</span><span class="o">.</span><span class="n">read</span><span class="o">(</span><span class="n">buffer</span><span class="o">),</span> <span class="n">buffer</span><span class="o">)</span>
 </span><span class='line'>
@@ -324,7 +329,7 @@
 </span><span class='line'>        <span class="k">else</span>
 </span><span class='line'>        <span class="o">{</span>
 </span><span class='line'>          <span class="k">val</span> <span class="o">(</span><span class="n">input</span><span class="o">,</span><span class="n">output</span><span class="o">)</span> <span class="k">=</span> <span class="nc">InputToOutput</span><span class="o">(</span><span class="n">getInputStream</span><span class="o">(</span><span class="n">entry</span><span class="o">),</span> <span class="k">new</span> <span class="nc">FileOutputStream</span><span class="o">(</span><span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="n">targetFolder</span><span class="o">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">getName</span><span class="o">)))</span>
-</span><span class='line'>
+</span><span class='line'>          
 </span><span class='line'>          <span class="n">input</span><span class="o">.</span><span class="n">close</span>
 </span><span class='line'>          <span class="n">output</span><span class="o">.</span><span class="n">close</span>
 </span><span class='line'>        <span class="o">}</span>
@@ -445,11 +450,11 @@
     <li class="loading">Status updating...</li>
   </ul>
   <script type="text/javascript">
-    $.domReady(function(){
+    $(document).ready(function(){
       getTwitterFeed("swind", 4, false);
     });
   </script>
-  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  <script src="/javascripts/asides/twitter.js" type="text/javascript"> </script>
   
     <a href="http://twitter.com/swind" class="twitter-follow-button" data-show-count="false">Follow @swind</a>
   
