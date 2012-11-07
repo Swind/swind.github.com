@@ -9,8 +9,8 @@
   <meta name="author" content="Swind">
 
   
-  <meta name="description" content="今天早上先簡單了依照昨天畫得架構圖做了一個雛型，整個跑起來功能是以了，但是流程整個悲劇 Orz &#8230;
-先是 Exception Handling 做的不夠好，結果就真的是 &#8220;Let it Crash&#8221; 一直死一直死一直死，好像在玩 D3 的煉獄模式一樣。 &hellip;">
+  <meta name="description" content="Spray 最初是想要建立一個提供查詢服務的 RESTful API Server，可以讓 Client 的應用程式透過 RESTful API 查詢一些資料。
+但是看來看去，用 Play2、Jersey、RESTEasy 等都蠻麻煩的，而且還需要使用 Web container（像 Tomcat &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -104,6 +104,58 @@
     <div class="row-fluid">
       <div class="span9">
   
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/06/spray/">用 Spray 建立一個簡單的 RESTful API Server</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-06T20:11:00+08:00" pubdate data-updated="true">Nov 6<span>th</span>, 2012</time>
+        
+         | <a href="/blog/2012/11/06/spray/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1><a href="http://spray.cc/">Spray</a></h1>
+
+<p>最初是想要建立一個提供查詢服務的 RESTful API Server，可以讓 Client 的應用程式透過 RESTful API 查詢一些資料。
+但是看來看去，用 Play2、Jersey、RESTEasy 等都蠻麻煩的，而且還需要使用 Web container（像 Tomcat、Jetty 等）。
+所以才找到這個 Spray，而且又是用 Scala 開發的，實在沒有理由不試試看阿。 XD</p>
+
+<p>若你連到官網看會發現他分成很多模組，老實說我也沒有詳細研究每個模組的功能。
+因為 <a href="http://spray.cc/documentation/spray-can/">spray-can</a> 的範例看起來最簡單並且也符合我的需求，所以就直接用他了。</p>
+
+<p>想瞭解更詳細內容的可以參考 <a href="https://github.com/spray/spray/tree/release-1.0-M2/examples/spray-can/simple-http-server/">spray-can 範例文件</a> 與 <a href="http://blog.cloudfoundry.com/2012/05/11/running-standalone-web-applications-on-cloud-foundry/">Running Standalone Web Applications on Cloud Foundry</a></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/11/06/spray/">繼續閱讀 &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -628,56 +680,6 @@ c3p0-0.9.1.1.jar
 
     </article>
   
-  
-    <article>
-      
-  <header class="page-header">
-    
-      <h1 class="entry-title"><a href="/blog/2012/01/22/scala-log-tools/">Scala Log 工具筆記</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-01-22T15:59:00+08:00" pubdate data-updated="true">Jan 22<span>nd</span>, 2012</time>
-        
-         | <a href="/blog/2012/01/22/scala-log-tools/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>之前偷懶都直接使用println來輸出訊息，但是最近在玩<a href="http://akka.io/">Akka</a>，我發現如果沒有使用log tool的話我根本不知道是哪個Actor印訊息的。
-只好搜尋一下Scala上面有沒有什麼好用的Log工具。</p>
-
-<h2>slf4s + slf4j + logback</h2>
-
-<p>一般依照以往的習慣基本就是<a href="http://logging.apache.org/log4j/">log4j</a> + <a href="http://www.slf4j.org/">slf4j</a>，這算是最通用的工具組了。但是Scala有這麼多特異功能，說不定會有更神奇的Log工具，
-於是就抱著這樣的心態跟Google大神詢問求籤。最後看到logback這個工具（雖然跟Scala完全沒有關係）但是人都是喜新厭舊 XD，所以
-我就從slf4j+log4j轉到slf4j+logback，附帶一提logback是slf4j預設的log工具，因此使用這兩個的組合不需要另外抓Adapter。（ex.slf4j-log4j12-1.6.4.jar之類的）</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/01/22/scala-log-tools/">繼續閱讀 &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <ul class="pager">
     
     <li class="previous"><a href="/blog/page/2/">&larr; Older</a></li>
@@ -693,6 +695,10 @@ c3p0-0.9.1.1.jar
     <li class="nav-header">Recent Posts</li>
     
       <li class="post">
+        <a href="/blog/2012/11/06/spray/">用 Spray 建立一個簡單的 RESTful API Server</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/06/17/akka-note-6-my-aggregator/">Akka 2.0 筆記(6) - Dispatcher 的設定</a>
       </li>
     
@@ -706,10 +712,6 @@ c3p0-0.9.1.1.jar
     
       <li class="post">
         <a href="/blog/2012/06/10/akka-note-3-future/">Akka 2.0 筆記(3) - Future 之實在不是我想要拖稿</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/06/08/akka-note-2-eventstream/">Akka 2.0 筆記 (2) - 開始使用 Future</a>
       </li>
     
   </ul>
@@ -735,7 +737,7 @@ c3p0-0.9.1.1.jar
 
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/akka' style='font-size: 132.72727272727272%'>Akka(6)</a> <a href='/blog/categories/java' style='font-size: 110.9090909090909%'>Java(2)</a> <a href='/blog/categories/octopress' style='font-size: 105.45454545454545%'>Octopress(1)</a> <a href='/blog/categories/scala' style='font-size: 160.0%'>Scala(11)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/akka' style='font-size: 135.0%'>Akka(7)</a> <a href='/blog/categories/java' style='font-size: 110.0%'>Java(2)</a> <a href='/blog/categories/octopress' style='font-size: 105.0%'>Octopress(1)</a> <a href='/blog/categories/scala' style='font-size: 160.0%'>Scala(12)</a> </span>
 </section>
 
   

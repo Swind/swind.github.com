@@ -165,7 +165,7 @@
 </pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">akka.actor.Actor</span>
 </span><span class='line'><span class="k">import</span> <span class="nn">akka.actor.Props</span>
 </span><span class='line'><span class="k">import</span> <span class="nn">akka.event.Logging</span>
-</span><span class='line'> 
+</span><span class='line'>
 </span><span class='line'><span class="k">class</span> <span class="nc">MyActor</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
 </span><span class='line'>  <span class="k">val</span> <span class="n">log</span> <span class="k">=</span> <span class="nc">Logging</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="n">system</span><span class="o">,</span> <span class="k">this</span><span class="o">)</span>
 </span><span class='line'>  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
@@ -184,7 +184,7 @@
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">object</span> <span class="nc">Main</span> <span class="k">extends</span> <span class="nc">App</span> 
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">object</span> <span class="nc">Main</span> <span class="k">extends</span> <span class="nc">App</span>
 </span><span class='line'><span class="o">{</span>
 </span><span class='line'>  <span class="k">val</span> <span class="n">system</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">(</span><span class="s">&quot;MySystem&quot;</span><span class="o">)</span>
 </span><span class='line'>  <span class="k">val</span> <span class="n">myActor</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">MyActor</span><span class="o">],</span> <span class="n">name</span> <span class="k">=</span> <span class="s">&quot;myactor&quot;</span><span class="o">)</span>
@@ -232,13 +232,13 @@ EventStream 只存在於 ActorSystem 底下，要使用 EventStream 的第一步
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
 </pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">import</span> <span class="nn">akka.actor.</span><span class="o">{</span> <span class="nc">Actor</span><span class="o">,</span> <span class="nc">DeadLetter</span><span class="o">,</span> <span class="nc">Props</span> <span class="o">}</span>
-</span><span class='line'> 
+</span><span class='line'>
 </span><span class='line'><span class="k">val</span> <span class="n">listener</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">Actor</span> <span class="o">{</span>
 </span><span class='line'>  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
 </span><span class='line'>    <span class="k">case</span> <span class="n">d</span><span class="k">:</span> <span class="kt">DeadLetter</span> <span class="o">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="n">d</span><span class="o">)</span>
 </span><span class='line'>  <span class="o">}</span>
 </span><span class='line'><span class="o">}))</span>
-</span><span class='line'><span class="n">system</span><span class="o">.</span><span class="n">eventStream</span><span class="o">.</span><span class="n">subscribe</span><span class="o">(</span><span class="n">listener</span><span class="o">,</span> <span class="n">classOf</span><span class="o">[</span><span class="kt">DeadLetter</span><span class="o">])</span>   
+</span><span class='line'><span class="n">system</span><span class="o">.</span><span class="n">eventStream</span><span class="o">.</span><span class="n">subscribe</span><span class="o">(</span><span class="n">listener</span><span class="o">,</span> <span class="n">classOf</span><span class="o">[</span><span class="kt">DeadLetter</span><span class="o">])</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -436,6 +436,10 @@ EventStream 只存在於 ActorSystem 底下，要使用 EventStream 的第一步
     <li class="nav-header">Recent Posts</li>
     
       <li class="post">
+        <a href="/blog/2012/11/06/spray/">用 Spray 建立一個簡單的 RESTful API Server</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/06/17/akka-note-6-my-aggregator/">Akka 2.0 筆記(6) - Dispatcher 的設定</a>
       </li>
     
@@ -449,10 +453,6 @@ EventStream 只存在於 ActorSystem 底下，要使用 EventStream 的第一步
     
       <li class="post">
         <a href="/blog/2012/06/10/akka-note-3-future/">Akka 2.0 筆記(3) - Future 之實在不是我想要拖稿</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/06/08/akka-note-2-eventstream/">Akka 2.0 筆記 (2) - 開始使用 Future</a>
       </li>
     
   </ul>
@@ -478,7 +478,7 @@ EventStream 只存在於 ActorSystem 底下，要使用 EventStream 的第一步
 
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/akka' style='font-size: 132.72727272727272%'>Akka(6)</a> <a href='/blog/categories/java' style='font-size: 110.9090909090909%'>Java(2)</a> <a href='/blog/categories/octopress' style='font-size: 105.45454545454545%'>Octopress(1)</a> <a href='/blog/categories/scala' style='font-size: 160.0%'>Scala(11)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/akka' style='font-size: 135.0%'>Akka(7)</a> <a href='/blog/categories/java' style='font-size: 110.0%'>Java(2)</a> <a href='/blog/categories/octopress' style='font-size: 105.0%'>Octopress(1)</a> <a href='/blog/categories/scala' style='font-size: 160.0%'>Scala(12)</a> </span>
 </section>
 
   

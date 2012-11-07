@@ -9,8 +9,8 @@
   <meta name="author" content="Swind">
 
   
-  <meta name="description" content="What is jsoup HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
-為了要從網頁中可以取出內容,我曾經用過不少方式,包括直接硬幹用字串搜尋、修改Scala本身內部的XML Parser等。 &hellip;">
+  <meta name="description" content="之前偷懶都直接使用println來輸出訊息，但是最近在玩Akka，我發現如果沒有使用log tool的話我根本不知道是哪個Actor印訊息的。
+只好搜尋一下Scala上面有沒有什麼好用的Log工具。 slf4s + slf4j + logback 一般依照以往的習慣基本就是log4j + &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -104,6 +104,56 @@
     <div class="row-fluid">
       <div class="span9">
   
+  
+  
+    <article>
+      
+  <header class="page-header">
+    
+      <h1 class="entry-title"><a href="/blog/2012/01/22/scala-log-tools/">Scala Log 工具筆記</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-22T15:59:00+08:00" pubdate data-updated="true">Jan 22<span>nd</span>, 2012</time>
+        
+         | <a href="/blog/2012/01/22/scala-log-tools/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>之前偷懶都直接使用println來輸出訊息，但是最近在玩<a href="http://akka.io/">Akka</a>，我發現如果沒有使用log tool的話我根本不知道是哪個Actor印訊息的。
+只好搜尋一下Scala上面有沒有什麼好用的Log工具。</p>
+
+<h2>slf4s + slf4j + logback</h2>
+
+<p>一般依照以往的習慣基本就是<a href="http://logging.apache.org/log4j/">log4j</a> + <a href="http://www.slf4j.org/">slf4j</a>，這算是最通用的工具組了。但是Scala有這麼多特異功能，說不定會有更神奇的Log工具，
+於是就抱著這樣的心態跟Google大神詢問求籤。最後看到logback這個工具（雖然跟Scala完全沒有關係）但是人都是喜新厭舊 XD，所以
+我就從slf4j+log4j轉到slf4j+logback，附帶一提logback是slf4j預設的log工具，因此使用這兩個的組合不需要另外抓Adapter。（ex.slf4j-log4j12-1.6.4.jar之類的）</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/01/22/scala-log-tools/">繼續閱讀 &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -230,6 +280,10 @@
     <li class="nav-header">Recent Posts</li>
     
       <li class="post">
+        <a href="/blog/2012/11/06/spray/">用 Spray 建立一個簡單的 RESTful API Server</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/06/17/akka-note-6-my-aggregator/">Akka 2.0 筆記(6) - Dispatcher 的設定</a>
       </li>
     
@@ -243,10 +297,6 @@
     
       <li class="post">
         <a href="/blog/2012/06/10/akka-note-3-future/">Akka 2.0 筆記(3) - Future 之實在不是我想要拖稿</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/06/08/akka-note-2-eventstream/">Akka 2.0 筆記 (2) - 開始使用 Future</a>
       </li>
     
   </ul>
@@ -272,7 +322,7 @@
 
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/akka' style='font-size: 132.72727272727272%'>Akka(6)</a> <a href='/blog/categories/java' style='font-size: 110.9090909090909%'>Java(2)</a> <a href='/blog/categories/octopress' style='font-size: 105.45454545454545%'>Octopress(1)</a> <a href='/blog/categories/scala' style='font-size: 160.0%'>Scala(11)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/akka' style='font-size: 135.0%'>Akka(7)</a> <a href='/blog/categories/java' style='font-size: 110.0%'>Java(2)</a> <a href='/blog/categories/octopress' style='font-size: 105.0%'>Octopress(1)</a> <a href='/blog/categories/scala' style='font-size: 160.0%'>Scala(12)</a> </span>
 </section>
 
   

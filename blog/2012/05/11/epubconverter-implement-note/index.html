@@ -202,7 +202,7 @@
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
 </pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="n">walkDir</span><span class="o">(</span><span class="n">fileList</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">File</span><span class="o">]</span> <span class="o">{})(</span><span class="n">expr</span><span class="k">:</span> <span class="o">(</span><span class="kt">File</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="nc">Unit</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span>
-</span><span class='line'>    
+</span><span class='line'>
 </span><span class='line'>
 </span><span class='line'>    <span class="n">fileList</span> <span class="k">match</span> <span class="o">{</span>
 </span><span class='line'>      <span class="k">case</span> <span class="n">file</span> <span class="o">::</span> <span class="n">files</span> <span class="k">=&gt;</span>
@@ -270,7 +270,7 @@
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="nc">InputToOutput</span><span class="o">(</span><span class="n">buffer</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">Byte</span><span class="o">])(</span><span class="n">fis</span><span class="k">:</span> <span class="kt">InputStream</span><span class="o">,</span> <span class="n">fos</span><span class="k">:</span> <span class="kt">OutputStream</span><span class="o">)</span> <span class="k">=</span> 
+</pre></td><td class='code'><pre><code class='scala'><span class='line'><span class="k">def</span> <span class="nc">InputToOutput</span><span class="o">(</span><span class="n">buffer</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">Byte</span><span class="o">])(</span><span class="n">fis</span><span class="k">:</span> <span class="kt">InputStream</span><span class="o">,</span> <span class="n">fos</span><span class="k">:</span> <span class="kt">OutputStream</span><span class="o">)</span> <span class="k">=</span>
 </span><span class='line'><span class="o">{</span>
 </span><span class='line'>   <span class="k">def</span> <span class="n">bufferReader</span><span class="o">(</span><span class="n">fis</span><span class="k">:</span> <span class="kt">InputStream</span><span class="o">)(</span><span class="n">buffer</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">Byte</span><span class="o">])</span> <span class="k">=</span> <span class="o">(</span><span class="n">fis</span><span class="o">.</span><span class="n">read</span><span class="o">(</span><span class="n">buffer</span><span class="o">),</span> <span class="n">buffer</span><span class="o">)</span>
 </span><span class='line'>
@@ -329,7 +329,7 @@
 </span><span class='line'>        <span class="k">else</span>
 </span><span class='line'>        <span class="o">{</span>
 </span><span class='line'>          <span class="k">val</span> <span class="o">(</span><span class="n">input</span><span class="o">,</span><span class="n">output</span><span class="o">)</span> <span class="k">=</span> <span class="nc">InputToOutput</span><span class="o">(</span><span class="n">getInputStream</span><span class="o">(</span><span class="n">entry</span><span class="o">),</span> <span class="k">new</span> <span class="nc">FileOutputStream</span><span class="o">(</span><span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="n">targetFolder</span><span class="o">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">getName</span><span class="o">)))</span>
-</span><span class='line'>          
+</span><span class='line'>
 </span><span class='line'>          <span class="n">input</span><span class="o">.</span><span class="n">close</span>
 </span><span class='line'>          <span class="n">output</span><span class="o">.</span><span class="n">close</span>
 </span><span class='line'>        <span class="o">}</span>
@@ -421,6 +421,10 @@
     <li class="nav-header">Recent Posts</li>
     
       <li class="post">
+        <a href="/blog/2012/11/06/spray/">用 Spray 建立一個簡單的 RESTful API Server</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/06/17/akka-note-6-my-aggregator/">Akka 2.0 筆記(6) - Dispatcher 的設定</a>
       </li>
     
@@ -434,10 +438,6 @@
     
       <li class="post">
         <a href="/blog/2012/06/10/akka-note-3-future/">Akka 2.0 筆記(3) - Future 之實在不是我想要拖稿</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/06/08/akka-note-2-eventstream/">Akka 2.0 筆記 (2) - 開始使用 Future</a>
       </li>
     
   </ul>
@@ -463,7 +463,7 @@
 
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/akka' style='font-size: 132.72727272727272%'>Akka(6)</a> <a href='/blog/categories/java' style='font-size: 110.9090909090909%'>Java(2)</a> <a href='/blog/categories/octopress' style='font-size: 105.45454545454545%'>Octopress(1)</a> <a href='/blog/categories/scala' style='font-size: 160.0%'>Scala(11)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/akka' style='font-size: 135.0%'>Akka(7)</a> <a href='/blog/categories/java' style='font-size: 110.0%'>Java(2)</a> <a href='/blog/categories/octopress' style='font-size: 105.0%'>Octopress(1)</a> <a href='/blog/categories/scala' style='font-size: 160.0%'>Scala(12)</a> </span>
 </section>
 
   
