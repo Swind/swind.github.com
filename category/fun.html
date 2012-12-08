@@ -2,7 +2,7 @@
 <html lang="zh">
   <head>
     <meta charset="utf-8">
-    <title>Corleonis - octopres</title>
+    <title>Corleonis - Fun</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -68,7 +68,7 @@
               <li class="divider-vertical"></li>
               
               
-              <li >
+              <li class="active">
                 <a href=".././category/fun.html">
                   <i class="icon-folder-open icon-large"></i>Fun
                 </a>
@@ -168,43 +168,42 @@
 
 	
 	<div class='article'>
-		<h1><a href=".././octopressan-zhuang-bi-ji-wo-tiao-cao-dao-pelican-liao.html">Octopress安裝筆記 - 我跳槽到 Pelican 了</a></h1>
+		<h1><a href=".././epubconverter-002-qi-shi-yi-jing-zhong-xie-liao-orz.html">EPUBConverter 0.0.2 - 其實已經重寫了 Orz</a></h1>
 		<div class="well small"><footer class="post-info">
 <span class="badge badge-info">Date</span>
-<abbr class="published" title="2011-10-19T11:17:00">
-	<i class="icon-calendar"></i>週三 19 十月 2011
+<abbr class="published" title="2012-12-08T00:00:00">
+	<i class="icon-calendar"></i>週六 08 十二月 2012
 </abbr>
 
 <span class="badge badge-info">By</span>
 <a href=".././author/swind.html"><i class="icon-user"></i>Swind</a>
 
 <span class="badge badge-info">Category</span>
-<a href=".././category/program.html"><i class="icon-folder-open"></i>Program</a>. 
+<a href=".././category/fun.html"><i class="icon-folder-open"></i>Fun</a>. 
 
 
 	
 
 <span class="badge badge-info">Tags</span> 
 
-	<a href=".././tag/octopres.html"><i class="icon-tag"></i>octopres</a>
+	<a href=".././tag/scala.html"><i class="icon-tag"></i>Scala</a>
 
 
 
 </footer><!-- /.post-info --></div>
-		<div class="summary"><div class="section" id="pelican">
-<h2>2012.11.28 我已經跳槽到 Pelican 了，不過還是把這篇留著當紀念好了。</h2>
-</div>
-<div class="section" id="win7">
-<h2>2012.05.21 更新這次好像真的解決在 Win7 上面的問題了</h2>
-<p>其實在 Windows 上面使用 Octopress 沒有什麼特別大的問題，注意文章的編碼就好。
-但是有一點一直非常困擾著我的就是， Codeblock 的問題。由於 rake generator 所提供的錯誤訊息非常的少，所以很難找出錯誤。
-最常在網頁上面看到的就是這個</p>
-<pre class="literal-block">
-Liquid error: undefined method `Py_IsInitialized’ for RubyPython::Python:Module
-</pre>
-<p>一直到我今天無意間搜尋到這篇文章 (話說 Octopress 的安裝教學文真的越來越多了)
-<a class="reference external" href="http://hivan.me/octopress-install-to-windows8/">Windows 8 安裝 Octopress 紀錄</a> 他真的找出問題了，重點就在於！ <em>Python 請安裝 ...</em></p></div> 
-			<a class="btn primary xsmall" href=".././octopressan-zhuang-bi-ji-wo-tiao-cao-dao-pelican-liao.html">more ...</a>
+		<div class="summary"><div class="section" id="epubconverter-0-0-2">
+<h2>EPUBConverter 0.0.2</h2>
+<p>一開始的 Scala 版本本來是自己寫來自己用的小工具，可是沒想到竟然有人有用還有回報問題。
+大受感動之餘（誤），而出現了這個全新感受的 EPUBConverter 0.0.2，絕對不是因為手癢想要試試看 Go。</p>
+<p><a class="reference external" href="https://github.com/Swind/EPUBConverter-Go/downloads">EPUBConverter 0.0.2 下載</a>
+<a class="reference external" href="https://github.com/Swind/EPUBConverter-Go">EPUBConverter Source Code</a></p>
+<p>這個版本比之前好得地方在於，這次使用了`新同文堂`_的簡繁轉換對照表。
+除了單字轉換之外，還多了一個詞彙轉換。</p>
+<p>所以轉換品質應該會比之前 Scala 的版本好很多，感謝新同文堂分享對照表。
+他的 Bookmarklet 版本也非常好用，基本上我 Go 的轉換邏輯就是從 Bookmarklet 版本移植過來的。</p>
+<p>但是由於我直接將對照表轉換成 Golang 裡面的 map 了，所以這次就沒有辦法讓使用者自己改對照表了。</p>
+<p>不過有興趣的人 ...</p></div> 
+			<a class="btn primary xsmall" href=".././epubconverter-002-qi-shi-yi-jing-zhong-xie-liao-orz.html">more ...</a>
 		</div>
 	</div>	
 	<hr />
