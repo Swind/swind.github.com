@@ -5,7 +5,7 @@
 大受感動之餘（誤），而出現了這個全新感受的 EPUBConverter 0.0.2，絕對不是因為手癢想要試試看 Go。&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://github.com/Swind/EPUBConverter-Go/downloads"&gt;EPUBConverter 0.0.2 下載&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://github.com/Swind/EPUBConverter-Go"&gt;EPUBConverter Source Code&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;這個版本比之前好得地方在於，這次使用了`新同文堂`_的簡繁轉換對照表。
+&lt;p&gt;這個版本比之前好得地方在於，這次使用了 &lt;a class="reference external" href="http://tongwen.openfoundry.org/"&gt;新同文堂&lt;/a&gt; 的簡繁轉換對照表。
 除了單字轉換之外，還多了一個詞彙轉換。&lt;/p&gt;
 &lt;p&gt;所以轉換品質應該會比之前 Scala 的版本好很多，感謝新同文堂分享對照表。
 他的 Bookmarklet 版本也非常好用，基本上我 Go 的轉換邏輯就是從 Bookmarklet 版本移植過來的。&lt;/p&gt;
