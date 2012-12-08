@@ -14,19 +14,12 @@
 可以利用那個重新產生 Go 的 map，但是最後還是得重新編譯整個 EPUBConverter 就是了。&lt;/p&gt;
 &lt;p&gt;延續之前的我的偷懶寫法，這次也是寫死只會轉換 source 資料夾底下的 epub 檔案，輸出到 target 資料夾。
 可是這次全部都在記憶體裡面處理，所以不會先解壓縮到磁碟上然後壓縮再刪除了。&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;table class="docutils option-list" frame="void" rules="none"&gt;
-&lt;col class="option" /&gt;
-&lt;col class="description" /&gt;
-&lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="option-group"&gt;
-&lt;kbd&gt;&lt;span class="option"&gt;/EPUBConverter&lt;/span&gt;&lt;/kbd&gt;&lt;/td&gt;
-&lt;td&gt;source
-target
-epubconverter.exe&lt;/td&gt;&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;/blockquote&gt;
+&lt;pre class="literal-block"&gt;
+/EPUBConverter
+           source
+           target
+           epubconverter.exe
+&lt;/pre&gt;
 &lt;p&gt;以上，如果有什麼問題的話也歡迎回覆，如果我有錢有閒而且沒事做的話 Orz。
 會找個時間繼續修正的，雖然目前我也想不到要加啥功能。&lt;/p&gt;
 &lt;/div&gt;
