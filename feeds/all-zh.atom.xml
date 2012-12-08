@@ -1,0 +1,1370 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Corleonis</title><link href="http://Swind.github.com/" rel="alternate"></link><link href="http://Swind.github.com/feeds/all-zh.atom.xml" rel="self"></link><id>http://Swind.github.com/</id><updated>2012-11-06T20:11:00+08:00</updated><entry><title>用 Spray 建立一個簡單的 RESTful API Server</title><link href="http://Swind.github.com/yong-spray-jian-li-ge-jian-dan-de-restful-api-server.html" rel="alternate"></link><updated>2012-11-06T20:11:00+08:00</updated><author><name>Swind</name></author><id>tag:Swind.github.com,2012-11-06:yong-spray-jian-li-ge-jian-dan-de-restful-api-server.html</id><summary type="html">&lt;div class="section" id="spray"&gt;
+&lt;h2&gt;Spray&lt;/h2&gt;
+&lt;p&gt;&lt;a class="reference external" href="http://spray.cc/"&gt;Spray&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;最初是想要建立一個提供查詢服務的 RESTful API Server，可以讓 Client 的應用程式透過 RESTful API 查詢一些資料。
+但是看來看去，用 Play2、Jersey、RESTEasy 等都蠻麻煩的，而且還需要使用 Web container（像 Tomcat、Jetty 等）。
+所以才找到這個 Spray，而且又是用 Scala 開發的，實在沒有理由不試試看阿。 XD&lt;/p&gt;
+&lt;p&gt;若你連到官網看會發現他分成很多模組，老實說我也沒有詳細研究每個模組的功能。
+因為 &lt;a class="reference external" href="http://spray.cc/documentation/spray-can/"&gt;spray-can&lt;/a&gt; 的範例看起來最簡單並且也符合我的需求，所以就直接用他了。&lt;/p&gt;
+&lt;p&gt;想瞭解更詳細內容的可以參考 &lt;a class="reference external" href="https://github.com/spray/spray/tree/release-1.0-M2/examples/spray-can/simple-http-server/"&gt;spray-can 範例文件&lt;/a&gt; 與 &lt;a class="reference external" href="http://blog.cloudfoundry.com/2012/05/11/running-standalone-web-applications-on-cloud-foundry/"&gt;Running Standalone Web Applications on Cloud Foundry&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id1"&gt;
+&lt;h2&gt;環境準備&lt;/h2&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://github.com/spray/spray/tree/release-1.0-M2/examples/spray-can/"&gt;spray-can 的範例&lt;/a&gt; 已經有建立好一個簡單的 HttpServer 了，
+所以我們先將 Spray 從 Github 上 Clone 下來。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;git clone git://github.com/spray/spray.git
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;然後複製出 spray/examples/spray-can/simple-http-server。
+接著在 simple-http-server 底下，建立 build.sbt 讓 SBT 去 include 所需要的 Library。&lt;/p&gt;
+&lt;p&gt;順便設定 &lt;a class="reference external" href="https://github.com/twitter/sbt-package-dist"&gt;package-dist&lt;/a&gt;  這個 sbt plugin 所需要的資料。
+package-dist 可以協助我們將 Project 所需要的 Library 與程式本身全部打包成一個 zip 檔。
+但是這個 plugin 只能使用在 sbt 0.11.x，目前我還沒有看到可以在 0.12.x 的版本。
+如果你不想用的話可以拿掉 Start 到 End 中間的內容。&lt;/p&gt;
+&lt;p&gt;而最下面的&lt;/p&gt;
+&lt;blockquote&gt;
+EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipsCreateSrc.Resource&lt;/blockquote&gt;
+&lt;p&gt;則是針對 sbteclipse 做的設定，讓 plugin 在產生 eclipse project 的時候可以將 src/main/resources 也加入 source folder。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;//Start - For package-dist&lt;/span&gt;
+&lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;com.twitter.sbt._&lt;/span&gt;
+
+&lt;span class="n"&gt;seq&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;PackageDist&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;newSettings&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="k"&gt;_&lt;/span&gt;&lt;span class="kt"&gt;*&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;seq&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;GitProject&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;gitSettings&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="k"&gt;_&lt;/span&gt;&lt;span class="kt"&gt;*&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;packageDistZipName&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;DictionaryServer.zip&amp;quot;&lt;/span&gt;
+&lt;span class="c1"&gt;//End - For package-dist&lt;/span&gt;
+
+&lt;span class="n"&gt;organization&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;cc.spray&amp;quot;&lt;/span&gt;
+
+&lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;DictionaryServer&amp;quot;&lt;/span&gt;
+
+&lt;span class="n"&gt;mainClass&lt;/span&gt; &lt;span class="n"&gt;in&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;Compile&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;packageBin&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="nc"&gt;Some&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;cc.spray.example.Main&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;version&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;0.1.0-SNAPSHOT&amp;quot;&lt;/span&gt;
+
+&lt;span class="n"&gt;scalaVersion&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;2.9.2&amp;quot;&lt;/span&gt;
+
+&lt;span class="n"&gt;resolvers&lt;/span&gt; &lt;span class="o"&gt;++=&lt;/span&gt; &lt;span class="nc"&gt;Seq&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;
+&lt;span class="s"&gt;&amp;quot;Typesafe repo&amp;quot;&lt;/span&gt; &lt;span class="n"&gt;at&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;http://repo.typesafe.com/typesafe/releases/&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+&lt;span class="s"&gt;&amp;quot;spray repo&amp;quot;&lt;/span&gt; &lt;span class="n"&gt;at&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;http://repo.spray.cc/&amp;quot;&lt;/span&gt;
+&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;libraryDependencies&lt;/span&gt; &lt;span class="o"&gt;++=&lt;/span&gt; &lt;span class="nc"&gt;Seq&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;quot;com.typesafe.akka&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;akka-actor&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;2.0.3&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;quot;cc.spray&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;spray-server&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;1.0-M2&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;quot;cc.spray&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;spray-can&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;1.0-M2&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;quot;org.slf4j&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;slf4j-api&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;1.6.6&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;quot;ch.qos.logback&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;logback-classic&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;1.0.7&amp;quot;&lt;/span&gt;
+&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;//sbteclipse setting&lt;/span&gt;
+&lt;span class="nc"&gt;EclipseKeys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;createSrc&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; &lt;span class="nc"&gt;EclipseCreateSrc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;Default&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nc"&gt;EclipseCreateSrc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;Resource&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;這邊注意一下 Spray 的版本問題，現在最新的 Example 程式碼是針對最新版本的 spray，但他們還沒有正式 release，
+並且他們還換了 package name 等，所以我都是使用 1.0-M2 的版本，當然 Library 也是使用 1.0-M2。&lt;/p&gt;
+&lt;p&gt;到這邊，我們的環境就準備的差不多了。接下來，只要執行範例程式碼就可以有一個可以提供 Web Service 的 Http Server 了。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="start-http-server"&gt;
+&lt;h2&gt;Start Http Server&lt;/h2&gt;
+&lt;p&gt;如果你對於 Akka 的用法有一點概念的話，那麼 Spray 對你來說應該是非常好上手的。&lt;/p&gt;
+&lt;p&gt;Main.scala 啟動一個 IoWorker Actor 負責 low-level 的 network I/O，
+接下來將 IoWorker Actor 以及 Service Actor 傳入 HttpServer Actor並啟動 Http Server。
+之後透過發送一個 HttpServer.Bind 的 Message 給 Server 設定 IP 與 Port。
+這樣就完成了 Server 的啟動與設定了。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// we need an ActorSystem to host our application in&lt;/span&gt;
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;system&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;ActorSystem&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;SimpleHttpServer&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;// the handler actor replies to incoming HttpRequests&lt;/span&gt;
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;handler&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;system&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;actorOf&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;Props&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;TestService&lt;/span&gt;&lt;span class="o"&gt;])&lt;/span&gt;
+
+&lt;span class="c1"&gt;// every spray-can HttpServer (and HttpClient) needs an IoWorker for low-level network IO&lt;/span&gt;
+&lt;span class="c1"&gt;// (but several servers and/or clients can share one)&lt;/span&gt;
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;ioWorker&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nc"&gt;IoWorker&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;system&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="n"&gt;start&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt;
+
+&lt;span class="c1"&gt;// create and start the spray-can HttpServer, telling it that we want requests to be&lt;/span&gt;
+&lt;span class="c1"&gt;// handled by our singleton handler&lt;/span&gt;
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;server&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;system&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;actorOf&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;
+&lt;span class="n"&gt;props&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Props&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nc"&gt;HttpServer&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ioWorker&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="nc"&gt;MessageHandlerDispatch&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;SingletonHandler&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;handler&lt;/span&gt;&lt;span class="o"&gt;))),&lt;/span&gt;
+&lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;http-server&amp;quot;&lt;/span&gt;
+&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;// a running HttpServer can be bound, unbound and rebound&lt;/span&gt;
+&lt;span class="c1"&gt;// initially to need to tell it where to bind to&lt;/span&gt;
+&lt;span class="n"&gt;server&lt;/span&gt; &lt;span class="o"&gt;!&lt;/span&gt; &lt;span class="nc"&gt;HttpServer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;Bind&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;localhost&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;8080&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;// finally we drop the main thread but hook the shutdown of&lt;/span&gt;
+&lt;span class="c1"&gt;// our IoWorker into the shutdown of the applications ActorSystem&lt;/span&gt;
+&lt;span class="n"&gt;system&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;registerOnTermination&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+&lt;span class="n"&gt;ioWorker&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stop&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="service"&gt;
+&lt;h2&gt;提供 Service&lt;/h2&gt;
+&lt;div class="section" id="http-request"&gt;
+&lt;h3&gt;處理 Http Request&lt;/h3&gt;
+&lt;p&gt;提供 Service 的 Actor 會接收到 HttpRequest 的 Message，HttpRequest 的內容如下。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;HttpRequest&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;
+            &lt;span class="n"&gt;method&lt;/span&gt;   &lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;HttpMethod&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;HttpMethods&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;GET&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;uri&lt;/span&gt;      &lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;String&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;/&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;headers&lt;/span&gt;  &lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;List&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;HttpHeader&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Nil&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;content&lt;/span&gt;  &lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Option&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;HttpContent&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;None&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+            &lt;span class="n"&gt;protocol&lt;/span&gt; &lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;HttpProtocol&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;`HTTP/1.1`&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;然後就可以利用 match 來處理各種不同的 HttpRequest，
+例如有連線到 &lt;a class="reference external" href="http://localhost:8080/"&gt;http://localhost:8080/&lt;/a&gt; 的 GET 請求，
+就會對應到第一個 HttpRequest &amp;quot;/&amp;quot;。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;protected&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;receive&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+
+    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nc"&gt;HttpRequest&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;GET&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;/&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="k"&gt;_&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="k"&gt;_&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="k"&gt;_&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+        &lt;span class="n"&gt;sender&lt;/span&gt; &lt;span class="o"&gt;!&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;
+
+    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nc"&gt;HttpRequest&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;GET&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;/ping&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="k"&gt;_&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="k"&gt;_&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="k"&gt;_&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+        &lt;span class="n"&gt;sender&lt;/span&gt; &lt;span class="o"&gt;!&lt;/span&gt; &lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;PONG!&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nc"&gt;HttpRequest&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;GET&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;/stats&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="k"&gt;_&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="k"&gt;_&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="k"&gt;_&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+        &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sender&lt;/span&gt;
+        &lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;actorFor&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;../http-server&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="n"&gt;ask&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;HttpServer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;GetStats&lt;/span&gt;&lt;span class="o"&gt;)(&lt;/span&gt;&lt;span class="mf"&gt;1.&lt;/span&gt;&lt;span class="n"&gt;second&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="n"&gt;onSuccess&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+
+    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;HttpServer.Stats&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt; &lt;span class="o"&gt;!&lt;/span&gt; &lt;span class="n"&gt;statsPresentation&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;.&lt;/span&gt;
+&lt;span class="o"&gt;.&lt;/span&gt;
+&lt;span class="o"&gt;.&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="http-response"&gt;
+&lt;h3&gt;建立 Http Response&lt;/h3&gt;
+&lt;p&gt;Response 的內容也非常好設定，以剛剛送回 sender 的 index 為例子，
+Spray 使用一個 HttpResonse 的 case class 來代表 Response 的內容。
+只要設定好 headers、body 與 status 就可以傳送回去 Sender 了。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;lazy&lt;/span&gt; &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;HttpResponse&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;
+&lt;span class="n"&gt;headers&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;List&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;HttpHeader&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Content-Type&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;text/html&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)),&lt;/span&gt;
+&lt;span class="n"&gt;body&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt;
+  &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;body&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;h1&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="nc"&gt;Say&lt;/span&gt; &lt;span class="n"&gt;hello&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="n"&gt;spray&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;can&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;!&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;h1&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="nc"&gt;Defined&lt;/span&gt; &lt;span class="n"&gt;resources&lt;/span&gt;&lt;span class="o"&gt;:&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;ul&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;li&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="n"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/ping&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;/&lt;/span&gt;&lt;span class="n"&gt;ping&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;li&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;li&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="n"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/search&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;/&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;li&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;li&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="n"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/stats&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;/&lt;/span&gt;&lt;span class="n"&gt;stats&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;li&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;li&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="n"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/crash&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;/&lt;/span&gt;&lt;span class="n"&gt;crash&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;li&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;li&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="n"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/timeout&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;/&lt;/span&gt;&lt;span class="n"&gt;timeout&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;li&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;li&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="n"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/timeout/timeout&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;/&lt;/span&gt;&lt;span class="n"&gt;timeout&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;timeout&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;li&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;li&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="n"&gt;href&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/stop&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;/&lt;/span&gt;&lt;span class="n"&gt;stop&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;li&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class="o"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;ul&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="o"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;body&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class="o"&gt;&amp;lt;/&lt;/span&gt;&lt;span class="n"&gt;html&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;.&lt;/span&gt;&lt;span class="n"&gt;toString&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getBytes&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;ISO-8859-1&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt;
+&lt;span class="n"&gt;status&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;200&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</summary><category term="Scala"></category><category term="Akka"></category></entry><entry><title>Akka 2.0 筆記(6) - Dispatcher 的設定</title><link href="http://Swind.github.com/akka-20-bi-ji-6-dispatcher-de-she-ding.html" rel="alternate"></link><updated>2012-06-17T20:19:00+08:00</updated><author><name>Swind</name></author><id>tag:Swind.github.com,2012-06-17:akka-20-bi-ji-6-dispatcher-de-she-ding.html</id><summary type="html">&lt;p&gt;今天早上先簡單了依照昨天畫得架構圖做了一個雛型，整個跑起來功能是以了，但是流程整個悲劇 Orz ...
+先是 Exception Handling 做的不夠好，結果就真的是 &amp;quot;Let it Crash&amp;quot; 一直死一直死一直死，好像在玩 D3 的煉獄模式一樣。&lt;/p&gt;
+&lt;p&gt;再來是我沒有去設定 Dispatcher 所以 Thread 用了十幾個。如果我沒有看錯的話，依照 Akka &lt;a class="reference external" href="https://github.com/akka/akka/blob/master/akka-actor/src/main/resources/reference.conf"&gt;reference.conf&lt;/a&gt; 的設定，
+Default Dispatcher 使用 fork-join-executor，他的預設設定如下&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;fork&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;executor&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;#&lt;/span&gt; &lt;span class="nc"&gt;Min&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="n"&gt;threads&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;cap&lt;/span&gt; &lt;span class="n"&gt;factor&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;based&lt;/span&gt; &lt;span class="n"&gt;parallelism&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt;
+  &lt;span class="n"&gt;parallelism&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;min&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt;
+
+  &lt;span class="k"&gt;#&lt;/span&gt; &lt;span class="nc"&gt;Parallelism&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;threads&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;...&lt;/span&gt; &lt;span class="n"&gt;ceil&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;available&lt;/span&gt; &lt;span class="n"&gt;processors&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;factor&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="n"&gt;parallelism&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;factor&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;3.0&lt;/span&gt;
+
+  &lt;span class="k"&gt;#&lt;/span&gt; &lt;span class="nc"&gt;Max&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="n"&gt;threads&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;cap&lt;/span&gt; &lt;span class="n"&gt;factor&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;based&lt;/span&gt; &lt;span class="n"&gt;parallelism&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt;
+  &lt;span class="n"&gt;parallelism&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;max&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;64&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;很簡單的 parallelism-min 與 parallelism-max 的值代表著 Thread 的上下限，那麼 parallelism_factor 呢？&lt;/p&gt;
+&lt;p&gt;他同樣也是限制 Thread 的上限，上限的計算方式為&lt;/p&gt;
+&lt;blockquote&gt;
+parallelism-factor * 你的處理器核心數&lt;/blockquote&gt;
+&lt;p&gt;所以我的四核心桌機使用這個 Dispatcher 最多會開到 12 個 Thread Orz ...&lt;/p&gt;
+&lt;p&gt;難怪我的 Thread 會滿天飛了&lt;/p&gt;
+&lt;p&gt;這邊我要先搞定我之前一直逃避的 Akka 設定檔，之前會逃避是因為我用 Eclipse 的 ScalaIDE 加上 sbt 來開發。
+不知道為什麼之前設定檔在 build 的時候一直不會自動放到編譯完成的目錄下面，所以就整個怒完全不想搞設定檔這種東西。
+那時候是偷懶直接寫在程式碼裡面。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="s"&gt;   my-dispatcher {&lt;/span&gt;
+&lt;span class="s"&gt;     # Dispatcher is the name of the event-based dispatcher&lt;/span&gt;
+&lt;span class="s"&gt;     type = Dispatcher&lt;/span&gt;
+&lt;span class="s"&gt;     # What kind of ExecutionService to use&lt;/span&gt;
+&lt;span class="s"&gt;     executor = &amp;quot;fork-join-executor&amp;quot;&lt;/span&gt;
+&lt;span class="s"&gt;     # Configuration for the fork join pool&lt;/span&gt;
+&lt;span class="s"&gt;     fork-join-executor {&lt;/span&gt;
+&lt;span class="s"&gt;       # Min number of threads to cap factor-based parallelism number to&lt;/span&gt;
+&lt;span class="s"&gt;       parallelism-min = 2&lt;/span&gt;
+&lt;span class="s"&gt;       # Parallelism (threads) ... ceil(available processors * factor)&lt;/span&gt;
+&lt;span class="s"&gt;       parallelism-factor = 2.0&lt;/span&gt;
+&lt;span class="s"&gt;       # Max number of threads to cap factor-based parallelism number to&lt;/span&gt;
+&lt;span class="s"&gt;       parallelism-max = 10&lt;/span&gt;
+&lt;span class="s"&gt;     }&lt;/span&gt;
+&lt;span class="s"&gt;     # Throughput defines the maximum number of messages to be&lt;/span&gt;
+&lt;span class="s"&gt;     # processed per actor before the thread jumps to the next actor.&lt;/span&gt;
+&lt;span class="s"&gt;     # Set to 1 for as fair as possible.&lt;/span&gt;
+&lt;span class="s"&gt;     throughput = 1&lt;/span&gt;
+&lt;span class="s"&gt;   }&lt;/span&gt;
+&lt;span class="s"&gt;   &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;system&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;ActorSystem&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;MySystem&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="nc"&gt;ConfigFactory&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;customConf&lt;/span&gt;&lt;span class="o"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;上面把設定檔內容直接儲存成字串，然後用 ConfigFactory.load 就可以產生設定檔了，不過一直放在程式碼裡面也不是一件健康的事情。
+所以還是花了一點時間處理之前在 Eclipse 上面遇到的問題。&lt;/p&gt;
+&lt;p&gt;不過俗話說得好，越難找的 Bug 越蠢 ... 我又再次驗證了這個道理 Orz&lt;/p&gt;
+&lt;p&gt;如果你是使用 sbt 上面的 sbt-eclipse 來建立 Eclipse Project，由於 plugin 不貼心或者很貼心的設計。
+他在 Eclipse 裡面並不會幫你建立 resources 的 source folder，
+所以請手動在 src/main 下面建立一個 resources 的 source folder。&lt;/p&gt;
+&lt;p&gt;接著是笨點 Orz，請進入 Project 的設定畫面，然後選擇 Java Build Path 的內 Source 的 Tab。
+請將 &lt;strong&gt;src/main/resources&lt;/strong&gt; 的 &lt;strong&gt;Output folder&lt;/strong&gt; 的路徑設定的跟 src/main/scala 一樣。&lt;/p&gt;
+&lt;img alt="https://dl.dropbox.com/u/15537823/Blog/Akka%202.0%20%E7%AD%86%E8%A8%98%286%29%20-%20Dispatcher%20%E7%9A%84%E8%A8%AD%E5%AE%9A/Eclipse_Setting.png" src="https://dl.dropbox.com/u/15537823/Blog/Akka%202.0%20%E7%AD%86%E8%A8%98%286%29%20-%20Dispatcher%20%E7%9A%84%E8%A8%AD%E5%AE%9A/Eclipse_Setting.png" /&gt;
+&lt;p&gt;之前都沒有部屬到我想要得地方就是因為他是放到 default output folder 也就是 bin 底下 Orz。&lt;/p&gt;
+&lt;p&gt;之後就可以參考 &lt;a class="reference external" href="http://doc.akka.io/docs/akka/2.0.1/general/configuration.html"&gt;Configure&lt;/a&gt; 與 &lt;a class="reference external" href="http://doc.akka.io/docs/akka/2.0.2/scala/dispatchers.html"&gt;Dispatcher&lt;/a&gt; 的內容去設定了。&lt;/p&gt;
+&lt;p&gt;這樣就解決了我之前一直懶得找得問題，再來應該就會詳細設定一下 Scatter-Gather 所要用的 Dispatcher 了。&lt;/p&gt;
+</summary><category term="Scala"></category><category term="Akka"></category></entry><entry><title>Akka 2.0 筆記(5) - Scatter Gather</title><link href="http://Swind.github.com/akka-20-bi-ji-5-scatter-gather.html" rel="alternate"></link><updated>2012-06-15T08:58:00+08:00</updated><author><name>Swind</name></author><id>tag:Swind.github.com,2012-06-15:akka-20-bi-ji-5-scatter-gather.html</id><summary type="html">&lt;p&gt;繼上次完全看不懂的 Dataflow 之後，我還是想要一個 Akka 的 Scatter Gather 實作方式，因此想試著自己實做看看。&lt;/p&gt;
+&lt;p&gt;下圖是 &lt;a class="reference external" href="http://www.eaipatterns.com/"&gt;Enterprise Integration Patterns&lt;/a&gt;  書中的 Scatter-Gather 概念圖。&lt;/p&gt;
+&lt;p&gt;..img:: &lt;a class="reference external" href="http://www.eaipatterns.com/img/BroadcastAggregate.gif"&gt;http://www.eaipatterns.com/img/BroadcastAggregate.gif&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;從圖中可以發現，中間對於 Vendor A、B 與 C 進行 Broadcast 的行為跟 Akka 內的 &lt;a class="reference external" href="http://doc.akka.io/docs/akka/2.0/scala/routing.html"&gt;Router&lt;/a&gt; 很像，
+所以當我正在思考 Router 是否合適作為這種用途的時候，我想到了 &lt;a class="reference external" href="http://letitcrash.com/"&gt;Let it Crash&lt;/a&gt; 裡面 &lt;a class="reference external" href="http://letitcrash.com/post/23532935686/watch-the-routees"&gt;Watch the Routees&lt;/a&gt; 這篇文章。&lt;/p&gt;
+&lt;p&gt;這篇文章裡面他紀錄了在 Akka mailinglist 中回答別人問題時所寫的範例程式。&lt;/p&gt;
+&lt;p&gt;整個 use case 是要執行一個 Job，這個 Job 由許多 Tasks 組成，在執行的過程中&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;會將這些 Tasks 透過 router 分派給 worker actors 執行。&lt;/li&gt;
+&lt;li&gt;最後收集所有 worker 的執行結果，並且將他們合併之後回傳。&lt;/li&gt;
+&lt;li&gt;除此之外， worker 在執行過程中發生錯誤時，應該要進行 retry，在進行幾次 retry 後依然有錯誤時，Worker 就會停止，並且中止整個 Job。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="section" id="master-actor"&gt;
+&lt;h2&gt;Master Actor&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cm"&gt;/*&lt;/span&gt;
+&lt;span class="cm"&gt; *  Master Actor，負責整個工作運作流程的 Actor。&lt;/span&gt;
+&lt;span class="cm"&gt; *  接收 Job、分派 Task 以及當發現 Worker Terminal 或者是全部 Task 都執行完畢之後。&lt;/span&gt;
+&lt;span class="cm"&gt; *  將結果整理好之後回傳&lt;/span&gt;
+&lt;span class="cm"&gt; */&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Master&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="nc"&gt;Actor&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;var&lt;/span&gt; &lt;span class="n"&gt;results&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Map&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Int&lt;/span&gt;, &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;]()&lt;/span&gt;
+  &lt;span class="k"&gt;var&lt;/span&gt; &lt;span class="n"&gt;replyTo&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;ActorRef&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;_&lt;/span&gt;
+
+&lt;span class="cm"&gt;/*&lt;/span&gt;
+&lt;span class="cm"&gt; *  Router 這邊的 Router 種類是使用 RoundRobinRouter，&lt;/span&gt;
+&lt;span class="cm"&gt; *  他會輪流將 Message 傳給底下的 Worker。&lt;/span&gt;
+&lt;span class="cm"&gt; *  例如：若他底下有 5 個 Worker，那麼就會&lt;/span&gt;
+&lt;span class="cm"&gt; *&lt;/span&gt;
+&lt;span class="cm"&gt; *     Worker 1&lt;/span&gt;
+&lt;span class="cm"&gt; *     Worker 2&lt;/span&gt;
+&lt;span class="cm"&gt; *     ...&lt;/span&gt;
+&lt;span class="cm"&gt; *     Worker 5&lt;/span&gt;
+&lt;span class="cm"&gt; *     Worker 1&lt;/span&gt;
+&lt;span class="cm"&gt; *&lt;/span&gt;
+&lt;span class="cm"&gt; *  這樣的順序傳遞。&lt;/span&gt;
+&lt;span class="cm"&gt; */&lt;/span&gt;
+
+  &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;router&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;actorOf&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;Props&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nc"&gt;Worker&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;
+    &lt;span class="n"&gt;withRouter&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;RoundRobinRouter&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+      &lt;span class="n"&gt;supervisorStrategy&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;OneForOneStrategy&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;
+        &lt;span class="n"&gt;maxNrOfRetries&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+          &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="k"&gt;_:&lt;/span&gt; &lt;span class="kt"&gt;IOException&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nc"&gt;Restart&lt;/span&gt;
+        &lt;span class="o"&gt;})),&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;router&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+
+  &lt;span class="n"&gt;router&lt;/span&gt; &lt;span class="o"&gt;!&lt;/span&gt; &lt;span class="nc"&gt;CurrentRoutees&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;receive&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nc"&gt;RouterRoutees&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;routees&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+      &lt;span class="n"&gt;routees&lt;/span&gt; &lt;span class="n"&gt;foreach&lt;/span&gt; &lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;watch&lt;/span&gt;
+
+    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;start&amp;quot;&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+      &lt;span class="n"&gt;replyTo&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sender&lt;/span&gt;
+      &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt; &lt;span class="k"&gt;←&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="n"&gt;router&lt;/span&gt; &lt;span class="o"&gt;!&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;22&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+      &lt;span class="n"&gt;results&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+      &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;results&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;replyTo&lt;/span&gt; &lt;span class="o"&gt;!&lt;/span&gt; &lt;span class="n"&gt;results&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sum&lt;/span&gt;
+
+    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nc"&gt;Terminated&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;actor&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+      &lt;span class="n"&gt;replyTo&lt;/span&gt; &lt;span class="o"&gt;!&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;
+      &lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stop&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="section" id="id1"&gt;
+&lt;h3&gt;Master Actor 的初始化&lt;/h3&gt;
+&lt;p&gt;上面的程式碼的註解有稍微介紹一下 Master 與 Router 的功能，這邊就針對程式碼的運作內容作些講解。&lt;/p&gt;
+&lt;p&gt;首先我們先看到這段程式碼&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;router&lt;/span&gt; &lt;span class="o"&gt;!&lt;/span&gt; &lt;span class="nc"&gt;CurrentRoutees&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;CurrentRoutess&lt;/strong&gt; 這邊困擾了我一段時間，因為我在 Akka 的文件裡面並沒有看到這個物件的說明，且在 API Document 裡面我也沒有看到相關的介紹 Orz ...&lt;/p&gt;
+&lt;p&gt;一直到仔細看 receive 裡面的內容之後才發現，這程式碼的功能是發一個 Message 給 Router，Router 在接收到這個訊息之後，
+就會將目前 Router 裡面的所有的 Worker Actor（在 Let it Crash 裡面稱他為 Routee） 用 RouterRoutees 這個 case class 包裝回傳。&lt;/p&gt;
+&lt;!-- code-block
+
+case RouterRoutees(routees) =&gt;
+     routees foreach context.watch --&gt;
+&lt;p&gt;之後就可以利用 context.watch 將這個 Worker Actor 註冊起來。&lt;/p&gt;
+&lt;p&gt;這樣當 Worker Actor 因為錯誤太多次而結束的時候，就會接收到一個 Terminated 的 Message，
+之後我們就回傳 -1 並且呼叫 context.stop(self) 結束 Master Actor，這也會連帶讓 Worker Actor 結束。&lt;/p&gt;
+&lt;!-- code-block
+
+case Terminated(actor) =&gt;
+   replyTo ! -1
+   context.stop(self) --&gt;
+&lt;/div&gt;
+&lt;div class="section" id="master-actor-scatter-gather"&gt;
+&lt;h3&gt;Master Actor 的 Scatter 與 Gather&lt;/h3&gt;
+&lt;p&gt;說到 Scatter 的部份的話我想應該就要介紹一下我們這邊使用的 Router 了。&lt;/p&gt;
+&lt;p&gt;Router 其實本身跟我們這邊所實做的 Master Actor 很像，透過 Router 就可以將訊息分派給他底下的 Actor ，他就有點像是仲介商一樣。
+你把要做的工作交給他，他會負責找到合適的人將工作分派出去。&lt;/p&gt;
+&lt;p&gt;Router 分派工作的方式有好幾種，可以到  &lt;a class="reference external" href="http://doc.akka.io/docs/akka/2.0/scala/routing.html"&gt;Router&lt;/a&gt;  的文件看一下，這邊使用的是經典的 RoundRobinRouter。&lt;/p&gt;
+&lt;p&gt;他會將工作輪流 &lt;strong&gt;forward&lt;/strong&gt; 給底下的 Actor，這邊會用到 forward 是因為在 Akka 裡面，當你傳送一個 Message 給某個 Actor 的時候，
+其實還會附帶上了 Sender 的資訊，所以如果 Message 的傳送路徑是用一般的傳送方式的話&lt;/p&gt;
+&lt;blockquote&gt;
+Main -&amp;gt; Router -&amp;gt; Worker Actor&lt;/blockquote&gt;
+&lt;p&gt;那麼 Worker Actor 的 Sender 就會變成 Router，所以 Router 所使用的傳遞方式是 forward，這樣 Worker Actor 接收到 Message 之後就還是會認為 Main 是 Sender。
+這樣才能將訊息正確的回傳回去。&lt;/p&gt;
+&lt;p&gt;Scatter 的部份就這麼簡單解決，但是下一個 Gather 的部份就比較麻煩了。
+理由很簡單。因為 Router 只有負責分派的部份，Worker Actor 回傳的對象是一開始發 Message 的 Actor，
+所以要另外針對回傳的 Message 作處理。下面的程式碼會在回傳的訊息累積到 10 個之後才將全部一起加總回傳。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+   &lt;span class="n"&gt;results&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+   &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;results&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+     &lt;span class="n"&gt;replyTo&lt;/span&gt; &lt;span class="o"&gt;!&lt;/span&gt; &lt;span class="n"&gt;results&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sum&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;但是很明顯的，這樣還不足夠，如果同時間 Master Actor 接收到多個 Job，那麼要如何分辨 Worker Actor 所回傳的 Result 是哪個 Job 的？&lt;/p&gt;
+&lt;p&gt;目前想到的解決方式有&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;簡單來說就是限制讓一個 Master Actor 同時只會有一個 Job 進行，如果有多個 Job 要進行就使用多個 Master Actor，附帶一題Actor 的數量並不代表 Thread 的數量，這部份可以透過 Dispatcher 的設定來控制。&lt;/li&gt;
+&lt;li&gt;增加 Job ID，讓每個 Job 都有自己的 ID，並且這個 ID 也會加在 Result 裡面，這樣就可以辨識 Result 是哪個 Job的了。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;本來我覺得第一個方法是不可行的，因為這樣太浪費資源且每次都要建立 Master Actor 很麻煩。
+但是這樣的作法很單純也很好擴充，反正只要增加 Master Actor 就能多處理幾個 Job，要管理資源就等於管理 Master Actor 的數量就好了。&lt;/p&gt;
+&lt;p&gt;第二種作法會增加整個程式的複雜度，因為需要多一個 Map 來暫存 Result（光這個就有點麻煩了），需要多傳遞 Job ID 的資訊等。但好處應該就是會比較節省記憶體與 CPU 等。&lt;/p&gt;
+&lt;p&gt;但是在這個 CPU、Memory 不值錢的年代且這個又只是我的玩具的，所以我會選擇第一種方式來實做。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="worker-actor"&gt;
+&lt;h2&gt;Worker Actor&lt;/h2&gt;
+&lt;p&gt;這是在 Let it Crash 裡面 Worker Actor 的程式碼，他接收的 Message 型態很簡單只有一種 (id,s:String)，這是在 Scala 稱之為 Tuple 的物件。
+會有兩種是因為這個範例會模擬當 Worker Actor 執行發生 Exception 的情況。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Worker&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="nc"&gt;Actor&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;receive&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;String&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nc"&gt;Random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;nextInt&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+      &lt;span class="k"&gt;throw&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nc"&gt;IOException&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;failed&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;String&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+      &lt;span class="n"&gt;sender&lt;/span&gt; &lt;span class="o"&gt;!&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;toInt&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+
+  &lt;span class="k"&gt;override&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;preRestart&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;
+    &lt;span class="n"&gt;reason&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Throwable&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Option&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Any&lt;/span&gt;&lt;span class="o"&gt;])&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="c1"&gt;// retry&lt;/span&gt;
+    &lt;span class="n"&gt;message&lt;/span&gt; &lt;span class="n"&gt;foreach&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt; &lt;span class="n"&gt;self&lt;/span&gt; &lt;span class="n"&gt;forward&lt;/span&gt; &lt;span class="k"&gt;_&lt;/span&gt; &lt;span class="o"&gt;}&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;比較有趣的是 preRestart ，這可以跟前面 Master Actor 內的 Router 一起看一下。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;router&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;actorOf&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;Props&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nc"&gt;Worker&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;
+    &lt;span class="n"&gt;withRouter&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;
+    &lt;span class="nc"&gt;RoundRobinRouter&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+      &lt;span class="n"&gt;supervisorStrategy&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;OneForOneStrategy&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;
+        &lt;span class="n"&gt;maxNrOfRetries&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+          &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="k"&gt;_:&lt;/span&gt; &lt;span class="kt"&gt;IOException&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nc"&gt;Restart&lt;/span&gt;
+        &lt;span class="o"&gt;})),&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;router&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;上面的 OneForOneStrategy 是 Akka 的特產，他可以設定 Supervisor（就是該 Actor 的管理者，例如 Worker Actor 的 supervisor 是 Router）&lt;/p&gt;
+&lt;p&gt;對於他底下 Actor 的應對策略。這邊是設定當 Worker Actor 有丟出 IOException 的時候，所採取的應對是將該 Worker Actor Restart。
+但是這個 restart 次數有限制，在 maxNrOfRetries = 2 ，因此 Worker Actor 最多只會 Restart 兩次，兩次之後就會被停止並且傳一個 Terminated 的訊息給 Master Actor。&lt;/p&gt;
+&lt;p&gt;而 preRestart 裡面做的事情就是就是在 Restart 前將目前的 Message 全部用 forward 的方式傳給自己一次，否則 Restart 後這些 message 就會被清理掉。
+這樣之前的工作就會遺失了。&lt;/p&gt;
+&lt;p&gt;Let it Crash 的 &lt;a class="reference external" href="http://letitcrash.com/post/23532935686/watch-the-routees"&gt;Watch the Routees&lt;/a&gt; 幫助真的很大，加上最近再看 &lt;a class="reference external" href="http://www.amazon.com/Scala-Depth-Joshua-Suereth-D/dp/1935182706"&gt;Scala in Depth&lt;/a&gt;  對於要做的 Scatter-Gather 比較有一些想法了，
+下一篇應該就會說明如何時做的。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id2"&gt;
+&lt;h2&gt;下集預告 ?&lt;/h2&gt;
+&lt;img alt="https://dl.dropbox.com/u/15537823/Blog/Akka%202.0%20%E7%AD%86%E8%A8%98%285%29%20-%20Scatter%20Gather/Photo%2012-6-16%20%E4%B8%8B%E5%8D%8810%2042%2021.png" src="https://dl.dropbox.com/u/15537823/Blog/Akka%202.0%20%E7%AD%86%E8%A8%98%285%29%20-%20Scatter%20Gather/Photo%2012-6-16%20%E4%B8%8B%E5%8D%8810%2042%2021.png" /&gt;
+&lt;/div&gt;
+</summary><category term="Scala"></category><category term="Akka"></category></entry><entry><title>Akka 2.0 筆記(4) - Dataflow 請不要期待這篇我會提到什麼</title><link href="http://Swind.github.com/akka-20-bi-ji-4-dataflow-qing-bu-yao-qi-dai-zhe-pian-wo-hui-ti-dao-shi-mo.html" rel="alternate"></link><updated>2012-06-12T21:55:00+08:00</updated><author><name>Swind</name></author><id>tag:Swind.github.com,2012-06-12:akka-20-bi-ji-4-dataflow-qing-bu-yao-qi-dai-zhe-pian-wo-hui-ti-dao-shi-mo.html</id><summary type="html">&lt;div class="section" id="orz"&gt;
+&lt;h2&gt;因為我也看不懂 Orz ...&lt;/h2&gt;
+&lt;p&gt;這整篇的原因起於，洗澡的時候想到的，
+Akka 的 Future 到底有沒有存在的意義呢？&lt;/p&gt;
+&lt;p&gt;因為當一個 Actor 用 reply 或者 sender 回傳結果的時候，其實可以再 receive 不同的型態的 Message 就好了。
+而且這樣還不會因為 Await 而需要 block thread，減少 dead lock 的發生。
+我之前就幹過很蠢的事情，因為 Actor 把 Thread Pool 裡面的 Thread 用光了，所以他底下幫他工作的 Actor 就取不到 Thread 可以執行，
+因此全部 Timeout Orz ...&lt;/p&gt;
+&lt;p&gt;目前唯一能想到的用法就是在發出訊息的地方不是一個 Actor 的時候，這時候就沒有 receive 可以接收結果了。
+所以需要使用 Future 來等待結果，也就是 Future 應該只被用在需要等待的時候，如果是在一個 Actor 被執行的時候使用 Future。
+很容易浪費掉一個 Thread，應該是要另外開一個新的 case class 來專門處理結果才是。&lt;/p&gt;
+&lt;p&gt;但是這邊又出現了一個更複雜的問題了，因為我將工作分給不同的 Actor 去執行，必須要等到所有 Actor 都執行完畢，整合所有的結果。
+那麼如果是用 receive 我要怎樣才能知道我所有的工作都已經完成了呢？&lt;/p&gt;
+&lt;p&gt;簡單來說，我就是需要實做一個  &lt;a class="reference external" href="http://www.eaipatterns.com/BroadcastAggregate.html"&gt;Scatter-Gather&lt;/a&gt; ，才會莫名其妙的看到 Akka 的 Dataflow。&lt;/p&gt;
+&lt;div class="section" id="akka-dataflow"&gt;
+&lt;h3&gt;Akka Dataflow&lt;/h3&gt;
+&lt;p&gt;起因在於我用 Scatter-Gather 與 Akka 搜尋文章的時候找到這篇 &lt;a class="reference external" href="http://blog.vasilrem.com/scatter-gather-with-akka-dataflow"&gt;Scatter-Gather with Akka Dataflow&lt;/a&gt; 。
+一看裡面的 Code 真是驚為天人，我一行都看不懂 Orz ...&lt;/p&gt;
+&lt;p&gt;然後 Akka  &lt;a class="reference external" href="http://doc.akka.io/docs/akka/2.0/scala/dataflow.html"&gt;Dataflow Concurrency&lt;/a&gt; 的內容又非常的精簡 Orz，而且他又用到了 &lt;a class="reference external" href="http://www.scala-lang.org/node/2096"&gt;Scala Continuations&lt;/a&gt; ，
+這東西的文件也非常的 Orz，連 Programming in Scala 2nd 都沒有提到這個東西，讓我完全放棄這個東西 Orz ..&lt;/p&gt;
+&lt;p&gt;但是找到都找到了，我想實做個標本出來也不錯，所以才會有這篇東西。&lt;/p&gt;
+&lt;p&gt;下面這個版本改自上面所提到的 &lt;a class="reference external" href="http://blog.vasilrem.com/scatter-gather-with-akka-dataflow"&gt;Scatter-Gather with Akka Dataflow&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;因為那個 Blog 的範例我估計來自於 Akka 1.3.1 之前的版本，所以我做了一些更動才能在 Akka 2.0 上面跑。&lt;/p&gt;
+&lt;p&gt;很幸運或者是很不幸的是 Dataflow 的部份則是從 Akka 1.x 就沒有變動過了，所以基本邏輯都沒有改變。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;scala.util.continuations._&lt;/span&gt;
+
+&lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;akka.actor.Actor&lt;/span&gt;
+&lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;akka.actor.ActorRef&lt;/span&gt;
+&lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;akka.actor.ActorSystem&lt;/span&gt;
+&lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;akka.actor.Props&lt;/span&gt;
+&lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;akka.dispatch.Future.flow&lt;/span&gt;
+&lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;akka.dispatch._&lt;/span&gt;
+&lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;akka.pattern.ask&lt;/span&gt;
+&lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;akka.util.duration._&lt;/span&gt;
+&lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;akka.util.Timeout&lt;/span&gt;
+
+&lt;span class="k"&gt;object&lt;/span&gt; &lt;span class="nc"&gt;ScatterGatherDataFlow&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;String&lt;/span&gt;&lt;span class="o"&gt;])&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;implicit&lt;/span&gt; &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;timeout&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Timeout&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt; &lt;span class="n"&gt;seconds&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;system&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;ActorSystem&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt;
+    &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;recipients&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="n"&gt;map&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;system&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;actorOf&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;Props&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nc"&gt;Recipient&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;))))&lt;/span&gt;
+    &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;aggregator&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;system&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;actorOf&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;Props&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nc"&gt;Aggregator&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;recipients&lt;/span&gt;&lt;span class="o"&gt;)))&lt;/span&gt;
+    &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;results1&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Await&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;aggregator&lt;/span&gt; &lt;span class="o"&gt;?&lt;/span&gt; &lt;span class="nc"&gt;Message&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Hello&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt; &lt;span class="n"&gt;timeout&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;duration&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;results2&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Await&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;aggregator&lt;/span&gt; &lt;span class="o"&gt;?&lt;/span&gt; &lt;span class="nc"&gt;Message&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;World&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt; &lt;span class="n"&gt;timeout&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;duration&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+
+    &lt;span class="n"&gt;results1&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;asInstanceOf&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Future&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;String&lt;/span&gt;&lt;span class="o"&gt;]]&lt;/span&gt; &lt;span class="n"&gt;map&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt; &lt;span class="n"&gt;res&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+      &lt;span class="n"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Result: %s&amp;quot;&lt;/span&gt; &lt;span class="n"&gt;format&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;res&lt;/span&gt;&lt;span class="o"&gt;))&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+    &lt;span class="n"&gt;results2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;asInstanceOf&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Future&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;String&lt;/span&gt;&lt;span class="o"&gt;]]&lt;/span&gt; &lt;span class="n"&gt;map&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt; &lt;span class="n"&gt;res&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+      &lt;span class="n"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Result: %s&amp;quot;&lt;/span&gt; &lt;span class="n"&gt;format&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;res&lt;/span&gt;&lt;span class="o"&gt;))&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+
+    &lt;span class="n"&gt;system&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;awaitTermination&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Aggregator&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;recipients&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Iterable&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;ActorRef&lt;/span&gt;&lt;span class="o"&gt;])&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="nc"&gt;Actor&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+
+  &lt;span class="k"&gt;implicit&lt;/span&gt; &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;defaultDispatcher&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dispatcher&lt;/span&gt;
+  &lt;span class="k"&gt;implicit&lt;/span&gt; &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;timeout&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Timeout&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt; &lt;span class="n"&gt;seconds&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;receive&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="n"&gt;msg&lt;/span&gt; &lt;span class="k"&gt;@&lt;/span&gt; &lt;span class="nc"&gt;Message&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+      &lt;span class="n"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Started processing message `%s`&amp;quot;&lt;/span&gt; &lt;span class="n"&gt;format&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="o"&gt;))&lt;/span&gt;
+
+      &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Promise&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;String&lt;/span&gt;&lt;span class="o"&gt;]()&lt;/span&gt;
+      &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;promises&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;List&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fill&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;recipients&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="o"&gt;)(&lt;/span&gt;&lt;span class="nc"&gt;Promise&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;String&lt;/span&gt;&lt;span class="o"&gt;]())&lt;/span&gt;
+
+      &lt;span class="n"&gt;recipients&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;zip&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;promises&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="n"&gt;map&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;recipient&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;promise&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+          &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;recipient&lt;/span&gt; &lt;span class="o"&gt;?&lt;/span&gt; &lt;span class="n"&gt;msg&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="n"&gt;mapTo&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;String&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="n"&gt;map&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;String&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt;
+            &lt;span class="n"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Binding recipient&amp;#39;s response: %s&amp;quot;&lt;/span&gt; &lt;span class="n"&gt;format&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="o"&gt;))&lt;/span&gt;
+            &lt;span class="n"&gt;flow&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+              &lt;span class="n"&gt;promise&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;
+            &lt;span class="o"&gt;}&lt;/span&gt;
+          &lt;span class="o"&gt;}&lt;/span&gt;
+      &lt;span class="o"&gt;}&lt;/span&gt;
+
+      &lt;span class="n"&gt;flow&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+          &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;gather&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;promises&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;List&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Future&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;String&lt;/span&gt;&lt;span class="o"&gt;]],&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;String&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;String&lt;/span&gt; &lt;span class="kt"&gt;@cps&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Future&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Any&lt;/span&gt;&lt;span class="o"&gt;]]&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt;
+            &lt;span class="n"&gt;promises&lt;/span&gt; &lt;span class="k"&gt;match&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+              &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="n"&gt;head&lt;/span&gt; &lt;span class="o"&gt;::&lt;/span&gt; &lt;span class="n"&gt;tail&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;gather&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;tail&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+              &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nc"&gt;Nil&lt;/span&gt;          &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;
+            &lt;span class="o"&gt;}&lt;/span&gt;
+
+        &lt;span class="n"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Binding result...&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;gather&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;promises&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+      &lt;span class="o"&gt;}&lt;/span&gt;
+
+      &lt;span class="n"&gt;sender&lt;/span&gt; &lt;span class="o"&gt;!&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+
+&lt;span class="o"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Recipient&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="nc"&gt;Actor&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;receive&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nc"&gt;Message&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;msg&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+      &lt;span class="nc"&gt;Thread&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sleep&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+      &lt;span class="n"&gt;sender&lt;/span&gt; &lt;span class="o"&gt;!&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;%s, [%s]! &amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;msg&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="o"&gt;))&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+
+&lt;span class="o"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Message&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;String&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;附上執行結果&lt;/p&gt;
+&lt;!-- code-block
+
+Started processing message `Hello`
+Started processing message `World`
+Binding result...
+Binding result...
+Binding recipient's response: Hello, [1]!
+Binding recipient's response: Hello, [2]!
+Binding recipient's response: Hello, [3]!
+Binding recipient's response: Hello, [4]!
+Binding recipient's response: Hello, [5]!
+Result: Hello, [5]! Hello, [4]! Hello, [3]! Hello, [2]! Hello, [1]!
+Binding recipient's response: World, [2]!
+Binding recipient's response: World, [1]!
+Binding recipient's response: World, [3]!
+Binding recipient's response: World, [4]!
+Binding recipient's response: World, [5]!
+Result: World, [5]! World, [4]! World, [3]! World, [2]! World, [1]! --&gt;
+&lt;p&gt;我目前只有做到將這段程式碼修改到可以動而已，實際整個運作流程與大概還不是完全了解。&lt;/p&gt;
+&lt;p&gt;一方面是因為有關於 Dataflow 的資料太少，二來是 Scala Continuations 的資料也很少 Orz 。
+並且這個功能我覺得不太好 Debug ，閱讀上也有點不習慣，因此不會採用這個方式。
+或許有一天我了解了 Dataflow 的好的時候我會在回頭把這程式碼的說明補齊。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="eclipse-sbt"&gt;
+&lt;h3&gt;Eclipse 與 Sbt 的設定&lt;/h3&gt;
+&lt;p&gt;上面這段程式碼由於有用到 &lt;a class="reference external" href="http://www.scala-lang.org/node/2096"&gt;Scala Continuations&lt;/a&gt;  所以 Eclipse 或者 sbt 需要作一些設定，讓他可以使用 scala 的 continuations plugin。&lt;/p&gt;
+&lt;p&gt;Eclipse 的部份需要在 Compiler Standard 的設定中 p 的部份增加 &lt;strong&gt;continuations:enable&lt;/strong&gt;&lt;/p&gt;
+&lt;img alt="https://dl.dropbox.com/u/15537823/Blog/2012-06-12-akka-dataflow/ScalaEclipse_continuations.png" src="https://dl.dropbox.com/u/15537823/Blog/2012-06-12-akka-dataflow/ScalaEclipse_continuations.png" /&gt;
+&lt;p&gt;在 Compiler Advanced 的設定中 Xplugin 增加 &lt;strong&gt;libcontinuations.jar&lt;/strong&gt;&lt;/p&gt;
+&lt;img alt="https://dl.dropbox.com/u/15537823/Blog/2012-06-12-akka-dataflow/ScalaEclipse_continuations_2.png" src="https://dl.dropbox.com/u/15537823/Blog/2012-06-12-akka-dataflow/ScalaEclipse_continuations_2.png" /&gt;
+&lt;p&gt;如果是 sbt 的話只要增加下面的內容到 &lt;strong&gt;build.sbt&lt;/strong&gt; 裡面即可。&lt;/p&gt;
+&lt;!-- code-block
+
+autoCompilerPlugins := true
+
+libraryDependencies &lt;+= scalaVersion { v =&gt; compilerPlugin("org.scala-lang.plugins" % "continuations" % "2.9.1") }
+
+scalacOptions += "-P:continuations:enable" --&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</summary><category term="Scala"></category><category term="Akka"></category></entry><entry><title>Akka 2.0 筆記(3) - Future 之實在不是我想要拖稿</title><link href="http://Swind.github.com/akka-20-bi-ji-3-future-zhi-shi-zai-bu-shi-wo-xiang-yao-tuo-gao.html" rel="alternate"></link><updated>2012-06-10T17:30:00+08:00</updated><author><name>Swind</name></author><id>tag:Swind.github.com,2012-06-10:akka-20-bi-ji-3-future-zhi-shi-zai-bu-shi-wo-xiang-yao-tuo-gao.html</id><summary type="html">&lt;p&gt;而是我實在是不擅長寫作，過去作文只有 20 分真的不是拿假的。
+前一篇的 &lt;strong&gt;開始使用 Future&lt;/strong&gt; 只有介紹一些基本的使用方式而已，然後依照前面的程式碼是絕對跑不起來的 Orz ...&lt;/p&gt;
+&lt;p&gt;原因在於 Future 需要一個 Execution Contexts 類似 Java 裡面的 Executor，也就是 Thread Pool。&lt;/p&gt;
+&lt;div class="section" id="execution-contexts"&gt;
+&lt;h2&gt;Execution Contexts&lt;/h2&gt;
+&lt;p&gt;因為 Future 除了跟 Actor 配合使用之外，也可以直接使用。&lt;/p&gt;
+&lt;p&gt;例如前面與 Actor 配合使用的例子scala&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;list&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;List&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;String&lt;/span&gt;&lt;span class="o"&gt;](&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Tony&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Lion&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Teddy&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Brain&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Jess&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Kay&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Michael&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;listOfFutures&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;list&lt;/span&gt; &lt;span class="n"&gt;map&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+   &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+      &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;countActor&lt;/span&gt; &lt;span class="o"&gt;?&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="n"&gt;mapTo&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;futureList&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Future&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sequence&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;listOfFutures&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;其實可以改成這樣:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;futureList&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Future&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sequence&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;list&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;map&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nc"&gt;Future&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="o"&gt;)))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;因此在使用 Future 之前必須要設定 ExecutionContext 讓 Future 可用來執行工作。&lt;/p&gt;
+&lt;dl class="docutils"&gt;
+&lt;dt&gt;P.S&lt;/dt&gt;
+&lt;dd&gt;這樣的結果也是會回傳一個 Future[List[Int]]。
+很明顯的這樣的作法簡單很多，因為少建立 Actor 也不需要再將 Actor 所回傳的值轉型（就是前面看到的 mapTo[Int]）。
+我是還蠻喜歡這樣做的，不過由於後面要使用到 Router 所以就沒有直接使用 Future 了。&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;div class="section" id="execution-context"&gt;
+&lt;h3&gt;設定 Execution Context&lt;/h3&gt;
+&lt;p&gt;雖然文件中有提到如果 scope 內存在 ActorSystem ，他會自己使用 ActorSystem 的 default dispatcher，
+不過很可惜的這個功能我沒有測試出來，不然就是我誤解了這段話的意思。
+如果有朝一日我突然開悟想通了再來補上這一段。&lt;/p&gt;
+&lt;p&gt;而在 Akka 裡面所有的 Dispatcher 都是繼承自 ExecutionContext
+所以要設定這個也不太花時間。&lt;/p&gt;
+&lt;p&gt;如果要使用 Future 的是一個 Actor，那麼只要直接設定 Actor 的 dispatcher 就可以了。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MyActor&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="nc"&gt;Actor&lt;/span&gt;&lt;span class="o"&gt;{&lt;/span&gt;
+&lt;span class="k"&gt;implicit&lt;/span&gt; &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;defaultDispatch&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dispatcher&lt;/span&gt;
+&lt;span class="o"&gt;.&lt;/span&gt;
+&lt;span class="o"&gt;.&lt;/span&gt;
+&lt;span class="o"&gt;.&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;至於為什麼要使用 implicit 呢？因為 Future 的 Function 中 dispatcher 都是用 implicit 的型態，
+所以如果沒有傳參數給他的時候，他會自動在這個 scope 裡面找尋是否有宣告成 implicit 的 ExecutionContext 變數。&lt;/p&gt;
+&lt;p&gt;如果使用 Future 的地方不是在 Actor 內，或不想使用 Actor 的 dispatch。那麼可以自己建立 Java 的 Executor ，並且將他轉成 ExecutionContext。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;es&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Executors&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;newFixedThreadPool&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;threadSize&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;             &lt;span class="c1"&gt;//Java Executor&lt;/span&gt;
+&lt;span class="k"&gt;implicit&lt;/span&gt; &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;ec&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;ExecutionContext&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fromExecutorService&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;es&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;這樣在使用 Future 的時候他就會自動去找 ExecutionContext 來執行。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="future-exception"&gt;
+&lt;h2&gt;如果 Future 執行的過程中有發生 Exception&lt;/h2&gt;
+&lt;p&gt;Future 用 &lt;strong&gt;recover&lt;/strong&gt; 與 &lt;strong&gt;recoverWith&lt;/strong&gt; 來處理 Future 執行過程中的所丟出的 Exception。&lt;/p&gt;
+&lt;p&gt;使用方式非常的簡單，寫起來也蠻漂亮的，只要在建立 Future 時使用 recover 或 recoverWith 並且加入要處理的例外就好了。&lt;/p&gt;
+&lt;p&gt;例如&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nc"&gt;Future&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;parsePage&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pageNumber&lt;/span&gt;&lt;span class="o"&gt;))&lt;/span&gt; &lt;span class="n"&gt;recover&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt; &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt;&lt;span class="kt"&gt;Exception&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nc"&gt;List&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Post&lt;/span&gt;&lt;span class="o"&gt;]()&lt;/span&gt; &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;上面表示當我執行 parsePage 時如果發生任何 Excetpion 那麼就回傳一個空的 list。&lt;/p&gt;
+&lt;p&gt;而 recover 與 recoverWith 的差別就在於，recoverWith 內的 Function 要回傳的型態是 Future[Int] 而 recover 則是 Int。&lt;/p&gt;
+&lt;p&gt;晚點整理一個使用 Future 的完整例子好了，現在寫的東西真的太不入流了 XDDDDDD
+我很難把程式碼直接貼上來當範例。&lt;/p&gt;
+&lt;/div&gt;
+</summary><category term="Scala"></category><category term="Akka"></category></entry><entry><title>Akka 2.0 筆記 (2) - 開始使用 Future</title><link href="http://Swind.github.com/akka-20-bi-ji-2-kai-shi-shi-yong-future.html" rel="alternate"></link><updated>2012-06-08T12:18:00+08:00</updated><author><name>Swind</name></author><id>tag:Swind.github.com,2012-06-08:akka-20-bi-ji-2-kai-shi-shi-yong-future.html</id><summary type="html">&lt;p&gt;以前再使用 Java Thread 的時候最困擾我的就是 Thread 之間的溝通。
+要怎樣讓一個 Thread 去等待另外一個 Thread？要怎樣才能讓工作分配的平均？
+最後是靠 BlockingQueue 才讓實作變得簡單一點，
+不過想當然問題當然一大堆 ... Orz&lt;/p&gt;
+&lt;p&gt;所以想來實驗看看 Akka 的 Future 與 Router 到底是如何使用，與可以做到什麼事情。&lt;/p&gt;
+&lt;div class="section" id="future"&gt;
+&lt;h2&gt;Future&lt;/h2&gt;
+&lt;p&gt;請搭配 Akka 官網 &lt;a class="reference external" href="http://doc.akka.io/docs/akka/2.0/scala/futures.html"&gt;Future&lt;/a&gt; 服用。&lt;/p&gt;
+&lt;p&gt;看 Future 一定要看一下文件第一句話&lt;/p&gt;
+&lt;blockquote&gt;
+In Akka, a Future is a data structure used to retrieve the result of some concurrent operation.&lt;/blockquote&gt;
+&lt;p&gt;是的，他只是一個 Data Structure 而已，&lt;strong&gt;Future 最主要的功能就是可以透過他取得 Actor 回傳的 message&lt;/strong&gt;
+也可以將他想成他代表我們未來會取得的回傳值，我想這也就是它叫做 Future 的原因了。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;implicit&lt;/span&gt; &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;timeout&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Timeout&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt; &lt;span class="n"&gt;seconds&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;future&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;actor&lt;/span&gt; &lt;span class="o"&gt;?&lt;/span&gt; &lt;span class="n"&gt;msg&lt;/span&gt; &lt;span class="c1"&gt;// enabled by the &amp;quot;ask&amp;quot; import&lt;/span&gt;
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Await&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;future&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;timeout&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;duration&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="n"&gt;asInstanceOf&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;String&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;偷一下官網的範例，我們一行一行看上面的程式碼。&lt;/p&gt;
+&lt;p&gt;一開始的&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;implicit&lt;/span&gt; &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;timeout&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Timeout&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt; &lt;span class="n"&gt;seconds&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;就先忽略 implicit 吧，因為這邊還沒有用到 implicit 的特性。&lt;/p&gt;
+&lt;p&gt;現在只要知道他建立了一個 Timeout 物件，內容是 5 seconds，這個在之後設定 wait timeout 的時候會用到‧
+為了避免無止盡的等待，在 Actor 裡面只要有關等待的操作都要給一個 Timeout 時間。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;future&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;actor&lt;/span&gt; &lt;span class="o"&gt;?&lt;/span&gt; &lt;span class="n"&gt;msg&lt;/span&gt; &lt;span class="c1"&gt;// enabled by the &amp;quot;ask&amp;quot; import&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;這裡發一個 msg 給 actor ，特別需要注意的地方是這裡不是使用* ! &lt;em&gt;而是&lt;/em&gt; ? &lt;em&gt;。
+要使用這個 ? 需要 *import akka.pattern.ask&lt;/em&gt;，跟 ! 不一樣的地方在於他會回傳一個 Future[Any] 物件&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Await&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;future&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="n"&gt;timeout&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;duration&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="n"&gt;asInstanceOf&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;String&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;最後使用 Await 來透過 Future 取得 Actor 的回傳值，並且設定一個 timeout 時間，如果時間到 Actor 沒有回傳任何東西的話，就會丟出一個 Timeout Exception。&lt;/p&gt;
+&lt;div class="section" id="actor"&gt;
+&lt;h3&gt;如果要等待很多個 Actor 回傳值呢？&lt;/h3&gt;
+&lt;p&gt;如果要將工作分派給多個 Actor 進行運作，那麼最直覺的想法就是&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;f1&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;actor1&lt;/span&gt; &lt;span class="o"&gt;?&lt;/span&gt; &lt;span class="n"&gt;msg1&lt;/span&gt;
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;f2&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;actor2&lt;/span&gt; &lt;span class="o"&gt;?&lt;/span&gt; &lt;span class="n"&gt;msg2&lt;/span&gt;
+
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Await&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f1&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="n"&gt;second&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="n"&gt;asInstanceOf&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Await&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f2&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="n"&gt;second&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="n"&gt;asInstanceOf&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;f3&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;actor3&lt;/span&gt; &lt;span class="o"&gt;?&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Await&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f3&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="n"&gt;second&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="n"&gt;asInstanceOf&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;我先將工作發給 actor1 等他回傳，然後再發給 actor2 等待回傳，最後在將回傳結果發給 actor3。&lt;/p&gt;
+&lt;p&gt;為了要取得 a、b 而使用了 Await 兩次，這樣的作法非常沒有效率，因此有了 sequence 與 traverse 這兩個 function。&lt;/p&gt;
+&lt;p&gt;舉例來說，如果我有一個&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nc"&gt;List&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;String&lt;/span&gt;&lt;span class="o"&gt;](&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Tony&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Lion&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Teddy&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Brain&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Jess&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Kay&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Michael&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;並且想要這個 List 內所有字串的長度總和。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;list&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;List&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;String&lt;/span&gt;&lt;span class="o"&gt;](&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Tony&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Lion&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Teddy&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Brain&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Jess&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Kay&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Michael&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;listOfFutures&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;list&lt;/span&gt; &lt;span class="n"&gt;map&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+   &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+      &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;countActor&lt;/span&gt; &lt;span class="o"&gt;?&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="n"&gt;mapTo&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;在這邊我們得到了一個型態為 List[Future[Int]] 的 listOfFutures，再來就可以使用 sequence 將其轉成 Future[List[Int]]
+最後就可以使用 Await 來取得所有字串長度了，並且統計字數了。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;futureList&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Future&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sequence&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;listOfFutures&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;lengthList&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Await&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;futureList&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="n"&gt;second&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;而 sequence 與 traverse 兩個不一樣的地方在於說&lt;/p&gt;
+&lt;p&gt;sequence 接受一個 List[Future[A]] 轉成 Future[List[A]]。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;futureList&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt;&lt;span class="kt"&gt;Future&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;List&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;]]&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Future&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sequence&lt;/span&gt;&lt;span class="o"&gt;((&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="n"&gt;toList&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;map&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;&lt;span class="nc"&gt;Future&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;)))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;而 traverse 則是接受一個 List[B] 與一個 function (B=&amp;gt;Future[A]) 最後也是產生 Future[List[A]]&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;futureList&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt;&lt;span class="kt"&gt;Future&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;List&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;]]&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Future&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;traverse&lt;/span&gt;&lt;span class="o"&gt;((&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="n"&gt;toList&lt;/span&gt;&lt;span class="o"&gt;)(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nc"&gt;Future&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;用 traverse 的好處在於少產生了中間過程的 List[Future[Int]] (至少我們的程式碼看不到，背後實際上有沒有我就不確定了，不過文件是這樣說的)，而直接產生了 Future[List[Int]]。&lt;/p&gt;
+&lt;p&gt;寫了這麼久，才寫這麼一點點 Orz ... 而且還完全沒有進入重點。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</summary><category term="Scala"></category><category term="Akka"></category></entry><entry><title>Akka 2.0 筆記 (1)</title><link href="http://Swind.github.com/akka-20-bi-ji-1.html" rel="alternate"></link><updated>2012-05-17T18:03:00+08:00</updated><author><name>Swind</name></author><id>tag:Swind.github.com,2012-05-17:akka-20-bi-ji-1.html</id><summary type="html">&lt;p&gt;因為我的程式還沒有寫完，所以是筆記 (1)，寫的過程應該還會有 2 3 ... 出現 Orz。&lt;/p&gt;
+&lt;blockquote&gt;
+Akka 2.0 - 要升級了
+你的時間的庫存量足夠嗎 ?&lt;/blockquote&gt;
+&lt;p&gt;Akka 進入了 2.0 時代，恭喜你如果你是用 1.x 的話，請準備改寫吧 ...
+先從幾個方面來看 2.0 的新增事項。&lt;/p&gt;
+&lt;p&gt;以下算是筆記，如有錯誤請多指教&lt;/p&gt;
+&lt;div class="section" id="actor"&gt;
+&lt;h2&gt;Actor&lt;/h2&gt;
+&lt;p&gt;從官網範例來看，Actor 的架構還是跟之前一樣沒有什麼改變&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;akka.actor.Actor&lt;/span&gt;
+&lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;akka.actor.Props&lt;/span&gt;
+&lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;akka.event.Logging&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MyActor&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="nc"&gt;Actor&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;log&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Logging&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;system&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;receive&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;test&amp;quot;&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;log&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;received test&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="k"&gt;_&lt;/span&gt;      &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;log&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;received unknown message&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;但是上面的程式碼你會看到一個有點陌生的東西 &lt;em&gt;context.system&lt;/em&gt;。
+2.0 建立 Actor 的方式已經有了改變，現在的 Actor 可以有階層關係（就像老鼠會一樣 Orz）。
+從 Actor 的 context 中可以取得很多該 Actor 的資訊與操作方式。而 ActorSystem 建立出來的 Actor 就會位於最上層。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;object&lt;/span&gt; &lt;span class="nc"&gt;Main&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="nc"&gt;App&lt;/span&gt;
+&lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;system&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;ActorSystem&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;MySystem&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;myActor&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;system&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;actorOf&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;Props&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;MyActor&lt;/span&gt;&lt;span class="o"&gt;],&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;myactor&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;延續上面的例子，如果MyActor內需要建立其他Actor&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;actorof&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;Props&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;children&lt;/span&gt;&lt;span class="o"&gt;],&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;children&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;利用這種階層關係有什麼好處呢？&lt;/p&gt;
+&lt;p&gt;在之前 Akka1.3 的時代，我就經歷過非常痛苦的過程，那時候還沒有像 2.0 這樣的階層關係。
+所以如果我在停止一個 Actor 之前沒有先把他底下的 Actor 都停止的話，程式是沒有辦法正常結束的（因為還有 Actor 活著）。&lt;/p&gt;
+&lt;p&gt;所以必須 override Actor 裡面的 function 讓他在停止之前，會先去結束他底下的 Actor。
+為了作到這件事，我還要多弄一個 List 去紀錄他有建立哪些 Actor。
+然後拼命的發 message 叫 Actor 去死去死去死去死 Orz。&lt;/p&gt;
+&lt;p&gt;但是這些煩惱在2.0就通通不見啦！！！！！
+現在要停止只要用&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stop&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;就會幹掉底下的部屬之後再做掉自己，真是讓人清爽又愉快（煙）&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="eventstream"&gt;
+&lt;h2&gt;EventStream&lt;/h2&gt;
+&lt;p&gt;最早知道 EventStream 或 EventBus 這種架構是在 GWT 的時後，那時候一用實在驚為天人。
+真是太方便了，雖然整體架構跟 Observer Pattern 一樣，但是人家就是用得很漂亮。&lt;/p&gt;
+&lt;p&gt;EventStream 只存在於 ActorSystem 底下，要使用 EventStream 的第一步就是先註冊 Actor 與他要接收的物件類型。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;akka.actor.&lt;/span&gt;&lt;span class="o"&gt;{&lt;/span&gt; &lt;span class="nc"&gt;Actor&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="nc"&gt;DeadLetter&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="nc"&gt;Props&lt;/span&gt; &lt;span class="o"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;listener&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;system&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;actorOf&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;Props&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nc"&gt;Actor&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;receive&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;DeadLetter&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}))&lt;/span&gt;
+&lt;span class="n"&gt;system&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;eventStream&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;subscribe&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;listener&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;classOf&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;DeadLetter&lt;/span&gt;&lt;span class="o"&gt;])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;上面的程式碼產生了一個 listener 的 Actor 並且註冊說如果有 DeadLeatter 類型的物件送到 EventStream 內，就會傳送給他。
+雖然文件說主要是拿來作 Log 或者是監聽事件，但我拿來當其他的用途，例如發給所有的 Actor 讓他們自己認領工作之類的。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="event-handler"&gt;
+&lt;h2&gt;Event Handler&lt;/h2&gt;
+&lt;p&gt;Event Handler 是拿來作 log 的工具，可以實作一個 EventListener 來監聽所有的事件。
+跟 Log4j 等工具一樣，可以分成&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Error&lt;/li&gt;
+&lt;li&gt;Warning&lt;/li&gt;
+&lt;li&gt;Info&lt;/li&gt;
+&lt;li&gt;Debug&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;看起來似乎可以拿來作為例外處理或者作一個事件重發的工具。&lt;/p&gt;
+&lt;div class="section" id="eventlistener"&gt;
+&lt;h3&gt;實作EventListener&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;errorHandlerEventListener&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Actor&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;actorOf&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nc"&gt;Actor&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="n"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dispatcher&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;EventHandler&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;EventHandlerDispatcher&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;receive&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nc"&gt;EventHandler&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;Error&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cause&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;instance&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;...&lt;/span&gt;
+    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nc"&gt;EventHandler&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;Warning&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;instance&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;...&lt;/span&gt;
+    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nc"&gt;EventHandler&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;Info&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;instance&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;...&lt;/span&gt;
+    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="nc"&gt;EventHandler&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;Debug&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;instance&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;...&lt;/span&gt;
+    &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="n"&gt;genericEvent&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;...&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;})&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;加入EventListener&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nc"&gt;EventHandler&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;addListener&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;errorHandlerEventListener&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;移除EventListener&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nc"&gt;EventHandler&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;removeListener&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;errorHandlerEventListener&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Log 訊息&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nc"&gt;EventHandler&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;error&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;exception&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="nc"&gt;EventHandler&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;error&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="nc"&gt;EventHandler&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;warning&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="nc"&gt;EventHandler&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;info&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="nc"&gt;EventHandler&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;debug&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;message&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="scheduler"&gt;
+&lt;h2&gt;Scheduler&lt;/h2&gt;
+&lt;p&gt;Akka 內有附一個簡單的 Scheduler，他可以讓你排程什麼時候要發訊息給 Actor&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;akka.actor.Scheduler&lt;/span&gt;
+
+&lt;span class="c1"&gt;//Sends messageToBeSent to receiverActor after initialDelayBeforeSending and then after each delayBetweenMessages&lt;/span&gt;
+&lt;span class="nc"&gt;Scheduler&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;schedule&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;receiverActor&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;messageToBeSent&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;initialDelayBeforeSending&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;delayBetweenMessages&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;timeUnit&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;//Sends messageToBeSent to receiverActor after delayUntilSend&lt;/span&gt;
+&lt;span class="nc"&gt;Scheduler&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;scheduleOnce&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;receiverActor&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;messageToBeSent&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;delayUntilSend&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;timeUnit&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="event-driven"&gt;
+&lt;h2&gt;Event Driven&lt;/h2&gt;
+&lt;p&gt;一直到最近在實作小玩具才想到的，我想這不是新的東西，可是用Akka或許可以把這件事情變得非常方便。
+以前在學Design Pattern的時候，其實整體架構算是很容易理解的東西。&lt;/p&gt;
+&lt;p&gt;But ! 就是這個But，在寫的時候卻會常常綁手綁腳，例如MVC的Pattern，我到底要不要在Control中紀錄Model與View的位置，如果不紀錄的話我又要怎麼找到他們，然後整個執行流程又是如何？
+這是一件很麻煩的事情，雖然現在用起來是沒啥感覺，但是我也常為了Model之間的溝通流程感到困擾。&lt;/p&gt;
+&lt;p&gt;小的在下我，寫論文的時候實作的東西其基礎架構是建立在JavaSpace上面，這個東西不要說現在沒啥人聽過了，就連我在用的時候都很悲劇。
+但是他設計概念我覺得很棒，他提供一個Pool可以讓你把Object丟進去，有興趣的Process就可以自己去那個Pool搶。
+但是這個東西就悲劇在他後來沒有在維護了，而且他的Server架設非常麻煩，API非常難用。&lt;/p&gt;
+&lt;p&gt;一直到後來在GWT中看到Event Bus，我覺得這真是TMD的好東西。
+反正每個Model就是把Event丟到Event Bus裡面就好了，然後誰愛撿就撿去玩，射後不理真是男人的浪漫（誤）。
+因此最近才想到，如果利用Akka來作一個類似JavaSpace的東西如何，每個Module都是一個獨立的Actor，Module在接收到工作把工作完成就，就將結果丟回Space。&lt;/p&gt;
+&lt;p&gt;舉個例子就像之前舉例舉到爛掉的某大論壇Parser，需要將文章內容紀錄到資料庫裡面，並且還要去下載相關的圖片。
+因此我就模仿Eva Magi系統（大誤），將Parser Module、Data Module與Download Module各自獨立成一個Actor。
+系統啟動的時候，由系統去建立Space，並且將這三個Module依照其MetaData的設定要將哪些Event傳送給他們（其實就是Observer Pattern）。&lt;/p&gt;
+&lt;p&gt;Parser定時自動去論壇取得文章內容，並且將內容丟到Space裡面。這時Data Module就可以將文章資料寫到資料庫中，而Download Module也同時進行下載。
+這樣的架構可以視情況讓他是Single Thread或Multiple Thread的程式。只要好好管理Event的流動方式就可以了。&lt;/p&gt;
+&lt;p&gt;至於這樣的架構好不好測試呢？我覺得這樣寫有一個好處，就是可以強迫Programmer寫出沒有副作用的程式，因為你必須要將所以處理結果都丟回Space裡面。
+因此測試的時候，只要建立該Module，並且傳送Mock Event給他就可以了，其他Module並不需要被建立起來。這樣的架構也降低了各Module之間的coupling。&lt;/p&gt;
+&lt;p&gt;最後如果想要作所謂的雲～～～～～～～～端系統（老實說連我都不知道啥鬼才叫TMD的雲～～～～～～端系統），就可以利用Akka的Remote Actor的功能，
+將不同的Module丟到不同的機器上面作，甚至是同一個Module可以有好幾個來分工。&lt;/p&gt;
+&lt;p&gt;Wao cow 越想感覺越夢幻，有空來實作看看到底會遇到什麼問題好了。&lt;/p&gt;
+&lt;/div&gt;
+</summary><category term="Scala"></category><category term="Akka"></category></entry><entry><title>實作 EPUBConverter 的筆記</title><link href="http://Swind.github.com/shi-zuo-epubconverter-de-bi-ji.html" rel="alternate"></link><updated>2012-05-11T18:19:00+08:00</updated><author><name>Swind</name></author><id>tag:Swind.github.com,2012-05-11:shi-zuo-epubconverter-de-bi-ji.html</id><summary type="html">&lt;div class="section" id="id1"&gt;
+&lt;h2&gt;好吧，我要開始筆記一下這次的實作心得了&lt;/h2&gt;
+&lt;p&gt;其實在學 Scala 的這一段時間中，我最困擾的就是到底怎樣才是好的 Scala 寫作風格。
+因為 Scala 最吸引我的部份就是在於他的語法可以不斷的精鍊再精鍊，最後變成*魔法文字* Orz。
+所以要怎樣善用 Scala 的語言特性，卻又不失可讀性，我覺得真的很難。
+因此在這次的小工具實作中，我試著摸索 Curry 的用法。&lt;/p&gt;
+&lt;div class="section" id="curry"&gt;
+&lt;h3&gt;Curry&lt;/h3&gt;
+&lt;p&gt;說到教學文件，就一定要推一下 &lt;a class="reference external" href="http://caterpillar.onlyfun.net/Gossip/Scala/index.html"&gt;良葛格的學習筆記&lt;/a&gt; 裡面他有提到 &lt;a class="reference external" href="http://caterpillar.onlyfun.net/Gossip/Scala/Curry.html"&gt;Curry&lt;/a&gt;  的語法與何謂 Curry 。
+但是我更喜歡在 jserv's blog &lt;a class="reference external" href="http://blog.linux.org.tw/~jserv/archives/002029.html"&gt;以 C 語言實做 Functional Language 的 Currying&lt;/a&gt;  看到的說明。&lt;/p&gt;
+&lt;p&gt;Curry 可以看成數學的多項式，舉例來說現在有一個多項式&lt;/p&gt;
+&lt;blockquote&gt;
+F(X,Y) = X + Y&lt;/blockquote&gt;
+&lt;p&gt;那麼 Curry 的感覺就是我現在已知 X 為 10 之類的，然後將其代入，所以上面的多項式又變成另外一個多項式&lt;/p&gt;
+&lt;blockquote&gt;
+F(Y) = 10 + Y&lt;/blockquote&gt;
+&lt;p&gt;如果將這段用 Scala 來表示就是&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// 這是 F(X,Y)&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;F&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;X&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt;&lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;)(&lt;/span&gt;&lt;span class="n"&gt;Y&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt;&lt;span class="kt"&gt;Int&lt;/span&gt;&lt;span class="o"&gt;)={&lt;/span&gt;
+   &lt;span class="n"&gt;X&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;Y&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+
+&lt;span class="c1"&gt;// 帶入 X = 10&lt;/span&gt;
+
+&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;F1&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;F&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id2"&gt;
+&lt;h3&gt;Curry 的使用案例&lt;/h3&gt;
+&lt;p&gt;在 jserv 的文章有提到一個 Ruby 目錄樹尋訪的範例，剛好我在這次有實作類似的東西，但是功力不足沒有辦法寫的像 Ruby 那麼優雅。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;walkDir&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fileList&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;List&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;File&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;{})(&lt;/span&gt;&lt;span class="n"&gt;expr&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;File&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nc"&gt;Unit&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Unit&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;fileList&lt;/span&gt; &lt;span class="k"&gt;match&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+      &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt; &lt;span class="o"&gt;::&lt;/span&gt; &lt;span class="n"&gt;files&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;isDirectory&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+          &lt;span class="n"&gt;walkDir&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;listFiles&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;toList&lt;/span&gt; &lt;span class="o"&gt;:::&lt;/span&gt; &lt;span class="n"&gt;files&lt;/span&gt;&lt;span class="o"&gt;)(&lt;/span&gt;&lt;span class="n"&gt;expr&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;else&lt;/span&gt;
+        &lt;span class="o"&gt;{&lt;/span&gt;
+          &lt;span class="n"&gt;expr&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+          &lt;span class="n"&gt;walkDir&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;files&lt;/span&gt;&lt;span class="o"&gt;)(&lt;/span&gt;&lt;span class="n"&gt;expr&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+        &lt;span class="o"&gt;}&lt;/span&gt;
+      &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="k"&gt;_&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;我想這樣寫最大的問題應該是會在&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;walkDir&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;listFiles&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;toList&lt;/span&gt; &lt;span class="o"&gt;:::&lt;/span&gt; &lt;span class="n"&gt;files&lt;/span&gt;&lt;span class="o"&gt;)(&lt;/span&gt;&lt;span class="n"&gt;expr&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;這邊每次都會產生一個新的 List ，這是優點也是缺點，效率我想可能會差了一點，但是我不在意，反正這個程式不是一秒幾十萬上下的東西。
+那麼這個東西可以怎麼用呢？&lt;/p&gt;
+&lt;p&gt;例如要印出所有資料夾底下的檔案&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;walkDir&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;folder&lt;/span&gt;&lt;span class="o"&gt;){&lt;/span&gt;&lt;span class="n"&gt;println&lt;/span&gt;&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;刪除底下所有名稱包含 test 的檔案&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;walkDir&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;folder&lt;/span&gt;&lt;span class="o"&gt;){&lt;/span&gt;
+   &lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+      &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getName&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;contains&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;test&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;))&lt;/span&gt;
+         &lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;delete&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;我另外一個有使用 Curry 的地方&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nc"&gt;InputToOutput&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;buffer&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Byte&lt;/span&gt;&lt;span class="o"&gt;])(&lt;/span&gt;&lt;span class="n"&gt;fis&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;InputStream&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fos&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;OutputStream&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt;
+&lt;span class="o"&gt;{&lt;/span&gt;
+   &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;bufferReader&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fis&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;InputStream&lt;/span&gt;&lt;span class="o"&gt;)(&lt;/span&gt;&lt;span class="n"&gt;buffer&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Byte&lt;/span&gt;&lt;span class="o"&gt;])&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fis&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;buffer&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt; &lt;span class="n"&gt;buffer&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+
+   &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;writeToOutputStream&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;reader&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Byte&lt;/span&gt;&lt;span class="o"&gt;])&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nc"&gt;Tuple2&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Int&lt;/span&gt;, &lt;span class="kt"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Byte&lt;/span&gt;&lt;span class="o"&gt;]],&lt;/span&gt; &lt;span class="n"&gt;fos&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;OutputStream&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Boolean&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+     &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;reader&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;buffer&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+     &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;length&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+       &lt;span class="n"&gt;fos&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+       &lt;span class="n"&gt;writeToOutputStream&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;reader&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fos&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+     &lt;span class="o"&gt;}&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt;
+       &lt;span class="kc"&gt;true&lt;/span&gt;
+   &lt;span class="o"&gt;}&lt;/span&gt;
+
+   &lt;span class="n"&gt;writeToOutputStream&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bufferReader&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fis&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;_&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fos&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+
+ &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fis&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fos&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;這個 function 主要負責將 InputStream 的資料寫到 OutputStream。&lt;/p&gt;
+&lt;p&gt;第一個 Curry 是 InputToOutput 他讓我可以用 InputToOutput(buffer)_ 建立一個已經宣告好 buffer 的 IO 操作 function。
+這樣我就不用每次都還要找一個 buffer 才可以開始我的 IO 操作，反正 buffer 的內容讀完就可以丟了，不過這個沒有考慮 multiple thread 的情況就是。&lt;/p&gt;
+&lt;p&gt;第二個 Curry 是讓 Read InputStream 的 function 跟傳進來的 InputStream 綁定，這單純只是想簡化之後的操作，讓我可以不用再考慮 InputStream 這個參數。
+反正我只要給一個 buffer 他就會自動讀進來，並且回傳讀取的大小與 buffer 本身。&lt;/p&gt;
+&lt;p&gt;解壓縮的部份也用了類似的技巧&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;unzipAllFile&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;entryList&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;List&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;ZipEntry&lt;/span&gt;&lt;span class="o"&gt;],&lt;/span&gt; &lt;span class="n"&gt;getInputStream&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;ZipEntry&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="nc"&gt;InputStream&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;targetFolder&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;File&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt; &lt;span class="kt"&gt;Boolean&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;entryList&lt;/span&gt; &lt;span class="k"&gt;match&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+      &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="n"&gt;entry&lt;/span&gt; &lt;span class="o"&gt;::&lt;/span&gt; &lt;span class="n"&gt;entries&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;entry&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;isDirectory&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+          &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nc"&gt;File&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;targetFolder&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;entry&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getName&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="n"&gt;mkdirs&lt;/span&gt;
+        &lt;span class="k"&gt;else&lt;/span&gt;
+        &lt;span class="o"&gt;{&lt;/span&gt;
+          &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;input&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="n"&gt;output&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;InputToOutput&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;getInputStream&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;entry&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nc"&gt;FileOutputStream&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nc"&gt;File&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;targetFolder&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;entry&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getName&lt;/span&gt;&lt;span class="o"&gt;)))&lt;/span&gt;
+
+          &lt;span class="n"&gt;input&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;
+          &lt;span class="n"&gt;output&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;
+        &lt;span class="o"&gt;}&lt;/span&gt;
+
+        &lt;span class="n"&gt;unzipAllFile&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;entries&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;getInputStream&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;targetFolder&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+
+      &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="k"&gt;_&lt;/span&gt; &lt;span class="k"&gt;=&amp;gt;&lt;/span&gt;
+        &lt;span class="kc"&gt;true&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;大概就這些了，總覺得程式還是寫的不夠多，這些 Code 應該可以寫的再更優雅一點才是。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</summary><category term="Scala"></category></entry><entry><title>EPUBConverter - epub格式簡轉繁小工具</title><link href="http://Swind.github.com/epubconverter-epubge-shi-jian-zhuan-fan-xiao-gong-ju.html" rel="alternate"></link><updated>2012-05-11T16:56:00+08:00</updated><author><name>Swind</name></author><id>tag:Swind.github.com,2012-05-11:epubconverter-epubge-shi-jian-zhuan-fan-xiao-gong-ju.html</id><summary type="html">&lt;div class="section" id="id1"&gt;
+&lt;h2&gt;下載點&lt;/h2&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://github.com/Swind/EPUBConverter/downloads"&gt;EPUBConverter 0.0.1&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;這個版號我覺得也沒有機會到 0.0.2 了，不過還是讓我命名個版號滿足小小的虛榮心好了。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id2"&gt;
+&lt;h2&gt;不負責任的使用教學&lt;/h2&gt;
+&lt;p&gt;這只是一個非常簡單的小工具，用 Scala 撰寫而成，因此執行環境需要使用 JVM。
+我只有測試過 JDK 7 的環境，理論上 JDK 6 應該也沒有問題。
+如果有人有測試到有問題的話（默...）我也不知道有沒有時間改 Orz。&lt;/p&gt;
+&lt;div class="section" id="id3"&gt;
+&lt;h3&gt;轉換方式&lt;/h3&gt;
+&lt;p&gt;轉換方式感謝 &lt;a class="reference external" href="http://jeremy.ssinrc.org/?p=327"&gt;六度數位空間&lt;/a&gt; 的分享。
+其實 epub 的格式是以 zip 格式壓縮，所以這個程式的執行流程是&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;將 epub 檔解壓縮到暫存資料夾&lt;/li&gt;
+&lt;li&gt;將 暫存資料夾裡面的所有檔案從 UTF-8 簡體 轉成 UTF-8 繁體&lt;/li&gt;
+&lt;li&gt;將資料夾壓縮，並且順便將檔名轉成繁體&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;簡體轉繁體的程式碼是使用 &lt;a class="reference external" href="http://www.mandarintools.com/zhcode.html"&gt;zhcode&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;整個步驟就只有這樣而已。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id5"&gt;
+&lt;h3&gt;使用方式&lt;/h3&gt;
+&lt;p&gt;整個程式的資料夾結構如下&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+/EPUBConverter
+  |---Source
+  |---Result
+  |---Converter.bat
+  |---Converter.jar
+  |---hcutf8.txt
+&lt;/pre&gt;
+&lt;p&gt;hcutf8.txt 是個對應表，他列出了簡體字跟繁體字的對應。所以如果想自行更改轉換字的話，可以修改這個檔案（應該可以）。
+要使用只要執行 Converter.bat 就會自動將 Source 資料夾底下 &lt;em&gt;所有&lt;/em&gt; 的檔案，轉換到 Result 資料夾底下，就這樣而已了。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</summary><category term="Scala"></category></entry><entry><title>Scala ORM 工具筆記-Circumflex與ActiveJDBC</title><link href="http://Swind.github.com/scala-orm-gong-ju-bi-ji-circumflexyu-activejdbc.html" rel="alternate"></link><updated>2012-02-07T13:44:00+08:00</updated><author><name>Swind</name></author><id>tag:Swind.github.com,2012-02-07:scala-orm-gong-ju-bi-ji-circumflexyu-activejdbc.html</id><summary type="html">&lt;div class="section" id="circumflex"&gt;
+&lt;h2&gt;Circumflex&lt;/h2&gt;
+&lt;div class="section" id="prepare"&gt;
+&lt;h3&gt;Prepare&lt;/h3&gt;
+&lt;p&gt;&lt;a class="reference external" href="http://circumflex.ru/"&gt;Circumflex&lt;/a&gt; 我是使用SBT連到Maven repository去載入他所有的Library。&lt;/p&gt;
+&lt;dl class="docutils"&gt;
+&lt;dt&gt;載入的項目有&lt;/dt&gt;
+&lt;dd&gt;&lt;ul class="first last simple"&gt;
+&lt;li&gt;circumflex-orm-2.1.jar&lt;/li&gt;
+&lt;li&gt;circumflex-core-2.1.jar&lt;/li&gt;
+&lt;li&gt;commons-io-2.0.1&lt;/li&gt;
+&lt;li&gt;circumflex-cache-2.1.jar&lt;/li&gt;
+&lt;li&gt;slf4j-api-1.6.1&lt;/li&gt;
+&lt;li&gt;ehcache-core-2.4.4&lt;/li&gt;
+&lt;li&gt;jta-1.1.jar&lt;/li&gt;
+&lt;li&gt;c3p0-0.9.1.1.jar&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;p&gt;Circumflex全部載入約2.3MB左右，比其他LightWeight的Library要大的很多。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="create-table"&gt;
+&lt;h3&gt;Create Table&lt;/h3&gt;
+&lt;p&gt;Circumflex的設計，主要是在是產生一個對應的資料物件，例如&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Country&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="nc"&gt;Record&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;String&lt;/span&gt;, &lt;span class="kt"&gt;Country&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;code&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;code&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;VARCHAR&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="nc"&gt;NOT_NULL&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;DEFAULT&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&amp;#39;ch&amp;#39;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;TEXT&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;NOT_NULL&lt;/span&gt;
+
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;cities&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;inverseMany&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;City&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;country&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;relation&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Country&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nc"&gt;PRIMARY_KEY&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;code&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;object&lt;/span&gt; &lt;span class="nc"&gt;Country&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="nc"&gt;Country&lt;/span&gt; &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="nc"&gt;Table&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;String&lt;/span&gt;, &lt;span class="kt"&gt;Country&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;其中class與object兩者皆為必要的，但是在object Country的繼承型態宣告，連續繼承了Country與Table。
+我覺得這部分會讓人有點困惑為何需要如此處理，但是這還是其次的。&lt;/p&gt;
+&lt;p&gt;在建立好資料物件之後，就可以利用此資料物件Create Table。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;ddl&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nc"&gt;DDLUnit&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;Country&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ddl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;CREATE&lt;/span&gt;
+&lt;span class="n"&gt;ddl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;DROP&lt;/span&gt;
+&lt;span class="n"&gt;ddl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;DROP_CREATE&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;建立Table的部分非常方便。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="association"&gt;
+&lt;h3&gt;讓我不會用的Association&lt;/h3&gt;
+&lt;p&gt;關聯式資料庫的架構非常常見，不管是One-to-One、One-to-Many等結構，我的小程式也很需要這方面功能的支持。
+Circumflex的設定方式是將變數宣告成inverseMany或inverseOne的型態，他目前沒有支援Many-to-Many。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;City&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="nc"&gt;Record&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Long&lt;/span&gt;, &lt;span class="kt"&gt;City&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;country&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;country_code&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;TEXT&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;REFERENCES&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;Country&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="nc"&gt;ON_DELETE&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;CASCADE&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="nc"&gt;ON_UPDATE&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;NO_ACTION&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Country&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="nc"&gt;Record&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;String&lt;/span&gt;, &lt;span class="kt"&gt;Country&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;cities&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;inverseMany&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;City&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;country&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;inverseMany會回傳一個inverseMany的物件，呼叫inverseMany.get之後可以得到一個seq的物件。這個物件是immutable的
+，因此你沒有辦法插入資料。所以我想像中的使用方式是Country與City兩個都是各自去儲存的，
+然後可以透過Country.cities()取得所有有關的City，相對的City.country()則可以查詢取得對應的Country。
+但是這比較不符合我想要的方式，我還是希望那個Collection是可以讓我CRUD的，並且在儲存Country的時候可以一併更新City。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="activejdbc"&gt;
+&lt;h2&gt;ActiveJDBC&lt;/h2&gt;
+&lt;div class="section" id="id2"&gt;
+&lt;h3&gt;Prepare&lt;/h3&gt;
+&lt;p&gt;&lt;a class="reference external" href="http://code.google.com/p/activejdbc/"&gt;activejdbc&lt;/a&gt; 所需要的Library比較多一點，因此建議使用Maven去匯入，或者使用SBT將會減少很多麻煩。
+匯入的方式可以參考 &lt;a class="reference external" href="http://code.google.com/p/activejdbc/wiki/GettingStarted"&gt;Getting Start&lt;/a&gt; 。
+我在這邊也簡單列出一下使用activejdbc有匯入的Library&lt;/p&gt;
+&lt;dl class="docutils"&gt;
+&lt;dt&gt;activejdbc 所需要的 Library&lt;/dt&gt;
+&lt;dd&gt;&lt;ul class="first last simple"&gt;
+&lt;li&gt;activejdbc-1.2-SNAPSHOT.jar&lt;/li&gt;
+&lt;li&gt;slf4j-api-1.5.10&lt;/li&gt;
+&lt;li&gt;javalite-common-1.2-SNAPSHOT.jar&lt;/li&gt;
+&lt;li&gt;ehcache-core-2.4.5&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;p&gt;上面這幾個Library中，以ehcache最大約 9xx KB&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id3"&gt;
+&lt;h3&gt;Create Table&lt;/h3&gt;
+&lt;p&gt;activejdbc並沒有支援Create Table等動作，因此這些動作需要自己撰寫SQL來處理。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="write-model"&gt;
+&lt;h3&gt;Write Model&lt;/h3&gt;
+&lt;p&gt;寫Model的時候最主要要注意物件的名稱，如果你的Table名稱是&amp;quot;employees&amp;quot;這種複數名詞，那麼你的Model名稱就應該為&amp;quot;employee&amp;quot;。
+activejdbc會自動對應複數名詞的Table與單數名詞的Model。(不知道對於es之類的這種變化他是不是也可以處理)。
+當然如果有需要的話，也可以使用**&amp;#64;Table**來指定Table名稱。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nd"&gt;@Table&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;TABLE_NAME&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;employe&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="nc"&gt;Model&lt;/span&gt;&lt;span class="o"&gt;{}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;P.S 幹悲劇了，由於activejdbc裡面的Model的set有三種傳值方式。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;Object&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt; &lt;span class="n"&gt;namesAndValues&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;String&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;attributeNames&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="nc"&gt;Object&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;String&lt;/span&gt; &lt;span class="n"&gt;attribute&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="nc"&gt;Object&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;這種寫法Scala在使用的時候會認為是**ambiguous reference to overloaded definition**
+因為當我們使用&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;employe&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;John&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;的時候，Scala會覺得符合set(Object... namesAndValues)與set(String attribute,Object Value)。
+不過我覺得這方面Scala蠻合理的，去查了一下似乎也傾向不會去修改這個。(抱頭 Orz)
+如果修改成使用&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;String&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;attributeNames&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="nc"&gt;Object&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;就不會有問題了 WTF
+另外一個解決方式就是使用setString等指定型態的設定方式，我想這應該是個不錯的解法&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;employe&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setString&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;John&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id4"&gt;
+&lt;h3&gt;放棄activejdbc&lt;/h3&gt;
+&lt;p&gt;他還有一個instrumentation的步驟，這個步驟我覺得影響太多了，不適合拿來跟Scala一起合用。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</summary><category term="Scala"></category></entry><entry><title>Scala log 工具筆記</title><link href="http://Swind.github.com/scala-log-gong-ju-bi-ji.html" rel="alternate"></link><updated>2012-01-22T15:59:00+08:00</updated><author><name>Swind</name></author><id>tag:Swind.github.com,2012-01-22:scala-log-gong-ju-bi-ji.html</id><summary type="html">&lt;p&gt;之前偷懶都直接使用 println 來輸出訊息，但是最近在玩 &lt;a class="reference external" href="http://akka.io/"&gt;Akka&lt;/a&gt; ，我發現如果沒有使用 log tool 的話我根本不知道是哪個 Actor 印訊息的。
+只好搜尋一下 Scala 上面有沒有什麼好用的 Log 工具。&lt;/p&gt;
+&lt;div class="section" id="slf4s-slf4j-logback"&gt;
+&lt;h2&gt;slf4s + slf4j + logback&lt;/h2&gt;
+&lt;p&gt;一般依照以往的習慣基本就是 &lt;a class="reference external" href="http://logging.apache.org/log4j/"&gt;log4j&lt;/a&gt; + &lt;a class="reference external" href="http://www.slf4j.org/"&gt;slf4j&lt;/a&gt; ，這算是最通用的工具組了。但是 Scala 有這麼多特異功能，說不定會有更神奇的 Log 工具，
+於是就抱著這樣的心態跟 Google 大神詢問求籤。最後看到 logback 這個工具（雖然跟 Scala 完全沒有關係）但是人都是喜新厭舊 XD，所以
+我就從 slf4j + log4j 轉到 slf4j + logback，附帶一提 logback 是 slf4j 預設的 log 工具，因此使用這兩個的組合不需要另外抓 Adapter。（ex.slf4j-log4j12-1.6.4.jar之類的）&lt;/p&gt;
+&lt;p&gt;設定檔的部分目前我看到最不一樣的就是格式了，log4j 是採用 properities 的方式記錄，也就是 key=value 的格式，而 logback 則是使用 xml。
+設定檔一直是讓我懶得使用 Log 工具的地方，好在網路上真的很多好心人，在 &lt;a class="reference external" href="http://werdna1222coldcodes.blogspot.com/2011/10/logback-log4j.html"&gt;符號記憶-Logback,Log4j設定檔自動產生器&lt;/a&gt; 有介紹了 &lt;a class="reference external" href="http://wizardforge.org/pc?action=displayFlowchartVersionPublic&amp;amp;id=42"&gt;協助產生設定檔的網站&lt;/a&gt;
+可以讓設定的工作減少很多。下面是我隨便產生的一個範例&lt;/p&gt;
+&lt;!-- code-block xml
+
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;configuration debug="true"&gt;
+  &lt;appender name="RootConsoleAppender" class="ch.qos.logback.core.ConsoleAppender"&gt;
+    &lt;filter class="ch.qos.logback.classic.filter.ThresholdFilter"&gt;
+      &lt;level&gt;debug&lt;/level&gt;
+    &lt;/filter&gt;
+    &lt;layout class="ch.qos.logback.classic.PatternLayout"&gt;
+      &lt;pattern&gt;%d{yyyy-MM-dd HH:mm:ss}, %p, %t, %L, %C{1}, %M %m%n&lt;/pattern&gt;
+    &lt;/layout&gt;
+  &lt;/appender&gt;
+
+   &lt;root&gt;
+      &lt;level value="debug"/&gt;
+      &lt;appender-ref ref="RootConsoleAppender"/&gt;
+   &lt;/root&gt;
+&lt;/configuration&gt; --&gt;
+&lt;p&gt;之後我還有多使用 &lt;a class="reference external" href="https://github.com/weiglewilczek/slf4s"&gt;slf4s&lt;/a&gt; 來讓 slf4j 的使用更有 Scala 的味道，不過其實也就只是多了一個 trait 讓你的 scala class 可以直接繼承，讓你省下一些麻煩
+例如：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;MyClazz&lt;/span&gt; &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="nc"&gt;Logging&lt;/span&gt;
+&lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;logger&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;debug&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Creator&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;最後是額外找到的 &lt;a class="reference external" href="http://www.ac.net.blog.163.com/blog/static/1364905620111023304126/"&gt;打一句log時間不到一納秒！完爆log4j、logback、slf4j&lt;/a&gt; ，但是我沒有用因為還沒有效能上的需求，不過我有稍微看一下程式碼，加上下面留言者給的提示。
+在使用logger印出訊息之前，先進行 logger.isTraceEnabled、logger.isDebugEnable 等的判斷，就可以在編譯的時候進行最佳化。&lt;/p&gt;
+&lt;p&gt;目前使用的 Log 工具大概就這樣了，logback 如果有玩到什麼好玩的會在上來報告。&lt;/p&gt;
+&lt;/div&gt;
+</summary><category term="Java"></category><category term="Scala"></category></entry><entry><title>好用的 HTML Parser - jsoup</title><link href="http://Swind.github.com/hao-yong-de-html-parser-jsoup.html" rel="alternate"></link><updated>2011-10-27T08:47:00+08:00</updated><author><name>Swind</name></author><id>tag:Swind.github.com,2011-10-27:hao-yong-de-html-parser-jsoup.html</id><summary type="html">&lt;div class="section" id="what-is-jsoupsoup"&gt;
+&lt;h2&gt;What is jsoupsoup&lt;/h2&gt;
+&lt;p&gt;HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
+為了要從網頁中可以取出內容,我曾經用過不少方式,包括直接硬幹用字串搜尋、修改Scala本身內部的XML Parser等。
+但是一直都找不到一個滿意又順手的解決方式,一直到後來在 &lt;a class="reference external" href="http://www.oschina.net/"&gt;CSDN&lt;/a&gt; 沒錯就是那個大陸網站 &lt;a class="reference external" href="http://www.oschina.net/"&gt;CSDN&lt;/a&gt;
+(雖然說CSDN訊息太多太雜亂,但是偶爾還是可以看到一些不錯的東西),才找到jsoup這個library。&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="http://jsoup.org/"&gt;jsoup的官方網站&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="http://jsoup.org/cookbook/"&gt;jsoup的教學文件&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;但是其實最重要的是這一 &lt;a class="reference external" href="http://jsoup.org/cookbook/extracting-data/selector-syntax"&gt;教學文件&lt;/a&gt; ,介紹了他與別人最不一樣的的地方。
+一般的html parser還是比較傾向於跟xml parser的作法一樣,把html分析完之後建成樹
+然後操作node將資料取出,但是除了這種操作方式之外josue還有一種是類似jquery的selector的操作方式。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;file&lt;/span&gt; &lt;span class="n"&gt;input&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/tmp/input.html&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;span class="n"&gt;document&lt;/span&gt; &lt;span class="n"&gt;doc&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;jsoup&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;parse&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;input&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;utf-8&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;http://example.com/&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+
+&lt;span class="c1"&gt;//document doc = jsoup.connect(&amp;quot;http://example.com/&amp;quot;);&lt;/span&gt;
+
+&lt;span class="c1"&gt;//取出擁有herf屬性的&amp;lt;a&amp;gt;&lt;/span&gt;
+&lt;span class="n"&gt;elements&lt;/span&gt; &lt;span class="n"&gt;links&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;doc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;select&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;a[href]&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;span class="c1"&gt;//取出擁有src屬性且值是以png結尾的&amp;lt;img&amp;gt;&lt;/span&gt;
+&lt;span class="n"&gt;elements&lt;/span&gt; &lt;span class="n"&gt;pngs&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;doc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;select&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;img[src$=.png]&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;上面是官網的範例,從這邊就可以看到 jsoup 不同於一般html parser的地方。
+jsoup除了有支援讀取檔案之外,也可以直接輸入網址讓他自己去連線與parser,
+最重要的是可以透過selector-syntax來取出想要的內容。接下來我會整理一些我常用的用法。&lt;/p&gt;
+&lt;p&gt;p.s我所使用的語言是scala，但是我會盡量不要用scala的&amp;lt;del&amp;gt;奇淫技巧&amp;lt;/del&amp;gt;特殊語法讓他看起來跟java差不多。&lt;/p&gt;
+&lt;p&gt;出發總要有個方向,這邊就以一個我想幹的壞事情來當作例子好了，順便強迫我自己把東西寫完。&lt;/p&gt;
+&lt;div class="section" id="id3"&gt;
+&lt;h3&gt;說出你的願望，否則不會讓你如願&lt;/h3&gt;
+&lt;p&gt;我想要一個可以自動檢查 &lt;a class="reference external" href="http://www.cwb.gov.tw/v7/forecast/taiwan/taipei_city.htm"&gt;某大論壇&lt;/a&gt; 的動畫討論區新番是否有更新的機器人。
+（因為它新番更新在同一個文章裡面，每周找新番真的好麻煩）&lt;/p&gt;
+&lt;p&gt;哈利路亞 ! chance !&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="prepare"&gt;
+&lt;h2&gt;Prepare&lt;/h2&gt;
+&lt;p&gt;首先呢，我習慣先將網頁內容儲存成html檔案,放到測試資料夾中。
+然後，寫個測試先決定整個程式的主要介面。
+因為我不喜歡一直連線到網站做測試。
+因為:&lt;/p&gt;
+&lt;ol class="arabic"&gt;
+&lt;li&gt;&lt;p class="first"&gt;浪費流量&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;dl class="first docutils"&gt;
+&lt;dt&gt;我要驗證程式執行結果的時候必須要開網頁才能驗證。&lt;/dt&gt;
+&lt;dd&gt;&lt;p class="first last"&gt;(因為文章會一直新增第一頁的內容會被擠到後面去)&lt;/p&gt;
+&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;你不一定隨時都有網路可以用&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;因此先將今天的文章列表儲存起來，然後寫個測試來驗證我最後的輸出結果是否如我所預期。
+有人會想說這是不是什麼軟體工程技巧阿，是不是什麼測試先行（tdd）的開發方式之類的？
+其實也沒有特別想說要使用什麼樣的開發方式或開發技巧，單純就只是因為我覺得這樣比較方便而已。
+我覺得沒有必要被偉大或者是只要這樣做就對了等口號給迷惑，選擇自己需要且足夠的方式就好了。&lt;/p&gt;
+&lt;div class="section" id="id5"&gt;
+&lt;h3&gt;要分析擷取的網頁內容&lt;/h3&gt;
+&lt;p&gt;這邊是網頁的部份內容，我在做測試資料的時候是將整份的網頁原始碼都儲存起來，下面的內容是為了後面的說明需要。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;&amp;lt;tbody&lt;/span&gt; &lt;span class="na"&gt;id=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;normalthread_6961970&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+ &lt;span class="nt"&gt;&amp;lt;tr&lt;/span&gt; &lt;span class="na"&gt;onmouseover=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;l_pic_6961970.style.display=&amp;#39;block&amp;#39;&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;onmouseout=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;l_pic_6961970.style.display=&amp;#39;none&amp;#39;&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;td&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;folder&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;viewthread.php?tid=6961970&amp;amp;amp;extra=page%3d1%26amp%3borderby%3ddateline&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;title=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;新窗口打開&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;target=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;_blank&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;img&lt;/span&gt; &lt;span class="na"&gt;src=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;images/default/folder_new.gif&amp;quot;&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
+ &lt;span class="nt"&gt;&amp;lt;/td&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;td&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;icon&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;img&lt;/span&gt; &lt;span class="na"&gt;src=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://a18.file-static.com/attachments/lib_picture/19/70/6961970.jpg&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;width=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;50&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;height=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;40&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;l_bpic&amp;quot;&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+   &lt;span class="nt"&gt;&amp;lt;div&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;l_spic&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;id=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;l_pic_6961970&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;img&lt;/span&gt; &lt;span class="na"&gt;src=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;http://a18.file-static.com/attachments/lib_picture/19/70/6961970.jpg&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;width=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;100&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;height=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;80&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;l_bpic&amp;quot;&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+   &lt;span class="nt"&gt;&amp;lt;/div&amp;gt;&amp;lt;/td&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;th&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;subject new&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;label&amp;gt;&lt;/span&gt;&lt;span class="ni"&gt;&amp;amp;nbsp;&lt;/span&gt;&lt;span class="nt"&gt;&amp;lt;/label&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;em&amp;gt;&lt;/span&gt;[&lt;span class="nt"&gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;forumdisplay.php?fid=22&amp;amp;amp;filter=type&amp;amp;amp;typeid=2&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;分享&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;]&lt;span class="nt"&gt;&amp;lt;/em&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;span&lt;/span&gt; &lt;span class="na"&gt;id=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;thread_6961970&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;viewthread.php?tid=6961970&amp;amp;amp;extra=page%3d1%26amp%3borderby%3ddateline&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+        (mu@繁體@rmvb)onepiece海賊王 第521話 (1p)&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;/span&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;/th&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;td&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;author&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;cite&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;space.php?uid=933315&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;likesea&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/cite&amp;gt;&amp;lt;em&amp;gt;&lt;/span&gt;2011-10-30&lt;span class="nt"&gt;&amp;lt;/em&amp;gt;&amp;lt;/td&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;td&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;nums&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;strong&amp;gt;&lt;/span&gt;0&lt;span class="nt"&gt;&amp;lt;/strong&amp;gt;&lt;/span&gt;/&lt;span class="nt"&gt;&amp;lt;em&amp;gt;&lt;/span&gt;2&lt;span class="nt"&gt;&amp;lt;/em&amp;gt;&amp;lt;/td&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;td&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;lastpost&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;cite&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;space.php?username=likesea&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;likesea&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;/cite&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;em&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;redirect.php?tid=6961970&amp;amp;amp;goto=lastpost#lastpost&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;span&lt;/span&gt; &lt;span class="na"&gt;title=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;2011-10-30 03:13 pm&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;1&lt;span class="ni"&gt;&amp;amp;nbsp;&lt;/span&gt;分鐘前&lt;span class="nt"&gt;&amp;lt;/span&amp;gt;&amp;lt;/a&amp;gt;&amp;lt;/em&amp;gt;&amp;lt;/td&amp;gt;&lt;/span&gt;
+ &lt;span class="nt"&gt;&amp;lt;/tr&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/tbody&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id6"&gt;
+&lt;h3&gt;想要的輸出結果&lt;/h3&gt;
+&lt;blockquote&gt;
+uid       : 933315
+title     : onepiece海賊王 第521話
+author    : likesea
+link      : &lt;a class="reference external" href="http://"&gt;http://&lt;/a&gt;.............&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id7"&gt;
+&lt;h2&gt;程式的介面&lt;/h2&gt;
+&lt;p&gt;雖然jsoup可以直接接收網址去取得網頁內容，但測試程式有讀取檔案的需求所以這邊會提供兩種介面。
+一種允許使用者直接傳入string型態的參數，也就是網址。另外一種則是讓使用者傳入file型態的參數。
+而回傳值的形態則是存放data object的list，這邊data object的名稱就先定義為envypost好了。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;envypost&lt;/span&gt;&lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;uid&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt;&lt;span class="kt"&gt;integer&lt;/span&gt;
+    &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;
+    &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;lastposttime&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt;&lt;span class="kt"&gt;date&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;parse&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt;&lt;span class="kt"&gt;list&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;envypost&lt;/span&gt;&lt;span class="o"&gt;]={}&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;parse&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt;&lt;span class="kt"&gt;file&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt;&lt;span class="kt"&gt;list&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;envypost&lt;/span&gt;&lt;span class="o"&gt;]={}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id8"&gt;
+&lt;h2&gt;開始用jsoup分析網頁資訊吧&lt;/h2&gt;
+&lt;div class="section" id="id9"&gt;
+&lt;h3&gt;找出所有文章&lt;/h3&gt;
+&lt;p&gt;雖然jsoup有提供很多種分析的方式，但是我最喜歡用的還是 &lt;a class="reference external" href="http://jsoup.org/cookbook/extracting-data/selector-syntax"&gt;selector&lt;/a&gt; 的語法。因為簡單明瞭又好閱讀！！
+執行效率我則完全不在意，反正我的需求也不是一秒幾十萬上下的東西。能夠讓我愉快又快速的寫好才是重要的。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;object&lt;/span&gt; &lt;span class="nc"&gt;envyexample&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;parse&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt;&lt;span class="kt"&gt;file&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="n"&gt;encode&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;big5&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt;&lt;span class="kt"&gt;list&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;envypost&lt;/span&gt;&lt;span class="o"&gt;]={&lt;/span&gt;
+    &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;doc&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;jsoup&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;parse&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="n"&gt;encode&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="n"&gt;envyurl&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;posts&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;parsepage&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;doc&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;parsepage&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;page&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt;&lt;span class="kt"&gt;document&lt;/span&gt;&lt;span class="o"&gt;)={&lt;/span&gt;
+    &lt;span class="n"&gt;doc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;select&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;tbody[id^=normalthread]&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;由於該論壇的每一篇文章都被一個tbody的tag包圍，且此tbody的id開頭為normalthread。因此我的第一步就是先找出此頁中每一篇文章的element。&lt;/p&gt;
+&lt;p&gt;雖然說jsoup跟jquery一樣對於tag的id與class屬性都有特殊的語法例如 tag#id 或 tag.class 但是由於我需要使用正規表示是來找出id為normalthread開頭的tbody。
+所以這邊使用&lt;/p&gt;
+&lt;blockquote&gt;
+tbody[id^=normalthread]&lt;/blockquote&gt;
+&lt;p&gt;因為若使用 # 的語法就沒有辦法使用正規表示式（至少我目前在官網的說明文件還沒有找到 orz）
+有沒有覺得這個語法真的超級方便的，如果是用其他工具的話，我現在應該還在處理把id屬性取出來，然後用string的startwith來判斷是不是normalthread開頭。&lt;/p&gt;
+&lt;p&gt;另外，我喜歡把每一個步驟分解成很多小函式，因為這樣方便我進行測試。例如上面這一段程式碼，我相對應的測試程式碼會長這樣。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;testenvyexample&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="n"&gt;funsuite&lt;/span&gt; &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;shouldmatchers&lt;/span&gt;&lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;there should be 10 post in the test file&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;){&lt;/span&gt;
+    &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;doc&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;jsoup&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;parse&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;file&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;./testdata/envy.html&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;),&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;big5&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="n"&gt;envyexample&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;envyurl&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;posts&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;envyexample&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;parsepage&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;doc&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;posts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt; &lt;span class="n"&gt;should&lt;/span&gt; &lt;span class="n"&gt;be&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;18&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+  &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;順便說明一下語法，我所使用的測試framework是 &lt;a class="reference external" href="http://www.scalatest.org/"&gt;scalatest&lt;/a&gt; ，這邊使用java的junit也是可以。
+testenvyexample繼承funsuite跟shouldmatchers兩個class，這兩個class主要讓測試程式可以使用**test**跟**should be**兩種語法。&lt;/p&gt;
+&lt;p&gt;到這邊程式執行完畢之後我就有目前此頁面每一篇文章的所有內容了。下一步就是要分析這些文章內容了。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="idtitleauthorlink"&gt;
+&lt;h3&gt;分析文章的內容-取得id、title、author與link&lt;/h3&gt;
+&lt;p&gt;取得post的功能再另外獨立一個parsepost的function，傳入的參數則為包含所有文章內容的element，並且希望這個function可以回傳一個envypost物件。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;parsepost&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;post&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt;&lt;span class="kt"&gt;element&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt;&lt;span class="kt"&gt;envypost&lt;/span&gt;&lt;span class="o"&gt;={&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;文章id的取得是透過tbody本身的id屬性，他的格式是normalthread_xxxxxx，後面的xxxxxx就是此篇文章的id，&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;parsepost&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;post&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt;&lt;span class="kt"&gt;element&lt;/span&gt;&lt;span class="o"&gt;)={&lt;/span&gt;
+    &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;id&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;post&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;attr&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;id&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="n"&gt;replace&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;normalthread_&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="n"&gt;link&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;parserpost_titleandlink&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="n"&gt;post&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;author&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;parserpost_author&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;post&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;envypost&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="n"&gt;author&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="n"&gt;link&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;link跟title其實是一起取得的，它們可以從id為thread_xxxxxx的span tag中取得。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;parserpost_titleandlink&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt;&lt;span class="kt"&gt;string&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="n"&gt;post&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt;&lt;span class="kt"&gt;element&lt;/span&gt;&lt;span class="o"&gt;)={&lt;/span&gt;
+    &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;element&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;post&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;select&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;span#thread_&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="n"&gt;first&lt;/span&gt;
+    &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;element&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="n"&gt;element&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;select&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;a&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="n"&gt;first&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;attr&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;href&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;))&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;author的名字則在class為author的td tag內cite中因此取的時候使用&lt;/p&gt;
+&lt;blockquote&gt;
+tag1 tag2&lt;/blockquote&gt;
+&lt;p&gt;的語法，這代表搜尋tag1底下所有的tag2&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;parserpost_author&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;post&lt;/span&gt;&lt;span class="k"&gt;:&lt;/span&gt;&lt;span class="kt"&gt;element&lt;/span&gt;&lt;span class="o"&gt;)={&lt;/span&gt;
+    &lt;span class="n"&gt;post&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;select&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;td.author cite&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="n"&gt;first&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;打完收工，這樣的短短的程式碼就把一個網站都分析完了，真的太棒了 qq
+以前要分析一個網站超血淚的，真的感謝open source的眾多好心人，願意分享他們的成果與程式碼。
+當然後續還有換頁讀取或者是比對之前的內容看是否有更新之類的工作，但是這都是後話了。&lt;/p&gt;
+&lt;p&gt;p.s一篇文章我竟然要打快兩個月，真佩服那些有辦法每天都有產出的人&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</summary><category term="Java"></category><category term="Scala"></category></entry><entry><title>Octopress安裝筆記 - 我跳槽到 Pelican 了</title><link href="http://Swind.github.com/octopressan-zhuang-bi-ji-wo-tiao-cao-dao-pelican-liao.html" rel="alternate"></link><updated>2011-10-19T11:17:00+08:00</updated><author><name>Swind</name></author><id>tag:Swind.github.com,2011-10-19:octopressan-zhuang-bi-ji-wo-tiao-cao-dao-pelican-liao.html</id><summary type="html">&lt;div class="section" id="pelican"&gt;
+&lt;h2&gt;2012.11.28 我已經跳槽到 Pelican 了，不過還是把這篇留著當紀念好了。&lt;/h2&gt;
+&lt;/div&gt;
+&lt;div class="section" id="win7"&gt;
+&lt;h2&gt;2012.05.21 更新這次好像真的解決在 Win7 上面的問題了&lt;/h2&gt;
+&lt;p&gt;其實在 Windows 上面使用 Octopress 沒有什麼特別大的問題，注意文章的編碼就好。
+但是有一點一直非常困擾著我的就是， Codeblock 的問題。由於 rake generator 所提供的錯誤訊息非常的少，所以很難找出錯誤。
+最常在網頁上面看到的就是這個&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+Liquid error: undefined method `Py_IsInitialized’ for RubyPython::Python:Module
+&lt;/pre&gt;
+&lt;p&gt;一直到我今天無意間搜尋到這篇文章 (話說 Octopress 的安裝教學文真的越來越多了)
+&lt;a class="reference external" href="http://hivan.me/octopress-install-to-windows8/"&gt;Windows 8 安裝 Octopress 紀錄&lt;/a&gt; 他真的找出問題了，重點就在於！ &lt;em&gt;Python 請安裝 32-bit 的版本&lt;/em&gt;。
+真的這樣就讓 Codeblock 可以正常運作了 T_T
+真的是太讓人心酸了。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="ubuntu"&gt;
+&lt;h2&gt;在Ubuntu上面實在是有夠難安裝的&lt;/h2&gt;
+&lt;p&gt;目前使用的環境是在Ubuntu上面，並且使用rvm安裝Ruby 1.9.2與Gem。但是就是那個但是這樣安裝的Ruby其實是不能用的，還需要用rvm安裝zlib與openssl才能使用。
+安裝方法可以參考 &lt;a class="reference external" href="http://www.distancetohere.com/how-to-deploy-jekyll-slash-octopress-to-heroku/"&gt;How to Install Octopress on Ubuntu 11.04 and Deploy on GitHub&lt;/a&gt; （本連結已經失效了，所以請另外 Google 安裝方式吧！），若前面這個網站有不清楚的部分或者想要找指令來源的可以到 &lt;a class="reference external" href="http://beginrescueend.com/"&gt;RVM&lt;/a&gt; 的網站查詢。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="windows"&gt;
+&lt;h2&gt;在Windows上面也沒有好裝多少，但是我好像成功了&lt;/h2&gt;
+&lt;p&gt;Windows上面沒有好用的RVM可以用，而且Ruby安裝包比較不一樣，叫做 &lt;a class="reference external" href="http://rubyinstaller.org/"&gt;RubyInstaller&lt;/a&gt; 。RubyInstaller 的安裝方式蠻簡單的，就一直下一步就可以了。
+安裝完畢之後你會發現 RubyInstaller 連 gem 都幫你安裝好了( Linux 我都用 RVM 裝，所以我不知道 gem 是不是安裝 Ruby 一定會有的)，但是這個版本的 gem 有點舊，所以需要下指令升級一下。&lt;/p&gt;
+&lt;blockquote&gt;
+gem update --system&lt;/blockquote&gt;
+&lt;p&gt;再來就是需要另外安裝一個 &lt;a class="reference external" href="http://rubyinstaller.org/add-ons/devkit/"&gt;DevKit&lt;/a&gt; ，這是Windows特有的老實說我也不知道這個要做啥。但是如果沒裝的話，你在使用gem安裝某些東西的時候他會跳出訊息要你安裝。&lt;/p&gt;
+&lt;p&gt;P.S 附帶一提，這是未確認事項不過在Windows上面安裝Git的時候，請選擇讓他將Git的執行檔路徑加入Path裡面的選項，也就是說讓你可以在命令提示字元上使用Git指令。
+因為我想Octopress應該沒有聰明到會自己去抓Git的安裝路徑。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="octopress"&gt;
+&lt;h2&gt;安裝與設定octopress&lt;/h2&gt;
+&lt;p&gt;終於可以進入octopress的安裝了，在這裡安裝的順暢與否就取決於你的平台了(誤)。詳細安裝方式可以參考Octopress官網的 &lt;a class="reference external" href="http://octopress.org/docs/setup/"&gt;Octopress Setup&lt;/a&gt; 。&lt;/p&gt;
+&lt;p&gt;首先先使用git將octopress cloe下來&lt;/p&gt;
+&lt;blockquote&gt;
+git clone git://github.com/imathis/octopress.git octopress&lt;/blockquote&gt;
+&lt;p&gt;進入octopress資料夾，使用gem安裝所需要的Ruby套件與設定octopress&lt;/p&gt;
+&lt;blockquote&gt;
+gem install bundler
+bundle install
+rake install&lt;/blockquote&gt;
+&lt;p&gt;到這邊我們終於踏進了八奇思考領域的第一步 Orz ... (我好久沒有看火鳳了)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="deploygithub"&gt;
+&lt;h2&gt;Deploy到GitHub上面&lt;/h2&gt;
+&lt;p&gt;Octopress的官網有提供 &lt;a class="reference external" href="http://octopress.org/docs/deploying/github"&gt;Github Pages&lt;/a&gt;、&lt;a class="reference external" href="http://octopress.org/docs/deploying/heroku"&gt;Heroku&lt;/a&gt; 與 &lt;a class="reference external" href="http://octopress.org/docs/deploying/rsync"&gt;Rsync&lt;/a&gt; 的上傳教學。Heroku還蠻多人使用的，在網路上也可以找到不少教學。
+但是我還是對Github比較熟悉，所以這邊只列出Github的設定方式&lt;/p&gt;
+&lt;p&gt;Github Pages的功能老實說我也是因為看到Octopress才知道的，所以不清楚他能做啥，反正他可以放網頁就是了(大誤)。&lt;/p&gt;
+&lt;p&gt;首先請先在Github上面開啟一個Repository，Repository的名稱格式為：&lt;/p&gt;
+&lt;blockquote&gt;
+帳號名稱.github.com&lt;/blockquote&gt;
+&lt;p&gt;例如我的id是swind，所以名稱就如你現在網址列所看到的為&lt;/p&gt;
+&lt;blockquote&gt;
+swind.github.com&lt;/blockquote&gt;
+&lt;p&gt;接著呢要跟Octopress說你的Repository的路徑，進入Octopress的資料夾，輸入下面的指令&lt;/p&gt;
+&lt;blockquote&gt;
+rake setup_github_pages&lt;/blockquote&gt;
+&lt;p&gt;Octopress會要你輸入Repository的路徑，這時請將Github上面SSH的路徑複製下來貼上，例如我的就是&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;a class="reference external" href="mailto:git&amp;#64;github.com"&gt;git&amp;#64;github.com&lt;/a&gt;:Swind/swind.github.com.git&lt;/blockquote&gt;
+&lt;p&gt;完成之後你就可以輸入&lt;/p&gt;
+&lt;blockquote&gt;
+rake generate
+rake deploy&lt;/blockquote&gt;
+&lt;p&gt;來測試是否可以正常deploy了。&lt;/p&gt;
+&lt;p&gt;P.S如果是使用Windows的朋友，然後你的文章檔案又是使用UTF-8存檔的話，應該會在rake generate的指令上遇到編碼問題。這是Jekyll的問題，可以透過設定環境變數來解決。
+在執行rake generate的指令之前先輸入:&lt;/p&gt;
+&lt;blockquote&gt;
+set LC_ALL=zh_TW.UTF-8
+set LANG=zh_TW.UTF-8&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id1"&gt;
+&lt;h2&gt;同場加映-同步與版本控管的方式&lt;/h2&gt;
+&lt;p&gt;&lt;a class="reference external" href="http://octopress.org/docs/deploying/github"&gt;Github Pages&lt;/a&gt; 上教學的最後有教你使用Git的Branch來將Octopress的原始碼以及Blog的頁面同時儲存在同一個Repository上，我有這樣用，而且還蠻有趣的。
+Octopress會將_deploy資料夾中的檔案Push到主分支，也就是Master。而你可以透過在Octopress的資料夾中輸入&lt;/p&gt;
+&lt;blockquote&gt;
+git add .
+git commit -m 'your message'
+git push origin source&lt;/blockquote&gt;
+&lt;p&gt;這樣就會將Octopress的原始碼Commit到source的分支上面，而不會影響到Blog的內容。但是這樣我在其他電腦要使用的時候都還要clone兩次(Octopress一次，_deploy一次)實在很麻煩。
+所以我最後還是使用Dropbox來進行同步，我乾脆就將整個Octopress放在Dropbox裡面，這樣不管我Linux或Windows都可以隨時編輯我的文章。&lt;/p&gt;
+&lt;p&gt;以上心得分享完畢，那個某人不要再來找我要心得了阿 XD&lt;/p&gt;
+&lt;/div&gt;
+</summary><category term="octopres"></category></entry></feed>

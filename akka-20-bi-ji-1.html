@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="utf-8">
+    <title>Akka 2.0 筆記 (1)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link rel="stylesheet" href="./theme/css/bootstrap.css" type="text/css" />
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+      .tag-1 {
+        font-size: 13pt;
+      }
+      .tag-2 {
+        font-size: 10pt;
+      }
+      .tag-2 {
+        font-size: 8pt;
+      }
+      .tag-4 {
+        font-size: 6pt;
+     }
+    </style>
+	<link href="./theme/css/bootstrap_custom.css" rel="stylesheet" type="text/css" />
+    <link href="./theme/css/monokai.css" rel="stylesheet" type="text/css"/>
+	<link href="./theme/css/font-awesome.css" rel="stylesheet"/>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./theme/images/favicon.ico">
+    <link rel="apple-touch-icon" href="./theme/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="./theme/images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="./theme/images/apple-touch-icon-114x114.png">
+
+    <link href="./" type="application/atom+xml" rel="alternate" title="Corleonis ATOM Feed" />
+    
+    <link href="./feeds/all.rss.xml" type="application/atom+xml" rel="alternate" title="Corleonis RSS Feed" />
+    
+
+  </head>
+
+  <body>
+
+    <!-- Navbar -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"/>
+          <a class="brand" href="./index.html">Corleonis </a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              
+              
+              
+              <li class="divider-vertical"></li>
+              
+              
+              <li class="active">
+                <a href="./category/Program.html">
+                  <i class="icon-folder-open icon-large"></i>Program
+                </a>
+              </li>
+              
+              
+              <ul class="nav pull-right">
+                <li><a href="./archives.html"><i class="icon-th-list"></i>Archives</a></li>
+              </ul>
+              
+            </ul>
+            <!--<p class="navbar-text pull-right">Logged in as <a href="#">username</a></p>-->
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Post -->
+    <div class="container-fluid">
+
+      <div class="row-fluid">
+         
+
+        <div class="span2 well sidebar-nav" id="sidebar">
+          <ul class="nav nav-list">
+
+
+
+<li class="nav-header"><i class="icon-home icon-large"></i> social</li>
+	
+	<li><a href="./feeds/all.rss.xml" rel="alternate"><i class="icon-bookmark icon-large"></i>rss feed</a></li>
+	
+	
+	
+	<li><a href="https://twitter.com/swind"><i class="icon-twitter-sign icon-large"></i>twitter</a></li>
+	
+
+
+<li class="nav-header"><i class="icon-folder-close icon-large"></i>Categories</li>
+
+<li>
+<a href="./category/Program.html">
+    Program
+</a>
+</li>
+
+
+<li class="divider"></li>
+
+<li class="nav-header"><i class="icon-tags icon-large"></i>Tags</li>
+
+<li class="tag-1">
+    <a href="./tag/Akka.html">
+       Akka
+    </a>
+</li>
+
+<li class="tag-4">
+    <a href="./tag/octopres.html">
+       octopres
+    </a>
+</li>
+
+<li class="tag-3">
+    <a href="./tag/Java.html">
+       Java
+    </a>
+</li>
+
+<li class="tag-1">
+    <a href="./tag/Scala.html">
+       Scala
+    </a>
+</li>
+
+
+
+
+
+
+</ul>
+        </div><!--/.well -->
+        
+
+        <div class="span8" id="content">
+          
+<section id="content">    
+	<article>
+		<header>
+			<h1>
+				<a href=""
+					rel="bookmark" 
+					title="Permalink to Akka 2.0 筆記 (1)">
+					Akka 2.0 筆記 (1) 
+				</a>
+				 
+			</h1> 
+		</header>
+		<div class="entry-content">
+		<div class="well">
+			<footer class="post-info">
+<span class="badge badge-info">Date</span>
+<abbr class="published" title="2012-05-17T18:03:00">
+	<i class="icon-calendar"></i>週四 17 五月 2012
+</abbr>
+
+<span class="badge badge-info">By</span>
+<a href="./author/swind.html"><i class="icon-user"></i>Swind</a>
+
+<span class="badge badge-info">Category</span>
+<a href="./category/program.html"><i class="icon-folder-open"></i>Program</a>. 
+
+
+	
+
+<span class="badge badge-info">Tags</span> 
+
+	<a href="./tag/scala.html"><i class="icon-tag"></i>Scala</a>
+
+	<a href="./tag/akka.html"><i class="icon-tag"></i>Akka</a>
+
+
+
+</footer><!-- /.post-info -->
+		</div>
+		<p>因為我的程式還沒有寫完，所以是筆記 (1)，寫的過程應該還會有 2 3 ... 出現 Orz。</p>
+<blockquote>
+Akka 2.0 - 要升級了
+你的時間的庫存量足夠嗎 ?</blockquote>
+<p>Akka 進入了 2.0 時代，恭喜你如果你是用 1.x 的話，請準備改寫吧 ...
+先從幾個方面來看 2.0 的新增事項。</p>
+<p>以下算是筆記，如有錯誤請多指教</p>
+<div class="section" id="actor">
+<h2>Actor</h2>
+<p>從官網範例來看，Actor 的架構還是跟之前一樣沒有什麼改變</p>
+<div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.actor.Actor</span>
+<span class="k">import</span> <span class="nn">akka.actor.Props</span>
+<span class="k">import</span> <span class="nn">akka.event.Logging</span>
+
+<span class="k">class</span> <span class="nc">MyActor</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">log</span> <span class="k">=</span> <span class="nc">Logging</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="n">system</span><span class="o">,</span> <span class="k">this</span><span class="o">)</span>
+  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="s">&quot;test&quot;</span> <span class="k">=&gt;</span> <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="s">&quot;received test&quot;</span><span class="o">)</span>
+    <span class="k">case</span> <span class="k">_</span>      <span class="k">=&gt;</span> <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="s">&quot;received unknown message&quot;</span><span class="o">)</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+<p>但是上面的程式碼你會看到一個有點陌生的東西 <em>context.system</em>。
+2.0 建立 Actor 的方式已經有了改變，現在的 Actor 可以有階層關係（就像老鼠會一樣 Orz）。
+從 Actor 的 context 中可以取得很多該 Actor 的資訊與操作方式。而 ActorSystem 建立出來的 Actor 就會位於最上層。</p>
+<div class="highlight"><pre><span class="k">object</span> <span class="nc">Main</span> <span class="k">extends</span> <span class="nc">App</span>
+<span class="o">{</span>
+  <span class="k">val</span> <span class="n">system</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">(</span><span class="s">&quot;MySystem&quot;</span><span class="o">)</span>
+  <span class="k">val</span> <span class="n">myActor</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">MyActor</span><span class="o">],</span> <span class="n">name</span> <span class="k">=</span> <span class="s">&quot;myactor&quot;</span><span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
+<p>延續上面的例子，如果MyActor內需要建立其他Actor</p>
+<div class="highlight"><pre><span class="n">context</span><span class="o">.</span><span class="n">actorof</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">children</span><span class="o">],</span> <span class="n">name</span> <span class="k">=</span> <span class="s">&quot;children&quot;</span><span class="o">)</span>
+</pre></div>
+<p>利用這種階層關係有什麼好處呢？</p>
+<p>在之前 Akka1.3 的時代，我就經歷過非常痛苦的過程，那時候還沒有像 2.0 這樣的階層關係。
+所以如果我在停止一個 Actor 之前沒有先把他底下的 Actor 都停止的話，程式是沒有辦法正常結束的（因為還有 Actor 活著）。</p>
+<p>所以必須 override Actor 裡面的 function 讓他在停止之前，會先去結束他底下的 Actor。
+為了作到這件事，我還要多弄一個 List 去紀錄他有建立哪些 Actor。
+然後拼命的發 message 叫 Actor 去死去死去死去死 Orz。</p>
+<p>但是這些煩惱在2.0就通通不見啦！！！！！
+現在要停止只要用</p>
+<div class="highlight"><pre><span class="n">context</span><span class="o">.</span><span class="n">stop</span><span class="o">(</span><span class="n">self</span><span class="o">)</span>
+</pre></div>
+<p>就會幹掉底下的部屬之後再做掉自己，真是讓人清爽又愉快（煙）</p>
+</div>
+<div class="section" id="eventstream">
+<h2>EventStream</h2>
+<p>最早知道 EventStream 或 EventBus 這種架構是在 GWT 的時後，那時候一用實在驚為天人。
+真是太方便了，雖然整體架構跟 Observer Pattern 一樣，但是人家就是用得很漂亮。</p>
+<p>EventStream 只存在於 ActorSystem 底下，要使用 EventStream 的第一步就是先註冊 Actor 與他要接收的物件類型。</p>
+<div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.actor.</span><span class="o">{</span> <span class="nc">Actor</span><span class="o">,</span> <span class="nc">DeadLetter</span><span class="o">,</span> <span class="nc">Props</span> <span class="o">}</span>
+
+<span class="k">val</span> <span class="n">listener</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">Actor</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="n">d</span><span class="k">:</span> <span class="kt">DeadLetter</span> <span class="o">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="n">d</span><span class="o">)</span>
+  <span class="o">}</span>
+<span class="o">}))</span>
+<span class="n">system</span><span class="o">.</span><span class="n">eventStream</span><span class="o">.</span><span class="n">subscribe</span><span class="o">(</span><span class="n">listener</span><span class="o">,</span> <span class="n">classOf</span><span class="o">[</span><span class="kt">DeadLetter</span><span class="o">])</span>
+</pre></div>
+<p>上面的程式碼產生了一個 listener 的 Actor 並且註冊說如果有 DeadLeatter 類型的物件送到 EventStream 內，就會傳送給他。
+雖然文件說主要是拿來作 Log 或者是監聽事件，但我拿來當其他的用途，例如發給所有的 Actor 讓他們自己認領工作之類的。</p>
+</div>
+<div class="section" id="event-handler">
+<h2>Event Handler</h2>
+<p>Event Handler 是拿來作 log 的工具，可以實作一個 EventListener 來監聽所有的事件。
+跟 Log4j 等工具一樣，可以分成</p>
+<ul class="simple">
+<li>Error</li>
+<li>Warning</li>
+<li>Info</li>
+<li>Debug</li>
+</ul>
+<p>看起來似乎可以拿來作為例外處理或者作一個事件重發的工具。</p>
+<div class="section" id="eventlistener">
+<h3>實作EventListener</h3>
+<div class="highlight"><pre><span class="k">val</span> <span class="n">errorHandlerEventListener</span> <span class="k">=</span> <span class="nc">Actor</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="k">new</span> <span class="nc">Actor</span> <span class="o">{</span>
+  <span class="n">self</span><span class="o">.</span><span class="n">dispatcher</span> <span class="k">=</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">EventHandlerDispatcher</span>
+
+  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">Error</span><span class="o">(</span><span class="n">cause</span><span class="o">,</span> <span class="n">instance</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">...</span>
+    <span class="k">case</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">Warning</span><span class="o">(</span><span class="n">instance</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">...</span>
+    <span class="k">case</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">Info</span><span class="o">(</span><span class="n">instance</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">...</span>
+    <span class="k">case</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">Debug</span><span class="o">(</span><span class="n">instance</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">...</span>
+    <span class="k">case</span> <span class="n">genericEvent</span> <span class="k">=&gt;</span> <span class="o">...</span>
+  <span class="o">}</span>
+<span class="o">})</span>
+</pre></div>
+<p>加入EventListener</p>
+<div class="highlight"><pre><span class="nc">EventHandler</span><span class="o">.</span><span class="n">addListener</span><span class="o">(</span><span class="n">errorHandlerEventListener</span><span class="o">)</span>
+</pre></div>
+<p>移除EventListener</p>
+<div class="highlight"><pre><span class="nc">EventHandler</span><span class="o">.</span><span class="n">removeListener</span><span class="o">(</span><span class="n">errorHandlerEventListener</span><span class="o">)</span>
+</pre></div>
+<p>Log 訊息</p>
+<div class="highlight"><pre><span class="nc">EventHandler</span><span class="o">.</span><span class="n">error</span><span class="o">(</span><span class="n">exception</span><span class="o">,</span> <span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
+<span class="nc">EventHandler</span><span class="o">.</span><span class="n">error</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
+<span class="nc">EventHandler</span><span class="o">.</span><span class="n">warning</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
+<span class="nc">EventHandler</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
+<span class="nc">EventHandler</span><span class="o">.</span><span class="n">debug</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="scheduler">
+<h2>Scheduler</h2>
+<p>Akka 內有附一個簡單的 Scheduler，他可以讓你排程什麼時候要發訊息給 Actor</p>
+<div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.actor.Scheduler</span>
+
+<span class="c1">//Sends messageToBeSent to receiverActor after initialDelayBeforeSending and then after each delayBetweenMessages</span>
+<span class="nc">Scheduler</span><span class="o">.</span><span class="n">schedule</span><span class="o">(</span><span class="n">receiverActor</span><span class="o">,</span> <span class="n">messageToBeSent</span><span class="o">,</span> <span class="n">initialDelayBeforeSending</span><span class="o">,</span> <span class="n">delayBetweenMessages</span><span class="o">,</span> <span class="n">timeUnit</span><span class="o">)</span>
+
+<span class="c1">//Sends messageToBeSent to receiverActor after delayUntilSend</span>
+<span class="nc">Scheduler</span><span class="o">.</span><span class="n">scheduleOnce</span><span class="o">(</span><span class="n">receiverActor</span><span class="o">,</span> <span class="n">messageToBeSent</span><span class="o">,</span> <span class="n">delayUntilSend</span><span class="o">,</span> <span class="n">timeUnit</span><span class="o">)</span>
+</pre></div>
+</div>
+<div class="section" id="event-driven">
+<h2>Event Driven</h2>
+<p>一直到最近在實作小玩具才想到的，我想這不是新的東西，可是用Akka或許可以把這件事情變得非常方便。
+以前在學Design Pattern的時候，其實整體架構算是很容易理解的東西。</p>
+<p>But ! 就是這個But，在寫的時候卻會常常綁手綁腳，例如MVC的Pattern，我到底要不要在Control中紀錄Model與View的位置，如果不紀錄的話我又要怎麼找到他們，然後整個執行流程又是如何？
+這是一件很麻煩的事情，雖然現在用起來是沒啥感覺，但是我也常為了Model之間的溝通流程感到困擾。</p>
+<p>小的在下我，寫論文的時候實作的東西其基礎架構是建立在JavaSpace上面，這個東西不要說現在沒啥人聽過了，就連我在用的時候都很悲劇。
+但是他設計概念我覺得很棒，他提供一個Pool可以讓你把Object丟進去，有興趣的Process就可以自己去那個Pool搶。
+但是這個東西就悲劇在他後來沒有在維護了，而且他的Server架設非常麻煩，API非常難用。</p>
+<p>一直到後來在GWT中看到Event Bus，我覺得這真是TMD的好東西。
+反正每個Model就是把Event丟到Event Bus裡面就好了，然後誰愛撿就撿去玩，射後不理真是男人的浪漫（誤）。
+因此最近才想到，如果利用Akka來作一個類似JavaSpace的東西如何，每個Module都是一個獨立的Actor，Module在接收到工作把工作完成就，就將結果丟回Space。</p>
+<p>舉個例子就像之前舉例舉到爛掉的某大論壇Parser，需要將文章內容紀錄到資料庫裡面，並且還要去下載相關的圖片。
+因此我就模仿Eva Magi系統（大誤），將Parser Module、Data Module與Download Module各自獨立成一個Actor。
+系統啟動的時候，由系統去建立Space，並且將這三個Module依照其MetaData的設定要將哪些Event傳送給他們（其實就是Observer Pattern）。</p>
+<p>Parser定時自動去論壇取得文章內容，並且將內容丟到Space裡面。這時Data Module就可以將文章資料寫到資料庫中，而Download Module也同時進行下載。
+這樣的架構可以視情況讓他是Single Thread或Multiple Thread的程式。只要好好管理Event的流動方式就可以了。</p>
+<p>至於這樣的架構好不好測試呢？我覺得這樣寫有一個好處，就是可以強迫Programmer寫出沒有副作用的程式，因為你必須要將所以處理結果都丟回Space裡面。
+因此測試的時候，只要建立該Module，並且傳送Mock Event給他就可以了，其他Module並不需要被建立起來。這樣的架構也降低了各Module之間的coupling。</p>
+<p>最後如果想要作所謂的雲～～～～～～～～端系統（老實說連我都不知道啥鬼才叫TMD的雲～～～～～～端系統），就可以利用Akka的Remote Actor的功能，
+將不同的Module丟到不同的機器上面作，甚至是同一個Module可以有好幾個來分工。</p>
+<p>Wao cow 越想感覺越夢幻，有空來實作看看到底會遇到什麼問題好了。</p>
+</div>
+
+		</div><!-- /.entry-content -->
+		
+		<div class="comments">
+		<h2>Comments !</h2>
+			<div id="disqus_thread"></div>
+			<script type="text/javascript">
+			   var disqus_identifier = "akka-20-bi-ji-1.html";
+			   (function() {
+				var dsq = document.createElement('script'); 
+				dsq.type = 'text/javascript'; dsq.async = true;
+				dsq.src = 'http://swindgithub.disqus.com/embed.js';
+				(document.getElementsByTagName('head')[0] || 
+				 document.getElementsByTagName('body')[0]).appendChild(dsq);
+			  })();
+			</script>
+		</div>
+		
+	</article>
+</section>
+
+        </div><!--/span-->
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <div class="container">
+          <div class="row">
+            <div class="span8 offset">
+              <address id="about">
+                Proudly powered by <a href="http://pelican.notmyidea.org/">Pelican <i class="icon-external-link"></i></a>,
+                which takes great advantage of <a href="http://python.org">Python <i class="icon-external-link"></i></a>.
+              </address><!-- /#about -->
+
+              <p>The theme is from <a href="http://twitter.github.com/bootstrap/">Bootstrap from Twitter <i class="icon-external-link"></i></a>, 
+               and <a href="http://fortawesome.github.com/Font-Awesome/">Font-Awesome <i class="icon-external-link"></i></a>, thanks!</p>
+             </div>
+           </div>
+         </div>
+       </footer>
+
+     </div><!--/.fluid-container-->
+
+
+     
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+	var pageTracker = _gat._getTracker("UA-15910682-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+     
+     
+<script type="text/javascript">
+    var disqus_shortname = 'swindgithub';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+    
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./theme/js/jquery-1.8.3.min.js"></script>
+    <script src="./theme/js/bootstrap.min.js"></script>
+    
+  </body>
+  </html>
