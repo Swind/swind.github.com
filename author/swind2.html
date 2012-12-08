@@ -125,12 +125,6 @@
     </a>
 </li>
 
-<li class="tag-1">
-    <a href=".././tag/Scala.html">
-       Scala
-    </a>
-</li>
-
 <li class="tag-4">
     <a href=".././tag/octopres.html">
        octopres
@@ -140,6 +134,12 @@
 <li class="tag-3">
     <a href=".././tag/Java.html">
        Java
+    </a>
+</li>
+
+<li class="tag-1">
+    <a href=".././tag/Scala.html">
+       Scala
     </a>
 </li>
 
@@ -154,6 +154,178 @@
         <div class="span8" id="content">
                   
 
+	
+	<div class='article'>
+		<h1><a href=".././epubconverter-epubge-shi-jian-zhuan-fan-xiao-gong-ju.html">EPUBConverter - epub格式簡轉繁小工具</a></h1>
+		<div class="well small"><footer class="post-info">
+<span class="badge badge-info">Date</span>
+<abbr class="published" title="2012-05-11T16:56:00">
+	<i class="icon-calendar"></i>週五 11 五月 2012
+</abbr>
+
+<span class="badge badge-info">By</span>
+<a href=".././author/swind.html"><i class="icon-user"></i>Swind</a>
+
+<span class="badge badge-info">Category</span>
+<a href=".././category/program.html"><i class="icon-folder-open"></i>Program</a>. 
+
+
+	
+
+<span class="badge badge-info">Tags</span> 
+
+	<a href=".././tag/scala.html"><i class="icon-tag"></i>Scala</a>
+
+
+
+</footer><!-- /.post-info --></div>
+		<div class="summary"><div class="section" id="id1">
+<h2>下載點</h2>
+<p><a class="reference external" href="https://github.com/Swind/EPUBConverter/downloads">EPUBConverter 0.0.1</a></p>
+<p>這個版號我覺得也沒有機會到 0.0.2 了，不過還是讓我命名個版號滿足小小的虛榮心好了。</p>
+</div>
+<div class="section" id="id2">
+<h2>不負責任的使用教學</h2>
+<p>這只是一個非常簡單的小工具，用 Scala 撰寫而成，因此執行環境需要使用 JVM。
+我只有測試過 JDK 7 的環境，理論上 JDK 6 應該也沒有問題。
+如果有人有測試到有問題的話（默...）我也不知道有沒有時間改 Orz。</p>
+<div class="section" id="id3">
+<h3>轉換方式</h3>
+<p>轉換方式感謝 <a class="reference external" href="http://jeremy.ssinrc.org/?p=327">六度數位空間</a> 的分享。
+其實 epub 的格式是以 zip 格式壓縮，所以這個程式的執行流程是</p>
+<ol class="arabic simple">
+<li>將 epub 檔解壓縮到暫存資料夾</li>
+<li>將 暫存資料夾裡面的所有檔案從 UTF-8 簡體 轉成 UTF-8 繁體 ...</li></ol></div></div> 
+			<a class="btn primary xsmall" href=".././epubconverter-epubge-shi-jian-zhuan-fan-xiao-gong-ju.html">more ...</a>
+		</div>
+	</div>	
+	<hr />
+	
+	<div class='article'>
+		<h1><a href=".././hao-yong-de-html-parser-jsoup.html">好用的 HTML Parser - jsoup</a></h1>
+		<div class="well small"><footer class="post-info">
+<span class="badge badge-info">Date</span>
+<abbr class="published" title="2011-10-27T08:47:00">
+	<i class="icon-calendar"></i>週四 27 十月 2011
+</abbr>
+
+<span class="badge badge-info">By</span>
+<a href=".././author/swind.html"><i class="icon-user"></i>Swind</a>
+
+<span class="badge badge-info">Category</span>
+<a href=".././category/program.html"><i class="icon-folder-open"></i>Program</a>. 
+
+
+	
+
+<span class="badge badge-info">Tags</span> 
+
+	<a href=".././tag/java.html"><i class="icon-tag"></i>Java</a>
+
+	<a href=".././tag/scala.html"><i class="icon-tag"></i>Scala</a>
+
+
+
+</footer><!-- /.post-info --></div>
+		<div class="summary"><div class="section" id="what-is-jsoupsoup">
+<h2>What is jsoupsoup</h2>
+<p>HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
+為了要從網頁中可以取出內容,我曾經用過不少方式,包括直接硬幹用字串搜尋、修改Scala本身內部的XML Parser等。
+但是一直都找不到一個滿意又順手的解決方式,一直到後來在 <a class="reference external" href="http://www.oschina.net/">CSDN</a> 沒錯就是那個大陸網站 <a class="reference external" href="http://www.oschina.net/">CSDN</a>
+(雖然說CSDN訊息太多太雜亂,但是偶爾還是可以看到一些不錯的東西),才找到jsoup這個library。</p>
+<p><a class="reference external" href="http://jsoup.org/">jsoup的官方網站</a></p>
+<p><a class="reference external" href="http://jsoup.org/cookbook/">jsoup的教學文件</a></p>
+<p>但是其實最重要的是這一 <a class="reference external" href="http://jsoup.org/cookbook/extracting-data/selector-syntax">教學文件</a> ,介紹了他與別人最不一樣的的地方。
+一般的html parser還是比較傾向於跟xml parser的作法一樣,把html分析完之後建成樹
+然後操作node將資料取出,但是除了這種操作方式之外josue還有一種是類似jquery的selector的操作方式。</p>
+<div class="highlight"><pre><span class="n">file</span> <span class="n">input</span> <span class="k">=</span> <span class="k">new</span> <span class="n">file</span><span class="o">(</span><span class="s">&quot;/tmp/input.html&quot;</span><span class="o">);</span>
+<span class="n">document</span> <span class="n">doc</span> <span class="k">=</span> <span class="n">jsoup</span><span class="o">.</span><span class="n">parse</span><span class="o">(</span><span class="n">input</span><span class="o">,</span> <span class="s">&quot;utf-8&quot;</span><span class="o">,</span> <span class="s">&quot;http://example.com/&quot;</span><span class="o">);</span>
+
+<span class="c1">//document doc ...</span></pre></div></div> 
+			<a class="btn primary xsmall" href=".././hao-yong-de-html-parser-jsoup.html">more ...</a>
+		</div>
+	</div>	
+	<hr />
+	
+	<div class='article'>
+		<h1><a href=".././octopressan-zhuang-bi-ji-wo-tiao-cao-dao-pelican-liao.html">Octopress安裝筆記 - 我跳槽到 Pelican 了</a></h1>
+		<div class="well small"><footer class="post-info">
+<span class="badge badge-info">Date</span>
+<abbr class="published" title="2011-10-19T11:17:00">
+	<i class="icon-calendar"></i>週三 19 十月 2011
+</abbr>
+
+<span class="badge badge-info">By</span>
+<a href=".././author/swind.html"><i class="icon-user"></i>Swind</a>
+
+<span class="badge badge-info">Category</span>
+<a href=".././category/program.html"><i class="icon-folder-open"></i>Program</a>. 
+
+
+	
+
+<span class="badge badge-info">Tags</span> 
+
+	<a href=".././tag/octopres.html"><i class="icon-tag"></i>octopres</a>
+
+
+
+</footer><!-- /.post-info --></div>
+		<div class="summary"><div class="section" id="pelican">
+<h2>2012.11.28 我已經跳槽到 Pelican 了，不過還是把這篇留著當紀念好了。</h2>
+</div>
+<div class="section" id="win7">
+<h2>2012.05.21 更新這次好像真的解決在 Win7 上面的問題了</h2>
+<p>其實在 Windows 上面使用 Octopress 沒有什麼特別大的問題，注意文章的編碼就好。
+但是有一點一直非常困擾著我的就是， Codeblock 的問題。由於 rake generator 所提供的錯誤訊息非常的少，所以很難找出錯誤。
+最常在網頁上面看到的就是這個</p>
+<pre class="literal-block">
+Liquid error: undefined method `Py_IsInitialized’ for RubyPython::Python:Module
+</pre>
+<p>一直到我今天無意間搜尋到這篇文章 (話說 Octopress 的安裝教學文真的越來越多了)
+<a class="reference external" href="http://hivan.me/octopress-install-to-windows8/">Windows 8 安裝 Octopress 紀錄</a> 他真的找出問題了，重點就在於！ <em>Python 請安裝 ...</em></p></div> 
+			<a class="btn primary xsmall" href=".././octopressan-zhuang-bi-ji-wo-tiao-cao-dao-pelican-liao.html">more ...</a>
+		</div>
+	</div>	
+	<hr />
+	
+	<div class='article'>
+		<h1><a href=".././scala-log-gong-ju-bi-ji.html">Scala log 工具筆記</a></h1>
+		<div class="well small"><footer class="post-info">
+<span class="badge badge-info">Date</span>
+<abbr class="published" title="2012-01-22T15:59:00">
+	<i class="icon-calendar"></i>週日 22 一月 2012
+</abbr>
+
+<span class="badge badge-info">By</span>
+<a href=".././author/swind.html"><i class="icon-user"></i>Swind</a>
+
+<span class="badge badge-info">Category</span>
+<a href=".././category/program.html"><i class="icon-folder-open"></i>Program</a>. 
+
+
+	
+
+<span class="badge badge-info">Tags</span> 
+
+	<a href=".././tag/java.html"><i class="icon-tag"></i>Java</a>
+
+	<a href=".././tag/scala.html"><i class="icon-tag"></i>Scala</a>
+
+
+
+</footer><!-- /.post-info --></div>
+		<div class="summary"><p>之前偷懶都直接使用 println 來輸出訊息，但是最近在玩 <a class="reference external" href="http://akka.io/">Akka</a> ，我發現如果沒有使用 log tool 的話我根本不知道是哪個 Actor 印訊息的。
+只好搜尋一下 Scala 上面有沒有什麼好用的 Log 工具。</p>
+<div class="section" id="slf4s-slf4j-logback">
+<h2>slf4s + slf4j + logback</h2>
+<p>一般依照以往的習慣基本就是 <a class="reference external" href="http://logging.apache.org/log4j/">log4j</a> + <a class="reference external" href="http://www.slf4j.org/">slf4j</a> ，這算是最通用的工具組了。但是 Scala 有這麼多特異功能，說不定會有更神奇的 Log 工具，
+於是就抱著這樣的心態跟 Google 大神詢問求籤。最後看到 logback 這個工具（雖然跟 Scala 完全沒有關係）但是人都是喜新厭舊 XD，所以
+我就從 slf4j + log4j 轉到 slf4j + logback，附帶一提 logback 是 ...</p></div> 
+			<a class="btn primary xsmall" href=".././scala-log-gong-ju-bi-ji.html">more ...</a>
+		</div>
+	</div>	
+	<hr />
 	
 	<div class='article'>
 		<h1><a href=".././scala-orm-gong-ju-bi-ji-circumflexyu-activejdbc.html">Scala ORM 工具筆記-Circumflex與ActiveJDBC</a></h1>
@@ -252,49 +424,6 @@ F(X,Y) = X ...</blockquote></div></div>
 	</div>	
 	<hr />
 	
-	<div class='article'>
-		<h1><a href=".././yong-spray-jian-li-ge-jian-dan-de-restful-api-server.html">用 Spray 建立一個簡單的 RESTful API Server</a></h1>
-		<div class="well small"><footer class="post-info">
-<span class="badge badge-info">Date</span>
-<abbr class="published" title="2012-11-06T20:11:00">
-	<i class="icon-calendar"></i>週二 06 十一月 2012
-</abbr>
-
-<span class="badge badge-info">By</span>
-<a href=".././author/swind.html"><i class="icon-user"></i>Swind</a>
-
-<span class="badge badge-info">Category</span>
-<a href=".././category/program.html"><i class="icon-folder-open"></i>Program</a>. 
-
-
-	
-
-<span class="badge badge-info">Tags</span> 
-
-	<a href=".././tag/scala.html"><i class="icon-tag"></i>Scala</a>
-
-	<a href=".././tag/akka.html"><i class="icon-tag"></i>Akka</a>
-
-
-
-</footer><!-- /.post-info --></div>
-		<div class="summary"><div class="section" id="spray">
-<h2>Spray</h2>
-<p><a class="reference external" href="http://spray.cc/">Spray</a></p>
-<p>最初是想要建立一個提供查詢服務的 RESTful API Server，可以讓 Client 的應用程式透過 RESTful API 查詢一些資料。
-但是看來看去，用 Play2、Jersey、RESTEasy 等都蠻麻煩的，而且還需要使用 Web container（像 Tomcat、Jetty 等）。
-所以才找到這個 Spray，而且又是用 Scala 開發的，實在沒有理由不試試看阿。 XD</p>
-<p>若你連到官網看會發現他分成很多模組，老實說我也沒有詳細研究每個模組的功能。
-因為 <a class="reference external" href="http://spray.cc/documentation/spray-can/">spray-can</a> 的範例看起來最簡單並且也符合我的需求，所以就直接用他了。</p>
-<p>想瞭解更詳細內容的可以參考 <a class="reference external" href="https://github.com/spray/spray/tree/release-1.0-M2/examples/spray-can/simple-http-server/">spray-can 範例文件</a> 與 <a class="reference external" href="http://blog.cloudfoundry.com/2012/05/11/running-standalone-web-applications-on-cloud-foundry/">Running Standalone Web Applications on Cloud Foundry</a></p>
-</div>
-<div class="section" id="id1">
-<h2>環境準備 ...</h2></div> 
-			<a class="btn primary xsmall" href=".././yong-spray-jian-li-ge-jian-dan-de-restful-api-server.html">more ...</a>
-		</div>
-	</div>	
-	<hr />
-	
 
 
 	
@@ -309,8 +438,10 @@ F(X,Y) = X ...</blockquote></div></div>
 		
 			<li class="active"><a href=".././author/Swind2.html">2</a></li>
 		
+			<li class=""><a href=".././author/Swind3.html">3</a></li>
 		
-			<li class="next disabled"><a href="#">&rarr; Next</a></li>
+		
+			<li class="next"><a href=".././author/Swind3.html">Next &rarr;</a></li>
 		
 	</ul>
 	</div>

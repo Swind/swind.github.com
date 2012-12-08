@@ -125,12 +125,6 @@
     </a>
 </li>
 
-<li class="tag-1">
-    <a href=".././tag/Scala.html">
-       Scala
-    </a>
-</li>
-
 <li class="tag-4">
     <a href=".././tag/octopres.html">
        octopres
@@ -140,6 +134,12 @@
 <li class="tag-3">
     <a href=".././tag/Java.html">
        Java
+    </a>
+</li>
+
+<li class="tag-1">
+    <a href=".././tag/Scala.html">
+       Scala
     </a>
 </li>
 
@@ -398,196 +398,6 @@ In Akka, a Future is a data structure used to retrieve the result of some concur
 	</div>	
 	<hr />
 	
-	<div class='article'>
-		<h1><a href=".././akka-20-bi-ji-1.html">Akka 2.0 筆記 (1)</a></h1>
-		<div class="well small"><footer class="post-info">
-<span class="badge badge-info">Date</span>
-<abbr class="published" title="2012-05-17T18:03:00">
-	<i class="icon-calendar"></i>週四 17 五月 2012
-</abbr>
-
-<span class="badge badge-info">By</span>
-<a href=".././author/swind.html"><i class="icon-user"></i>Swind</a>
-
-<span class="badge badge-info">Category</span>
-<a href=".././category/program.html"><i class="icon-folder-open"></i>Program</a>. 
-
-
-	
-
-<span class="badge badge-info">Tags</span> 
-
-	<a href=".././tag/scala.html"><i class="icon-tag"></i>Scala</a>
-
-	<a href=".././tag/akka.html"><i class="icon-tag"></i>Akka</a>
-
-
-
-</footer><!-- /.post-info --></div>
-		<div class="summary"><p>因為我的程式還沒有寫完，所以是筆記 (1)，寫的過程應該還會有 2 3 ... 出現 Orz。</p>
-<blockquote>
-Akka 2.0 - 要升級了
-你的時間的庫存量足夠嗎 ?</blockquote>
-<p>Akka 進入了 2.0 時代，恭喜你如果你是用 1.x 的話，請準備改寫吧 ...
-先從幾個方面來看 2.0 的新增事項。</p>
-<p>以下算是筆記，如有錯誤請多指教</p>
-<div class="section" id="actor">
-<h2>Actor</h2>
-<p>從官網範例來看，Actor 的架構還是跟之前一樣沒有什麼改變</p>
-<div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.actor.Actor</span>
-<span class="k">import</span> <span class="nn">akka.actor.Props</span>
-<span class="k">import</span> <span class="nn">akka.event.Logging</span>
-
-<span class="k">class</span> <span class="nc">MyActor</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
-  <span class="k">val ...</span></pre></div></div> 
-			<a class="btn primary xsmall" href=".././akka-20-bi-ji-1.html">more ...</a>
-		</div>
-	</div>	
-	<hr />
-	
-	<div class='article'>
-		<h1><a href=".././shi-zuo-epubconverter-de-bi-ji.html">實作 EPUBConverter 的筆記</a></h1>
-		<div class="well small"><footer class="post-info">
-<span class="badge badge-info">Date</span>
-<abbr class="published" title="2012-05-11T18:19:00">
-	<i class="icon-calendar"></i>週五 11 五月 2012
-</abbr>
-
-<span class="badge badge-info">By</span>
-<a href=".././author/swind.html"><i class="icon-user"></i>Swind</a>
-
-<span class="badge badge-info">Category</span>
-<a href=".././category/program.html"><i class="icon-folder-open"></i>Program</a>. 
-
-
-	
-
-<span class="badge badge-info">Tags</span> 
-
-	<a href=".././tag/scala.html"><i class="icon-tag"></i>Scala</a>
-
-
-
-</footer><!-- /.post-info --></div>
-		<div class="summary"><div class="section" id="id1">
-<h2>好吧，我要開始筆記一下這次的實作心得了</h2>
-<p>其實在學 Scala 的這一段時間中，我最困擾的就是到底怎樣才是好的 Scala 寫作風格。
-因為 Scala 最吸引我的部份就是在於他的語法可以不斷的精鍊再精鍊，最後變成*魔法文字* Orz。
-所以要怎樣善用 Scala 的語言特性，卻又不失可讀性，我覺得真的很難。
-因此在這次的小工具實作中，我試著摸索 Curry 的用法。</p>
-<div class="section" id="curry">
-<h3>Curry</h3>
-<p>說到教學文件，就一定要推一下 <a class="reference external" href="http://caterpillar.onlyfun.net/Gossip/Scala/index.html">良葛格的學習筆記</a> 裡面他有提到 <a class="reference external" href="http://caterpillar.onlyfun.net/Gossip/Scala/Curry.html">Curry</a>  的語法與何謂 Curry 。
-但是我更喜歡在 jserv's blog <a class="reference external" href="http://blog.linux.org.tw/~jserv/archives/002029.html">以 C 語言實做 Functional Language 的 Currying</a>  看到的說明。</p>
-<p>Curry 可以看成數學的多項式，舉例來說現在有一個多項式</p>
-<blockquote>
-F(X,Y) = X ...</blockquote></div></div> 
-			<a class="btn primary xsmall" href=".././shi-zuo-epubconverter-de-bi-ji.html">more ...</a>
-		</div>
-	</div>	
-	<hr />
-	
-	<div class='article'>
-		<h1><a href=".././epubconverter-epubge-shi-jian-zhuan-fan-xiao-gong-ju.html">EPUBConverter - epub格式簡轉繁小工具</a></h1>
-		<div class="well small"><footer class="post-info">
-<span class="badge badge-info">Date</span>
-<abbr class="published" title="2012-05-11T16:56:00">
-	<i class="icon-calendar"></i>週五 11 五月 2012
-</abbr>
-
-<span class="badge badge-info">By</span>
-<a href=".././author/swind.html"><i class="icon-user"></i>Swind</a>
-
-<span class="badge badge-info">Category</span>
-<a href=".././category/program.html"><i class="icon-folder-open"></i>Program</a>. 
-
-
-	
-
-<span class="badge badge-info">Tags</span> 
-
-	<a href=".././tag/scala.html"><i class="icon-tag"></i>Scala</a>
-
-
-
-</footer><!-- /.post-info --></div>
-		<div class="summary"><div class="section" id="id1">
-<h2>下載點</h2>
-<p><a class="reference external" href="https://github.com/Swind/EPUBConverter/downloads">EPUBConverter 0.0.1</a></p>
-<p>這個版號我覺得也沒有機會到 0.0.2 了，不過還是讓我命名個版號滿足小小的虛榮心好了。</p>
-</div>
-<div class="section" id="id2">
-<h2>不負責任的使用教學</h2>
-<p>這只是一個非常簡單的小工具，用 Scala 撰寫而成，因此執行環境需要使用 JVM。
-我只有測試過 JDK 7 的環境，理論上 JDK 6 應該也沒有問題。
-如果有人有測試到有問題的話（默...）我也不知道有沒有時間改 Orz。</p>
-<div class="section" id="id3">
-<h3>轉換方式</h3>
-<p>轉換方式感謝 <a class="reference external" href="http://jeremy.ssinrc.org/?p=327">六度數位空間</a> 的分享。
-其實 epub 的格式是以 zip 格式壓縮，所以這個程式的執行流程是</p>
-<ol class="arabic simple">
-<li>將 epub 檔解壓縮到暫存資料夾</li>
-<li>將 暫存資料夾裡面的所有檔案從 UTF-8 簡體 轉成 UTF-8 繁體 ...</li></ol></div></div> 
-			<a class="btn primary xsmall" href=".././epubconverter-epubge-shi-jian-zhuan-fan-xiao-gong-ju.html">more ...</a>
-		</div>
-	</div>	
-	<hr />
-	
-	<div class='article'>
-		<h1><a href=".././scala-orm-gong-ju-bi-ji-circumflexyu-activejdbc.html">Scala ORM 工具筆記-Circumflex與ActiveJDBC</a></h1>
-		<div class="well small"><footer class="post-info">
-<span class="badge badge-info">Date</span>
-<abbr class="published" title="2012-02-07T13:44:00">
-	<i class="icon-calendar"></i>週二 07 二月 2012
-</abbr>
-
-<span class="badge badge-info">By</span>
-<a href=".././author/swind.html"><i class="icon-user"></i>Swind</a>
-
-<span class="badge badge-info">Category</span>
-<a href=".././category/program.html"><i class="icon-folder-open"></i>Program</a>. 
-
-
-	
-
-<span class="badge badge-info">Tags</span> 
-
-	<a href=".././tag/scala.html"><i class="icon-tag"></i>Scala</a>
-
-
-
-</footer><!-- /.post-info --></div>
-		<div class="summary"><div class="section" id="circumflex">
-<h2>Circumflex</h2>
-<div class="section" id="prepare">
-<h3>Prepare</h3>
-<p><a class="reference external" href="http://circumflex.ru/">Circumflex</a> 我是使用SBT連到Maven repository去載入他所有的Library。</p>
-<dl class="docutils">
-<dt>載入的項目有</dt>
-<dd><ul class="first last simple">
-<li>circumflex-orm-2.1.jar</li>
-<li>circumflex-core-2.1.jar</li>
-<li>commons-io-2.0.1</li>
-<li>circumflex-cache-2.1.jar</li>
-<li>slf4j-api-1.6.1</li>
-<li>ehcache-core-2.4.4</li>
-<li>jta-1.1.jar</li>
-<li>c3p0-0.9.1.1.jar</li>
-</ul>
-</dd>
-</dl>
-<p>Circumflex全部載入約2.3MB左右，比其他LightWeight的Library要大的很多。</p>
-</div>
-<div class="section" id="create-table">
-<h3>Create Table</h3>
-<p>Circumflex的設計，主要是在是產生一個對應的資料物件，例如</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">Country</span> <span class="k">extends</span> <span class="nc">Record</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Country</span><span class="o">]</span> <span class="o">{</span>
-  <span class="k">val</span> <span class="n">code</span> <span class="k">=</span> <span class="s">&quot;code&quot;</span><span class="o">.</span><span class="nc">VARCHAR ...</span></pre></div></div></div> 
-			<a class="btn primary xsmall" href=".././scala-orm-gong-ju-bi-ji-circumflexyu-activejdbc.html">more ...</a>
-		</div>
-	</div>	
-	<hr />
-	
 
 
 	
@@ -600,6 +410,8 @@ F(X,Y) = X ...</blockquote></div></div>
 			<li class="active"><a href=".././category/Program.html">1</a></li>
 		
 			<li class=""><a href=".././category/Program2.html">2</a></li>
+		
+			<li class=""><a href=".././category/Program3.html">3</a></li>
 		
 		
 			<li class="next"><a href=".././category/Program2.html">Next &rarr;</a></li>

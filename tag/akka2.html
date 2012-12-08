@@ -2,7 +2,7 @@
 <html lang="zh">
   <head>
     <meta charset="utf-8">
-    <title>Corleonis - Java</title>
+    <title>Corleonis - Akka</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -156,11 +156,11 @@
 
 	
 	<div class='article'>
-		<h1><a href=".././scala-log-gong-ju-bi-ji.html">Scala log 工具筆記</a></h1>
+		<h1><a href=".././akka-20-bi-ji-1.html">Akka 2.0 筆記 (1)</a></h1>
 		<div class="well small"><footer class="post-info">
 <span class="badge badge-info">Date</span>
-<abbr class="published" title="2012-01-22T15:59:00">
-	<i class="icon-calendar"></i>週日 22 一月 2012
+<abbr class="published" title="2012-05-17T18:03:00">
+	<i class="icon-calendar"></i>週四 17 五月 2012
 </abbr>
 
 <span class="badge badge-info">By</span>
@@ -174,67 +174,30 @@
 
 <span class="badge badge-info">Tags</span> 
 
-	<a href=".././tag/java.html"><i class="icon-tag"></i>Java</a>
-
 	<a href=".././tag/scala.html"><i class="icon-tag"></i>Scala</a>
+
+	<a href=".././tag/akka.html"><i class="icon-tag"></i>Akka</a>
 
 
 
 </footer><!-- /.post-info --></div>
-		<div class="summary"><p>之前偷懶都直接使用 println 來輸出訊息，但是最近在玩 <a class="reference external" href="http://akka.io/">Akka</a> ，我發現如果沒有使用 log tool 的話我根本不知道是哪個 Actor 印訊息的。
-只好搜尋一下 Scala 上面有沒有什麼好用的 Log 工具。</p>
-<div class="section" id="slf4s-slf4j-logback">
-<h2>slf4s + slf4j + logback</h2>
-<p>一般依照以往的習慣基本就是 <a class="reference external" href="http://logging.apache.org/log4j/">log4j</a> + <a class="reference external" href="http://www.slf4j.org/">slf4j</a> ，這算是最通用的工具組了。但是 Scala 有這麼多特異功能，說不定會有更神奇的 Log 工具，
-於是就抱著這樣的心態跟 Google 大神詢問求籤。最後看到 logback 這個工具（雖然跟 Scala 完全沒有關係）但是人都是喜新厭舊 XD，所以
-我就從 slf4j + log4j 轉到 slf4j + logback，附帶一提 logback 是 ...</p></div> 
-			<a class="btn primary xsmall" href=".././scala-log-gong-ju-bi-ji.html">more ...</a>
-		</div>
-	</div>	
-	<hr />
-	
-	<div class='article'>
-		<h1><a href=".././hao-yong-de-html-parser-jsoup.html">好用的 HTML Parser - jsoup</a></h1>
-		<div class="well small"><footer class="post-info">
-<span class="badge badge-info">Date</span>
-<abbr class="published" title="2011-10-27T08:47:00">
-	<i class="icon-calendar"></i>週四 27 十月 2011
-</abbr>
+		<div class="summary"><p>因為我的程式還沒有寫完，所以是筆記 (1)，寫的過程應該還會有 2 3 ... 出現 Orz。</p>
+<blockquote>
+Akka 2.0 - 要升級了
+你的時間的庫存量足夠嗎 ?</blockquote>
+<p>Akka 進入了 2.0 時代，恭喜你如果你是用 1.x 的話，請準備改寫吧 ...
+先從幾個方面來看 2.0 的新增事項。</p>
+<p>以下算是筆記，如有錯誤請多指教</p>
+<div class="section" id="actor">
+<h2>Actor</h2>
+<p>從官網範例來看，Actor 的架構還是跟之前一樣沒有什麼改變</p>
+<div class="highlight"><pre><span class="k">import</span> <span class="nn">akka.actor.Actor</span>
+<span class="k">import</span> <span class="nn">akka.actor.Props</span>
+<span class="k">import</span> <span class="nn">akka.event.Logging</span>
 
-<span class="badge badge-info">By</span>
-<a href=".././author/swind.html"><i class="icon-user"></i>Swind</a>
-
-<span class="badge badge-info">Category</span>
-<a href=".././category/program.html"><i class="icon-folder-open"></i>Program</a>. 
-
-
-	
-
-<span class="badge badge-info">Tags</span> 
-
-	<a href=".././tag/java.html"><i class="icon-tag"></i>Java</a>
-
-	<a href=".././tag/scala.html"><i class="icon-tag"></i>Scala</a>
-
-
-
-</footer><!-- /.post-info --></div>
-		<div class="summary"><div class="section" id="what-is-jsoupsoup">
-<h2>What is jsoupsoup</h2>
-<p>HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
-為了要從網頁中可以取出內容,我曾經用過不少方式,包括直接硬幹用字串搜尋、修改Scala本身內部的XML Parser等。
-但是一直都找不到一個滿意又順手的解決方式,一直到後來在 <a class="reference external" href="http://www.oschina.net/">CSDN</a> 沒錯就是那個大陸網站 <a class="reference external" href="http://www.oschina.net/">CSDN</a>
-(雖然說CSDN訊息太多太雜亂,但是偶爾還是可以看到一些不錯的東西),才找到jsoup這個library。</p>
-<p><a class="reference external" href="http://jsoup.org/">jsoup的官方網站</a></p>
-<p><a class="reference external" href="http://jsoup.org/cookbook/">jsoup的教學文件</a></p>
-<p>但是其實最重要的是這一 <a class="reference external" href="http://jsoup.org/cookbook/extracting-data/selector-syntax">教學文件</a> ,介紹了他與別人最不一樣的的地方。
-一般的html parser還是比較傾向於跟xml parser的作法一樣,把html分析完之後建成樹
-然後操作node將資料取出,但是除了這種操作方式之外josue還有一種是類似jquery的selector的操作方式。</p>
-<div class="highlight"><pre><span class="n">file</span> <span class="n">input</span> <span class="k">=</span> <span class="k">new</span> <span class="n">file</span><span class="o">(</span><span class="s">&quot;/tmp/input.html&quot;</span><span class="o">);</span>
-<span class="n">document</span> <span class="n">doc</span> <span class="k">=</span> <span class="n">jsoup</span><span class="o">.</span><span class="n">parse</span><span class="o">(</span><span class="n">input</span><span class="o">,</span> <span class="s">&quot;utf-8&quot;</span><span class="o">,</span> <span class="s">&quot;http://example.com/&quot;</span><span class="o">);</span>
-
-<span class="c1">//document doc ...</span></pre></div></div> 
-			<a class="btn primary xsmall" href=".././hao-yong-de-html-parser-jsoup.html">more ...</a>
+<span class="k">class</span> <span class="nc">MyActor</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+  <span class="k">val ...</span></pre></div></div> 
+			<a class="btn primary xsmall" href=".././akka-20-bi-ji-1.html">more ...</a>
 		</div>
 	</div>	
 	<hr />
@@ -242,7 +205,23 @@
 
 
 	
-	
+	<div class="pagination">
+	<ul>
+		
+			
+			<li class="prev"><a href=".././tag/Akka.html">&larr; Previous</a></li>
+		
+		
+			<li class=""><a href=".././tag/Akka.html">1</a></li>
+		
+			<li class="active"><a href=".././tag/Akka2.html">2</a></li>
+		
+		
+			<li class="next disabled"><a href="#">&rarr; Next</a></li>
+		
+	</ul>
+	</div>
+
 
 
         </div><!--/span-->
