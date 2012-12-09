@@ -60,14 +60,16 @@ go func()&lt;/blockquote&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;測試結果&lt;/p&gt;
-&lt;p&gt;使用四核心&lt;/p&gt;
-&lt;blockquote&gt;
+&lt;p&gt;使用四核心:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
 BenchmarkConvertCore4          1        9775559100 ns/op
-ok      epubconverter   10.282s&lt;/blockquote&gt;
-&lt;p&gt;使用單核&lt;/p&gt;
-&lt;blockquote&gt;
+ok      epubconverter   10.282s
+&lt;/pre&gt;
+&lt;p&gt;使用單核:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
 BenchmarkConvertCore1          1        33146895900 ns/op
-ok      epubconverter   33.673s&lt;/blockquote&gt;
+ok      epubconverter   33.673s
+&lt;/pre&gt;
 &lt;/div&gt;
 </description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Swind</dc:creator><pubDate>Sun, 09 Dec 2012 00:00:00 +0800</pubDate><guid>tag:Swind.github.com,2012-12-09:golang-goroutine-bi-ji-1.html</guid><category>Go</category></item><item><title>EPUBConverter 0.0.2 - 其實已經重寫了 Orz</title><link>http://Swind.github.com/epubconverter-002-qi-shi-yi-jing-zhong-xie-liao-orz.html</link><description>&lt;div class="section" id="epubconverter-0-0-2"&gt;
 &lt;h2&gt;EPUBConverter 0.0.2&lt;/h2&gt;
