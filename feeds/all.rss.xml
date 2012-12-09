@@ -1,5 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Corleonis</title><link>http://Swind.github.com/</link><description></description><atom:link href="http://Swind.github.com/feeds/all.rss.xml" rel="self"></atom:link><lastBuildDate>Sat, 08 Dec 2012 00:00:00 +0800</lastBuildDate><item><title>EPUBConverter 0.0.2 - 其實已經重寫了 Orz</title><link>http://Swind.github.com/epubconverter-002-qi-shi-yi-jing-zhong-xie-liao-orz.html</link><description>&lt;div class="section" id="epubconverter-0-0-2"&gt;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Corleonis</title><link>http://Swind.github.com/</link><description></description><atom:link href="http://Swind.github.com/feeds/all.rss.xml" rel="self"></atom:link><lastBuildDate>Sun, 09 Dec 2012 00:00:00 +0800</lastBuildDate><item><title>Golang - Goroutine 筆記 (1)</title><link>http://Swind.github.com/golang-goroutine-bi-ji-1.html</link><description>&lt;p&gt;順便 Release &lt;a class="reference external" href="https://github.com/Swind/EPUBConverter-Go/downloads"&gt;EPUBConverter 0.0.3&lt;/a&gt; (其實只是讓他變成可以平行處理而已 Orz)&lt;/p&gt;
+&lt;div class="section" id="golang-goroutine"&gt;
+&lt;h2&gt;Golang 中的 goroutine&lt;/h2&gt;
+&lt;p&gt;會想到用這個是由於 EPUBConverter Go 的版本雖然運作上已經比 Scala 版本快上不少了。
+但我發現在執行的時候 CPU 使用率一直都只有 25 %，所以才想試試看使用 goroutine 看能不能讓他轉換更快一點。&lt;/p&gt;
+&lt;p&gt;依照文件所說，在執行 IO 相關動作的時候，會將 CPU 讓給 goroutine 來使用，那麼對於 EPUBConverter 的效能應該會有顯著的提昇。&lt;/p&gt;
+&lt;p&gt;雖然有人說 goroutine 跟 Scala 的 actor 有點像，但是 actor 的模型就很具體跟明確。
+而 goroutine 則是提供一個方便快速的 thread 操作方式。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="goroutine"&gt;
+&lt;h2&gt;goroutine 的使用方式&lt;/h2&gt;
+&lt;p&gt;goroutine 的使用非常簡單，只要在呼叫 function 的時候在前面加上 go 就可以了。&lt;/p&gt;
+&lt;blockquote&gt;
+go func()&lt;/blockquote&gt;
+&lt;p&gt;至於要跟 goroutine 的溝通則是使用 channel。&lt;/p&gt;
+&lt;p&gt;channel 目前我使用的感覺很像是 java 中的 blocking queue。
+他的宣告方式只要在一般宣告的時候加個 &lt;strong&gt;chan&lt;/strong&gt; 的關鍵字就可以了。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;var&lt;/span&gt; &lt;span class="n"&gt;count&lt;/span&gt; &lt;span class="k"&gt;chan&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;這樣就可以透過 &amp;lt;- 賦值與取值&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;//將 i assign 給 count&lt;/span&gt;
+&lt;span class="n"&gt;count&lt;/span&gt; &lt;span class="p"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;
+&lt;span class="c1"&gt;//從 count 取出值&lt;/span&gt;
+&lt;span class="n"&gt;value&lt;/span&gt; &lt;span class="p"&gt;:=&lt;/span&gt; &lt;span class="p"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="n"&gt;count&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;而要決定 channel 可以放的數量則是可以透過&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;count&lt;/span&gt; &lt;span class="p"&gt;:=&lt;/span&gt; &lt;span class="nb"&gt;make&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;chan&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;的方式來決定。&lt;/p&gt;
+&lt;p&gt;以上面的程式碼為例子，當 count 裡面沒有東西時，使用 &amp;lt;- count 會 block 住直到有值寫入。
+而使用 count &amp;lt;- 的時候當裡面的值超過 4 個的時候，則會 block 住無法寫入，直到有值被取出。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id1"&gt;
+&lt;h2&gt;goroutine 的設定&lt;/h2&gt;
+&lt;p&gt;雖然後來使用了 goroutine 讓每一個 EPUB 電子書的轉換都可以平行處理，
+但是我發現 CPU 使用率卻依然只有 25 %。&lt;/p&gt;
+&lt;p&gt;後來才發現是還要再設定 GOMAXPROCS 來讓 Go 知道要用幾個核心。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;//透過 runtime.NumCPU() 取得 CPU 核心數&lt;/span&gt;
+&lt;span class="n"&gt;runtime&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;GOMAXPROCS&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;runtime&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;NumCPU&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;這樣就終於看得到 CPU 使用率到 100% 了 ...&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="golang-benchmark"&gt;
+&lt;h2&gt;Golang 的 benchmark 測試&lt;/h2&gt;
+&lt;p&gt;&lt;a class="reference external" href="http://golang.org/pkg/testing/"&gt;testing package&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Go 另外一點讓我還蠻喜歡的就是，他的設計非常的實用。
+雖然還沒有很完整，但是一般開發常用的東西他都會幫你想到。
+例如寫在 test case 內的 benchmark。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;package&lt;/span&gt; &lt;span class="n"&gt;main&lt;/span&gt;
+
+&lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="s"&gt;&amp;quot;runtime&amp;quot;&lt;/span&gt;
+        &lt;span class="s"&gt;&amp;quot;testing&amp;quot;&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;func&lt;/span&gt; &lt;span class="n"&gt;BenchmarkConvertCore4&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="p"&gt;*&lt;/span&gt;&lt;span class="n"&gt;testing&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;B&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="c1"&gt;// 4 代表使用的核心數&lt;/span&gt;
+        &lt;span class="n"&gt;executeConvert&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;./testdata&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;測試結果&lt;/p&gt;
+&lt;p&gt;使用四核心&lt;/p&gt;
+&lt;blockquote&gt;
+BenchmarkConvertCore4          1        9775559100 ns/op
+ok      epubconverter   10.282s&lt;/blockquote&gt;
+&lt;p&gt;使用單核&lt;/p&gt;
+&lt;blockquote&gt;
+BenchmarkConvertCore1          1        33146895900 ns/op
+ok      epubconverter   33.673s&lt;/blockquote&gt;
+&lt;/div&gt;
+</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Swind</dc:creator><pubDate>Sun, 09 Dec 2012 00:00:00 +0800</pubDate><guid>tag:Swind.github.com,2012-12-09:golang-goroutine-bi-ji-1.html</guid><category>Go</category></item><item><title>EPUBConverter 0.0.2 - 其實已經重寫了 Orz</title><link>http://Swind.github.com/epubconverter-002-qi-shi-yi-jing-zhong-xie-liao-orz.html</link><description>&lt;div class="section" id="epubconverter-0-0-2"&gt;
 &lt;h2&gt;EPUBConverter 0.0.2&lt;/h2&gt;
 &lt;p&gt;一開始的 Scala 版本本來是自己寫來自己用的小工具，可是沒想到竟然有人有用還有回報問題。
 大受感動之餘（誤），而出現了這個全新感受的 EPUBConverter 0.0.2，絕對不是因為手癢想要試試看 Go。&lt;/p&gt;
@@ -75,7 +145,7 @@ part[:length]&lt;/blockquote&gt;
 &lt;p&gt;剩下的之後有想到再補上，不過 Go 寫起來也蠻愉快的，我想以後用 Scala 跟 Go 的時間應該會一半一半了。&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Swind</dc:creator><pubDate>Sat, 08 Dec 2012 00:00:00 +0800</pubDate><guid>tag:Swind.github.com,2012-12-08:epubconverter-002-qi-shi-yi-jing-zhong-xie-liao-orz.html</guid><category>Scala</category></item><item><title>用 Spray 建立一個簡單的 RESTful API Server</title><link>http://Swind.github.com/yong-spray-jian-li-ge-jian-dan-de-restful-api-server.html</link><description>&lt;div class="section" id="spray"&gt;
+</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Swind</dc:creator><pubDate>Sat, 08 Dec 2012 00:00:00 +0800</pubDate><guid>tag:Swind.github.com,2012-12-08:epubconverter-002-qi-shi-yi-jing-zhong-xie-liao-orz.html</guid><category>Go</category></item><item><title>用 Spray 建立一個簡單的 RESTful API Server</title><link>http://Swind.github.com/yong-spray-jian-li-ge-jian-dan-de-restful-api-server.html</link><description>&lt;div class="section" id="spray"&gt;
 &lt;h2&gt;Spray&lt;/h2&gt;
 &lt;p&gt;&lt;a class="reference external" href="http://spray.cc/"&gt;Spray&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;最初是想要建立一個提供查詢服務的 RESTful API Server，可以讓 Client 的應用程式透過 RESTful API 查詢一些資料。

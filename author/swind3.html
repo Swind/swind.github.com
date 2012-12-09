@@ -131,15 +131,21 @@
 
 <li class="nav-header"><i class="icon-tags icon-large"></i>Tags</li>
 
-<li class="tag-1">
-    <a href=".././tag/scala.html">
-       Scala
+<li class="tag-3">
+    <a href=".././tag/java.html">
+       Java
     </a>
 </li>
 
 <li class="tag-3">
-    <a href=".././tag/java.html">
-       Java
+    <a href=".././tag/go.html">
+       Go
+    </a>
+</li>
+
+<li class="tag-1">
+    <a href=".././tag/scala.html">
+       Scala
     </a>
 </li>
 
@@ -166,6 +172,61 @@
         <div class="span8" id="content">
                   
 
+	
+	<div class='article'>
+		<h1><a href=".././scala-orm-gong-ju-bi-ji-circumflexyu-activejdbc.html">Scala ORM 工具筆記-Circumflex與ActiveJDBC</a></h1>
+		<div class="well small"><footer class="post-info">
+<span class="badge badge-info">Date</span>
+<abbr class="published" title="2012-02-07T13:44:00">
+	<i class="icon-calendar"></i>週二 07 二月 2012
+</abbr>
+
+<span class="badge badge-info">By</span>
+<a href=".././author/swind.html"><i class="icon-user"></i>Swind</a>
+
+<span class="badge badge-info">Category</span>
+<a href=".././category/program.html"><i class="icon-folder-open"></i>Program</a>. 
+
+
+	
+
+<span class="badge badge-info">Tags</span> 
+
+	<a href=".././tag/scala.html"><i class="icon-tag"></i>Scala</a>
+
+
+
+</footer><!-- /.post-info --></div>
+		<div class="summary"><div class="section" id="circumflex">
+<h2>Circumflex</h2>
+<div class="section" id="prepare">
+<h3>Prepare</h3>
+<p><a class="reference external" href="http://circumflex.ru/">Circumflex</a> 我是使用SBT連到Maven repository去載入他所有的Library。</p>
+<dl class="docutils">
+<dt>載入的項目有</dt>
+<dd><ul class="first last simple">
+<li>circumflex-orm-2.1.jar</li>
+<li>circumflex-core-2.1.jar</li>
+<li>commons-io-2.0.1</li>
+<li>circumflex-cache-2.1.jar</li>
+<li>slf4j-api-1.6.1</li>
+<li>ehcache-core-2.4.4</li>
+<li>jta-1.1.jar</li>
+<li>c3p0-0.9.1.1.jar</li>
+</ul>
+</dd>
+</dl>
+<p>Circumflex全部載入約2.3MB左右，比其他LightWeight的Library要大的很多。</p>
+</div>
+<div class="section" id="create-table">
+<h3>Create Table</h3>
+<p>Circumflex的設計，主要是在是產生一個對應的資料物件，例如</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Country</span> <span class="k">extends</span> <span class="nc">Record</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Country</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">code</span> <span class="k">=</span> <span class="s">&quot;code&quot;</span><span class="o">.</span><span class="nc">VARCHAR ...</span></pre></div></div></div> 
+			<a class="btn primary xsmall" href=".././scala-orm-gong-ju-bi-ji-circumflexyu-activejdbc.html">more ...</a>
+		</div>
+	</div>	
+	<hr />
 	
 	<div class='article'>
 		<h1><a href=".././shi-zuo-epubconverter-de-bi-ji.html">實作 EPUBConverter 的筆記</a></h1>

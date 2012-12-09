@@ -131,15 +131,21 @@
 
 <li class="nav-header"><i class="icon-tags icon-large"></i>Tags</li>
 
-<li class="tag-1">
-    <a href="./tag/scala.html">
-       Scala
+<li class="tag-3">
+    <a href="./tag/java.html">
+       Java
     </a>
 </li>
 
 <li class="tag-3">
-    <a href="./tag/java.html">
-       Java
+    <a href="./tag/go.html">
+       Go
+    </a>
+</li>
+
+<li class="tag-1">
+    <a href="./tag/scala.html">
+       Scala
     </a>
 </li>
 
@@ -166,6 +172,48 @@
         <div class="span8" id="content">
                   
 
+	
+	<div class='article'>
+		<h1><a href="./akka-20-bi-ji-3-future-zhi-shi-zai-bu-shi-wo-xiang-yao-tuo-gao.html">Akka 2.0 筆記(3) - Future 之實在不是我想要拖稿</a></h1>
+		<div class="well small"><footer class="post-info">
+<span class="badge badge-info">Date</span>
+<abbr class="published" title="2012-06-10T17:30:00">
+	<i class="icon-calendar"></i>週日 10 六月 2012
+</abbr>
+
+<span class="badge badge-info">By</span>
+<a href="./author/swind.html"><i class="icon-user"></i>Swind</a>
+
+<span class="badge badge-info">Category</span>
+<a href="./category/program.html"><i class="icon-folder-open"></i>Program</a>. 
+
+
+	
+
+<span class="badge badge-info">Tags</span> 
+
+	<a href="./tag/scala.html"><i class="icon-tag"></i>Scala</a>
+
+	<a href="./tag/akka.html"><i class="icon-tag"></i>Akka</a>
+
+
+
+</footer><!-- /.post-info --></div>
+		<div class="summary"><p>而是我實在是不擅長寫作，過去作文只有 20 分真的不是拿假的。
+前一篇的 <strong>開始使用 Future</strong> 只有介紹一些基本的使用方式而已，然後依照前面的程式碼是絕對跑不起來的 Orz ...</p>
+<p>原因在於 Future 需要一個 Execution Contexts 類似 Java 裡面的 Executor，也就是 Thread Pool。</p>
+<div class="section" id="execution-contexts">
+<h2>Execution Contexts</h2>
+<p>因為 Future 除了跟 Actor 配合使用之外，也可以直接使用。</p>
+<p>例如前面與 Actor 配合使用的例子scala</p>
+<div class="highlight"><pre><span class="k">val</span> <span class="n">list</span> <span class="k">=</span> <span class="nc">List</span><span class="o">[</span><span class="kt">String</span><span class="o">](</span><span class="s">&quot;Tony&quot;</span><span class="o">,</span><span class="s">&quot;Lion&quot;</span><span class="o">,</span><span class="s">&quot;Teddy&quot;</span><span class="o">,</span><span class="s">&quot;Brain&quot;</span><span class="o">,</span><span class="s">&quot;Jess&quot;</span><span class="o">,</span><span class="s">&quot;Kay&quot;</span><span class="o">,</span><span class="s">&quot;Michael&quot;</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">listOfFutures</span> <span class="k">=</span> <span class="n">list</span> <span class="n">map</span> <span class="o">{</span>
+   <span class="n">name</span> <span class="k">=&gt;</span>
+      <span class="o">(</span><span class="n">countActor ...</span></pre></div></div> 
+			<a class="btn primary xsmall" href="./akka-20-bi-ji-3-future-zhi-shi-zai-bu-shi-wo-xiang-yao-tuo-gao.html">more ...</a>
+		</div>
+	</div>	
+	<hr />
 	
 	<div class='article'>
 		<h1><a href="./akka-20-bi-ji-2-kai-shi-shi-yong-future.html">Akka 2.0 筆記 (2) - 開始使用 Future</a></h1>
@@ -395,44 +443,6 @@ F(X,Y) = X ...</blockquote></div></div>
 <div class="highlight"><pre><span class="k">class</span> <span class="nc">Country</span> <span class="k">extends</span> <span class="nc">Record</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Country</span><span class="o">]</span> <span class="o">{</span>
   <span class="k">val</span> <span class="n">code</span> <span class="k">=</span> <span class="s">&quot;code&quot;</span><span class="o">.</span><span class="nc">VARCHAR ...</span></pre></div></div></div> 
 			<a class="btn primary xsmall" href="./scala-orm-gong-ju-bi-ji-circumflexyu-activejdbc.html">more ...</a>
-		</div>
-	</div>	
-	<hr />
-	
-	<div class='article'>
-		<h1><a href="./scala-log-gong-ju-bi-ji.html">Scala log 工具筆記</a></h1>
-		<div class="well small"><footer class="post-info">
-<span class="badge badge-info">Date</span>
-<abbr class="published" title="2012-01-22T15:59:00">
-	<i class="icon-calendar"></i>週日 22 一月 2012
-</abbr>
-
-<span class="badge badge-info">By</span>
-<a href="./author/swind.html"><i class="icon-user"></i>Swind</a>
-
-<span class="badge badge-info">Category</span>
-<a href="./category/program.html"><i class="icon-folder-open"></i>Program</a>. 
-
-
-	
-
-<span class="badge badge-info">Tags</span> 
-
-	<a href="./tag/java.html"><i class="icon-tag"></i>Java</a>
-
-	<a href="./tag/scala.html"><i class="icon-tag"></i>Scala</a>
-
-
-
-</footer><!-- /.post-info --></div>
-		<div class="summary"><p>之前偷懶都直接使用 println 來輸出訊息，但是最近在玩 <a class="reference external" href="http://akka.io/">Akka</a> ，我發現如果沒有使用 log tool 的話我根本不知道是哪個 Actor 印訊息的。
-只好搜尋一下 Scala 上面有沒有什麼好用的 Log 工具。</p>
-<div class="section" id="slf4s-slf4j-logback">
-<h2>slf4s + slf4j + logback</h2>
-<p>一般依照以往的習慣基本就是 <a class="reference external" href="http://logging.apache.org/log4j/">log4j</a> + <a class="reference external" href="http://www.slf4j.org/">slf4j</a> ，這算是最通用的工具組了。但是 Scala 有這麼多特異功能，說不定會有更神奇的 Log 工具，
-於是就抱著這樣的心態跟 Google 大神詢問求籤。最後看到 logback 這個工具（雖然跟 Scala 完全沒有關係）但是人都是喜新厭舊 XD，所以
-我就從 slf4j + log4j 轉到 slf4j + logback，附帶一提 logback 是 ...</p></div> 
-			<a class="btn primary xsmall" href="./scala-log-gong-ju-bi-ji.html">more ...</a>
 		</div>
 	</div>	
 	<hr />

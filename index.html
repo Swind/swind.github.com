@@ -131,15 +131,21 @@
 
 <li class="nav-header"><i class="icon-tags icon-large"></i>Tags</li>
 
-<li class="tag-1">
-    <a href="./tag/scala.html">
-       Scala
+<li class="tag-3">
+    <a href="./tag/java.html">
+       Java
     </a>
 </li>
 
 <li class="tag-3">
-    <a href="./tag/java.html">
-       Java
+    <a href="./tag/go.html">
+       Go
+    </a>
+</li>
+
+<li class="tag-1">
+    <a href="./tag/scala.html">
+       Scala
     </a>
 </li>
 
@@ -168,6 +174,43 @@
 
 	
 	<div class='article'>
+		<h1><a href="./golang-goroutine-bi-ji-1.html">Golang - Goroutine 筆記 (1)</a></h1>
+		<div class="well small"><footer class="post-info">
+<span class="badge badge-info">Date</span>
+<abbr class="published" title="2012-12-09T00:00:00">
+	<i class="icon-calendar"></i>週日 09 十二月 2012
+</abbr>
+
+<span class="badge badge-info">By</span>
+<a href="./author/swind.html"><i class="icon-user"></i>Swind</a>
+
+<span class="badge badge-info">Category</span>
+<a href="./category/fun.html"><i class="icon-folder-open"></i>Fun</a>. 
+
+
+	
+
+<span class="badge badge-info">Tags</span> 
+
+	<a href="./tag/go.html"><i class="icon-tag"></i>Go</a>
+
+
+
+</footer><!-- /.post-info --></div>
+		<div class="summary"><p>順便 Release <a class="reference external" href="https://github.com/Swind/EPUBConverter-Go/downloads">EPUBConverter 0.0.3</a> (其實只是讓他變成可以平行處理而已 Orz)</p>
+<div class="section" id="golang-goroutine">
+<h2>Golang 中的 goroutine</h2>
+<p>會想到用這個是由於 EPUBConverter Go 的版本雖然運作上已經比 Scala 版本快上不少了。
+但我發現在執行的時候 CPU 使用率一直都只有 25 %，所以才想試試看使用 goroutine 看能不能讓他轉換更快一點。</p>
+<p>依照文件所說，在執行 IO 相關動作的時候，會將 CPU 讓給 goroutine 來使用，那麼對於 EPUBConverter 的效能應該會有顯著的提昇。</p>
+<p>雖然有人說 goroutine 跟 Scala 的 actor 有點像，但是 actor 的模型就很具體跟明確。
+而 goroutine 則是提供一個方便快速的 thread ...</p></div> 
+			<a class="btn primary xsmall" href="./golang-goroutine-bi-ji-1.html">more ...</a>
+		</div>
+	</div>	
+	<hr />
+	
+	<div class='article'>
 		<h1><a href="./epubconverter-002-qi-shi-yi-jing-zhong-xie-liao-orz.html">EPUBConverter 0.0.2 - 其實已經重寫了 Orz</a></h1>
 		<div class="well small"><footer class="post-info">
 <span class="badge badge-info">Date</span>
@@ -186,7 +229,7 @@
 
 <span class="badge badge-info">Tags</span> 
 
-	<a href="./tag/scala.html"><i class="icon-tag"></i>Scala</a>
+	<a href="./tag/go.html"><i class="icon-tag"></i>Go</a>
 
 
 
@@ -363,48 +406,6 @@ Akka 的 Future 到底有沒有存在的意義呢？</p>
 因此全部 Timeout Orz ...</p>
 <p>目前唯一能想到的用法就是在發出訊息的地方不是一個 Actor 的時候，這時候就沒有 ...</p></div> 
 			<a class="btn primary xsmall" href="./akka-20-bi-ji-4-dataflow-qing-bu-yao-qi-dai-zhe-pian-wo-hui-ti-dao-shi-mo.html">more ...</a>
-		</div>
-	</div>	
-	<hr />
-	
-	<div class='article'>
-		<h1><a href="./akka-20-bi-ji-3-future-zhi-shi-zai-bu-shi-wo-xiang-yao-tuo-gao.html">Akka 2.0 筆記(3) - Future 之實在不是我想要拖稿</a></h1>
-		<div class="well small"><footer class="post-info">
-<span class="badge badge-info">Date</span>
-<abbr class="published" title="2012-06-10T17:30:00">
-	<i class="icon-calendar"></i>週日 10 六月 2012
-</abbr>
-
-<span class="badge badge-info">By</span>
-<a href="./author/swind.html"><i class="icon-user"></i>Swind</a>
-
-<span class="badge badge-info">Category</span>
-<a href="./category/program.html"><i class="icon-folder-open"></i>Program</a>. 
-
-
-	
-
-<span class="badge badge-info">Tags</span> 
-
-	<a href="./tag/scala.html"><i class="icon-tag"></i>Scala</a>
-
-	<a href="./tag/akka.html"><i class="icon-tag"></i>Akka</a>
-
-
-
-</footer><!-- /.post-info --></div>
-		<div class="summary"><p>而是我實在是不擅長寫作，過去作文只有 20 分真的不是拿假的。
-前一篇的 <strong>開始使用 Future</strong> 只有介紹一些基本的使用方式而已，然後依照前面的程式碼是絕對跑不起來的 Orz ...</p>
-<p>原因在於 Future 需要一個 Execution Contexts 類似 Java 裡面的 Executor，也就是 Thread Pool。</p>
-<div class="section" id="execution-contexts">
-<h2>Execution Contexts</h2>
-<p>因為 Future 除了跟 Actor 配合使用之外，也可以直接使用。</p>
-<p>例如前面與 Actor 配合使用的例子scala</p>
-<div class="highlight"><pre><span class="k">val</span> <span class="n">list</span> <span class="k">=</span> <span class="nc">List</span><span class="o">[</span><span class="kt">String</span><span class="o">](</span><span class="s">&quot;Tony&quot;</span><span class="o">,</span><span class="s">&quot;Lion&quot;</span><span class="o">,</span><span class="s">&quot;Teddy&quot;</span><span class="o">,</span><span class="s">&quot;Brain&quot;</span><span class="o">,</span><span class="s">&quot;Jess&quot;</span><span class="o">,</span><span class="s">&quot;Kay&quot;</span><span class="o">,</span><span class="s">&quot;Michael&quot;</span><span class="o">)</span>
-<span class="k">val</span> <span class="n">listOfFutures</span> <span class="k">=</span> <span class="n">list</span> <span class="n">map</span> <span class="o">{</span>
-   <span class="n">name</span> <span class="k">=&gt;</span>
-      <span class="o">(</span><span class="n">countActor ...</span></pre></div></div> 
-			<a class="btn primary xsmall" href="./akka-20-bi-ji-3-future-zhi-shi-zai-bu-shi-wo-xiang-yao-tuo-gao.html">more ...</a>
 		</div>
 	</div>	
 	<hr />
