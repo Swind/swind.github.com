@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Corleonis</title><link href="http://Swind.github.com/" rel="alternate"></link><link href="http://Swind.github.com/feeds/Fun.atom.xml" rel="self"></link><id>http://Swind.github.com/</id><updated>2012-12-09T00:00:00+08:00</updated><entry><title>Golang - Goroutine 筆記 (1)</title><link href="http://Swind.github.com/golang-goroutine-bi-ji-1.html" rel="alternate"></link><updated>2012-12-09T00:00:00+08:00</updated><author><name>Swind</name></author><id>tag:Swind.github.com,2012-12-09:golang-goroutine-bi-ji-1.html</id><summary type="html">&lt;p&gt;順便 Release &lt;a class="reference external" href="https://github.com/Swind/EPUBConverter-Go/downloads"&gt;EPUBConverter 0.0.3&lt;/a&gt; (其實只是讓他變成可以平行處理而已 Orz)&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Corleonis</title><link href="http://Swind.github.com/" rel="alternate"></link><link href="http://Swind.github.com/feeds/Fun.atom.xml" rel="self"></link><id>http://Swind.github.com/</id><updated>2012-12-09T00:00:00+08:00</updated><entry><title>Golang - Goroutine 筆記 (1)</title><link href="http://Swind.github.com/golang-goroutine-bi-ji-1.html" rel="alternate"></link><updated>2012-12-09T00:00:00+08:00</updated><author><name>Swind</name></author><id>tag:Swind.github.com,2012-12-09:golang-goroutine-bi-ji-1.html</id><summary type="html">&lt;p&gt;順便 Release &lt;a class="reference external" href="https://dl.dropbox.com/u/15537823/EPUBConverter_0.0.3.7z"&gt;EPUBConverter 0.0.3&lt;/a&gt; (其實只是讓他變成可以平行處理而已 Orz)&lt;/p&gt;
 &lt;div class="section" id="golang-goroutine"&gt;
 &lt;h2&gt;Golang 中的 goroutine&lt;/h2&gt;
 &lt;p&gt;會想到用這個是由於 EPUBConverter Go 的版本雖然運作上已經比 Scala 版本快上不少了。
@@ -75,7 +75,8 @@ ok      epubconverter   33.673s
 &lt;h2&gt;EPUBConverter 0.0.2&lt;/h2&gt;
 &lt;p&gt;一開始的 Scala 版本本來是自己寫來自己用的小工具，可是沒想到竟然有人有用還有回報問題。
 大受感動之餘（誤），而出現了這個全新感受的 EPUBConverter 0.0.2，絕對不是因為手癢想要試試看 Go。&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="https://github.com/Swind/EPUBConverter-Go/downloads"&gt;EPUBConverter 0.0.2 下載&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;P.S 2012.12.09 更新 - 修正了鳥 Bug 所以到 0.0.3 了。&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://dl.dropbox.com/u/15537823/EPUBConverter_0.0.3.7z"&gt;EPUBConverter 0.0.3 下載&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://github.com/Swind/EPUBConverter-Go"&gt;EPUBConverter Source Code&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;這個版本比之前好得地方在於，這次使用了 &lt;a class="reference external" href="http://tongwen.openfoundry.org/"&gt;新同文堂&lt;/a&gt; 的簡繁轉換對照表。
 除了單字轉換之外，還多了一個詞彙轉換。&lt;/p&gt;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Corleonis</title><link href="http://Swind.github.com/" rel="alternate"></link><link href="http://Swind.github.com/feeds/all-zh.atom.xml" rel="self"></link><id>http://Swind.github.com/</id><updated>2012-12-09T00:00:00+08:00</updated><entry><title>Golang - Goroutine 筆記 (1)</title><link href="http://Swind.github.com/golang-goroutine-bi-ji-1.html" rel="alternate"></link><updated>2012-12-09T00:00:00+08:00</updated><author><name>Swind</name></author><id>tag:Swind.github.com,2012-12-09:golang-goroutine-bi-ji-1.html</id><summary type="html">&lt;p&gt;順便 Release &lt;a class="reference external" href="https://github.com/Swind/EPUBConverter-Go/downloads"&gt;EPUBConverter 0.0.3&lt;/a&gt; (其實只是讓他變成可以平行處理而已 Orz)&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Corleonis</title><link href="http://Swind.github.com/" rel="alternate"></link><link href="http://Swind.github.com/feeds/all-zh.atom.xml" rel="self"></link><id>http://Swind.github.com/</id><updated>2012-12-09T00:00:00+08:00</updated><entry><title>Golang - Goroutine 筆記 (1)</title><link href="http://Swind.github.com/golang-goroutine-bi-ji-1.html" rel="alternate"></link><updated>2012-12-09T00:00:00+08:00</updated><author><name>Swind</name></author><id>tag:Swind.github.com,2012-12-09:golang-goroutine-bi-ji-1.html</id><summary type="html">&lt;p&gt;順便 Release &lt;a class="reference external" href="https://dl.dropbox.com/u/15537823/EPUBConverter_0.0.3.7z"&gt;EPUBConverter 0.0.3&lt;/a&gt; (其實只是讓他變成可以平行處理而已 Orz)&lt;/p&gt;
 &lt;div class="section" id="golang-goroutine"&gt;
 &lt;h2&gt;Golang 中的 goroutine&lt;/h2&gt;
 &lt;p&gt;會想到用這個是由於 EPUBConverter Go 的版本雖然運作上已經比 Scala 版本快上不少了。
@@ -75,7 +75,8 @@ ok      epubconverter   33.673s
 &lt;h2&gt;EPUBConverter 0.0.2&lt;/h2&gt;
 &lt;p&gt;一開始的 Scala 版本本來是自己寫來自己用的小工具，可是沒想到竟然有人有用還有回報問題。
 大受感動之餘（誤），而出現了這個全新感受的 EPUBConverter 0.0.2，絕對不是因為手癢想要試試看 Go。&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="https://github.com/Swind/EPUBConverter-Go/downloads"&gt;EPUBConverter 0.0.2 下載&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;P.S 2012.12.09 更新 - 修正了鳥 Bug 所以到 0.0.3 了。&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://dl.dropbox.com/u/15537823/EPUBConverter_0.0.3.7z"&gt;EPUBConverter 0.0.3 下載&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://github.com/Swind/EPUBConverter-Go"&gt;EPUBConverter Source Code&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;這個版本比之前好得地方在於，這次使用了 &lt;a class="reference external" href="http://tongwen.openfoundry.org/"&gt;新同文堂&lt;/a&gt; 的簡繁轉換對照表。
 除了單字轉換之外，還多了一個詞彙轉換。&lt;/p&gt;
@@ -1515,4 +1516,100 @@ git push origin source&lt;/blockquote&gt;
 所以我最後還是使用Dropbox來進行同步，我乾脆就將整個Octopress放在Dropbox裡面，這樣不管我Linux或Windows都可以隨時編輯我的文章。&lt;/p&gt;
 &lt;p&gt;以上心得分享完畢，那個某人不要再來找我要心得了阿 XD&lt;/p&gt;
 &lt;/div&gt;
-</summary><category term="octopres"></category></entry></feed>
+</summary><category term="octopres"></category></entry><entry><title>我常用的指令筆記</title><link href="http://Swind.github.com/wo-chang-yong-de-zhi-ling-bi-ji.html" rel="alternate"></link><updated>1970-01-01T00:00:00+08:00</updated><author><name>Swind</name></author><id>tag:Swind.github.com,1970-01-01:wo-chang-yong-de-zhi-ling-bi-ji.html</id><summary type="html">&lt;p&gt;因為公司偉大的 IT 把 Evernote 給我擋掉了 T_T。&lt;/p&gt;
+&lt;p&gt;雖然開了 SSH Tunnel，可是 Evernote 竟然不支援 Proxy。
+才會有這篇出來，基本上這篇沒有什麼營養價值，單純只是我自己常用的指令而已。&lt;/p&gt;
+&lt;p&gt;這篇是永久置底 Orz&lt;/p&gt;
+&lt;div class="section" id="git"&gt;
+&lt;h2&gt;Git 相關&lt;/h2&gt;
+&lt;div class="section" id="log"&gt;
+&lt;h3&gt;漂亮一點的 log 顯示方式&lt;/h3&gt;
+&lt;p&gt;出處 &lt;a class="reference external" href="http://coolshell.cn/articles/7755.html"&gt;酷殼 - CoolShell.cn - Git 顯示漂亮日誌的小技巧&lt;/a&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;git config --global alias.lg &amp;quot;log --color --graph --pretty=format:&amp;#39;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&amp;lt;%an&amp;gt;%Creset&amp;#39; --abbrev-commit --&amp;quot;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="submodule-git-pull"&gt;
+&lt;h3&gt;讓所有 submodule 執行 git pull&lt;/h3&gt;
+&lt;blockquote&gt;
+git submodule foreach git pull&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div class="section" id="submodule-checkout-master"&gt;
+&lt;h3&gt;所有 submodule checkout master&lt;/h3&gt;
+&lt;blockquote&gt;
+git submodule foreach git checkout master&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="storage"&gt;
+&lt;h2&gt;Storage 相關&lt;/h2&gt;
+&lt;div class="section" id="sg3-utils"&gt;
+&lt;h3&gt;sg3 utils&lt;/h3&gt;
+&lt;p&gt;列出所有 scsi 硬體&lt;/p&gt;
+&lt;blockquote&gt;
+sg_scan&lt;/blockquote&gt;
+&lt;p&gt;讀檔案&lt;/p&gt;
+&lt;blockquote&gt;
+sg_raw.exe -v -r 512 –o read512byte.txt PD3 28 00 00 00 03 00 00 00 01 00&lt;/blockquote&gt;
+&lt;p&gt;寫檔案
+其中 wdata512byte 是事先寫好的一個檔案&lt;/p&gt;
+&lt;blockquote&gt;
+sg_raw -v -s 512 PD3 2a 00 00 00 01 00 00 00 01 00 &amp;lt; wdata512byte&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="linux"&gt;
+&lt;h2&gt;Linux 相關&lt;/h2&gt;
+&lt;div class="section" id="ssh-login-without-password"&gt;
+&lt;h3&gt;SSH login without password&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;#!/bin/bash
+account=$1
+ip=$2
+ssh-keygen -t rsa
+ssh $account@$ip mkdir -p .ssh
+cat ~/.ssh/id_rsa.pub | ssh $account@$ip &amp;#39;cat &amp;gt;&amp;gt; ~/.ssh/authorized_keys&amp;#39;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="rz-sz"&gt;
+&lt;h3&gt;使用 rz 與 sz&lt;/h3&gt;
+&lt;blockquote&gt;
+yum install lrzsz&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="eclipse"&gt;
+&lt;h2&gt;Eclipse 相關&lt;/h2&gt;
+&lt;div class="section" id="id2"&gt;
+&lt;h3&gt;搜尋&lt;/h3&gt;
+&lt;blockquote&gt;
+Shift + Ctrl + T 可以搜尋 Class
+Shift + Ctrl + R 可以搜尋檔案&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id3"&gt;
+&lt;h3&gt;顏色&lt;/h3&gt;
+&lt;p&gt;選擇之後會把相同名稱的選擇起來的功能叫做&lt;/p&gt;
+&lt;blockquote&gt;
+Mark occurences&lt;/blockquote&gt;
+&lt;p&gt;修改的地方在&lt;/p&gt;
+&lt;blockquote&gt;
+Preferences &amp;gt; General &amp;gt; Editors &amp;gt; Text Editors &amp;gt; Annotations&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="gdb"&gt;
+&lt;h2&gt;GDB&lt;/h2&gt;
+&lt;div class="section" id="gdb-core-file"&gt;
+&lt;h3&gt;使用 gdb 觀看 core file 資訊&lt;/h3&gt;
+&lt;blockquote&gt;
+gdb -c &amp;lt;corefile&amp;gt; &amp;lt;execfile&amp;gt;&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div class="section" id="thread"&gt;
+&lt;h3&gt;Thread 相關操作&lt;/h3&gt;
+&lt;div class="section" id="id4"&gt;
+&lt;h4&gt;顯示所有 thread&lt;/h4&gt;
+&lt;blockquote&gt;
+info threads&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id5"&gt;
+&lt;h4&gt;進入某個 thread&lt;/h4&gt;
+&lt;blockquote&gt;
+thread &amp;lt;thread number&amp;gt;&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</summary><category term="Other"></category><category term="Linux"></category></entry></feed>
