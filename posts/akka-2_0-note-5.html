@@ -1,0 +1,251 @@
+<!DOCTYPE html><html lang="en"><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta charset="utf-8"><meta name="title" content="Akka 2.0 筆記(5) - Scatter Gather | Corleonis"><meta name="description" content=""><meta name="author" content="Swind"><title>Akka 2.0 筆記(5) - Scatter Gather | Corleonis</title><!-- Le styles --><link href="../assets/css/bootstrap.css" rel="stylesheet" type="text/css"><link href="../assets/css/rst.css" rel="stylesheet" type="text/css"><link href="../assets/css/monokai.css" rel="stylesheet" type="text/css"><link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css"><link href="../assets/css/slides.css" rel="stylesheet" type="text/css"><link href="../assets/css/theme.css" rel="stylesheet" type="text/css"><link href="../assets/css/bootstrap-responsive.css" rel="stylesheet" type="text/css"><script src="../assets/js/jquery-1.7.2.min.js" type="text/javascript"></script><script src="../assets/js/jquery.colorbox-min.js" type="text/javascript"></script><script src="../assets/js/slides.min.jquery.js" type="text/javascript"></script><script src="../assets/js/bootstrap.min.js" type="text/javascript"></script><!-- Le HTML5 shim, for IE6-8 support of HTML5 elements --><!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]--><link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../rss.xml"></head><body>
+<!-- Menubar -->
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+        
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </a>        
+        
+            <a class="brand" href="../">
+            Corleonis
+            </a>
+            <!-- Everything you want hidden at 940px or less, place within here -->
+            <div class="nav-collapse collapse">
+                <ul class="nav"><li><a href="../archive.html">Archives</a>
+            </li><li><a href="../categories/index.html">Tags</a>
+            </li><li><a href="../stories/linux-note.html">Linux 筆記</a>
+
+                </li></ul><ul class="nav pull-right"><li>
+    <a href="akka-2_0-note-5.rst">Source</a>
+    </li>
+
+                </ul></div>
+        </div>
+    </div>
+</div>
+<!-- End of Menubar -->
+<div class="container-fluid" id="container-fluid">
+    <!--Body content-->
+    <div class="row-fluid">
+    <div class="span2"></div>
+    <div class="span8">
+    
+    <div class="postbox">
+    
+    <h1>Akka 2.0 筆記(5) - Scatter Gather</h1>
+
+    <hr><small>
+        Posted: 2012-06-15 08:58
+        
+
+        
+          |  More posts about
+            <a class="tag" href="../categories/scala.html"><span class="badge badge-info">Scala</span></a>
+            <a class="tag" href="../categories/akka.html"><span class="badge badge-info">Akka</span></a>
+
+    </small>
+    <hr><div><p>繼上次完全看不懂的 Dataflow 之後，我還是想要一個 Akka 的 Scatter Gather 實作方式，因此想試著自己實做看看。</p>
+<p>下圖是 <a class="reference external" href="http://www.eaipatterns.com/">Enterprise Integration Patterns</a>  書中的 Scatter-Gather 概念圖。</p>
+<img alt="http://www.eaipatterns.com/img/BroadcastAggregate.gif" src="http://www.eaipatterns.com/img/BroadcastAggregate.gif"><p>從圖中可以發現，中間對於 Vendor A、B 與 C 進行 Broadcast 的行為跟 Akka 內的 <a class="reference external" href="http://doc.akka.io/docs/akka/2.0/scala/routing.html">Router</a> 很像，
+所以當我正在思考 Router 是否合適作為這種用途的時候，我想到了 <a class="reference external" href="http://letitcrash.com/">Let it Crash</a> 裡面 <a class="reference external" href="http://letitcrash.com/post/23532935686/watch-the-routees">Watch the Routees</a> 這篇文章。</p>
+<p>這篇文章裡面他紀錄了在 Akka mailinglist 中回答別人問題時所寫的範例程式。</p>
+<p>整個 use case 是要執行一個 Job，這個 Job 由許多 Tasks 組成，在執行的過程中</p>
+<ol class="arabic simple"><li>會將這些 Tasks 透過 router 分派給 worker actors 執行。</li>
+<li>最後收集所有 worker 的執行結果，並且將他們合併之後回傳。</li>
+<li>除此之外， worker 在執行過程中發生錯誤時，應該要進行 retry，在進行幾次 retry 後依然有錯誤時，Worker 就會停止，並且中止整個 Job。</li>
+</ol><div class="section" id="master-actor">
+<h2>Master Actor</h2>
+<pre class="code scala literal-block">
+<span class="cm">/*
+ *  Master Actor，負責整個工作運作流程的 Actor。
+ *  接收 Job、分派 Task 以及當發現 Worker Terminal 或者是全部 Task 都執行完畢之後。
+ *  將結果整理好之後回傳
+ */</span>
+
+<span class="k">class</span> <span class="nc">Master</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+  <span class="k">var</span> <span class="n">results</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">[</span><span class="kt">Int</span>, <span class="kt">Int</span><span class="o">]()</span>
+  <span class="k">var</span> <span class="n">replyTo</span><span class="k">:</span> <span class="kt">ActorRef</span> <span class="o">=</span> <span class="k">_</span>
+
+<span class="cm">/*
+ *  Router 這邊的 Router 種類是使用 RoundRobinRouter，
+ *  他會輪流將 Message 傳給底下的 Worker。
+ *  例如：若他底下有 5 個 Worker，那麼就會
+ *
+ *     Worker 1
+ *     Worker 2
+ *     ...
+ *     Worker 5
+ *     Worker 1
+ *
+ *  這樣的順序傳遞。
+ */</span>
+
+  <span class="k">val</span> <span class="n">router</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">Worker</span><span class="o">).</span>
+    <span class="n">withRouter</span><span class="o">(</span><span class="nc">RoundRobinRouter</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span>
+      <span class="n">supervisorStrategy</span> <span class="k">=</span> <span class="nc">OneForOneStrategy</span><span class="o">(</span>
+        <span class="n">maxNrOfRetries</span> <span class="k">=</span> <span class="mi">2</span><span class="o">)</span> <span class="o">{</span>
+          <span class="k">case</span> <span class="k">_:</span> <span class="kt">IOException</span> <span class="o">=&gt;</span> <span class="nc">Restart</span>
+        <span class="o">})),</span> <span class="n">name</span> <span class="k">=</span> <span class="s">"router"</span><span class="o">)</span>
+
+  <span class="n">router</span> <span class="o">!</span> <span class="nc">CurrentRoutees</span>
+
+  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="nc">RouterRoutees</span><span class="o">(</span><span class="n">routees</span><span class="o">)</span> <span class="k">=&gt;</span>
+      <span class="n">routees</span> <span class="n">foreach</span> <span class="n">context</span><span class="o">.</span><span class="n">watch</span>
+
+    <span class="k">case</span> <span class="s">"start"</span> <span class="k">=&gt;</span>
+      <span class="n">replyTo</span> <span class="k">=</span> <span class="n">sender</span>
+      <span class="k">for</span> <span class="o">(</span><span class="n">id</span> <span class="k">←</span> <span class="mi">1</span> <span class="n">to</span> <span class="mi">10</span><span class="o">)</span> <span class="n">router</span> <span class="o">!</span> <span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="s">"22"</span><span class="o">)</span>
+
+    <span class="k">case</span> <span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">result</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=&gt;</span>
+      <span class="n">results</span> <span class="o">+=</span> <span class="o">(</span><span class="n">id</span> <span class="o">-&gt;</span> <span class="n">result</span><span class="o">)</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">results</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">10</span><span class="o">)</span>
+        <span class="n">replyTo</span> <span class="o">!</span> <span class="n">results</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">sum</span>
+
+    <span class="k">case</span> <span class="nc">Terminated</span><span class="o">(</span><span class="n">actor</span><span class="o">)</span> <span class="k">=&gt;</span>
+      <span class="n">replyTo</span> <span class="o">!</span> <span class="o">-</span><span class="mi">1</span>
+      <span class="n">context</span><span class="o">.</span><span class="n">stop</span><span class="o">(</span><span class="n">self</span><span class="o">)</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre>
+<div class="section" id="id1">
+<h3>Master Actor 的初始化</h3>
+<p>上面的程式碼的註解有稍微介紹一下 Master 與 Router 的功能，這邊就針對程式碼的運作內容作些講解。</p>
+<p>首先我們先看到這段程式碼</p>
+<pre class="code scala literal-block">
+<span class="n">router</span> <span class="o">!</span> <span class="nc">CurrentRoutees</span>
+</pre>
+<p><strong>CurrentRoutess</strong> 這邊困擾了我一段時間，因為我在 Akka 的文件裡面並沒有看到這個物件的說明，且在 API Document 裡面我也沒有看到相關的介紹 Orz ...</p>
+<p>一直到仔細看 receive 裡面的內容之後才發現，這程式碼的功能是發一個 Message 給 Router，Router 在接收到這個訊息之後，
+就會將目前 Router 裡面的所有的 Worker Actor（在 Let it Crash 裡面稱他為 Routee） 用 RouterRoutees 這個 case class 包裝回傳。</p>
+<!-- code-block
+
+case RouterRoutees(routees) =>
+     routees foreach context.watch -->
+<p>之後就可以利用 context.watch 將這個 Worker Actor 註冊起來。</p>
+<p>這樣當 Worker Actor 因為錯誤太多次而結束的時候，就會接收到一個 Terminated 的 Message，
+之後我們就回傳 -1 並且呼叫 context.stop(self) 結束 Master Actor，這也會連帶讓 Worker Actor 結束。</p>
+<!-- code-block
+
+case Terminated(actor) =>
+   replyTo ! -1
+   context.stop(self) -->
+</div>
+<div class="section" id="master-actor-scatter-gather">
+<h3>Master Actor 的 Scatter 與 Gather</h3>
+<p>說到 Scatter 的部份的話我想應該就要介紹一下我們這邊使用的 Router 了。</p>
+<p>Router 其實本身跟我們這邊所實做的 Master Actor 很像，透過 Router 就可以將訊息分派給他底下的 Actor ，他就有點像是仲介商一樣。
+你把要做的工作交給他，他會負責找到合適的人將工作分派出去。</p>
+<p>Router 分派工作的方式有好幾種，可以到  <a class="reference external" href="http://doc.akka.io/docs/akka/2.0/scala/routing.html">Router</a>  的文件看一下，這邊使用的是經典的 RoundRobinRouter。</p>
+<p>他會將工作輪流 <strong>forward</strong> 給底下的 Actor，這邊會用到 forward 是因為在 Akka 裡面，當你傳送一個 Message 給某個 Actor 的時候，
+其實還會附帶上了 Sender 的資訊，所以如果 Message 的傳送路徑是用一般的傳送方式的話</p>
+<blockquote>
+Main -&gt; Router -&gt; Worker Actor</blockquote>
+<p>那麼 Worker Actor 的 Sender 就會變成 Router，所以 Router 所使用的傳遞方式是 forward，這樣 Worker Actor 接收到 Message 之後就還是會認為 Main 是 Sender。
+這樣才能將訊息正確的回傳回去。</p>
+<p>Scatter 的部份就這麼簡單解決，但是下一個 Gather 的部份就比較麻煩了。
+理由很簡單。因為 Router 只有負責分派的部份，Worker Actor 回傳的對象是一開始發 Message 的 Actor，
+所以要另外針對回傳的 Message 作處理。下面的程式碼會在回傳的訊息累積到 10 個之後才將全部一起加總回傳。</p>
+<pre class="code scala literal-block">
+<span class="k">case</span> <span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">result</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=&gt;</span>
+   <span class="n">results</span> <span class="o">+=</span> <span class="o">(</span><span class="n">id</span> <span class="o">-&gt;</span> <span class="n">result</span><span class="o">)</span>
+   <span class="k">if</span> <span class="o">(</span><span class="n">results</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">10</span><span class="o">)</span>
+     <span class="n">replyTo</span> <span class="o">!</span> <span class="n">results</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">sum</span>
+</pre>
+<p>但是很明顯的，這樣還不足夠，如果同時間 Master Actor 接收到多個 Job，那麼要如何分辨 Worker Actor 所回傳的 Result 是哪個 Job 的？</p>
+<p>目前想到的解決方式有</p>
+<ol class="arabic simple"><li>簡單來說就是限制讓一個 Master Actor 同時只會有一個 Job 進行，如果有多個 Job 要進行就使用多個 Master Actor，附帶一題Actor 的數量並不代表 Thread 的數量，這部份可以透過 Dispatcher 的設定來控制。</li>
+<li>增加 Job ID，讓每個 Job 都有自己的 ID，並且這個 ID 也會加在 Result 裡面，這樣就可以辨識 Result 是哪個 Job的了。</li>
+</ol><p>本來我覺得第一個方法是不可行的，因為這樣太浪費資源且每次都要建立 Master Actor 很麻煩。
+但是這樣的作法很單純也很好擴充，反正只要增加 Master Actor 就能多處理幾個 Job，要管理資源就等於管理 Master Actor 的數量就好了。</p>
+<p>第二種作法會增加整個程式的複雜度，因為需要多一個 Map 來暫存 Result（光這個就有點麻煩了），需要多傳遞 Job ID 的資訊等。但好處應該就是會比較節省記憶體與 CPU 等。</p>
+<p>但是在這個 CPU、Memory 不值錢的年代且這個又只是我的玩具的，所以我會選擇第一種方式來實做。</p>
+</div>
+</div>
+<div class="section" id="worker-actor">
+<h2>Worker Actor</h2>
+<p>這是在 Let it Crash 裡面 Worker Actor 的程式碼，他接收的 Message 型態很簡單只有一種 (id,s:String)，這是在 Scala 稱之為 Tuple 的物件。
+會有兩種是因為這個範例會模擬當 Worker Actor 執行發生 Exception 的情況。</p>
+<pre class="code scala literal-block">
+<span class="k">class</span> <span class="nc">Worker</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">s</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">if</span> <span class="nc">Random</span><span class="o">.</span><span class="n">nextInt</span><span class="o">(</span><span class="mi">4</span><span class="o">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">=&gt;</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nc">IOException</span><span class="o">(</span><span class="s">"failed"</span><span class="o">)</span>
+    <span class="k">case</span> <span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">s</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">=&gt;</span>
+      <span class="n">sender</span> <span class="o">!</span> <span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">s</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+  <span class="o">}</span>
+
+  <span class="k">override</span> <span class="k">def</span> <span class="n">preRestart</span><span class="o">(</span>
+    <span class="n">reason</span><span class="k">:</span> <span class="kt">Throwable</span><span class="o">,</span> <span class="n">message</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Any</span><span class="o">])</span> <span class="o">{</span>
+    <span class="c1">// retry
+</span>    <span class="n">message</span> <span class="n">foreach</span> <span class="o">{</span> <span class="n">self</span> <span class="n">forward</span> <span class="k">_</span> <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre>
+<p>比較有趣的是 preRestart ，這可以跟前面 Master Actor 內的 Router 一起看一下。</p>
+<pre class="code scala literal-block">
+<span class="k">val</span> <span class="n">router</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">Worker</span><span class="o">).</span>
+    <span class="n">withRouter</span><span class="o">(</span>
+    <span class="nc">RoundRobinRouter</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span>
+      <span class="n">supervisorStrategy</span> <span class="k">=</span> <span class="nc">OneForOneStrategy</span><span class="o">(</span>
+        <span class="n">maxNrOfRetries</span> <span class="k">=</span> <span class="mi">2</span><span class="o">)</span> <span class="o">{</span>
+          <span class="k">case</span> <span class="k">_:</span> <span class="kt">IOException</span> <span class="o">=&gt;</span> <span class="nc">Restart</span>
+        <span class="o">})),</span> <span class="n">name</span> <span class="k">=</span> <span class="s">"router"</span><span class="o">)</span>
+</pre>
+<p>上面的 OneForOneStrategy 是 Akka 的特產，他可以設定 Supervisor（就是該 Actor 的管理者，例如 Worker Actor 的 supervisor 是 Router）</p>
+<p>對於他底下 Actor 的應對策略。這邊是設定當 Worker Actor 有丟出 IOException 的時候，所採取的應對是將該 Worker Actor Restart。
+但是這個 restart 次數有限制，在 maxNrOfRetries = 2 ，因此 Worker Actor 最多只會 Restart 兩次，兩次之後就會被停止並且傳一個 Terminated 的訊息給 Master Actor。</p>
+<p>而 preRestart 裡面做的事情就是就是在 Restart 前將目前的 Message 全部用 forward 的方式傳給自己一次，否則 Restart 後這些 message 就會被清理掉。
+這樣之前的工作就會遺失了。</p>
+<p>Let it Crash 的 <a class="reference external" href="http://letitcrash.com/post/23532935686/watch-the-routees">Watch the Routees</a> 幫助真的很大，加上最近再看 <a class="reference external" href="http://www.amazon.com/Scala-Depth-Joshua-Suereth-D/dp/1935182706">Scala in Depth</a>  對於要做的 Scatter-Gather 比較有一些想法了，
+下一篇應該就會說明如何時做的。</p>
+</div>
+<div class="section" id="id2">
+<h2>下集預告 ?</h2>
+<img alt="https://dl.dropbox.com/u/15537823/Blog/Akka%202.0%20%E7%AD%86%E8%A8%98%285%29%20-%20Scatter%20Gather/Photo%2012-6-16%20%E4%B8%8B%E5%8D%8810%2042%2021.png" src="https://dl.dropbox.com/u/15537823/Blog/Akka%202.0%20%E7%AD%86%E8%A8%98%285%29%20-%20Scatter%20Gather/Photo%2012-6-16%20%E4%B8%8B%E5%8D%8810%2042%2021.png"></div></div>
+    
+    <ul class="pager"><li class="previous">
+            <a href="akka-2_0-note-4.html">← Previous post</a>
+        </li>
+        <li class="next">
+            <a href="akka-2_0-note-6.html">Next post →</a>
+        </li>
+    </ul><div id="disqus_thread"></div>
+        <script type="text/javascript">
+        var disqus_shortname ="nikolademo";
+            var disqus_url="http://swind.code-life.info/posts/akka-2_0-note-5.html";
+        var disqus_title="Akka 2.0 筆記(5) - Scatter Gather";
+        var disqus_identifier="cache\posts\2012-06-15-akka-note-5-aggregator.html";
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+    </div>
+
+    </div>
+    </div> 
+    <!--End of body content-->
+</div>
+<div class="footerbox">
+    Contents © 2013 <a href="mailto:">Swind</a> - Powered by <a href="http://nikola.ralsina.com.ar">Nikola</a>
+</div>
+
+    <!-- Social buttons -->
+    <div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
+    <a class="addthis_button_more">Share</a>
+    <ul><li><a class="addthis_button_facebook"></a></li>
+    <li><a class="addthis_button_google_plusone_share"></a></li>
+    <li><a class="addthis_button_linkedin"></a></li>
+    <li><a class="addthis_button_twitter"></a></li>
+    </ul></div>
+    <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script><!-- End of social buttons --><script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script></body></html>
