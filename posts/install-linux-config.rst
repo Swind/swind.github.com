@@ -78,6 +78,9 @@
 
 ----------------------------
 
+.. figure:: https://dl.dropbox.com/u/15537823/Blog/ARIA.jpg
+	:class: thumbnail
+	
 話說，水星領航員真的不愧是文青動畫之首阿！！今天的情況讓我想起了動畫中的這句話。
 
 .. raw:: html
