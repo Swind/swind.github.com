@@ -34,6 +34,38 @@
     <div class="span8">
     
         <div class="postbox">
+        <h1><a href="posts/install-linux-config.html">一鍵安裝 Linux 設定檔</a>
+        <small>  
+             Posted: 2013-01-21 22:36
+        </small></h1>
+        <hr><p>我常用的 Linux 環境一定會裝下面幾個工具</p>
+<ol class="arabic simple"><li>zsh 與 oh-my-zsh</li>
+<li>vim 很多很多 vim plugin</li>
+<li>tmux 與他的快樂設定檔</li>
+</ol><p>一開始開發環境只有一兩台，一個個手動安裝還沒什麼問題。
+再加上那時後有從 vgod 的 <a class="reference external" href="http://blog.vgod.tw/2011/03/19/vimrc/">分享我的 vim 設定檔</a> 這文章中學到使用 pathogen + github 來管理 vim。
+所以一直就懶得去想辦法整理這些設定檔。</p>
+<p>可是最近要管理的機器變多了，而且加上最近再進行 porting 的工作，所以又有各種不同版本的 Linux 需要設定。</p>
+<p>就在今天，終於 <strong>爆～～～～發～～～～啦！！！！</strong></p>
+<p>感謝 JosephJ 的 <a class="reference external" href="http://josephj.com/entry.php?id=374">一個指令安裝所有 Linux 設定檔</a> 以及該篇文章的回應。
+我最後也從 pathogen.vim 叛逃，使用 github + shell script + vundle 來完成我 zsh、tmux 與 vim 的設定。</p>
+<p>關於 vundle 的使用方式與設定我是參考 <a class="reference external" href="http://yishanhe.net/using-vim-vundle-for-better-plugin-management/">使用Vundle更好的管理你的Vim插件</a>，雖然是簡體的。
+不過設定與使用方式都寫得非常詳細。</p>
+<p>經過一個早上的努力，我也終於可以使用</p>
+<pre class="code shell literal-block">
+wget -O - https://raw.github.com/Swind/linux-config/master/install.sh | sh
+</pre>
+<p>把 Linux 給設定完畢了～</p>
+<p>除此之外 JosephJ 所給的建議也非常的實用，
+將常用的工具與指令整理成一份文件，來協助管理與記憶。
+目前我是用 Nikola (對沒錯，所從 Octopress 跳到 Pelican 又跳到 Nikola 了 XD) stories 來作筆記。</p>
+<p><a href="posts/install-linux-config.html">Read more...</a></p>
+        
+    <p>
+        <a href="posts/install-linux-config.html#disqus_thread" data-disqus-identifier="cache\posts\2013-01-21-install-linux-config.html">Comments</a>
+
+        </p></div>
+        <div class="postbox">
         <h1><a href="posts/goroutine-note-1.html">Golang - Goroutine 筆記 (1)</a>
         <small>  
              Posted: 2012-12-09 18:00
@@ -209,22 +241,6 @@ Akka 2.0 - 要升級了
         
     <p>
         <a href="posts/akka-2_0-note-1.html#disqus_thread" data-disqus-identifier="cache\posts\2012-05-17-akka-note-1.html">Comments</a>
-
-        </p></div>
-        <div class="postbox">
-        <h1><a href="posts/epubconverter-implement-note.html">實作 EPUBConverter 的筆記</a>
-        <small>  
-             Posted: 2012-05-11 18:19
-        </small></h1>
-        <hr><p>好吧，我要開始筆記一下這次的實作心得了</p>
-<p>其實在學 Scala 的這一段時間中，我最困擾的就是到底怎樣才是好的 Scala 寫作風格。
-因為 Scala 最吸引我的部份就是在於他的語法可以不斷的精鍊再精鍊，最後變成*魔法文字* Orz。
-所以要怎樣善用 Scala 的語言特性，卻又不失可讀性，我覺得真的很難。
-因此在這次的小工具實作中，我試著摸索 Curry 的用法。</p>
-<p><a href="posts/epubconverter-implement-note.html">Read more...</a></p>
-        
-    <p>
-        <a href="posts/epubconverter-implement-note.html#disqus_thread" data-disqus-identifier="cache\posts\2012-05-11-epubconverter-implement-note.html">Comments</a>
 
         </p></div>
     
