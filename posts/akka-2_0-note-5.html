@@ -60,7 +60,7 @@
 <ol class="arabic simple"><li>會將這些 Tasks 透過 router 分派給 worker actors 執行。</li>
 <li>最後收集所有 worker 的執行結果，並且將他們合併之後回傳。</li>
 <li>除此之外， worker 在執行過程中發生錯誤時，應該要進行 retry，在進行幾次 retry 後依然有錯誤時，Worker 就會停止，並且中止整個 Job。</li>
-</ol><div class="section" id="master-actor">
+</ol><!-- TEASER_END --><div class="section" id="master-actor">
 <h2>Master Actor</h2>
 <pre class="code scala literal-block">
 <span class="cm">/*

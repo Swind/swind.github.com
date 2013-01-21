@@ -50,14 +50,13 @@
             <a class="tag" href="../categories/scala.html"><span class="badge badge-info">Scala</span></a>
 
     </small>
-    <hr><div><div class="section" id="what-is-jsoupsoup">
-<h2>What is jsoupsoup</h2>
-<p>HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
+    <hr><div><p>HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
 為了要從網頁中可以取出內容,我曾經用過不少方式,包括直接硬幹用字串搜尋、修改Scala本身內部的XML Parser等。
 但是一直都找不到一個滿意又順手的解決方式,一直到後來在 <a class="reference external" href="http://www.oschina.net/">CSDN</a> 沒錯就是那個大陸網站 <a class="reference external" href="http://www.oschina.net/">CSDN</a>
 (雖然說CSDN訊息太多太雜亂,但是偶爾還是可以看到一些不錯的東西),才找到jsoup這個library。</p>
 <p><a class="reference external" href="http://jsoup.org/">jsoup的官方網站</a></p>
 <p><a class="reference external" href="http://jsoup.org/cookbook/">jsoup的教學文件</a></p>
+<!-- TEASER_END -->
 <p>但是其實最重要的是這一 <a class="reference external" href="http://jsoup.org/cookbook/extracting-data/selector-syntax">教學文件</a> ,介紹了他與別人最不一樣的的地方。
 一般的html parser還是比較傾向於跟xml parser的作法一樣,把html分析完之後建成樹
 然後操作node將資料取出,但是除了這種操作方式之外josue還有一種是類似jquery的selector的操作方式。</p>
@@ -78,14 +77,12 @@ jsoup除了有支援讀取檔案之外,也可以直接輸入網址讓他自己�
 <p>p.s我所使用的語言是scala，但是我會盡量不要用scala的&lt;del&gt;奇淫技巧&lt;/del&gt;特殊語法讓他看起來跟java差不多。</p>
 <p>出發總要有個方向,這邊就以一個我想幹的壞事情來當作例子好了，順便強迫我自己把東西寫完。</p>
 <div class="section" id="id3">
-<h3>說出你的願望，否則不會讓你如願</h3>
+<h2>說出你的願望，否則不會讓你如願</h2>
 <p>我想要一個可以自動檢查 <a class="reference external" href="http://www.cwb.gov.tw/v7/forecast/taiwan/taipei_city.htm">某大論壇</a> 的動畫討論區新番是否有更新的機器人。
 （因為它新番更新在同一個文章裡面，每周找新番真的好麻煩）</p>
 <p>哈利路亞 ! chance !</p>
-</div>
-</div>
 <div class="section" id="prepare">
-<h2>Prepare</h2>
+<h3>Prepare</h3>
 <p>首先呢，我習慣先將網頁內容儲存成html檔案,放到測試資料夾中。
 然後，寫個測試先決定整個程式的主要介面。
 因為我不喜歡一直連線到網站做測試。
@@ -102,8 +99,10 @@ jsoup除了有支援讀取檔案之外,也可以直接輸入網址讓他自己�
 有人會想說這是不是什麼軟體工程技巧阿，是不是什麼測試先行（tdd）的開發方式之類的？
 其實也沒有特別想說要使用什麼樣的開發方式或開發技巧，單純就只是因為我覺得這樣比較方便而已。
 我覺得沒有必要被偉大或者是只要這樣做就對了等口號給迷惑，選擇自己需要且足夠的方式就好了。</p>
+</div>
+</div>
 <div class="section" id="id5">
-<h3>要分析擷取的網頁內容</h3>
+<h2>要分析擷取的網頁內容</h2>
 <p>這邊是網頁的部份內容，我在做測試資料的時候是將整份的網頁原始碼都儲存起來，下面的內容是為了後面的說明需要。</p>
 <pre class="code html literal-block">
 <span class="nt">&lt;tbody</span> <span class="na">id=</span><span class="s">"normalthread_6961970"</span><span class="nt">&gt;</span>
@@ -137,16 +136,14 @@ jsoup除了有支援讀取檔案之外,也可以直接輸入網址讓他自己�
 </pre>
 </div>
 <div class="section" id="id6">
-<h3>想要的輸出結果</h3>
+<h2>想要的輸出結果</h2>
 <blockquote>
 uid       : 933315
 title     : onepiece海賊王 第521話
 author    : likesea
 link      : <a class="reference external" href="#">http://</a>.............</blockquote>
-</div>
-</div>
 <div class="section" id="id7">
-<h2>程式的介面</h2>
+<h3>程式的介面</h3>
 <p>雖然jsoup可以直接接收網址去取得網頁內容，但測試程式有讀取檔案的需求所以這邊會提供兩種介面。
 一種允許使用者直接傳入string型態的參數，也就是網址。另外一種則是讓使用者傳入file型態的參數。
 而回傳值的形態則是存放data object的list，這邊data object的名稱就先定義為envypost好了。</p>
@@ -162,9 +159,11 @@ link      : <a class="reference external" href="#">http://</a>.............</blo
 </pre>
 </div>
 <div class="section" id="id8">
-<h2>開始用jsoup分析網頁資訊吧</h2>
+<h3>開始用jsoup分析網頁資訊吧</h3>
+</div>
+</div>
 <div class="section" id="id9">
-<h3>找出所有文章</h3>
+<h2>找出所有文章</h2>
 <p>雖然jsoup有提供很多種分析的方式，但是我最喜歡用的還是 <a class="reference external" href="http://jsoup.org/cookbook/extracting-data/selector-syntax">selector</a> 的語法。因為簡單明瞭又好閱讀！！
 執行效率我則完全不在意，反正我的需求也不是一秒幾十萬上下的東西。能夠讓我愉快又快速的寫好才是重要的。</p>
 <pre class="code scala literal-block">
@@ -200,7 +199,7 @@ testenvyexample繼承funsuite跟shouldmatchers兩個class，這兩個class主要
 <p>到這邊程式執行完畢之後我就有目前此頁面每一篇文章的所有內容了。下一步就是要分析這些文章內容了。</p>
 </div>
 <div class="section" id="idtitleauthorlink">
-<h3>分析文章的內容-取得id、title、author與link</h3>
+<h2>分析文章的內容-取得id、title、author與link</h2>
 <p>取得post的功能再另外獨立一個parsepost的function，傳入的參數則為包含所有文章內容的element，並且希望這個function可以回傳一個envypost物件。</p>
 <pre class="code scala literal-block">
 <span class="k">def</span> <span class="n">parsepost</span><span class="o">(</span><span class="n">post</span><span class="k">:</span><span class="kt">element</span><span class="o">)</span><span class="k">:</span><span class="kt">envypost</span><span class="o">={</span>
@@ -236,7 +235,6 @@ tag1 tag2</blockquote>
 以前要分析一個網站超血淚的，真的感謝open source的眾多好心人，願意分享他們的成果與程式碼。
 當然後續還有換頁讀取或者是比對之前的內容看是否有更新之類的工作，但是這都是後話了。</p>
 <p>p.s一篇文章我竟然要打快兩個月，真佩服那些有辦法每天都有產出的人</p>
-</div>
 </div></div>
     
     <ul class="pager"><li class="previous">

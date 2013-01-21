@@ -51,16 +51,14 @@
             <a class="tag" href="../categories/akka.html"><span class="badge badge-info">Akka</span></a>
 
     </small>
-    <hr><div><div class="section" id="spray">
-<h2>Spray</h2>
-<p><a class="reference external" href="http://spray.cc/">Spray</a></p>
+    <hr><div><p><a class="reference external" href="http://spray.cc/">Spray</a></p>
 <p>最初是想要建立一個提供查詢服務的 RESTful API Server，可以讓 Client 的應用程式透過 RESTful API 查詢一些資料。
 但是看來看去，用 Play2、Jersey、RESTEasy 等都蠻麻煩的，而且還需要使用 Web container（像 Tomcat、Jetty 等）。
 所以才找到這個 Spray，而且又是用 Scala 開發的，實在沒有理由不試試看阿。 XD</p>
 <p>若你連到官網看會發現他分成很多模組，老實說我也沒有詳細研究每個模組的功能。
 因為 <a class="reference external" href="http://spray.cc/documentation/spray-can/">spray-can</a> 的範例看起來最簡單並且也符合我的需求，所以就直接用他了。</p>
 <p>想瞭解更詳細內容的可以參考 <a class="reference external" href="https://github.com/spray/spray/tree/release-1.0-M2/examples/spray-can/simple-http-server/">spray-can 範例文件</a> 與 <a class="reference external" href="http://blog.cloudfoundry.com/2012/05/11/running-standalone-web-applications-on-cloud-foundry/">Running Standalone Web Applications on Cloud Foundry</a></p>
-</div>
+<!-- TEASER_END -->
 <div class="section" id="id1">
 <h2>環境準備</h2>
 <p><a class="reference external" href="https://github.com/spray/spray/tree/release-1.0-M2/examples/spray-can/">spray-can 的範例</a> 已經有建立好一個簡單的 HttpServer 了，

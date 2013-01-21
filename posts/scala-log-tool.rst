@@ -14,6 +14,7 @@ slf4s + slf4j + logback
 於是就抱著這樣的心態跟 Google 大神詢問求籤。最後看到 logback 這個工具（雖然跟 Scala 完全沒有關係）但是人都是喜新厭舊 XD，所以
 我就從 slf4j + log4j 轉到 slf4j + logback，附帶一提 logback 是 slf4j 預設的 log 工具，因此使用這兩個的組合不需要另外抓 Adapter。（ex.slf4j-log4j12-1.6.4.jar之類的）
 
+.. TEASER_END
 
 設定檔的部分目前我看到最不一樣的就是格式了，log4j 是採用 properities 的方式記錄，也就是 key=value 的格式，而 logback 則是使用 xml。
 設定檔一直是讓我懶得使用 Log 工具的地方，好在網路上真的很多好心人，在 `符號記憶-Logback,Log4j設定檔自動產生器`_ 有介紹了 協助產生設定檔的網站_ 

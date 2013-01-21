@@ -38,82 +38,12 @@
         <small>  
              Posted: 2012-12-09 18:00
         </small></h1>
-        <hr><div><div class="section" id="golang-goroutine">
-<h2>Golang 中的 goroutine</h2>
-<p>會想到用這個是由於 EPUBConverter Go 的版本雖然運作上已經比 Scala 版本快上不少了。
+        <hr><p>會想到用這個是由於 EPUBConverter Go 的版本雖然運作上已經比 Scala 版本快上不少了。
 但我發現在執行的時候 CPU 使用率一直都只有 25 %，所以才想試試看使用 goroutine 看能不能讓他轉換更快一點。</p>
 <p>依照文件所說，在執行 IO 相關動作的時候，會將 CPU 讓給 goroutine 來使用，那麼對於 EPUBConverter 的效能應該會有顯著的提昇。</p>
 <p>雖然有人說 goroutine 跟 Scala 的 actor 有點像，但是 actor 的模型就很具體跟明確。
 而 goroutine 則是提供一個方便快速的 thread 操作方式。</p>
-</div>
-<div class="section" id="goroutine">
-<h2>goroutine 的使用方式</h2>
-<p>goroutine 的使用非常簡單，只要在呼叫 function 的時候在前面加上 go 就可以了。</p>
-<blockquote>
-go func()</blockquote>
-<p>至於要跟 goroutine 的溝通則是使用 channel。</p>
-<p>channel 目前我使用的感覺很像是 java 中的 blocking queue。
-他的宣告方式只要在一般宣告的時候加個 <strong>chan</strong> 的關鍵字就可以了。</p>
-<pre class="code go literal-block">
-<span class="k">var</span> <span class="n">count</span> <span class="k">chan</span> <span class="nb">int</span>
-</pre>
-<p>這樣就可以透過 &lt;- 賦值與取值</p>
-<pre class="code go literal-block">
-<span class="c1">//將 i assign 給 count
-</span><span class="n">count</span> <span class="p">&lt;-</span> <span class="n">i</span>
-<span class="c1">//從 count 取出值
-</span><span class="n">value</span> <span class="p">:=</span> <span class="p">&lt;-</span> <span class="n">count</span>
-</pre>
-<p>而要決定 channel 可以放的數量則是可以透過</p>
-<pre class="code go literal-block">
-<span class="n">count</span> <span class="p">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="nb">int</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-</pre>
-<p>的方式來決定。</p>
-<p>以上面的程式碼為例子，當 count 裡面沒有東西時，使用 &lt;- count 會 block 住直到有值寫入。
-而使用 count &lt;- 的時候當裡面的值超過 4 個的時候，則會 block 住無法寫入，直到有值被取出。</p>
-</div>
-<div class="section" id="id1">
-<h2>goroutine 的設定</h2>
-<p>雖然後來使用了 goroutine 讓每一個 EPUB 電子書的轉換都可以平行處理，
-但是我發現 CPU 使用率卻依然只有 25 %。</p>
-<p>後來才發現是還要再設定 GOMAXPROCS 來讓 Go 知道要用幾個核心。</p>
-<pre class="code go literal-block">
-<span class="c1">//透過 runtime.NumCPU() 取得 CPU 核心數
-</span><span class="n">runtime</span><span class="p">.</span><span class="n">GOMAXPROCS</span><span class="p">(</span><span class="n">runtime</span><span class="p">.</span><span class="n">NumCPU</span><span class="p">())</span>
-</pre>
-<p>這樣就終於看得到 CPU 使用率到 100% 了 ...</p>
-</div>
-<div class="section" id="golang-benchmark">
-<h2>Golang 的 benchmark 測試</h2>
-<p><a class="reference external" href="http://golang.org/pkg/testing/">testing package</a></p>
-<p>Go 另外一點讓我還蠻喜歡的就是，他的設計非常的實用。
-雖然還沒有很完整，但是一般開發常用的東西他都會幫你想到。
-例如寫在 test case 內的 benchmark。</p>
-<pre class="code go literal-block">
-<span class="k">package</span> <span class="n">main</span>
-
-<span class="k">import</span> <span class="p">(</span>
-        <span class="s">"runtime"</span>
-        <span class="s">"testing"</span>
-<span class="p">)</span>
-
-<span class="k">func</span> <span class="n">BenchmarkConvertCore4</span><span class="p">(</span><span class="n">b</span> <span class="p">*</span><span class="n">testing</span><span class="p">.</span><span class="n">B</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// 4 代表使用的核心數
-</span>        <span class="n">executeConvert</span><span class="p">(</span><span class="s">"./testdata"</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-<span class="p">}</span>
-</pre>
-<p>測試結果</p>
-<p>使用四核心:</p>
-<pre class="literal-block">
-BenchmarkConvertCore4          1        9775559100 ns/op
-ok      epubconverter   10.282s
-</pre>
-<p>使用單核:</p>
-<pre class="literal-block">
-BenchmarkConvertCore1          1        33146895900 ns/op
-ok      epubconverter   33.673s
-</pre>
-</div></div>
+<p><a href="../posts/goroutine-note-1.html">Read more...</a></p>
         
     <p>
         <a href="../posts/goroutine-note-1.html#disqus_thread" data-disqus-identifier="cache\posts\2012-12-09-golang-goroutine-note1.html">Comments</a>
@@ -124,9 +54,7 @@ ok      epubconverter   33.673s
         <small>  
              Posted: 2012-12-08 18:00
         </small></h1>
-        <hr><div><div class="section" id="epubconverter-0-0-2">
-<h2>EPUBConverter 0.0.2</h2>
-<p>一開始的 Scala 版本本來是自己寫來自己用的小工具，可是沒想到竟然有人有用還有回報問題。
+        <hr><p>一開始的 Scala 版本本來是自己寫來自己用的小工具，可是沒想到竟然有人有用還有回報問題。
 大受感動之餘（誤），而出現了這個全新感受的 EPUBConverter 0.0.2，絕對不是因為手癢想要試試看 Go。</p>
 <p>P.S 2012.12.09 更新 - 修正了鳥 Bug 所以到 0.0.3 了。</p>
 <p><a class="reference external" href="https://dl.dropbox.com/u/15537823/EPUBConverter_0.0.3.7z">EPUBConverter 0.0.3 下載</a></p>
@@ -138,71 +66,7 @@ ok      epubconverter   33.673s
 <p>但是由於我直接將對照表轉換成 Golang 裡面的 map 了，所以這次就沒有辦法讓使用者自己改對照表了。</p>
 <p>不過有興趣的人，在原始碼的 <a class="reference external" href="https://github.com/Swind/EPUBConverter-Go/tree/master/tongwen_table">tongwen_table</a> 資料夾底下，我有放了一個簡單的轉換工具。
 可以利用那個重新產生 Go 的 map，但是最後還是得重新編譯整個 EPUBConverter 就是了。</p>
-<p>延續之前的我的偷懶寫法，這次也是寫死只會轉換 source 資料夾底下的 epub 檔案，輸出到 target 資料夾。
-可是這次全部都在記憶體裡面處理，所以不會先解壓縮到磁碟上然後壓縮再刪除了。</p>
-<pre class="literal-block">
-/EPUBConverter
-           source
-           target
-           epubconverter.exe
-</pre>
-<p>以上，如果有什麼問題的話也歡迎回覆，如果我有錢有閒而且沒事做的話 Orz。
-會找個時間繼續修正的，雖然目前我也想不到要加啥功能。</p>
-</div>
-<div class="section" id="go">
-<h2>Go 的心得</h2>
-<p>其實這段才是本文 Orz。
-這次寫 Go 我是使用 <a class="reference external" href="http://www.sublimetext.com/2">Sublime Text 2</a> 來作為我的編輯器。
-雖然萬能的 Elcipse 也有支援，但是我現在是能不用就不用，他真的太肥了。</p>
-<p>Go 的設計讓我覺得他非常的務實，考慮到現在 Coding 的需求。
-例如自己就有包涵 gofmt 這個 format 工具，並且可以使用 go install 來安裝 remote respository 的 package。</p>
-<p>至少免去了每次要學一個新語言，就必須東找西找各式各樣工具來進行整合。</p>
-</div>
-<div class="section" id="id1">
-<h2>Go 的語法紀錄</h2>
-<p>這一次寫得時候還沒有把 Go 的語法看完，所以有很多都是亂用的，並且把 Go 當 C 在寫 Orz。</p>
-<div class="section" id="for">
-<h3>for 迴圈</h3>
-<p>寫習慣了 Scala，看到 for 迴圈就很自然的會去找是否有 for-each 的語法。
-在 Go 裡面如果要尋訪 slice 或 map 等容器裡面的每一個元素，使用的是 for + range</p>
-<pre class="code go literal-block">
-<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">element</span> <span class="p">:=</span> <span class="k">range</span> <span class="n">slice</span> <span class="p">{</span>
-        <span class="p">...</span>
-<span class="p">}</span>
-</pre>
-<p>由於 Go 支援多個回傳值，所以 for 後面的 <strong>index</strong> 與 <strong>element</strong> 是會隨著 range 後面所接的對象而改變的。
-例如是 map 的話，那麼回傳值就會是 key, value。</p>
-</div>
-<div class="section" id="id2">
-<h3>函式與變數的名稱</h3>
-<p>大寫開頭的就是可以在其他 package 被呼叫，小寫得就只能在自己的 package 裡面被呼叫。</p>
-</div>
-<div class="section" id="id3">
-<h3>讀檔與寫檔</h3>
-<p>先來段程式碼</p>
-<pre class="code go literal-block">
-<span class="k">for</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="n">length</span><span class="p">,</span> <span class="n">err</span> <span class="p">=</span> <span class="n">reader</span><span class="p">.</span><span class="n">Read</span><span class="p">(</span><span class="n">part</span><span class="p">);</span> <span class="n">err</span> <span class="p">!=</span> <span class="n">nil</span> <span class="p">{</span>
-                <span class="k">break</span>
-        <span class="p">}</span>
-
-        <span class="k">if</span> <span class="n">length</span> <span class="p">!=</span> <span class="mi">0</span> <span class="p">{</span>
-                <span class="n">f</span><span class="p">.</span><span class="n">Write</span><span class="p">(</span><span class="n">part</span><span class="p">[:</span><span class="n">length</span><span class="p">])</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                <span class="k">break</span>
-        <span class="p">}</span>
-<span class="p">}</span>
-</pre>
-<p>在 C、C++、Java、Scala 等語言基本上在 Write 的 function 中，都會有一個參數是用來帶要寫的長度。
-可是 Go 沒有 T_T，所以這段程式碼在剛寫好得時候寫了一堆垃圾資料進去。因為每次都把整個 buffer 寫入。</p>
-<p>一直到去 stackoverflow 查詢才發現，原來要善用</p>
-<blockquote>
-part[:length]</blockquote>
-<p>這樣的語法來取出 slice 中特定的某段區域。
-更詳細的 slice 內容可以參考 <a class="reference external" href="http://blog.golang.org/2011/01/go-slices-usage-and-internals.html">Go Slices - usage and internals</a></p>
-<p>剩下的之後有想到再補上，不過 Go 寫起來也蠻愉快的，我想以後用 Scala 跟 Go 的時間應該會一半一半了。</p>
-</div>
-</div></div>
+<p><a href="../posts/epubconverter-0_0_2.html">Read more...</a></p>
         
     <p>
         <a href="../posts/epubconverter-0_0_2.html#disqus_thread" data-disqus-identifier="cache\posts\2012-12-08-epubconverter-go.html">Comments</a>

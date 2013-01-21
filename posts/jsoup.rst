@@ -5,9 +5,6 @@
 .. link: 
 .. description: 
 
-What is jsoupsoup
-=====================
-
 HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
 為了要從網頁中可以取出內容,我曾經用過不少方式,包括直接硬幹用字串搜尋、修改Scala本身內部的XML Parser等。
 但是一直都找不到一個滿意又順手的解決方式,一直到後來在 CSDN_ 沒錯就是那個大陸網站 CSDN_
@@ -20,6 +17,8 @@ jsoup的教學文件_
 .. _jsoup的官方網站: http://jsoup.org/
 .. _jsoup的教學文件: http://jsoup.org/cookbook/
 .. _CSDN: http://www.oschina.net/
+
+.. TEASER_END
 
 但是其實最重要的是這一 教學文件_ ,介紹了他與別人最不一樣的的地方。
 一般的html parser還是比較傾向於跟xml parser的作法一樣,把html分析完之後建成樹

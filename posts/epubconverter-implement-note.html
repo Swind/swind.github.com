@@ -50,10 +50,12 @@
             <a class="tag" href="../categories/scala.html"><span class="badge badge-info">Scala</span></a>
 
     </small>
-    <hr><div><p>其實在學 Scala 的這一段時間中，我最困擾的就是到底怎樣才是好的 Scala 寫作風格。
+    <hr><div><p>好吧，我要開始筆記一下這次的實作心得了</p>
+<p>其實在學 Scala 的這一段時間中，我最困擾的就是到底怎樣才是好的 Scala 寫作風格。
 因為 Scala 最吸引我的部份就是在於他的語法可以不斷的精鍊再精鍊，最後變成*魔法文字* Orz。
 所以要怎樣善用 Scala 的語言特性，卻又不失可讀性，我覺得真的很難。
 因此在這次的小工具實作中，我試著摸索 Curry 的用法。</p>
+<!-- TEASER_END -->
 <div class="section" id="curry">
 <h2>Curry</h2>
 <p>說到教學文件，就一定要推一下 <a class="reference external" href="http://caterpillar.onlyfun.net/Gossip/Scala/index.html">良葛格的學習筆記</a> 裡面他有提到 <a class="reference external" href="http://caterpillar.onlyfun.net/Gossip/Scala/Curry.html">Curry</a>  的語法與何謂 Curry 。
@@ -76,7 +78,7 @@ F(Y) = 10 + Y</blockquote>
 <span class="k">val</span> <span class="n">F1</span> <span class="k">=</span> <span class="n">F</span><span class="o">(</span><span class="mi">10</span><span class="o">)</span>
 </pre>
 </div>
-<div class="section" id="id2">
+<div class="section" id="id1">
 <h2>Curry 的使用案例</h2>
 <p>在 jserv 的文章有提到一個 Ruby 目錄樹尋訪的範例，剛好我在這次有實作類似的東西，但是功力不足沒有辦法寫的像 Ruby 那麼優雅。</p>
 <pre class="code scala literal-block">

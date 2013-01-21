@@ -12,6 +12,8 @@
 
 所以想來實驗看看 Akka 的 Future 與 Router 到底是如何使用，與可以做到什麼事情。
 
+.. TEASER_END
+
 Future
 ------------------------
 

@@ -29,6 +29,8 @@
 
 .. _Windows 8 安裝 Octopress 紀錄: http://hivan.me/octopress-install-to-windows8/
 
+.. TEASER_END
+
 在Ubuntu上面實在是有夠難安裝的
 ------------------------------------
 

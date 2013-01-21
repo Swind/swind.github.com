@@ -8,6 +8,8 @@
 而是我實在是不擅長寫作，過去作文只有 20 分真的不是拿假的。
 前一篇的 **開始使用 Future** 只有介紹一些基本的使用方式而已，然後依照前面的程式碼是絕對跑不起來的 Orz ...
 
+.. TEASER_END
+
 原因在於 Future 需要一個 Execution Contexts 類似 Java 裡面的 Executor，也就是 Thread Pool。
 
 Execution Contexts

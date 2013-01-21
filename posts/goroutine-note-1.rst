@@ -5,9 +5,6 @@
 .. link: 
 .. description: 
 
-Golang 中的 goroutine
------------------------------------------
-
 會想到用這個是由於 EPUBConverter Go 的版本雖然運作上已經比 Scala 版本快上不少了。
 但我發現在執行的時候 CPU 使用率一直都只有 25 %，所以才想試試看使用 goroutine 看能不能讓他轉換更快一點。
 
@@ -15,6 +12,8 @@ Golang 中的 goroutine
 
 雖然有人說 goroutine 跟 Scala 的 actor 有點像，但是 actor 的模型就很具體跟明確。
 而 goroutine 則是提供一個方便快速的 thread 操作方式。
+
+.. TEASER_END
 
 goroutine 的使用方式
 -----------------------------------------

@@ -63,6 +63,7 @@ Akka 的 Future 到底有沒有存在的意義呢？</p>
 <p>但是這邊又出現了一個更複雜的問題了，因為我將工作分給不同的 Actor 去執行，必須要等到所有 Actor 都執行完畢，整合所有的結果。
 那麼如果是用 receive 我要怎樣才能知道我所有的工作都已經完成了呢？</p>
 <p>簡單來說，我就是需要實做一個  <a class="reference external" href="http://www.eaipatterns.com/BroadcastAggregate.html">Scatter-Gather</a> ，才會莫名其妙的看到 Akka 的 Dataflow。</p>
+<!-- TEASER_END -->
 <div class="section" id="akka-dataflow">
 <h2>Akka Dataflow</h2>
 <p>起因在於我用 Scatter-Gather 與 Akka 搜尋文章的時候找到這篇 <a class="reference external" href="http://blog.vasilrem.com/scatter-gather-with-akka-dataflow">Scatter-Gather with Akka Dataflow</a> 。

@@ -5,9 +5,6 @@
 .. link: 
 .. description: 
 
-Spray
-=========================
-
 Spray_
 
 最初是想要建立一個提供查詢服務的 RESTful API Server，可以讓 Client 的應用程式透過 RESTful API 查詢一些資料。
@@ -18,6 +15,8 @@ Spray_
 因為 `spray-can`_ 的範例看起來最簡單並且也符合我的需求，所以就直接用他了。
 
 想瞭解更詳細內容的可以參考 `spray-can 範例文件`_ 與 `Running Standalone Web Applications on Cloud Foundry`_ 
+
+.. TEASER_END
 
 環境準備
 =====================

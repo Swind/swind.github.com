@@ -32,6 +32,8 @@ Default Dispatcher 使用 fork-join-executor，他的預設設定如下
 
 所以我的四核心桌機使用這個 Dispatcher 最多會開到 12 個 Thread Orz ...
 
+.. TEASER_END
+
 難怪我的 Thread 會滿天飛了
 
 這邊我要先搞定我之前一直逃避的 Akka 設定檔，之前會逃避是因為我用 Eclipse 的 ScalaIDE 加上 sbt 來開發。

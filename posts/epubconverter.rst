@@ -5,14 +5,13 @@
 .. link: 
 .. description:
 
-下載點
-====================
-
 `EPUBConverter 0.0.1`_  
 
 這個版號我覺得也沒有機會到 0.0.2 了，不過還是讓我命名個版號滿足小小的虛榮心好了。
 
 .. _EPUBConverter 0.0.1: https://github.com/Swind/EPUBConverter/downloads
+
+.. TEASER_END
 
 不負責任的使用教學
 ==========================
