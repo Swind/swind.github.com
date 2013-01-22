@@ -1,80 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Corleonis</title><link>http://swind.code-life.info</link><description>I am Swind.</description><lastBuildDate>Tue, 22 Jan 2013 22:11:55 GMT</lastBuildDate><generator>nikola</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Pelican 轉移到 Nikola</title><link>http://swind.code-life.info/posts/pelican-to-nikola.html</link><description>&lt;p&gt;&amp;#20043;&amp;#21069;&amp;#38614;&amp;#28982;&amp;#24478; Octopress &amp;#36339;&amp;#21040; Pelican &amp;#33067;&amp;#38626;&amp;#20102; Ruby &amp;#30340;&amp;#29872;&amp;#22659;&amp;#65292;&amp;#20063;&amp;#33457;&amp;#20102;&amp;#19968;&amp;#20123;&amp;#26178;&amp;#38291;&amp;#22312;&amp;#20462;&amp;#25913; Theme&amp;#12290;
+<rss version="2.0"><channel><title>Corleonis</title><link>http://swind.code-life.info</link><description>I am Swind.</description><lastBuildDate>Wed, 23 Jan 2013 00:09:35 GMT</lastBuildDate><generator>nikola</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Pelican 轉移到 Nikola</title><link>http://swind.code-life.info/posts/pelican-to-nikola.html</link><description>&lt;p&gt;&amp;#20043;&amp;#21069;&amp;#38614;&amp;#28982;&amp;#24478; Octopress &amp;#36339;&amp;#21040; Pelican &amp;#33067;&amp;#38626;&amp;#20102; Ruby &amp;#30340;&amp;#29872;&amp;#22659;&amp;#65292;&amp;#20063;&amp;#33457;&amp;#20102;&amp;#19968;&amp;#20123;&amp;#26178;&amp;#38291;&amp;#22312;&amp;#20462;&amp;#25913; Theme&amp;#12290;
 &amp;#20294;&amp;#26159;&amp;#36996;&amp;#26159;&amp;#24456;&amp;#38627;&amp;#21916;&amp;#27489;&amp;#19978; Pelican&amp;#65292;&amp;#26368;&amp;#20027;&amp;#35201;&amp;#30340;&amp;#23601;&amp;#26159;&amp;#20182;&amp;#30340;&amp;#25163;&amp;#20874;&amp;#24456;&amp;#38627;&amp;#38321;&amp;#35712;&amp;#65292;&amp;#32780;&amp;#19988;&amp;#36039;&amp;#35338;&amp;#26377;&amp;#40670;&amp;#23569; Orz&amp;#12290;&lt;/p&gt;
 &lt;p&gt;Nikola &amp;#30340;&amp;#25163;&amp;#20874;&amp;#23601;&amp;#27604;&amp;#36611;&amp;#31777;&amp;#28500;&amp;#28165;&amp;#26970;&amp;#65292;&amp;#20063;&amp;#27604;&amp;#36611;&amp;#22909;&amp;#26597;&amp;#35426;&amp;#12290;
 &amp;#19988;&amp;#26597;&amp;#35426;&amp;#20102;&amp;#19968;&amp;#19979; Nikola &amp;#30340;&amp;#20107;&amp;#36447;&amp;#20043;&amp;#24460;&amp;#30332;&amp;#29694;&amp;#20182;&amp;#22826;&amp;#24101;&amp;#20102;&amp;#65281;&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="http://zh.wikipedia.org/wiki/%E5%B0%BC%E5%8F%A4%E6%8B%89%C2%B7%E7%89%B9%E6%96%AF%E6%8B%89"&gt;Wiki &amp;#23612;&amp;#21476;&amp;#25289; &amp;#29305;&amp;#26031;&amp;#25289;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&amp;#25152;&amp;#20197;&amp;#24460;&amp;#20358;&amp;#23601;&amp;#27770;&amp;#23450;&amp;#36339;&amp;#36942;&amp;#20358;&amp;#20102;&amp;#65374;&lt;/p&gt;
-&lt;div class="section" id="windows-nikola"&gt;
-&lt;h2&gt;&amp;#22312; Windows &amp;#19978;&amp;#23433;&amp;#35037; Nikola&lt;/h2&gt;
-&lt;p&gt;&amp;#22312; Windows &amp;#19978;&amp;#38754;&amp;#23433;&amp;#35037; Nikola &amp;#23526;&amp;#22312;&amp;#26159;&amp;#26377;&amp;#40670;&amp;#24754;&amp;#21127;&amp;#65292;&amp;#22240;&amp;#28858;&amp;#20182;&amp;#25152;&amp;#20351;&amp;#29992;&amp;#30340; Library &amp;#26377;&amp;#19968;&amp;#20123;&amp;#26371;&amp;#20351;&amp;#29992;&amp;#21040; C &amp;#30340;&amp;#31243;&amp;#24335;&amp;#30908;&amp;#12290;
-&amp;#22240;&amp;#27492;&amp;#38656;&amp;#35201;&amp;#32232;&amp;#35695;&amp;#65292;&amp;#21487;&amp;#26159;&amp;#20182;&amp;#21448;&amp;#26371;&amp;#36899;&amp;#32080;&amp;#21040;&amp;#20854;&amp;#20182; C Library&amp;#65288;&amp;#20363;&amp;#22914; pillow or pil&amp;#65289;&amp;#65292;&amp;#25152;&amp;#20197;&amp;#23601;&amp;#21345;&amp;#22312;&amp;#23433;&amp;#35037;&amp;#30456;&amp;#20381;&amp;#24615;&amp;#22871;&amp;#20214;&amp;#36889;&amp;#19968;&amp;#38364;&amp;#12290;&lt;/p&gt;
-&lt;p&gt;&amp;#38614;&amp;#28982;&amp;#29992; pip &amp;#23433;&amp;#35037; pil &amp;#25110;&amp;#32773;&amp;#26159; pillow &amp;#20063;&amp;#21487;&amp;#20197;&amp;#65292;&amp;#20294;&amp;#26159;&amp;#23433;&amp;#35037;&amp;#23436;&amp;#20043;&amp;#24460;&amp;#26371;&amp;#22240;&amp;#28858;&amp;#32570;&amp;#23569;&amp;#26576;&amp;#20123; library &amp;#32780;&amp;#23566;&amp;#33268;&amp;#20687; jpg &amp;#31561;&amp;#22294;&amp;#29255;&amp;#26684;&amp;#24335;&amp;#19981;&amp;#34987;&amp;#25903;&amp;#25588;&amp;#12290;&lt;/p&gt;
-&lt;p&gt;&amp;#26368;&amp;#24460;&amp;#26159;&amp;#25214;&amp;#21040;&amp;#20102; &lt;a class="reference external" href="http://www.lfd.uci.edu/~gohlke/pythonlibs/"&gt;Unofficial Windows Binaries for Python Extension Packages&lt;/a&gt; &amp;#19979;&amp;#36617;&amp;#20102; pil &amp;#25165;&amp;#35299;&amp;#27770;&amp;#20102;&amp;#30456;&amp;#20381;&amp;#24615;&amp;#23433;&amp;#35037;&amp;#21839;&amp;#38988;&amp;#12290;
-&amp;#36889;&amp;#20123;&amp;#30456;&amp;#20381;&amp;#24615;&amp;#30340; Library &amp;#23433;&amp;#35037;&amp;#23436;&amp;#30050;&amp;#20043;&amp;#24460;&amp;#65292;&amp;#23601;&amp;#21487;&amp;#20197;&amp;#20351;&amp;#29992; pip &amp;#23433;&amp;#35037; Nikola &amp;#20102;&amp;#12290;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;But ! &amp;#23601;&amp;#26159;&amp;#36889;&amp;#20491; But !&amp;#12290;&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&amp;#30070;&amp;#20320;&amp;#38283;&amp;#24515;&amp;#23433;&amp;#35037;&amp;#23436;&amp;#30050; Nikola &amp;#20043;&amp;#24460;&amp;#26371;&amp;#30332;&amp;#29694;&amp;#28961;&amp;#27861;&amp;#20351;&amp;#29992; nikola &amp;#30340;&amp;#25351;&amp;#20196;&amp;#12290;&lt;/p&gt;
-&lt;p&gt;&amp;#22240;&amp;#28858;&amp;#20182;&amp;#25918;&amp;#22312; Python Scripts &amp;#36039;&amp;#26009;&amp;#22846;&amp;#24213;&amp;#19979;&amp;#30340; Script &amp;#27284;&amp;#21517;&amp;#26159; &lt;strong&gt;nikola&lt;/strong&gt;&amp;#65292;Windows &amp;#19981;&amp;#26371;&amp;#35258;&amp;#24471;&amp;#20182;&amp;#26159;&amp;#22519;&amp;#34892;&amp;#27284;&amp;#65292;&amp;#25152;&amp;#20197;&amp;#27794;&amp;#26377;&amp;#36774;&amp;#27861;&amp;#22519;&amp;#34892;&amp;#25351;&amp;#20196;&amp;#12290;
-( &amp;#22914;&amp;#26524;&amp;#26377;&amp;#20154;&amp;#26377;&amp;#30693;&amp;#36947;&amp;#20854;&amp;#20182;&amp;#22519;&amp;#34892;&amp;#26041;&amp;#24335;&amp;#30340;&amp;#35441;&amp;#35531;&amp;#36319;&amp;#25105;&amp;#35498; m(_ _)m )&lt;/p&gt;
-&lt;p&gt;&amp;#19968;&amp;#38283;&amp;#22987;&amp;#25105;&amp;#24456;&amp;#22825;&amp;#30495;&amp;#30340;&amp;#35258;&amp;#24471;&amp;#25913;&amp;#25104; nikola.py &amp;#23601;&amp;#27794;&amp;#26377;&amp;#21839;&amp;#38988;&amp;#20102;&amp;#65292;&amp;#20294;&amp;#26159;&amp;#22312;&amp;#22519;&amp;#34892;&amp;#20013; import &amp;#26371;&amp;#20986;&amp;#21839;&amp;#38988;&amp;#65292;&amp;#22240;&amp;#28858; nikola &amp;#36889;&amp;#20491;&amp;#21517;&amp;#23383;&amp;#37325;&amp;#35079;&amp;#20102; Orz&amp;#12290;
-&amp;#25152;&amp;#20197;&amp;#26368;&amp;#24460;&amp;#26159;&amp;#22810;&amp;#23531;&amp;#19968;&amp;#20491; nikola.bat&lt;/p&gt;
-&lt;pre class="code shell literal-block"&gt;
-C:\Python27\python.exe C:\Python27\Scripts\nikola %1 %2 %3 %4
-&lt;/pre&gt;
-&lt;p&gt;&amp;#25918;&amp;#22312; Scripts &amp;#36039;&amp;#26009;&amp;#22846;&amp;#24213;&amp;#19979;&amp;#65292;&amp;#20358;&amp;#35299;&amp;#27770;&amp;#36889;&amp;#20491;&amp;#21839;&amp;#38988;&amp;#12290;&lt;/p&gt;
-&lt;p&gt;&amp;#19978;&amp;#38754;&amp;#30340; Script &amp;#22240;&amp;#28858;&amp;#25105;&amp;#25214;&amp;#19981;&amp;#21040; Windows &amp;#35041;&amp;#38754;&amp;#20195;&amp;#34920;&amp;#25152;&amp;#26377;&amp;#20659;&amp;#20837;&amp;#21443;&amp;#25976;&amp;#30340;&amp;#31526;&amp;#34399;&amp;#65292;
-&amp;#21482;&amp;#22909;&amp;#23601;&amp;#22303;&amp;#27861;&amp;#29001;&amp;#37628;&amp;#19968;&amp;#20491;&amp;#19968;&amp;#20491;&amp;#36664;&amp;#20837;&amp;#65292;&amp;#25152;&amp;#20197;&amp;#26368;&amp;#22810;&amp;#21482;&amp;#33021;&amp;#36664;&amp;#20837;&amp;#22235;&amp;#20491;&amp;#21443;&amp;#25976;&amp;#12290;&lt;/p&gt;
-&lt;p&gt;&amp;#65288;&amp;#22914;&amp;#26524;&amp;#26377;&amp;#20154;&amp;#26377;&amp;#22909;&amp;#24471;&amp;#35299;&amp;#27770;&amp;#26041;&amp;#24335;&amp;#20063;&amp;#35531;&amp;#25945;&amp;#25105;&amp;#19968;&amp;#19979; m(_ _)m )&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="nikola"&gt;
-&lt;h2&gt;Nikola &amp;#30340;&amp;#19968;&amp;#20123;&amp;#25351;&amp;#20196;&lt;/h2&gt;
-&lt;p&gt;&amp;#21021;&amp;#22987;&amp;#21270;&lt;/p&gt;
-&lt;blockquote&gt;
-nikola init &amp;lt;&amp;lt;&amp;#36039;&amp;#26009;&amp;#22846;&amp;#21517;&amp;#31281;&amp;gt;&amp;gt;&lt;/blockquote&gt;
-&lt;p&gt;&amp;#32232;&amp;#35695;&lt;/p&gt;
-&lt;blockquote&gt;
-nikola build&lt;/blockquote&gt;
-&lt;p&gt;&amp;#21855;&amp;#21205;&amp;#28204;&amp;#35430; Server&lt;/p&gt;
-&lt;blockquote&gt;
-nikola serve&lt;/blockquote&gt;
-&lt;p&gt;&amp;#25110;&lt;/p&gt;
-&lt;blockquote&gt;
-nikola serve --address 0.0.0.0 --port 8080&lt;/blockquote&gt;
-&lt;/div&gt;
-&lt;div class="section" id="id1"&gt;
-&lt;h2&gt;Nikola &amp;#30340;&amp;#35486;&amp;#27861;&amp;#31558;&amp;#35352;&lt;/h2&gt;
-&lt;p&gt;&amp;#36889;&amp;#37002;&amp;#32000;&amp;#37636;&amp;#19968;&amp;#19979; Nikola &amp;#35041;&amp;#38754;&amp;#25165;&amp;#26377;&amp;#30340;&amp;#35486;&amp;#27861;&lt;/p&gt;
-&lt;p&gt;Note:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-.. Note:: &amp;#36889;&amp;#23601;&amp;#26159; Note &amp;#30340;&amp;#25928;&amp;#26524;
-&lt;/pre&gt;
-&lt;hr class="docutils"&gt;&lt;div class="note"&gt;
-&lt;p class="first admonition-title"&gt;Note&lt;/p&gt;
-&lt;p class="last"&gt;&amp;#36889;&amp;#23601;&amp;#26159; Note &amp;#30340;&amp;#25928;&amp;#26524;&lt;/p&gt;
-&lt;/div&gt;
-&lt;hr class="docutils"&gt;&lt;p&gt;Contents:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-.. contents::
-&lt;/pre&gt;
-&lt;hr class="docutils"&gt;&lt;p&gt;Contents &amp;#21152;&amp;#19978;&amp;#19968;&amp;#20123;&amp;#20854;&amp;#20182;&amp;#30340; Class &amp;#23660;&amp;#24615;:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-.. class:: alert alert-info pull-left
-
-.. contents::
-&lt;/pre&gt;
-&lt;hr class="docutils"&gt;&lt;p&gt;Sildes:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-.. slides::
-
-   https://dl.dropbox.com/u/15537823/Blog/SildeDemo/wallpaper-1427130.jpg
-   https://dl.dropbox.com/u/15537823/Blog/SildeDemo/wallpaper-1427132.jpg
-   https://dl.dropbox.com/u/15537823/Blog/SildeDemo/wallpaper-1427197.jpg
-&lt;/pre&gt;
-&lt;script&gt; $(function(){ $("#slides").slides({"currentClass": "slide-current", "autoHeight": true, "bigTarget": true, "paginationClass": "pager"}); }); &lt;/script&gt;&lt;div id="slides" class="slides"&gt;&lt;div class="slides_container"&gt;
-&lt;div&gt;&lt;img src="https://dl.dropbox.com/u/15537823/Blog/SildeDemo/wallpaper-1427130.jpg"&gt;&lt;/div&gt;
-&lt;div&gt;&lt;img src="https://dl.dropbox.com/u/15537823/Blog/SildeDemo/wallpaper-1427132.jpg"&gt;&lt;/div&gt;
-&lt;div&gt;&lt;img src="https://dl.dropbox.com/u/15537823/Blog/SildeDemo/wallpaper-1427197.jpg"&gt;&lt;/div&gt;
-&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;</description><guid>http://swind.code-life.info/posts/pelican-to-nikola.html</guid><pubDate>Tue, 22 Jan 2013 09:11:00 GMT</pubDate></item><item><title>一鍵安裝 Linux 設定檔</title><link>http://swind.code-life.info/posts/install-linux-config.html</link><description>&lt;p&gt;&amp;#25105;&amp;#24120;&amp;#29992;&amp;#30340; Linux &amp;#29872;&amp;#22659;&amp;#19968;&amp;#23450;&amp;#26371;&amp;#35037;&amp;#19979;&amp;#38754;&amp;#24190;&amp;#20491;&amp;#24037;&amp;#20855;&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/pelican-to-nikola.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;</description><guid>http://swind.code-life.info/posts/pelican-to-nikola.html</guid><pubDate>Tue, 22 Jan 2013 09:11:00 GMT</pubDate></item><item><title>一鍵安裝 Linux 設定檔</title><link>http://swind.code-life.info/posts/install-linux-config.html</link><description>&lt;p&gt;&amp;#25105;&amp;#24120;&amp;#29992;&amp;#30340; Linux &amp;#29872;&amp;#22659;&amp;#19968;&amp;#23450;&amp;#26371;&amp;#35037;&amp;#19979;&amp;#38754;&amp;#24190;&amp;#20491;&amp;#24037;&amp;#20855;&lt;/p&gt;
 &lt;ol class="arabic simple"&gt;&lt;li&gt;zsh &amp;#33287; oh-my-zsh&lt;/li&gt;
 &lt;li&gt;vim &amp;#24456;&amp;#22810;&amp;#24456;&amp;#22810; vim plugin&lt;/li&gt;
 &lt;li&gt;tmux &amp;#33287;&amp;#20182;&amp;#30340;&amp;#24555;&amp;#27138;&amp;#35373;&amp;#23450;&amp;#27284;&lt;/li&gt;

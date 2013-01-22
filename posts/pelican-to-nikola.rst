@@ -47,6 +47,8 @@ Nikola 的手冊就比較簡潔清楚，也比較好查詢。
 
 （如果有人有好得解決方式也請教我一下 m(_ _)m )
 
+.. TEASER_END
+
 Nikola 的一些指令
 -------------------------------------------------
 
@@ -109,6 +111,24 @@ Sildes::
 	   https://dl.dropbox.com/u/15537823/Blog/SildeDemo/wallpaper-1427132.jpg
 	   https://dl.dropbox.com/u/15537823/Blog/SildeDemo/wallpaper-1427197.jpg
 
+----------------------
+
+Youtube::
+	
+	.. youtube:: gtTyWCjvSfI
+
+----------------------
+
+.. youtube:: gtTyWCjvSfI
+
+.. raw:: html
+
+	<blockquote>
+	<p>這並非單純只是流逝的季節，亦是那「永遠的夏季」逝去的年代。夢幻般的 80's </p>
+	<small>Orage Road</small><cite title="Source Title">きまぐれオレンジ☆ロード</cite></small>
+	</blockquote>
+
+這部動畫真的影響了我整個人生阿，夢幻般的 80 年代 XDDDD 
 
 .. _Unofficial Windows Binaries for Python Extension Packages: http://www.lfd.uci.edu/~gohlke/pythonlibs/
 .. _Octopress: http://octopress.org/
