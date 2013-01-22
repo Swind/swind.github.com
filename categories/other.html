@@ -1,0 +1,146 @@
+<!DOCTYPE html><html lang="en"><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta charset="utf-8"><meta name="title" content="Posts about Other | Corleonis"><meta name="description" content="I am Swind."><meta name="author" content="Swind"><title>Posts about Other | Corleonis</title><!-- Le styles --><link href="../assets/css/bootstrap.css" rel="stylesheet" type="text/css"><link href="../assets/css/rst.css" rel="stylesheet" type="text/css"><link href="../assets/css/monokai.css" rel="stylesheet" type="text/css"><link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css"><link href="../assets/css/slides.css" rel="stylesheet" type="text/css"><link href="../assets/css/theme.css" rel="stylesheet" type="text/css"><link href="../assets/css/bootstrap-responsive.css" rel="stylesheet" type="text/css"><script src="../assets/js/jquery-1.7.2.min.js" type="text/javascript"></script><script src="../assets/js/jquery.colorbox-min.js" type="text/javascript"></script><script src="../assets/js/slides.min.jquery.js" type="text/javascript"></script><script src="../assets/js/bootstrap.min.js" type="text/javascript"></script><!-- Le HTML5 shim, for IE6-8 support of HTML5 elements --><!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]--><link rel="alternate" type="application/rss+xml" title="RSS for tag Other (en)" href="other.xml"></head><body>
+<!-- Menubar -->
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+        
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </a>        
+        
+            <a class="brand" href="../">
+            Corleonis
+            </a>
+            <!-- Everything you want hidden at 940px or less, place within here -->
+            <div class="nav-collapse collapse">
+                <ul class="nav"><li><a href="../archive.html">Archives</a>
+            </li><li><a href="index.html">Tags</a>
+            </li><li><a href="../stories/linux-note.html">Linux 筆記</a>
+
+                </li></ul><ul class="nav pull-right"></ul></div>
+        </div>
+    </div>
+</div>
+<!-- End of Menubar -->
+<div class="container-fluid" id="container-fluid">
+    <!--Body content-->
+    <div class="row-fluid">
+    <div class="span2"></div>
+    <div class="span8">
+    
+        <div class="postbox">
+        <h1><a href="../posts/pelican-to-nikola.html">Pelican 轉移到 Nikola</a>
+        <small>  
+             Posted: 2013-01-22 09:11
+        </small></h1>
+        <hr><p>之前雖然從 Octopress 跳到 Pelican 脫離了 Ruby 的環境，也花了一些時間在修改 Theme。
+但是還是很難喜歡上 Pelican，最主要的就是他的手冊很難閱讀，而且資訊有點少 Orz。</p>
+<p>Nikola 的手冊就比較簡潔清楚，也比較好查詢。
+且查詢了一下 Nikola 的事蹟之後發現他太帥了！</p>
+<p><a class="reference external" href="http://zh.wikipedia.org/wiki/%E5%B0%BC%E5%8F%A4%E6%8B%89%C2%B7%E7%89%B9%E6%96%AF%E6%8B%89">Wiki 尼古拉 特斯拉</a></p>
+<p>所以後來就決定跳過來了～</p>
+<div class="section" id="windows-nikola">
+<h2>在 Windows 上安裝 Nikola</h2>
+<p>在 Windows 上面安裝 Nikola 實在是有點悲劇，因為他所使用的 Library 有一些會使用到 C 的程式碼。
+因此需要編譯，可是他又會連結到其他 C Library（例如 pillow or pil），所以就卡在安裝相依性套件這一關。</p>
+<p>雖然用 pip 安裝 pil 或者是 pillow 也可以，但是安裝完之後會因為缺少某些 library 而導致像 jpg 等圖片格式不被支援。</p>
+<p>最後是找到了 <a class="reference external" href="http://www.lfd.uci.edu/~gohlke/pythonlibs/">Unofficial Windows Binaries for Python Extension Packages</a> 下載了 pil 才解決了相依性安裝問題。
+這些相依性的 Library 安裝完畢之後，就可以使用 pip 安裝 Nikola 了。</p>
+<p><strong>But ! 就是這個 But !。</strong></p>
+<p>當你開心安裝完畢 Nikola 之後會發現無法使用 nikola 的指令。</p>
+<p>因為他放在 Python Scripts 資料夾底下的 Script 檔名是 <strong>nikola</strong>，Windows 不會覺得他是執行檔，所以沒有辦法執行指令。
+( 如果有人有知道其他執行方式的話請跟我說 m(_ _)m )</p>
+<p>一開始我很天真的覺得改成 nikola.py 就沒有問題了，但是在執行中 import 會出問題，因為 nikola 這個名字重複了 Orz。
+所以最後是多寫一個 nikola.bat</p>
+<pre class="code shell literal-block">
+C:\Python27\python.exe C:\Python27\Scripts\nikola %1 %2 %3 %4
+</pre>
+<p>放在 Scripts 資料夾底下，來解決這個問題。</p>
+<p>上面的 Script 因為我找不到 Windows 裡面代表所有傳入參數的符號，
+只好就土法煉鋼一個一個輸入，所以最多只能輸入四個參數。</p>
+<p>（如果有人有好得解決方式也請教我一下 m(_ _)m )</p>
+</div>
+<div class="section" id="nikola">
+<h2>Nikola 的一些指令</h2>
+<p>初始化</p>
+<blockquote>
+nikola init &lt;&lt;資料夾名稱&gt;&gt;</blockquote>
+<p>編譯</p>
+<blockquote>
+nikola build</blockquote>
+<p>啟動測試 Server</p>
+<blockquote>
+nikola serve</blockquote>
+<p>或</p>
+<blockquote>
+nikola serve --address 0.0.0.0 --port 8080</blockquote>
+</div>
+<div class="section" id="id1">
+<h2>Nikola 的語法筆記</h2>
+<p>這邊紀錄一下 Nikola 裡面才有的語法</p>
+<p>Note:</p>
+<pre class="literal-block">
+.. Note:: 這就是 Note 的效果
+</pre>
+<hr class="docutils"><div class="note">
+<p class="first admonition-title">Note</p>
+<p class="last">這就是 Note 的效果</p>
+</div>
+<hr class="docutils"><p>Contents:</p>
+<pre class="literal-block">
+.. contents::
+</pre>
+<hr class="docutils"><p>Contents 加上一些其他的 Class 屬性:</p>
+<pre class="literal-block">
+.. class:: alert alert-info pull-left
+
+.. contents::
+</pre>
+<hr class="docutils"><p>Sildes:</p>
+<pre class="literal-block">
+.. slides::
+
+   https://dl.dropbox.com/u/15537823/Blog/SildeDemo/wallpaper-1427130.jpg
+   https://dl.dropbox.com/u/15537823/Blog/SildeDemo/wallpaper-1427132.jpg
+   https://dl.dropbox.com/u/15537823/Blog/SildeDemo/wallpaper-1427197.jpg
+</pre>
+<script> $(function(){ $("#slides").slides({"currentClass": "slide-current", "autoHeight": true, "bigTarget": true, "paginationClass": "pager"}); }); </script><div id="slides" class="slides"><div class="slides_container">
+<div><img src="https://dl.dropbox.com/u/15537823/Blog/SildeDemo/wallpaper-1427130.jpg"></div>
+<div><img src="https://dl.dropbox.com/u/15537823/Blog/SildeDemo/wallpaper-1427132.jpg"></div>
+<div><img src="https://dl.dropbox.com/u/15537823/Blog/SildeDemo/wallpaper-1427197.jpg"></div>
+</div></div></div>
+        
+    <p>
+        <a href="../posts/pelican-to-nikola.html#disqus_thread" data-disqus-identifier="cache\posts\2013-01-22-pelican-to-nikola.html">Comments</a>
+
+        </p></div>
+    
+<div>
+<ul class="pager"></ul></div>
+
+    
+       <script type="text/javascript">var disqus_shortname="swindgithub";(function(){var a=document.createElement("script");a.async=true;a.type="text/javascript";a.src="http://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("HEAD")[0]||document.getElementsByTagName("BODY")[0]).appendChild(a)}());</script></div>
+    </div> 
+    <!--End of body content-->
+</div>
+<div class="footerbox">
+    Contents © 2013 <a href="mailto:">Swind</a> - Powered by <a href="http://nikola.ralsina.com.ar">Nikola</a>
+</div>
+
+    <!-- Social buttons -->
+    <div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
+    <a class="addthis_button_more">Share</a>
+    <ul><li><a class="addthis_button_facebook"></a></li>
+    <li><a class="addthis_button_google_plusone_share"></a></li>
+    <li><a class="addthis_button_linkedin"></a></li>
+    <li><a class="addthis_button_twitter"></a></li>
+    </ul></div>
+    <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script><!-- End of social buttons -->
+
+UA-15910682-2
+    <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script></body></html>
