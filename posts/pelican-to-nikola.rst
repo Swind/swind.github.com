@@ -121,14 +121,11 @@ Youtube::
 
 .. youtube:: gtTyWCjvSfI
 
-.. raw:: html
-
-	<blockquote>
-	<p>這並非單純只是流逝的季節，亦是那「永遠的夏季」逝去的年代。夢幻般的 80's </p>
-	<small>Orage Road</small><cite title="Source Title">きまぐれオレンジ☆ロード</cite></small>
-	</blockquote>
-
 這部動畫真的影響了我整個人生阿，夢幻般的 80 年代 XDDDD 
+
+	這並非單純只是流逝的季節，亦是那「永遠的夏季」逝去的年代。夢幻般的 80's
+
+	-- きまぐれオレンジ☆ロード
 
 .. _Unofficial Windows Binaries for Python Extension Packages: http://www.lfd.uci.edu/~gohlke/pythonlibs/
 .. _Octopress: http://octopress.org/
