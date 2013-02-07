@@ -16,7 +16,7 @@
 
 剛好之前也一直對 Play Framework 很有興趣，所以就大概花了兩個小時把 API 簡單的接上去，順便玩一下 Play Framework 2.0。
 
-`成果`_ 
+`原始碼`_ 
 
 自從開始工作之後，我就放棄了我會把東西記起來這件事情。
 所以我決定把使用 Play 實作的過程記錄一下，以方便我日後回憶。
@@ -490,7 +490,7 @@ Heroku 現在有支援 Play framework 了，所以整個部屬的過程也非常
 
 
 .. _怎麼設計22K?: http://minipai.tumblr.com/post/41882685541/22k
-.. _成果: http://serene-basin-3676.herokuapp.com/jobs/1
+.. _原始碼: https://github.com/Swind/22k
 .. _Play官網: http://www.playframework.org/
 .. _play-2.0.4.zip下載點: http://download.playframework.org/releases/play-2.0.4.zip
 .. _Your first Play application: http://www.playframework.org/documentation/2.1-RC4/ScalaTodoList
