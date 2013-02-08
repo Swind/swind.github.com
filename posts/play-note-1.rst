@@ -486,8 +486,14 @@ Play 設定 routes 的方式非常的直覺（遠望 struts 1.x Orz）::
 Heroku 現在有支援 Play framework 了，所以整個部屬的過程也非常簡單。
 可以參考 `Getting Started with Play! on Heroku`_。
 
+.. figure:: https://dl.dropbox.com/u/15537823/Blog/Scala-Play-%E7%AD%86%E8%A8%98/%E7%AB%B9%E6%9C%AC%E8%85%B3%E8%B8%8F%E8%BB%8A.jpg
 
+.. raw:: html
 
+	<blockquote>
+	<p>我從來都不知道自己房間的那扇門就是任意門， 只要走出去就能連到任何地方去。</p>
+	<small>竹本祐太</small><cite title="Source Title">蜂蜜與四葉草</cite></small>
+	</blockquote>
 
 .. _怎麼設計22K?: http://minipai.tumblr.com/post/41882685541/22k
 .. _原始碼: https://github.com/Swind/22k
