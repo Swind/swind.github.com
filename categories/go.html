@@ -1,18 +1,25 @@
 <!DOCTYPE html><html lang="en">
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <meta charset="utf-8">
+    <meta name="title" content="Posts about Go | Corleonis">
     <meta name="description" content="I am Swind.">
     <meta name="author" content="Swind">
     <title>Posts about Go | Corleonis</title>
-    
-            <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-            <link href="../assets/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">
+    <!-- Le styles -->
+        <link href="../assets/css/bootstrap.css" rel="stylesheet" type="text/css">
         <link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
-        <link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/monokai.css" rel="stylesheet" type="text/css">
         <link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
         <link href="../assets/css/slides.css" rel="stylesheet" type="text/css">
         <link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+        <script src="../assets/js/jquery-1.7.2.min.js" type="text/javascript"></script>
+        <script src="../assets/js/jquery.colorbox-min.js" type="text/javascript"></script>
+        <script src="../assets/js/slides.min.jquery.js" type="text/javascript"></script>
+        <script src="../assets/js/bootstrap.min.js" type="text/javascript"></script>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
     <![endif]-->
@@ -20,31 +27,52 @@
 
     
     
-    
 </head>
 <body>
-    <script type="text/javascript">var addthis_config={"ui_language":"en"};</script>
-<div class="container-fluid" id="container">
-    <div class="row-fluid" id="titlerow">
-    <div class="span12" id="titlecolumn">
-    <!-- Banner-like substance !-->
-        <div class="titlebox">
-        <h1 id="blog-title">
-            <a href="../" title="Corleonis">Corleonis</a>
-        </h1>
+<!-- Menubar -->
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
         
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </a>        
         
-        <hr>
+            <a class="brand" href="../">
+            Corleonis
+            </a>
+            <!-- Everything you want hidden at 940px or less, place within here -->
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    
+            <li><a href="../archive.html">Archives</a>
+            </li><li><a href="index.html">Tags</a>
+            </li><li><a href="../stories/linux-note.html">Linux 筆記</a>
+
+                </li></ul>
+                <ul class="nav pull-right">
+                
+                
+                 
+                </ul>
+            </div>
         </div>
-    <!-- End of banner-like substance !-->
-    <div class="row-fluid" id="contentrow">
-        <div class="span10" id="contentcolumn">
-            <!--Body content-->
-            
+    </div>
+</div>
+<!-- End of Menubar -->
+<div class="container-fluid" id="container-fluid">
+    <!--Body content-->
+    <div class="row-fluid">
+    <div class="span2"></div>
+    <div class="span8">
+    
         <div class="postbox">
         <h1><a href="../posts/goroutine-note-1.html">Golang - Goroutine 筆記 (1)</a>
         <small>  
-             Posted: <time class="published" datetime="2012-12-09T18:00:00">2012-12-09 18:00</time>
+             Posted: 2012-12-09 18:00
         </small></h1>
         <hr>
         <p>會想到用這個是由於 EPUBConverter Go 的版本雖然運作上已經比 Scala 版本快上不少了。
@@ -53,7 +81,7 @@
 <p>雖然有人說 goroutine 跟 Scala 的 actor 有點像，但是 actor 的模型就很具體跟明確。
 而 goroutine 則是提供一個方便快速的 thread 操作方式。</p>
 <p><a href="../posts/goroutine-note-1.html">Read more...</a></p>
-            
+        
     <p>
         <a href="../posts/goroutine-note-1.html#disqus_thread" data-disqus-identifier="cache/posts/2012-12-09-golang-goroutine-note1.html">Comments</a>
 
@@ -61,7 +89,7 @@
         <div class="postbox">
         <h1><a href="../posts/epubconverter-0_0_2.html">EPUBConverter 0.0.2 - 其實已經重寫了 Orz</a>
         <small>  
-             Posted: <time class="published" datetime="2012-12-08T18:00:00">2012-12-08 18:00</time>
+             Posted: 2012-12-08 18:00
         </small></h1>
         <hr>
         <p>一開始的 Scala 版本本來是自己寫來自己用的小工具，可是沒想到竟然有人有用還有回報問題。
@@ -77,7 +105,7 @@
 <p>不過有興趣的人，在原始碼的 <a class="reference external" href="https://github.com/Swind/EPUBConverter-Go/tree/master/tongwen_table">tongwen_table</a> 資料夾底下，我有放了一個簡單的轉換工具。
 可以利用那個重新產生 Go 的 map，但是最後還是得重新編譯整個 EPUBConverter 就是了。</p>
 <p><a href="../posts/epubconverter-0_0_2.html">Read more...</a></p>
-            
+        
     <p>
         <a href="../posts/epubconverter-0_0_2.html#disqus_thread" data-disqus-identifier="cache/posts/2012-12-08-epubconverter-go.html">Comments</a>
 
@@ -91,52 +119,18 @@
     
        <script type="text/javascript">var disqus_shortname="swindgithub";(function(){var a=document.createElement("script");a.async=true;a.type="text/javascript";a.src="http://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("HEAD")[0]||document.getElementsByTagName("BODY")[0]).appendChild(a)}());</script>
 
-    
 
-
-            <!--End of body content-->
-            <hr>
-            <small>Contents © 2013 <a href="mailto:">Swind</a> - Powered by <a href="http://nikola.ralsina.com.ar">Nikola</a></small>
-        </div>
-        <div class="span2" id="sidebar">
-            <!--Sidebar content-->
-            <ul class="unstyled">
-            <li>
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/ar/">
-<img alt="Creative Commons License BY-NC-SA" style="border-width:0; margin-bottom:12px;" src="http://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a>
-            
-    <!-- Social buttons -->
-    <div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
-    <a class="addthis_button_more">Share</a>
-    <ul><li><a class="addthis_button_facebook"></a>
-    </li><li><a class="addthis_button_google_plusone_share"></a>
-    </li><li><a class="addthis_button_linkedin"></a>
-    </li><li><a class="addthis_button_twitter"></a>
-    </li></ul>
     </div>
-    <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
-    <!-- End of social buttons -->
-
-            
-            </li><li><a href="../archive.html">Archives</a>
-            </li><li><a href="index.html">Tags</a>
-            </li><li><a href="../stories/linux-note.html">Linux 筆記</a>
-
-            </li><li>
-            </li></ul>
-            <!--End of sidebar content-->
-        </div>
-    </div>
-    </div>
-    </div>
+    </div> 
+    <!--End of body content-->
 </div>
-    
-            <script src="../assets/js/jquery-1.7.2.min.js" type="text/javascript"></script>
-            <script src="../assets/js/bootstrap.min.js" type="text/javascript"></script>
-        <script src="../assets/js/jquery.colorbox-min.js" type="text/javascript"></script>
-        <script src="../assets/js/slides.min.jquery.js" type="text/javascript"></script>
+
+<div class="footerbox">
+    Contents © 2013 <a href="mailto:">Swind</a> - Powered by <a href="http://nikola.ralsina.com.ar">Nikola</a>
+</div>
 
     
     <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script>
+
 </body>
 </html>
