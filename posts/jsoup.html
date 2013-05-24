@@ -1,50 +1,55 @@
-<!DOCTYPE html><html lang="en"><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta charset="utf-8"><meta name="title" content="好用的 HTML Parser - jsoup | Corleonis"><meta name="description" content=""><meta name="author" content="Swind"><title>好用的 HTML Parser - jsoup | Corleonis</title><!-- Le styles --><link href="../assets/css/bootstrap.css" rel="stylesheet" type="text/css"><link href="../assets/css/rst.css" rel="stylesheet" type="text/css"><link href="../assets/css/monokai.css" rel="stylesheet" type="text/css"><link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css"><link href="../assets/css/slides.css" rel="stylesheet" type="text/css"><link href="../assets/css/theme.css" rel="stylesheet" type="text/css"><link href="../assets/css/bootstrap-responsive.css" rel="stylesheet" type="text/css"><script src="../assets/js/jquery-1.7.2.min.js" type="text/javascript"></script><script src="../assets/js/jquery.colorbox-min.js" type="text/javascript"></script><script src="../assets/js/slides.min.jquery.js" type="text/javascript"></script><script src="../assets/js/bootstrap.min.js" type="text/javascript"></script><!-- Le HTML5 shim, for IE6-8 support of HTML5 elements --><!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
-    <![endif]--><link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../rss.xml"></head><body>
-<!-- Menubar -->
-<div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container">
-        
-        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </a>        
-        
-            <a class="brand" href="../">
-            Corleonis
-            </a>
-            <!-- Everything you want hidden at 940px or less, place within here -->
-            <div class="nav-collapse collapse">
-                <ul class="nav"><li><a href="../archive.html">Archives</a>
-            </li><li><a href="../categories/index.html">Tags</a>
-            </li><li><a href="../stories/linux-note.html">Linux 筆記</a>
-
-                </li></ul><ul class="nav pull-right"><li>
-    <a href="jsoup.rst">Source</a>
-    </li>
-
-                </ul></div>
-        </div>
-    </div>
-</div>
-<!-- End of Menubar -->
-<div class="container-fluid" id="container-fluid">
-    <!--Body content-->
-    <div class="row-fluid">
-    <div class="span2"></div>
-    <div class="span8">
+<!DOCTYPE html><html lang="en">
+<head>
     
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="author" content="Swind">
+    <title>好用的 HTML Parser - jsoup | Corleonis</title>
+    
+            <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+            <link href="../assets/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/slides.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]-->
+            <link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+
+    
+
+
+
+    
+</head>
+<body>
+    <script type="text/javascript">var addthis_config={"ui_language":"en"};</script>
+<div class="container-fluid" id="container">
+    <div class="row-fluid" id="titlerow">
+    <div class="span12" id="titlecolumn">
+    <!-- Banner-like substance !-->
+        <div class="titlebox">
+        <h1 id="blog-title">
+            <a href="../" title="Corleonis">Corleonis</a>
+        </h1>
+        
+        
+        <hr>
+        </div>
+    <!-- End of banner-like substance !-->
+    <div class="row-fluid" id="contentrow">
+        <div class="span10" id="contentcolumn">
+            <!--Body content-->
+            
     <div class="postbox">
-	
-	
+    
     <h1>好用的 HTML Parser - jsoup</h1>
 
-
-    <hr><small>
-        Posted: 2011-10-27 08:47
+    <hr>
+    <small>
+        Posted: <time class="published" datetime="2011-10-27T08:47:00">2011-10-27 08:47</time>
         
 
         
@@ -52,7 +57,8 @@
             <a class="tag" href="../categories/scala.html"><span class="badge badge-info">Scala</span></a>
 
     </small>
-    <hr><div><p>HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
+    <hr>
+    <p>HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
 為了要從網頁中可以取出內容,我曾經用過不少方式,包括直接硬幹用字串搜尋、修改Scala本身內部的XML Parser等。
 但是一直都找不到一個滿意又順手的解決方式,一直到後來在 <a class="reference external" href="http://www.oschina.net/">CSDN</a> 沒錯就是那個大陸網站 <a class="reference external" href="http://www.oschina.net/">CSDN</a>
 (雖然說CSDN訊息太多太雜亂,但是偶爾還是可以看到一些不錯的東西),才找到jsoup這個library。</p>
@@ -89,15 +95,19 @@ jsoup除了有支援讀取檔案之外,也可以直接輸入網址讓他自己�
 然後，寫個測試先決定整個程式的主要介面。
 因為我不喜歡一直連線到網站做測試。
 因為:</p>
-<ol class="arabic"><li><p class="first">浪費流量</p>
+<ol class="arabic">
+<li><p class="first">浪費流量</p>
 </li>
-<li><dl class="first docutils"><dt>我要驗證程式執行結果的時候必須要開網頁才能驗證。</dt>
+<li><dl class="first docutils">
+<dt>我要驗證程式執行結果的時候必須要開網頁才能驗證。</dt>
 <dd><p class="first last">(因為文章會一直新增第一頁的內容會被擠到後面去)</p>
 </dd>
-</dl></li>
+</dl>
+</li>
 <li><p class="first">你不一定隨時都有網路可以用</p>
 </li>
-</ol><p>因此先將今天的文章列表儲存起來，然後寫個測試來驗證我最後的輸出結果是否如我所預期。
+</ol>
+<p>因此先將今天的文章列表儲存起來，然後寫個測試來驗證我最後的輸出結果是否如我所預期。
 有人會想說這是不是什麼軟體工程技巧阿，是不是什麼測試先行（tdd）的開發方式之類的？
 其實也沒有特別想說要使用什麼樣的開發方式或開發技巧，單純就只是因為我覺得這樣比較方便而已。
 我覺得沒有必要被偉大或者是只要這樣做就對了等口號給迷惑，選擇自己需要且足夠的方式就好了。</p>
@@ -236,46 +246,80 @@ tag1 tag2</blockquote>
 以前要分析一個網站超血淚的，真的感謝open source的眾多好心人，願意分享他們的成果與程式碼。
 當然後續還有換頁讀取或者是比對之前的內容看是否有更新之類的工作，但是這都是後話了。</p>
 <p>p.s一篇文章我竟然要打快兩個月，真佩服那些有辦法每天都有產出的人</p>
-</div></div>
+</div>
     
-    <ul class="pager"><li class="previous">
+    <ul class="pager">
+        <li class="previous">
             <a href="octopress-note.html">← Previous post</a>
-        </li>
-        <li class="next">
+        </li><li class="next">
             <a href="scala-log-tool.html">Next post →</a>
-        </li>
-    </ul><div id="disqus_thread"></div>
+    </li></ul>
+
+        
+        <div id="disqus_thread"></div>
         <script type="text/javascript">
         var disqus_shortname ="swindgithub";
             var disqus_url="http://swind.code-life.info/posts/jsoup.html";
-        var disqus_title="好用的 HTML Parser - jsoup";
-        var disqus_identifier="cache\posts\2011-10-27-jsoup.html";
+        var disqus_title="\u597d\u7528\u7684 HTML Parser - jsoup";
+        var disqus_identifier="cache/posts/2011-10-27-jsoup.html";
+        var disqus_config = function () {
+            this.language = "en";
+        };
         (function() {
             var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
             dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
             (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
         })();
-    </script><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+    
 
     </div>
 
-    </div>
-    </div> 
-    <!--End of body content-->
-</div>
-<div class="footerbox">
-    Contents © 2013 <a href="mailto:">Swind</a> - Powered by <a href="http://nikola.ralsina.com.ar">Nikola</a>
-</div>
-
+            <!--End of body content-->
+            <hr>
+            <small>Contents © 2013 <a href="mailto:">Swind</a> - Powered by <a href="http://nikola.ralsina.com.ar">Nikola</a></small>
+        </div>
+        <div class="span2" id="sidebar">
+            <!--Sidebar content-->
+            <ul class="unstyled">
+            <li>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/ar/">
+<img alt="Creative Commons License BY-NC-SA" style="border-width:0; margin-bottom:12px;" src="http://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a>
+            
     <!-- Social buttons -->
     <div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
     <a class="addthis_button_more">Share</a>
-    <ul><li><a class="addthis_button_facebook"></a></li>
-    <li><a class="addthis_button_google_plusone_share"></a></li>
-    <li><a class="addthis_button_linkedin"></a></li>
-    <li><a class="addthis_button_twitter"></a></li>
-    </ul></div>
-    <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script><!-- End of social buttons -->
+    <ul><li><a class="addthis_button_facebook"></a>
+    </li><li><a class="addthis_button_google_plusone_share"></a>
+    </li><li><a class="addthis_button_linkedin"></a>
+    </li><li><a class="addthis_button_twitter"></a>
+    </li></ul>
+    </div>
+    <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
+    <!-- End of social buttons -->
 
-UA-15910682-2
-    <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script></body></html>
+            
+            </li><li><a href="../archive.html">Archives</a>
+            </li><li><a href="../categories/index.html">Tags</a>
+            </li><li><a href="../stories/linux-note.html">Linux 筆記</a>
+
+            </li><li>
+            </li></ul>
+            <!--End of sidebar content-->
+        </div>
+    </div>
+    </div>
+    </div>
+</div>
+    
+            <script src="../assets/js/jquery-1.7.2.min.js" type="text/javascript"></script>
+            <script src="../assets/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="../assets/js/jquery.colorbox-min.js" type="text/javascript"></script>
+        <script src="../assets/js/slides.min.jquery.js" type="text/javascript"></script>
+
+    
+    <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script>
+</body>
+</html>

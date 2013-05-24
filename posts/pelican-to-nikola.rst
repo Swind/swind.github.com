@@ -36,7 +36,7 @@ Nikola 的手冊就比較簡潔清楚，也比較好查詢。
 一開始我很天真的覺得改成 nikola.py 就沒有問題了，但是在執行中 import 會出問題，因為 nikola 這個名字重複了 Orz。
 所以最後是多寫一個 nikola.bat 
 
-.. code-block:: shell
+.. code-block:: bash
 
 	C:\Python27\python.exe C:\Python27\Scripts\nikola %1 %2 %3 %4
 

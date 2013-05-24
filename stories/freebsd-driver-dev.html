@@ -1,0 +1,185 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <meta name="description" content="FreeBSD Driver 開發筆記">
+    <meta name="author" content="Swind">
+    <title>FreeBSD Driver 開發筆記 | Corleonis</title>
+    
+            <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+            <link href="../assets/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/slides.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]-->
+            <link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+
+    
+
+
+
+    
+</head>
+<body>
+    <script type="text/javascript">var addthis_config={"ui_language":"en"};</script>
+<div class="container-fluid" id="container">
+    <div class="row-fluid" id="titlerow">
+    <div class="span12" id="titlecolumn">
+    <!-- Banner-like substance !-->
+        <div class="titlebox">
+        <h1 id="blog-title">
+            <a href="../" title="Corleonis">Corleonis</a>
+        </h1>
+        
+        
+        <hr>
+        </div>
+    <!-- End of banner-like substance !-->
+    <div class="row-fluid" id="contentrow">
+        <div class="span10" id="contentcolumn">
+            <!--Body content-->
+            
+    <h1>FreeBSD Driver 開發筆記</h1>
+    <p>莫名其妙進入了 FreeBSD Driver 領域 Orz 說好的 Java 呢 ? T_T</p>
+<div class="section" id="id1">
+<h2>參考資料</h2>
+<p>FreeBSD Device Drivers</p>
+</div>
+<div class="section" id="hello-world">
+<h2>先別管這個了，你有聽過 Hello World 嗎 ?</h2>
+<pre class="code c literal-block">
+<span class="cp">#include &lt;sys/param.h&gt;
+#include &lt;sys/module.h&gt;
+#include &lt;sys/kernel.h&gt;
+#include &lt;sys/systm.h&gt;
+</span>
+<span class="k">static</span> <span class="kt">int</span>
+<span class="nf">hello_modevent</span><span class="p">(</span><span class="kt">module_t</span> <span class="n">mod</span> <span class="n">__unused</span><span class="p">,</span> <span class="kt">int</span> <span class="n">event</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">arg</span> <span class="n">__unused</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">error</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">switch</span><span class="p">(</span><span class="n">event</span><span class="p">){</span>
+        <span class="k">case</span> <span class="n">MOD_LOAD</span>:
+            <span class="n">uprintf</span><span class="p">(</span><span class="s">"Hello, world!</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="n">MOD_UNLOAD</span>:
+            <span class="n">uprintf</span><span class="p">(</span><span class="s">"Good-bye, cruel world!</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="nl">default:</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="n">EOPNOTSUPP</span><span class="p">;</span>
+            <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">error</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="kt">moduledata_t</span> <span class="n">hello_mod</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">"hello"</span><span class="p">,</span>
+    <span class="n">hello_modevent</span><span class="p">,</span>
+    <span class="nb">NULL</span>
+<span class="p">};</span>
+
+<span class="n">DECLARE_MODULE</span><span class="p">(</span><span class="n">hello</span><span class="p">,</span> <span class="n">hello_mod</span><span class="p">,</span> <span class="n">SI_SUB_DRIVERS</span><span class="p">,</span> <span class="n">SI_ORDER_MIDDLE</span><span class="p">);</span>
+</pre>
+<pre class="code makefile literal-block">
+<span class="nv">KMOD</span><span class="o">=</span> hello
+<span class="nv">SRCS</span><span class="o">=</span> hello.c
+
+<span class="cp">.include &lt;bsd.kmod.mk&gt;
+</span>
+</pre>
+<p>這邊不得不說 FreeBSD 在開發 Kernel Module 的時候比 Linux 方便很多。
+連 Makefile 的設都定幫你準備好。</p>
+<p>在 include "bsd.kmod.mk" 之後，可以使用</p>
+<blockquote>
+make load</blockquote>
+<p>與</p>
+<blockquote>
+make unload</blockquote>
+<p>來代替 kldload ./hello.ko 與 kldunload hello.ko。</p>
+<p>Note:</p>
+<pre class="literal-block">
+.. &lt;sys/systm.h&gt;:: 是 systm.h 不是 system.h
+</pre>
+</div>
+<div class="section" id="hello-character-drivers">
+<h2>Hello Character Drivers</h2>
+<p>struct cdevsw 定義在 &lt;sys/conf.h&gt; 之中。</p>
+</div>
+<div class="section" id="common-access-method">
+<h2>Common Access Method</h2>
+<p>FreeBSD CAM implementation contains SIMs for</p>
+<ol class="arabic simple">
+<li>SCSI Parallel Interface (SPI)</li>
+<li>Fibre Channel (FC)</li>
+<li>USB Mass Storage (UMASS)</li>
+<li>FireWire (IEEE 1394)</li>
+<li>Advanced Technology Attachment Packet Interface (ATAPI)</li>
+</ol>
+<p>It has peripheral modules</p>
+<ol class="arabic simple">
+<li>disks (ds)</li>
+<li>CD-ROMs (cd)</li>
+<li>tapes (sa)</li>
+<li>tape changers (ch)</li>
+<li>processor type devices (pt)</li>
+<li>enclosure services (ses)</li>
+</ol>
+<p>Also, it provides a "pass-through" interface that allows user applications to send I/O requests directly to any CAM-controlled device.</p>
+</div>
+<div class="section" id="id2">
+<h2>縮寫翻譯</h2>
+<p>CTL (CAM target layer)</p>
+<p><a class="reference external" href="http://www.youtube.com/watch?v=eJv7GQ9rfDo">http://www.youtube.com/watch?v=eJv7GQ9rfDo</a></p>
+</div>
+
+            <!--End of body content-->
+            <hr>
+            <small>Contents © 2013 <a href="mailto:">Swind</a> - Powered by <a href="http://nikola.ralsina.com.ar">Nikola</a></small>
+        </div>
+        <div class="span2" id="sidebar">
+            <!--Sidebar content-->
+            <ul class="unstyled">
+            <li>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/ar/">
+<img alt="Creative Commons License BY-NC-SA" style="border-width:0; margin-bottom:12px;" src="http://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a>
+            
+    <!-- Social buttons -->
+    <div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
+    <a class="addthis_button_more">Share</a>
+    <ul><li><a class="addthis_button_facebook"></a>
+    </li><li><a class="addthis_button_google_plusone_share"></a>
+    </li><li><a class="addthis_button_linkedin"></a>
+    </li><li><a class="addthis_button_twitter"></a>
+    </li></ul>
+    </div>
+    <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
+    <!-- End of social buttons -->
+
+            
+            </li><li><a href="../archive.html">Archives</a>
+            </li><li><a href="../categories/index.html">Tags</a>
+            </li><li><a href="linux-note.html">Linux 筆記</a>
+
+            </li><li>
+            </li></ul>
+            <!--End of sidebar content-->
+        </div>
+    </div>
+    </div>
+    </div>
+</div>
+    
+            <script src="../assets/js/jquery-1.7.2.min.js" type="text/javascript"></script>
+            <script src="../assets/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="../assets/js/jquery.colorbox-min.js" type="text/javascript"></script>
+        <script src="../assets/js/slides.min.jquery.js" type="text/javascript"></script>
+
+    
+    <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script>
+</body>
+</html>

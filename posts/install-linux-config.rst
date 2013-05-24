@@ -22,16 +22,31 @@
 感謝 JosephJ 的 `一個指令安裝所有 Linux 設定檔`_ 以及該篇文章的回應。
 我最後也從 pathogen.vim 叛逃，使用 github + shell script + vundle 來完成我 zsh、tmux 與 vim 的設定。
 
-關於 vundle 的使用方式與設定我是參考 `使用Vundle更好的管理你的Vim插件`_，雖然是簡體的。
-不過設定與使用方式都寫得非常詳細。
+關於 vundle 的使用方式與設定我是參考 `使用Vundle更好的管理你的Vim插件`_ 雖然是簡體的。不過設定與使用方式都寫得非常詳細。
 
 經過一個早上的努力，我也終於可以使用
 
-.. code-block:: shell
+.. code-block:: bash
 
 	wget -O - https://raw.github.com/Swind/linux-config/master/install.sh | sh
 
 把 Linux 給設定完畢了～
+
+**2013.02.08 update**
+
+我發現在其他機器上使用的時候會有::
+
+	ERROR: certificate common name “*.a.ssl.fastly.net” doesn’t match requested host name “raw.github.com”.
+	To connect to raw.github.com insecurely, use ‘--no-check-certificate’.
+
+的錯誤訊息，目前我還沒有很仔細的去找原因。
+
+不過如他所敘述的，加入 --no-check-certificate 就沒有問題了。
+
+.. code-block:: bash
+
+	wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/master/install.sh | sh
+	
 
 除此之外 JosephJ 所給的建議也非常的實用，
 將常用的工具與指令整理成一份文件，來協助管理與記憶。
@@ -60,7 +75,7 @@
 	cd ~
 
 	#Checkout my config
-	git clone git@github.com:Swind/linux-config.git "$CONFIG_HOME"
+	git clone git://github.com/Swind/linux-config.git "$CONFIG_HOME"
 
 	ln -s $CONFIG_HOME/.vim .vim
 	ln -s .vim/.vimrc .vimrc

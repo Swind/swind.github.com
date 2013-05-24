@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Corleonis (Octopress)</title><link>http://swind.code-life.info</link><description>I am Swind.</description><lastBuildDate>Fri, 01 Feb 2013 15:42:27 GMT</lastBuildDate><generator>nikola</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Octopress安裝筆記 - 我跳槽到 Pelican 了 - 又跳到 Nikola 了</title><link>http://swind.code-life.info/posts/octopress-note.html</link><description>&lt;div class="section" id="nikola"&gt;
-&lt;h2&gt;2013.01.20 &amp;#25105;&amp;#21448;&amp;#36339;&amp;#27133;&amp;#21040; Nikola &amp;#20102;&lt;/h2&gt;
+<rss version="2.0"><channel><title>Corleonis (Octopress)</title><link>http://swind.code-life.info</link><description>I am Swind.</description><lastBuildDate>Thu, 23 May 2013 01:45:52 GMT</lastBuildDate><generator>nikola</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Octopress安裝筆記 - 我跳槽到 Pelican 了 - 又跳到 Nikola 了</title><link>http://swind.code-life.info/posts/octopress-note.html</link><description>&lt;html&gt;&lt;body&gt;&lt;div class="section" id="nikola"&gt;
+&lt;h2&gt;2013.01.20 我又跳槽到 Nikola 了&lt;/h2&gt;
 &lt;/div&gt;
 &lt;div class="section" id="pelican"&gt;
-&lt;h2&gt;2012.11.28 &amp;#25105;&amp;#24050;&amp;#32147;&amp;#36339;&amp;#27133;&amp;#21040; Pelican &amp;#20102;&amp;#65292;&amp;#19981;&amp;#36942;&amp;#36996;&amp;#26159;&amp;#25226;&amp;#36889;&amp;#31687;&amp;#30041;&amp;#33879;&amp;#30070;&amp;#32000;&amp;#24565;&amp;#22909;&amp;#20102;&amp;#12290;&lt;/h2&gt;
+&lt;h2&gt;2012.11.28 我已經跳槽到 Pelican 了，不過還是把這篇留著當紀念好了。&lt;/h2&gt;
 &lt;/div&gt;
-&lt;p&gt;&lt;a href="/posts/octopress-note.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;</description><guid>http://swind.code-life.info/posts/octopress-note.html</guid><pubDate>Wed, 19 Oct 2011 11:17:00 GMT</pubDate></item></channel></rss>
+&lt;div class="section" id="win7"&gt;
+&lt;h2&gt;2012.05.21 更新這次好像真的解決在 Win7 上面的問題了&lt;/h2&gt;
+&lt;p&gt;其實在 Windows 上面使用 Octopress 沒有什麼特別大的問題，注意文章的編碼就好。
+但是有一點一直非常困擾著我的就是， Codeblock 的問題。由於 rake generator 所提供的錯誤訊息非常的少，所以很難找出錯誤。
+最常在網頁上面看到的就是這個&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+Liquid error: undefined method `Py_IsInitialized’ for RubyPython::Python:Module
+&lt;/pre&gt;
+&lt;p&gt;一直到我今天無意間搜尋到這篇文章 (話說 Octopress 的安裝教學文真的越來越多了)
+&lt;a class="reference external" href="http://hivan.me/octopress-install-to-windows8/"&gt;Windows 8 安裝 Octopress 紀錄&lt;/a&gt; 他真的找出問題了，重點就在於！ &lt;em&gt;Python 請安裝 32-bit 的版本&lt;/em&gt;。
+真的這樣就讓 Codeblock 可以正常運作了 T_T
+真的是太讓人心酸了。&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/octopress-note.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;</description><guid>http://swind.code-life.info/posts/octopress-note.html</guid><pubDate>Wed, 19 Oct 2011 11:17:00 GMT</pubDate></item></channel></rss>

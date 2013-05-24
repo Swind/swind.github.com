@@ -1,0 +1,278 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <meta name="description" content="iSCSI REST API 設計">
+    <meta name="author" content="Swind">
+    <title>iSCSI REST API 設計 | Corleonis</title>
+    
+            <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+            <link href="../assets/css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/slides.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]-->
+            <link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+
+    
+
+
+
+    
+</head>
+<body>
+    <script type="text/javascript">var addthis_config={"ui_language":"en"};</script>
+<div class="container-fluid" id="container">
+    <div class="row-fluid" id="titlerow">
+    <div class="span12" id="titlecolumn">
+    <!-- Banner-like substance !-->
+        <div class="titlebox">
+        <h1 id="blog-title">
+            <a href="../" title="Corleonis">Corleonis</a>
+        </h1>
+        
+        
+        <hr>
+        </div>
+    <!-- End of banner-like substance !-->
+    <div class="row-fluid" id="contentrow">
+        <div class="span10" id="contentcolumn">
+            <!--Body content-->
+            
+    <h1>iSCSI REST API 設計</h1>
+    <div class="section" id="create-iscsi-target">
+<h2>Create iSCSI Target</h2>
+<p>This API is to create a new iSCSI target</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name">
+<col class="field-body">
+<tbody valign="top">
+<tr class="field"><th class="field-name">HTTP method:</th><td class="field-body">POST</td>
+</tr>
+<tr class="field"><th class="field-name">URI Pattern:</th><td class="field-body">/iscsi-targets</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="parameters">
+<h3>Parameters</h3>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name">
+<col class="field-body">
+<tbody valign="top">
+<tr class="field"><th class="field-name">name:</th><td class="field-body">iSCSI Target name</td>
+</tr>
+<tr class="field"><th class="field-name">target_alias:</th><td class="field-body">iSCSI Target alias</td>
+</tr>
+<tr class="field"><th class="field-name">auth_method:</th><td class="field-body">iSCSI target auth method</td>
+</tr>
+<tr class="field"><th class="field-name">use digest:</th><td class="field-body">use digest for PDU header and data or not</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="example-create-iscsi-target-json-request">
+<h3>Example. Create iSCSI Target: JSON Request</h3>
+<pre class="code json literal-block">
+<span class="p">{</span>
+    <span class="nt">"iscsi_target"</span><span class="p">:{</span>
+        <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"iqn.2012-05.pi-coral.com.disk1"</span><span class="p">,</span>
+        <span class="nt">"target_alias"</span><span class="p">:</span> <span class="s2">"iSCSI Data Disk1"</span><span class="p">,</span>
+        <span class="nt">"AuthMethod"</span><span class="p">:</span> <span class="s2">"Auto"</span><span class="p">,</span>
+        <span class="nt">"UseDigest"</span><span class="p">:</span> <span class="s2">"Auto"</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+</div>
+<div class="section" id="example-create-iscsi-target-json-response">
+<h3>Example. Create iSCSI Target:JSON Response</h3>
+<pre class="code json literal-block">
+<span class="p">{</span>
+    <span class="nt">"iscsi_target"</span><span class="p">:{</span>
+        <span class="nt">"id"</span><span class="p">:</span> <span class="s2">"5aa119a8-d25b-45a7-8d1b-88e127885635"</span><span class="p">,</span>
+        <span class="nt">"links"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="nt">"href"</span><span class="p">:</span> <span class="s2">"http://localhost:8776/v2/0c2eba2c5af04d3f9e9d0d410b371fde/iscsi-targets/5aa119a8-d25b-45a7-8d1b-88e127885635"</span><span class="p">,</span>
+                <span class="nt">"ref"</span><span class="p">:</span> <span class="s2">"self"</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="nt">"href"</span><span class="p">:</span> <span class="s2">"http://localhost:8776/0c2eba2c5af04d3f9e9d0d410b371fde/iscsi-targets/5aa119a8-d25b-45a7-8d1b-88e127885635"</span><span class="p">,</span>
+                <span class="nt">"ref"</span><span class="p">:</span> <span class="s2">"self"</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"iqn.2012-05.pi-coral.com"</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+</div>
+</div>
+<div class="section" id="update-iscsi-target">
+<h2>Update iSCSI Target</h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name">
+<col class="field-body">
+<tbody valign="top">
+<tr class="field"><th class="field-name">HTTP method:</th><td class="field-body">PUT</td>
+</tr>
+<tr class="field"><th class="field-name">URI Pattern:</th><td class="field-body">/iscsi-targets/&lt;iscsi target id&gt;</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="id1">
+<h3>Parameters</h3>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name">
+<col class="field-body">
+<tbody valign="top">
+<tr class="field"><th class="field-name" colspan="2">max_connextions:</th></tr>
+<tr class="field"><td> </td><td class="field-body">Default is 1
+Maximum number of connections requested/acceptable.</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">first_burst_length:</th></tr>
+<tr class="field"><td> </td><td class="field-body">Default is 65536 (64 Kbytes)
+Maximum amount in bytes of unsolicited data an iSCSI initiator may send to the target during the execution of a single SCSI Command.</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">max_burst_length:</th></tr>
+<tr class="field"><td> </td><td class="field-body">Default is 262411 (256 Kbytes)
+Maximum SCSI data payload in bytes in a Data-In or Data-Out PDU with the F bit set to one.</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">max_receive_data_segment_length:</th></tr>
+<tr class="field"><td> </td><td class="field-body">Default is 8192 bytes.
+Maximuxm data segment length in bytes it can receive in an iSCSI PDU.</td>
+</tr>
+<tr class="field"><th class="field-name">portal_group:</th><td class="field-body">A portal specifies the IP address and port number to be used for iSCSI connections.</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">initiator_group:</th></tr>
+<tr class="field"><td> </td><td class="field-body">Spetified name allow login/discovery</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="example-update-iscsi-target-json-request">
+<h3>Example. Update iSCSI Target: JSON Request</h3>
+<pre class="code json literal-block">
+<span class="p">{</span>
+    <span class="nt">"iscsi_target"</span><span class="p">:{</span>
+        <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"iqn.2012-05.pi-coral.com.disk1"</span><span class="p">,</span>
+        <span class="nt">"target_alias"</span><span class="p">:</span> <span class="s2">"iSCSI Data Disk1"</span><span class="p">,</span>
+        <span class="nt">"AuthMethod"</span><span class="p">:</span> <span class="s2">"Auto"</span><span class="p">,</span>
+        <span class="nt">"UseDigest"</span><span class="p">:</span> <span class="s2">"Auto"</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+</div>
+<div class="section" id="example-update-iscsi-target-json-response">
+<h3>Example. Update iSCSI Target: JSON Response</h3>
+</div>
+</div>
+<div class="section" id="create-portal-group">
+<h2>Create Portal Group</h2>
+<div class="section" id="example-create-portal-group-json-request">
+<h3>Example. Create Portal Group: JSON Request</h3>
+</div>
+<div class="section" id="example-create-portal-group-json-response">
+<h3>Example. Create Portal Group: JSON Response</h3>
+</div>
+</div>
+<div class="section" id="create-initiator-group">
+<h2>Create Initiator Group</h2>
+<div class="section" id="id2">
+<h3>Parameters</h3>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name">
+<col class="field-body">
+<tbody valign="top">
+<tr class="field"><th class="field-name">comment:</th><td class="field-body">The description of this initiator group.</td>
+</tr>
+<tr class="field"><th class="field-name">initiator_name:</th><td class="field-body">Spetified name allow login/discovery. Special word "ALL" match all of initiators.</td>
+</tr>
+<tr class="field"><th class="field-name">netmask:</th><td class="field-body">192.168.2.0/24 means the initiators from 192.168.2.0/24 can login and discovery this target.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="example-create-initiator-group-json-request">
+<h3>Example. Create Initiator Group: JSON Request</h3>
+<pre class="code json literal-block">
+<span class="p">{</span>
+    <span class="nt">"initiator_group"</span><span class="p">:{</span>
+        <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"initiator_group1"</span><span class="p">,</span>
+        <span class="nt">"comment"</span><span class="p">:</span> <span class="s2">"All initiators from 192.168.2.0/24"</span><span class="p">,</span>
+        <span class="nt">"initiator_name"</span><span class="p">:</span> <span class="s2">"All"</span><span class="p">,</span>
+        <span class="nt">"netmask"</span><span class="p">:</span> <span class="s2">"192.168.2.0/24"</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+</div>
+<div class="section" id="example-create-initiator-group-json-response">
+<h3>Example. Create Initiator Group: JSON Response</h3>
+<pre class="code json literal-block">
+<span class="p">{</span>
+    <span class="nt">"initiator_group"</span><span class="p">:{</span>
+        <span class="nt">"id"</span><span class="p">:</span> <span class="s2">"5aa119a8-d25b-45a7-8d1b-88e127885635"</span><span class="p">,</span>
+        <span class="nt">"links"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="nt">"href"</span><span class="p">:</span> <span class="s2">"http://localhost:8776/v2/0c2eba2c5af04d3f9e9d0d410b371fde/iscsi-targets/5aa119a8-d25b-45a7-8d1b-88e127885635"</span><span class="p">,</span>
+                <span class="nt">"ref"</span><span class="p">:</span> <span class="s2">"self"</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="nt">"href"</span><span class="p">:</span> <span class="s2">"http://localhost:8776/0c2eba2c5af04d3f9e9d0d410b371fde/iscsi-targets/5aa119a8-d25b-45a7-8d1b-88e127885635"</span><span class="p">,</span>
+                <span class="nt">"ref"</span><span class="p">:</span> <span class="s2">"self"</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"initiator_group1"</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+</div>
+</div>
+
+            <!--End of body content-->
+            <hr>
+            <small>Contents © 2013 <a href="mailto:">Swind</a> - Powered by <a href="http://nikola.ralsina.com.ar">Nikola</a></small>
+        </div>
+        <div class="span2" id="sidebar">
+            <!--Sidebar content-->
+            <ul class="unstyled">
+            <li>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/ar/">
+<img alt="Creative Commons License BY-NC-SA" style="border-width:0; margin-bottom:12px;" src="http://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a>
+            
+    <!-- Social buttons -->
+    <div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
+    <a class="addthis_button_more">Share</a>
+    <ul><li><a class="addthis_button_facebook"></a>
+    </li><li><a class="addthis_button_google_plusone_share"></a>
+    </li><li><a class="addthis_button_linkedin"></a>
+    </li><li><a class="addthis_button_twitter"></a>
+    </li></ul>
+    </div>
+    <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
+    <!-- End of social buttons -->
+
+            
+            </li><li><a href="../archive.html">Archives</a>
+            </li><li><a href="../categories/index.html">Tags</a>
+            </li><li><a href="linux-note.html">Linux 筆記</a>
+
+            </li><li>
+            </li></ul>
+            <!--End of sidebar content-->
+        </div>
+    </div>
+    </div>
+    </div>
+</div>
+    
+            <script src="../assets/js/jquery-1.7.2.min.js" type="text/javascript"></script>
+            <script src="../assets/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="../assets/js/jquery.colorbox-min.js" type="text/javascript"></script>
+        <script src="../assets/js/slides.min.jquery.js" type="text/javascript"></script>
+
+    
+    <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script>
+</body>
+</html>
