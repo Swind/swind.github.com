@@ -1,0 +1,834 @@
+<!DOCTYPE html><html lang="en">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta charset="utf-8">
+    <meta name="title" content="Setup iSCSI in FreeBSD | Corleonis">
+    <meta name="description" content="How to setup the iSCSI initiator in FreeBSD">
+    <meta name="author" content="Swind">
+    <title>Setup iSCSI in FreeBSD | Corleonis</title>
+    <!-- Le styles -->
+        <link href="../assets/css/bootstrap.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/monokai.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/slides.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+        <script src="../assets/js/jquery-1.7.2.min.js" type="text/javascript"></script>
+        <script src="../assets/js/jquery.colorbox-min.js" type="text/javascript"></script>
+        <script src="../assets/js/slides.min.jquery.js" type="text/javascript"></script>
+        <script src="../assets/js/bootstrap.min.js" type="text/javascript"></script>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]-->
+            <link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../rss.xml">
+
+    
+    
+</head>
+<body>
+<!-- Menubar -->
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+        
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </a>        
+        
+            <a class="brand" href="../">
+            Corleonis
+            </a>
+            <!-- Everything you want hidden at 940px or less, place within here -->
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    
+            <li><a href="../archive.html">Archives</a>
+            </li><li><a href="../categories/index.html">Tags</a>
+            </li><li><a href="linux-note.html">Linux 筆記</a>
+
+                </li></ul>
+                <ul class="nav pull-right">
+                
+                
+                
+    <li>
+    <a href="setup-iscsi-in-freebsd.rst">Source</a>
+    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of Menubar -->
+<div class="container-fluid" id="container-fluid">
+    <!--Body content-->
+    <div class="row-fluid">
+    <div class="span2"></div>
+    <div class="span8">
+    
+    <h1>Setup iSCSI in FreeBSD</h1>
+    <div class="contents alert alert-info pull-right topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="setup-iscsi-in-freebsd.html#piscsi-development-environment" id="id6">PiSCSI Development Environment</a><ul>
+<li><a class="reference internal" href="setup-iscsi-in-freebsd.html#os" id="id7">OS</a></li>
+<li><a class="reference internal" href="setup-iscsi-in-freebsd.html#tools" id="id8">Tools</a></li>
+<li><a class="reference internal" href="setup-iscsi-in-freebsd.html#compiler" id="id9">Compiler</a></li>
+<li><a class="reference internal" href="setup-iscsi-in-freebsd.html#libraries" id="id10">Libraries</a><ul>
+<li><a class="reference internal" href="setup-iscsi-in-freebsd.html#id1" id="id11">CppUTest</a></li>
+<li><a class="reference internal" href="setup-iscsi-in-freebsd.html#id2" id="id12">Google Perftools</a></li>
+<li><a class="reference internal" href="setup-iscsi-in-freebsd.html#id3" id="id13">LibConfig</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="setup-iscsi-in-freebsd.html#compile-the-source-code" id="id14">Compile the Source Code</a><ul>
+<li><a class="reference internal" href="setup-iscsi-in-freebsd.html#checkout-the-source-code-from-gitlab" id="id15">Checkout the source code from GitLab</a></li>
+<li><a class="reference internal" href="setup-iscsi-in-freebsd.html#use-cmake-to-generate-makefile" id="id16">Use CMake to generate Makefile</a></li>
+<li><a class="reference internal" href="setup-iscsi-in-freebsd.html#id4" id="id17">Compile the source code</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="setup-iscsi-in-freebsd.html#piscsi-configuration-file" id="id18">PiSCSI Configuration File</a><ul>
+<li><a class="reference internal" href="setup-iscsi-in-freebsd.html#global-environment-variables" id="id19">Global Environment Variables</a><ul>
+<li><a class="reference internal" href="setup-iscsi-in-freebsd.html#logical-unit" id="id20">logical_unit</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="setup-iscsi-in-freebsd.html#portal" id="id21">Portal</a></li>
+<li><a class="reference internal" href="setup-iscsi-in-freebsd.html#logical-units" id="id22">Logical Units</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="setup-iscsi-in-freebsd.html#configuration-file-example" id="id23">Configuration File Example</a></li>
+<li><a class="reference internal" href="setup-iscsi-in-freebsd.html#iscsi-target-and-initiator" id="id24">iSCSI Target and Initiator</a><ul>
+<li><a class="reference internal" href="setup-iscsi-in-freebsd.html#create-a-ramdisk" id="id25">Create a Ramdisk</a></li>
+<li><a class="reference internal" href="setup-iscsi-in-freebsd.html#execute-piscsi" id="id26">Execute PiSCSI</a></li>
+<li><a class="reference internal" href="setup-iscsi-in-freebsd.html#start-freebsd-iscsi-initiator" id="id27">Start FreeBSD iSCSI Initiator</a></li>
+<li><a class="reference internal" href="setup-iscsi-in-freebsd.html#stop-freebsd-iscsi-initiator" id="id28">Stop FreeBSD iSCSI Initiator</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="piscsi-development-environment">
+<h2><a class="toc-backref" href="setup-iscsi-in-freebsd.html#id6">PiSCSI Development Environment</a></h2>
+<div class="section" id="os">
+<h3><a class="toc-backref" href="setup-iscsi-in-freebsd.html#id7">OS</a></h3>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name">
+<col class="field-body">
+<tbody valign="top">
+<tr class="field"><th class="field-name">Release Note:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p><a class="reference external" href="http://www.freebsd.org/releases/9.1R/announce.html">FreeBSD 9.1-RELEASE</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name">
+<col class="field-body">
+<tbody valign="top">
+<tr class="field"><th class="field-name">LXR:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p><a class="reference external" href="http://fxr.watson.org/fxr/source/?v=FREEBSD91">LXR</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name">
+<col class="field-body">
+<tbody valign="top">
+<tr class="field"><th class="field-name">ISO:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p><a class="reference external" href="http://www.freebsd.org/where.html">FreeBSD 9.1-RELEASE ISO Download</a></p>
+</div>
+<div class="section" id="tools">
+<h3><a class="toc-backref" href="setup-iscsi-in-freebsd.html#id8">Tools</a></h3>
+<p><a class="reference external" href="http://www.cmake.org/">CMake</a></p>
+<p>CMake is used to control the software compilation process using simple platform and compiler independent configuration files.
+CMake generates native makefiles and workspaces that can be used in the compiler environment of your choice.</p>
+<p><strong>Install</strong></p>
+<blockquote>
+pkg_add -r cmake</blockquote>
+<p><a class="reference external" href="http://git-scm.com/">Git</a></p>
+<p>Git is a free and open source distributed version control system designed to handle everything from small to very large projects with speed and efficiency.</p>
+<p><strong>Install</strong></p>
+<blockquote>
+pkg_add -r git</blockquote>
+</div>
+<div class="section" id="compiler">
+<h3><a class="toc-backref" href="setup-iscsi-in-freebsd.html#id9">Compiler</a></h3>
+<p>Clang and Clang++</p>
+<p>The goal of the Clang project is to create a new C, C++, Objective C and
+Objective C++ front-end for the LLVM compiler.</p>
+<pre class="literal-block">
+clang version 3.2 (tags/RELEASE_32/final)
+Target: x86_64-unknown-freebsd9.0
+Thread model: posix
+</pre>
+<p><strong>Install</strong></p>
+<blockquote>
+pkg_add -r clang</blockquote>
+</div>
+<div class="section" id="libraries">
+<h3><a class="toc-backref" href="setup-iscsi-in-freebsd.html#id10">Libraries</a></h3>
+<div class="section" id="id1">
+<h4><a class="reference external" href="http://www.cpputest.org/">CppUTest</a></h4>
+<p>CppUTest is a C /C++ based unit xUnit test framework for unit testing and for test-driving your code.
+It is written in C++ but is used in C and C++ projects and frequently used in embedded systems.</p>
+<p>CppUTest has a couple design principles
+* Simpl to use and small
+* Portable to old and new platforms</p>
+<p><strong>Install</strong></p>
+<blockquote>
+git clone <a class="reference external" href="https://github.com/cpputest/cpputest.git">https://github.com/cpputest/cpputest.git</a>
+cd cpputest
+cmake .
+make install</blockquote>
+</div>
+<div class="section" id="id2">
+<h4><a class="reference external" href="https://code.google.com/p/gperftools/?redir=1">Google Perftools</a></h4>
+<p>These tools are for use by developers so that they can create more robust applications.
+Especially of use to those developing multi-threaded applications in C++ with templates.
+Includes TCMalloc, heap-checker, heap-profiler and cpu-profiler.</p>
+<p><strong>Install</strong></p>
+<blockquote>
+pkg_add -r google-perftools</blockquote>
+</div>
+<div class="section" id="id3">
+<h4><a class="reference external" href="http://www.hyperrealm.com/libconfig/">LibConfig</a></h4>
+<p>Libconfig is a simple library for processing structured configuration files
+This file format is more compact and more readable than XML. And unlike XML, it is type-aware, so it is not necessary to do string parsing in application code.</p>
+<p><strong>Install</strong></p>
+<blockquote>
+pkg_add -r libconfig</blockquote>
+</div>
+</div>
+</div>
+<div class="section" id="compile-the-source-code">
+<h2><a class="toc-backref" href="setup-iscsi-in-freebsd.html#id14">Compile the Source Code</a></h2>
+<div class="section" id="checkout-the-source-code-from-gitlab">
+<h3><a class="toc-backref" href="setup-iscsi-in-freebsd.html#id15">Checkout the source code from GitLab</a></h3>
+<pre class="code bash literal-block">
+git clone git@gitlab:Pi-Coral/piscsi.git
+</pre>
+<pre class="literal-block">
+╭─root@SwindBSD9  ~/Program/tmp
+╰─$ git clone git@gitlab:Pi-Coral/piscsi.git
+Cloning into 'piscsi'...
+The authenticity of host 'gitlab (192.168.1.56)' can't be established.
+ECDSA key fingerprint is f4:ce:20:e4:66:a8:d1:04:da:a6:e5:0c:0b:ea:70:57.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'gitlab' (ECDSA) to the list of known hosts.
+remote: Counting objects: 1202, done.
+remote: Compressing objects: 100% (752/752), done.
+remote: Total 1202 (delta 823), reused 673 (delta 430)
+Receiving objects: 100% (1202/1202), 1.33 MiB | 1.86 MiB/s, done.
+Resolving deltas: 100% (823/823), done.
+</pre>
+</div>
+<div class="section" id="use-cmake-to-generate-makefile">
+<h3><a class="toc-backref" href="setup-iscsi-in-freebsd.html#id16">Use CMake to generate Makefile</a></h3>
+<pre class="code bash literal-block">
+cmake .
+</pre>
+<pre class="literal-block">
+╭─root@SwindBSD9  ~/Program/tmp
+╰─$ cmake .
+-- The C compiler identification is Clang 3.2.0
+-- The CXX compiler identification is Clang 3.2.0
+-- Check for working C compiler: /usr/bin/clang
+-- Check for working C compiler: /usr/bin/clang -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/clang++
+-- Check for working CXX compiler: /usr/bin/clang++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Found Google perftools:
+
+-------------------------------------------------------
+CppUTest Version .
+
+Current compiler options:
+    CC:                                 /usr/bin/clang
+    CXX:                                /usr/bin/clang++
+    CppUTest CFLAGS:
+    CppUTest CXXFLAGS:
+    CppUTest LDFLAGS:
+
+Porject Information:
+    Project Name:                       PiSCSI
+    Project Source Dir:                 /root/Program/tmp/piscsi
+    Project Binary Dir:                 /root/Program/tmp/piscsi
+-------------------------------------------------------
+
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /root/Program/tmp/piscsi
+</pre>
+</div>
+<div class="section" id="id4">
+<h3><a class="toc-backref" href="setup-iscsi-in-freebsd.html#id17">Compile the source code</a></h3>
+<pre class="code bash literal-block">
+make
+</pre>
+<pre class="literal-block">
+╭─root@SwindBSD9  ~/Program/tmp/piscsi  ‹master*›
+╰─$ make
+-- Found Google perftools:
+
+-------------------------------------------------------
+CppUTest Version .
+
+Current compiler options:
+    CC:                                 /usr/bin/clang
+    CXX:                                /usr/bin/clang++
+    CppUTest CFLAGS:
+    CppUTest CXXFLAGS:
+    CppUTest LDFLAGS:
+
+Porject Information:
+    Project Name:                       PiSCSI
+    Project Source Dir:                 /root/Program/tmp/piscsi
+    Project Binary Dir:                 /root/Program/tmp/piscsi
+-------------------------------------------------------
+
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /root/Program/tmp/piscsi
+[  2%] Building C object src/CMakeFiles/iscsi_test.dir/bhs.c.o
+[  5%] Building C object src/CMakeFiles/iscsi_test.dir/pdu.c.o
+[  8%] Building C object src/CMakeFiles/iscsi_test.dir/login_manager.c.o
+[ 11%] Building C object src/CMakeFiles/iscsi_test.dir/socket_acceptor.c.o
+[ 14%] Building C object src/CMakeFiles/iscsi_test.dir/fullfeature.c.o
+[ 17%] Building C object src/CMakeFiles/iscsi_test.dir/logical_unit.c.o
+Linking C static library libiscsi_test.a
+[ 17%] Built target iscsi_test
+[ 20%] Building C object src/event/CMakeFiles/pievent.dir/ae.c.o
+[ 23%] Building C object src/event/CMakeFiles/pievent.dir/eventbus.c.o
+Linking C static library libpievent.a
+[ 23%] Built target pievent
+[ 26%] Building C object src/utils/CMakeFiles/piutils.dir/crc32.c.o
+[ 29%] Building C object src/utils/CMakeFiles/piutils.dir/param_set_list.c.o
+[ 32%] Building C object src/utils/CMakeFiles/piutils.dir/log.c.o
+[ 35%] Building C object src/utils/CMakeFiles/piutils.dir/queue.c.o
+[ 38%] Building C object src/utils/CMakeFiles/piutils.dir/misc.c.o
+Linking C static library libpiutils.a
+[ 38%] Built target piutils
+[ 41%] Building C object src/memory/CMakeFiles/pimemory.dir/pimalloc.c.o
+Linking C static library libpimemory.a
+[ 41%] Built target pimemory
+[ 44%] Building C object src/net/CMakeFiles/pinet.dir/connection.c.o
+[ 47%] Building C object src/net/CMakeFiles/pinet.dir/session.c.o
+Linking C static library libpinet.a
+[ 47%] Built target pinet
+[ 50%] Building C object src/config/CMakeFiles/piconfig.dir/portal.c.o
+[ 52%] Building C object src/config/CMakeFiles/piconfig.dir/target_info.c.o
+[ 55%] Building C object src/config/CMakeFiles/piconfig.dir/auth.c.o
+[ 58%] Building C object src/config/CMakeFiles/piconfig.dir/lun_info.c.o
+[ 61%] Building C object src/config/CMakeFiles/piconfig.dir/config.c.o
+[ 64%] Building C object src/config/CMakeFiles/piconfig.dir/config_loader.c.o
+Linking C static library libpiconfig.a
+[ 64%] Built target piconfig
+[ 67%] Building C object src/CMakeFiles/iscsid.dir/daemon.c.o
+[ 70%] Building C object src/CMakeFiles/iscsid.dir/bhs.c.o
+[ 73%] Building C object src/CMakeFiles/iscsid.dir/pdu.c.o
+[ 76%] Building C object src/CMakeFiles/iscsid.dir/login_manager.c.o
+[ 79%] Building C object src/CMakeFiles/iscsid.dir/socket_acceptor.c.o
+[ 82%] Building C object src/CMakeFiles/iscsid.dir/fullfeature.c.o
+[ 85%] Building C object src/CMakeFiles/iscsid.dir/logical_unit.c.o
+Linking C executable iscsid
+[ 85%] Built target iscsid
+[ 88%] Building CXX object tests/CMakeFiles/Runner.dir/CppUTestExample.cpp.o
+[ 91%] Building CXX object tests/CMakeFiles/Runner.dir/test_config.cpp.o
+[ 94%] Building CXX object tests/CMakeFiles/Runner.dir/test_connection.cpp.o
+[ 97%] Building CXX object tests/CMakeFiles/Runner.dir/test_utils_param_set.cpp.o
+[100%] Building CXX object tests/CMakeFiles/Runner.dir/test_emulator.cpp.o
+Linking CXX executable Runner
+[100%] Built target Runner
+</pre>
+</div>
+</div>
+<div class="section" id="piscsi-configuration-file">
+<h2><a class="toc-backref" href="setup-iscsi-in-freebsd.html#id18">PiSCSI Configuration File</a></h2>
+<p>We use <a class="reference external" href="http://www.hyperrealm.com/libconfig/">libconfig</a> to read/write our configuration file.</p>
+<div class="section" id="global-environment-variables">
+<h3><a class="toc-backref" href="setup-iscsi-in-freebsd.html#id19">Global Environment Variables</a></h3>
+<p>The global environment variables include debug leven and some constant variables.</p>
+<pre class="code kconfig literal-block">
+version <span class="o">=</span> <span class="s2">"1.0"</span>
+
+global:
+{
+    <span class="c1">#Global Debug Level: ERROR, WARN, INFO, DEBUG, NONE
+</span>    debug_level <span class="o">=</span> <span class="s2">"DEBUG"</span>;
+    socket_buffer <span class="o">=</span> <span class="s2">"1048576"</span>;
+}
+
+logical_unit:
+{
+    debug_level <span class="o">=</span> <span class="s2">"WARN"</span>;
+
+    <span class="c1">#Log the scsi command but exclude include READ and WRITE.
+</span>    log_scsi_command <span class="o">=</span> true;
+}
+</pre>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name">
+<col class="field-body">
+<tbody valign="top">
+<tr class="field"><th class="field-name">version:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>The iSCSI target version, it is showed in sysctl.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name">
+<col class="field-body">
+<tbody valign="top">
+<tr class="field"><th class="field-name">global:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>debug_level</p>
+<ul class="simple">
+<li>ERROR</li>
+<li>WARN</li>
+<li>INFO</li>
+<li>DEBUG</li>
+<li>NONE</li>
+</ul>
+<p><strong>default value is NONE</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name">
+<col class="field-body">
+<tbody valign="top">
+<tr class="field"><th class="field-name">socket_buffer:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>The socket buffer for every connection.</p>
+<p><strong>default value is 1048576 (bytes)</strong></p>
+<div class="section" id="logical-unit">
+<h4><a class="toc-backref" href="setup-iscsi-in-freebsd.html#id20">logical_unit</a></h4>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name">
+<col class="field-body">
+<tbody valign="top">
+<tr class="field"><th class="field-name">debug_level:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>The debug level for logical_unit.c</p>
+<p><strong>default value is NONE</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name">
+<col class="field-body">
+<tbody valign="top">
+<tr class="field"><th class="field-name" colspan="2">log_scsi_command:</th></tr>
+<tr class="field"><td> </td><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Log the SCSI Command opcode except READ and WRITE</p>
+<p><strong>default value is false</strong></p>
+</div>
+</div>
+<div class="section" id="portal">
+<h3><a class="toc-backref" href="setup-iscsi-in-freebsd.html#id21">Portal</a></h3>
+<pre class="code kconfig literal-block">
+portal_groups:
+<span class="p">(</span>
+    {
+        Name        <span class="o">=</span> <span class="s2">"Group1"</span>;
+        Portals     <span class="o">=</span>
+        <span class="p">(</span>
+            <span class="s2">"192.168.1.157:3260"</span>
+        <span class="p">)</span>;
+    }
+<span class="p">)</span>;
+</pre>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name">
+<col class="field-body">
+<tbody valign="top">
+<tr class="field"><th class="field-name">Name:</th><td class="field-body">The portal group ID.</td>
+</tr>
+<tr class="field"><th class="field-name">Portals:</th><td class="field-body">If there are mutiple address or port which are need to be listen, you can use</td>
+</tr>
+</tbody>
+</table>
+<pre class="code kconfig literal-block">
+Portals <span class="o">=</span>
+<span class="p">(</span>
+    <span class="s2">"192.168.1.157:3260"</span>,
+    <span class="s2">"192.168.1.158:3260"</span>,
+    <span class="s2">"192.168.1.159:3260"</span>
+<span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="logical-units">
+<h3><a class="toc-backref" href="setup-iscsi-in-freebsd.html#id22">Logical Units</a></h3>
+<pre class="code kconfig literal-block">
+logical_units:
+<span class="p">(</span>
+    {
+        Description <span class="o">=</span> <span class="s2">"Target 1"</span>;
+        TargetName <span class="o">=</span> <span class="s2">"iqn.2007-09.jp.ne.peach.istgt:disk1"</span>;
+        TargetAlias <span class="o">=</span> <span class="s2">"Test Target 1"</span>;
+        PortalGroup <span class="o">=</span> <span class="s2">"Group1"</span>;
+        Luns <span class="o">=</span>
+        <span class="p">(</span>
+            {
+                Id <span class="o">=</span> <span class="mi">1</span>;
+                Path <span class="o">=</span> <span class="s2">"/dev/da1"</span>;
+                Size <span class="o">=</span> <span class="s2">"1024 MB"</span>;
+                Type <span class="o">=</span> <span class="s2">"Pass"</span>;
+            }
+        <span class="p">)</span>;
+    }
+<span class="p">)</span>
+</pre>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name">
+<col class="field-body">
+<tbody valign="top">
+<tr class="field"><th class="field-name">Description:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>Just a description</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name">
+<col class="field-body">
+<tbody valign="top">
+<tr class="field"><th class="field-name">TargetName:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<p>iSCSI Qualified Name (IQN)</p>
+<p>Format: The iSCSI Qualified Name is documented in RFC 3720, with further examples of names in RFC 3721. Briefly, the fields are:</p>
+<ul class="simple">
+<li>literal iqn</li>
+<li>date (yyyy-mm) that the naming authority took ownership of the domain</li>
+<li>reversed domain name of the authority (org.alpinelinux, com.example, to.yp.cr)</li>
+<li>Optional ":" prefixing a storage target name specified by the naming authority.</li>
+</ul>
+<p>From the RFC:</p>
+<pre class="literal-block">
+              Naming     String defined by
+ Type  Date    Auth      "example.com" naming authority
++--++-----+ +---------+ +-----------------------------+
+|  ||     | |         | |                             |
+
+iqn.1992-01.com.example:storage:diskarrays-sn-a8675309
+iqn.1992-01.com.example
+iqn.1992-01.com.example:storage.tape1.sys1.xyz
+iqn.1992-01.com.example:storage.disk2.sys1.xyz[5]
+</pre>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name">
+<col class="field-body">
+<tbody valign="top">
+<tr class="field"><th class="field-name">TargetAlias:</th><td class="field-body">Target Alias</td>
+</tr>
+<tr class="field"><th class="field-name">PortalGroup:</th><td class="field-body">Portal Group ID</td>
+</tr>
+<tr class="field"><th class="field-name">Luns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils option-list" frame="void" rules="none">
+<col class="option">
+<col class="description">
+<tbody valign="top">
+<tr><td class="option-group">
+<kbd><span class="option">-I<var>d</var></span></kbd></td>
+<td>Lun ID;</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-P<var>ath</var></span></kbd></td>
+<td>Device path ex."/dev/da1"</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-S<var>ize</var></span></kbd></td>
+<td>Device size. Now this variable is unuseful, we directly get the disk size information from the device;</td></tr>
+<tr><td class="option-group">
+<kbd><span class="option">-T<var>ype</var></span></kbd></td>
+<td>Lun type. "Pass" or "Virtual", "Pass" will redirectly the READ/WRITE to the device.</td></tr>
+</tbody>
+</table>
+<p>If there are two targets</p>
+<pre class="code kconfig literal-block">
+logical_units:
+<span class="p">(</span>
+    {
+        Description <span class="o">=</span> <span class="s2">"Target 1"</span>;
+        TargetName <span class="o">=</span> <span class="s2">"iqn.2007-09.jp.ne.peach.istgt:disk1"</span>;
+        TargetAlias <span class="o">=</span> <span class="s2">"Test Target 1"</span>;
+        PortalGroup <span class="o">=</span> <span class="s2">"Group1"</span>;
+        Luns <span class="o">=</span>
+        <span class="p">(</span>
+            {
+                Id <span class="o">=</span> <span class="mi">1</span>;
+                Path <span class="o">=</span> <span class="s2">"/dev/da1"</span>;
+                Size <span class="o">=</span> <span class="s2">"1024 MB"</span>;
+                Type <span class="o">=</span> <span class="s2">"Pass"</span>;
+            }
+        <span class="p">)</span>;
+    }
+    ,
+    {
+        Description <span class="o">=</span> <span class="s2">"Target 2"</span>;
+        TargetName <span class="o">=</span> <span class="s2">"iqn.2007-09.jp.ne.peach.istgt:disk2"</span>;
+        TargetAlias <span class="o">=</span> <span class="s2">"Test Target 2"</span>;
+        PortalGroup <span class="o">=</span> <span class="s2">"Group1"</span>;
+        Luns <span class="o">=</span>
+        <span class="p">(</span>
+            {
+                Id <span class="o">=</span> <span class="mi">2</span>;
+                Path <span class="o">=</span> <span class="s2">"/dev/da2"</span>;
+                Size <span class="o">=</span> <span class="s2">"1024 MB"</span>;
+                Type <span class="o">=</span> <span class="s2">"Pass"</span>;
+            }
+        <span class="p">)</span>;
+    }
+<span class="p">)</span>
+</pre>
+</div>
+</div>
+<div class="section" id="configuration-file-example">
+<h2><a class="toc-backref" href="setup-iscsi-in-freebsd.html#id23">Configuration File Example</a></h2>
+<pre class="code kconfig literal-block">
+<span class="c1">#PiSCSI Configuration file
+</span>
+<span class="c1">#####################################################################
+</span>
+version <span class="o">=</span> <span class="s2">"1.0"</span>
+
+global:
+{
+    <span class="c1">#Global Debug Level: ERROR, WARN, INFO, DEBUG, NONE
+</span>    debug_level <span class="o">=</span> <span class="s2">"DEBUG"</span>;
+    socket_buffer <span class="o">=</span> <span class="s2">"1048576"</span>;
+}
+
+logical_unit:
+{
+    debug_level <span class="o">=</span> <span class="s2">"WARN"</span>;
+
+    <span class="c1">#Log the scsi command from initiator but doesn't include READ and WRITE.
+</span>    log_scsi_command <span class="o">=</span> true;
+}
+
+
+<span class="c1">#####################################################################
+</span>portal_groups:
+<span class="p">(</span>
+    {
+        Name        <span class="o">=</span> <span class="s2">"Group1"</span>;
+        Portals     <span class="o">=</span>
+        <span class="p">(</span>
+            <span class="s2">"192.168.1.157:3260"</span>
+        <span class="p">)</span>;
+    }
+<span class="p">)</span>;
+
+logical_units:
+<span class="p">(</span>
+    {
+        Description <span class="o">=</span> <span class="s2">"Target 1"</span>;
+        TargetName <span class="o">=</span> <span class="s2">"iqn.2007-09.jp.ne.peach.istgt:disk1"</span>;
+        TargetAlias <span class="o">=</span> <span class="s2">"Test Target 1"</span>;
+        PortalGroup <span class="o">=</span> <span class="s2">"Group1"</span>;
+        Luns <span class="o">=</span>
+        <span class="p">(</span>
+            {
+                Id <span class="o">=</span> <span class="mi">1</span>;
+                Path <span class="o">=</span> <span class="s2">"/dev/da1"</span>;
+                Size <span class="o">=</span> <span class="s2">"1024 MB"</span>;
+                Type <span class="o">=</span> <span class="s2">"Pass"</span>;
+            }
+        <span class="p">)</span>;
+    }
+<span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="iscsi-target-and-initiator">
+<h2><a class="toc-backref" href="setup-iscsi-in-freebsd.html#id24">iSCSI Target and Initiator</a></h2>
+<div class="section" id="create-a-ramdisk">
+<h3><a class="toc-backref" href="setup-iscsi-in-freebsd.html#id25">Create a Ramdisk</a></h3>
+<p>Before use PiSCSI, you need have a raw disk for PiSCSI.
+In order to exclude the I/O effect, we use ramdisk as the downstream disk.</p>
+<pre class="code bash literal-block">
+<span class="c">#Create 512 MB ramdisk
+</span>ctladm create -b ramdisk -s 536870912
+</pre>
+<pre class="literal-block">
+LUN created successfully
+backend:       ramdisk
+device type:   0
+LUN size:      536870912 bytes
+blocksize      512 bytes
+LUN ID:        0
+Serial Number: MYSERIAL   0
+Device ID;     MYDEVID   0
+Front End Ports enabled
+</pre>
+<p>Enable the ctl port</p>
+<pre class="code bash literal-block">
+ctladm port -o on
+</pre>
+<pre class="literal-block">
+Front End Ports enabled
+</pre>
+<p>You can check the ramdisk information by <strong>ctladm devlist</strong> and <strong>camcontrol devlist</strong></p>
+<pre class="code bash literal-block">
+ctladm devlist
+</pre>
+<pre class="literal-block">
+LUN Backend       Size (Blocks)   BS Serial Number    Device ID
+  0 ramdisk             1048576  512 MYSERIAL   0     MYDEVID   0
+</pre>
+<pre class="code bash literal-block">
+camcontrol devlist
+</pre>
+<pre class="literal-block">
+&lt;NECVMWar VMware IDE CDR10 1.00&gt;   at scbus1 target 0 lun 0 (pass0,cd0)
+&lt;VMware Virtual disk 1.0&gt;          at scbus2 target 0 lun 0 (pass1,da0)
+&lt;VMware Virtual disk 1.0&gt;          at scbus2 target 1 lun 0 (pass2,da1)
+&lt;FREEBSD CTLDISK 0001&gt;             at scbus3 target 1 lun 0 (da2,pass3)
+</pre>
+<p>The "FREEBSD CTLDISK 0001" is the ramdisk we created.</p>
+</div>
+<div class="section" id="execute-piscsi">
+<h3><a class="toc-backref" href="setup-iscsi-in-freebsd.html#id26">Execute PiSCSI</a></h3>
+<p>Before execute the "iscsid", you need finish the configuration file and put the file with the iscsid together.</p>
+<pre class="code bash literal-block">
+./iscsid
+</pre>
+<pre class="literal-block">
+PiSCSI daemon start...
+Read Configuration...Load config file ./piscsi.config ...
+/root/Program/tmp/piscsi/src/config/config_loader.c:  25: debug_level = DEBUG
+Debug Level = DEBUG(2147483648)
+Log SCSI Command = true
+Add Portal:
+ Name: Group1
+ IP: 192.168.1.95:3260
+Add a logical unit:
+ Name: iqn.2007-09.jp.ne.peach.istgt:disk1
+ Alias: Test Target 1
+ Portal Group: Group1
+Load config file finish...
+OK
+Start EventBus...OK
+Start FullFeature Manager...OK
+Start Login Manager...OK
+Create Socket Acceptor and add portal to Socket Acceptor...
+/root/Program/tmp/piscsi/src/daemon.c:  63: Portal Group Group1
+/root/Program/tmp/piscsi/src/daemon.c:  66: Open the portal 192.168.1.95:3260...
+/root/Program/tmp/piscsi/src/utils/misc.c:  91: Listen 192.168.1.95:3260 success, socket 5
+/root/Program/tmp/piscsi/src/event/eventbus.c:  75: Listener 192.168.1.95:3260 has been added
+OK
+/root/Program/tmp/piscsi/src/event/eventbus.c:  62: Eventbus start !
+</pre>
+</div>
+<div class="section" id="start-freebsd-iscsi-initiator">
+<h3><a class="toc-backref" href="setup-iscsi-in-freebsd.html#id27">Start FreeBSD iSCSI Initiator</a></h3>
+<p>Load the iSCSI initiator module.</p>
+<pre class="code bash literal-block">
+kldload /boot/kernel/iscsi_initiator.ko
+kldstat
+</pre>
+<pre class="literal-block">
+Id Refs Address            Size     Name
+ 1    6 0xffffffff80200000 1323388  kernel
+ 2    1 0xffffffff81615000 a268     iscsi_initiator.ko
+</pre>
+<p>Create the iSCSI initiator config : iscsi_initiator.config</p>
+<pre class="code kconfig literal-block">
+officeiscsi {
+        authmethod    <span class="o">=</span> NONE
+        <span class="c1">#chapIName    = YOUR-ISCSI-USERNAME
+</span>        <span class="c1">#chapSecret   = YOUR-ISCSI-PASSWORD
+</span>        initiatorname <span class="o">=</span> nxl
+        TargetName    <span class="o">=</span> iqn.XYZZZZZZZZZZZZZ <span class="c1">#  whatever "iscontrol -v -d " gives you
+</span>        TargetAddress <span class="o">=</span> <span class="mi">127</span>.0.0.1:3260,1 <span class="c1"># your iscsi server IP
+</span>}
+</pre>
+<ul class="simple">
+<li>officeiscsi { : Start config for iSCSI.</li>
+<li>authmethod : Set authentication method to chap</li>
+<li>chapIName : Your username</li>
+<li>chapSecret : Your password</li>
+<li>initiatorname : if not specified, defaults to iqn.2005-01.il.ac.huji.cs:&lt;hostname&gt;</li>
+<li>TargetName : is the name by which the target is known, not to be confused with target address, either obtained via the target administrator, or from a discovery session.</li>
+<li>TargetAddress : is of the form domainname[:port][,portal-group-tag] to quote the RFC: The domainname can be specified as either a DNS host name, a dotted-decimal IPv4 address, or a bracketed IPv6 address as specified in [RFC2732].</li>
+<li>} : End of config</li>
+</ul>
+<p>Start iSCSI initiator</p>
+<pre class="code bash literal-block">
+iscontrol -c ./iscsi_initiator.config -n testdisk
+camcontrol devlist
+</pre>
+</div>
+<div class="section" id="stop-freebsd-iscsi-initiator">
+<h3><a class="toc-backref" href="setup-iscsi-in-freebsd.html#id28">Stop FreeBSD iSCSI Initiator</a></h3>
+<p>The iscontrol doesn't provide stop command, so we use kill to terminate the iscontrol.</p>
+<pre class="code bash literal-block">
+ps aux | grep iscontrol | awk <span class="s1">'{ print $2 }'</span> | xargs <span class="nb">kill</span> -9
+</pre>
+<p>And the iscsid doesn't provide too.</p>
+<pre class="code bash literal-block">
+ps aux | grep iscsid | awk <span class="s1">'{ print $2 }'</span> | xargs <span class="nb">kill</span> -9
+</pre>
+<p>login may create a new session or it may add a connection to an
+existing session.  Between a given iSCSI Initiator Node (selected
+only by an InitiatorName) and a given iSCSI target defined by an
+iSCSI TargetName and a Target Portal Group Tag, the login results are
+defined by the following table:</p>
+<pre class="literal-block">
+    +------------------------------------------------------------------+
+    |ISID      | TSIH        | CID    |     Target action              |
+    +------------------------------------------------------------------+
+    |new       | non-zero    | any    |     fail the login             |
+    |          |             |        |     ("session does not exist") |
+    +------------------------------------------------------------------+
+    |new       | zero        | any    |     instantiate a new session  |
+    +------------------------------------------------------------------+
+    |existing  | zero        | any    |     do session reinstatement   |
+    |          |             |        |     (see section 5.3.5)        |
+    +------------------------------------------------------------------+
+    |existing  | non-zero    | new    |     add a new connection to    |
+    |          | existing    |        |     the session                |
+    +------------------------------------------------------------------+
+    |existing  | non-zero    |existing|     do connection reinstatement|
+    |          | existing    |        |    (see section 5.3.4)         |
+    +------------------------------------------------------------------+
+    |existing  | non-zero    | any    |         fail the login         |
+    |          | new         |        |     ("session does not exist") |
+    +------------------------------------------------------------------+
+
+Determination of "existing" or "new" are made by the target.
+</pre>
+</div>
+</div>
+
+    </div>
+    </div> 
+    <!--End of body content-->
+</div>
+
+<div class="footerbox">
+    Contents © 2013 <a href="mailto:">Swind</a> - Powered by <a href="http://nikola.ralsina.com.ar">Nikola</a>
+</div>
+
+    
+    <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script>
+
+</body>
+</html>
