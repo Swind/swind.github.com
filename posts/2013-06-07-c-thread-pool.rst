@@ -1,4 +1,4 @@
-.. title: C 的 Thread Pool
+.. title: C 的 Thread Pool 筆記
 .. slug: c-thread-pool
 .. date: 2013/06/07 21:43:28
 .. tags: 
@@ -42,6 +42,9 @@ Currently, the implementation:
 
 from wikipedia
 
+Thread Pool 的資料結構
+----------------------------------------------------------------------------------
+
 首先 Thread Pool 要有的東西就是 job 或者是 task 讓 Thread 知道他們要做什麼事情。
 
 .. code-block:: c
@@ -51,6 +54,7 @@ from wikipedia
         void *argument;
     } threadpool_task_t;
 
+所以只要有一個資料結構紀錄要執行的 function pointer 與要傳遞的參數即可。
 接下來就是 Thread Pool 本身，他必須存放所有的 Thread 與 Job Queue  
 
 .. code-block:: c
@@ -72,57 +76,8 @@ from wikipedia
 這邊他使用了一個 pthread_t 的 pointer 來紀錄所有的 Thread，簡單來說就是一個 pthread_t 的 array，而 head, tail 就是紀錄 array 的 offset。
 threadpool_task_t 也是一樣的原理，真是出乎意料的簡單。
 
-.. code-block:: c
-
-    threadpool_t *threadpool_create(int thread_count, int queue_size, int flags)
-    {
-        threadpool_t *pool;
-        int i;
-
-        /* TODO: Check for negative or otherwise very big input parameters */
-
-        if((pool = (threadpool_t *)malloc(sizeof(threadpool_t))) == NULL) {
-            goto err;
-        }
-
-        /* Initialize */
-        pool->thread_count = 0;
-        pool->queue_size = queue_size;
-        pool->head = pool->tail = pool->count = 0;
-        pool->shutdown = pool->started = 0;
-
-        /* Allocate thread and task queue */
-        pool->threads = (pthread_t *)malloc(sizeof(pthread_t) * thread_count);
-        pool->queue = (threadpool_task_t *)malloc
-            (sizeof(threadpool_task_t) * queue_size);
-
-        /* Initialize mutex and conditional variable first */
-        if((pthread_mutex_init(&(pool->lock), NULL) != 0) ||
-           (pthread_cond_init(&(pool->notify), NULL) != 0) ||
-           (pool->threads == NULL) ||
-           (pool->queue == NULL)) {
-            goto err;
-        }
-
-        /* Start worker threads */
-        for(i = 0; i < thread_count; i++) {
-            if(pthread_create(&(pool->threads[i]), NULL,
-                              threadpool_thread, (void*)pool) != 0) {
-                threadpool_destroy(pool, 0);
-                return NULL;
-            }
-            pool->thread_count++;
-            pool->started++;
-        }
-
-        return pool;
-
-     err:
-        if(pool) {
-            threadpool_free(pool);
-        }
-        return NULL;
-    }
+ThreadPool 的建立與工作的執行
+-----------------------------------------------------------------------------------------------------
 
 再來就是 Thread Pool 的建立，由於剛剛提到的他其實是使用一個 pthread array 與一個 job array 來存放所有的 thread 與 jobs。
 因此需要在一開始的時候就決定 Thread Pool 與 Jobs 的最大數量。
@@ -179,10 +134,37 @@ threadpool_task_t 也是一樣的原理，真是出乎意料的簡單。
         return(NULL);
     }
 
-在 **for(;;)** 裡面，Thread 第一件要做的事情就是去搶奪 lock
+在 **for(;;)** 裡面，Thread 第一件要做的事情就是去搶奪 pool 的 lock，當搶到 lock 的 Thread 發現沒有工作可以做的時候，
+就會執行 pthread_cond_wait 來等待通知。這時候 pool->lock 會被 Unlock，因此這時候其他 Thread 也可以進來這個區域。
+所以在完全沒有工作的情況下，所有的 Thread 都會在這邊 Waiting。
+
+當 Thread 被透過 pthread_cond_signal 喚醒的時候，該 Thread 就會重新取得 pool->lock。
+這時他就可以安心的取出 queue 中的 task，等待取出完畢之後，再 unlock 讓其他被喚醒的 Thread 也可以去取得 Task。
+
+之後就是執行 task 中的 function pointer 做該做的工作。
+
+ThreadPool 的 destory
+------------------------------------------------------------------------------------------------------
+
+destory 就更簡單了，只要使用 pthread_cond_broadcast 通知所有的 Thread 起來，由於 shoutdown 的確認會在執行工作之前。
+所以該 thread 就會離開執行工作的迴圈，並且結束。
+
+`mbrossard 完整的 ThreadPool 原始碼`_
  
+其實寫這篇筆記應該只是想貼這個
+
+.. figure:: https://dl.dropboxusercontent.com/u/15537823/Blog/%E7%94%9F%E5%AD%98%E6%88%B0%E7%95%A5.jpg 
+
+.. raw:: html
+
+	<blockquote>
+	<p>生存戦略！</p>
+	<cite title="Source Title">輪るピングドラム</cite></small>
+	</blockquote>
+
 .. _threadpool-mbrossard: https://github.com/mbrossard/threadpool 
 .. _threadpool-jmatthew: http://people.clarkson.edu/~jmatthew/cs644.archive/cs644.fa2001/proj/locksmith/code/ExampleTest/
 .. _cthreadpool: http://sourceforge.net/projects/cthpool/
 .. _C-Thread-Pool: https://github.com/Pithikos/C-Thread-Pool
 .. _Existing threadpool C implementation: http://stackoverflow.com/questions/6297428/existing-threadpool-c-implementation
+.. _mbrossard 完整的 ThreadPool 原始碼: https://github.com/mbrossard/threadpool/blob/master/src/threadpool.c
