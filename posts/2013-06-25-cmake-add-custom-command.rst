@@ -67,6 +67,5 @@
 	<p>我らの望みヽ</p>
 	<p>それは</p>
 	<p>汝の本降ちゆくを看取ること</p>
-	<cite title="Source Title">星界的紋章</cite></small>
 	</blockquote>
 
