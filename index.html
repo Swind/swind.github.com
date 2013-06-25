@@ -70,6 +70,69 @@
     <div class="span8">
     
         <div class="postbox">
+        <h1><a href="posts/cmake-add_custom_command.html">CMake - add_custom_command</a>
+        <small>  
+             Posted: 2013-06-25 19:20
+        </small></h1>
+        <hr>
+        <p>最近因為必須要示範如何將公司的 autoconf 與 automake 轉成 CMake，所以稍微研究了一下之前完全沒有用過得 <a class="reference external" href="http://www.cmake.org/cmake/help/cmake2.6docs.html#command:add_custom_command">add_custom_command</a> 跟 <a class="reference external" href="http://www.cmake.org/cmake/help/cmake2.6docs.html#command:add_custom_target">add_custom_target</a></p>
+<div class="section" id="symbolic-link">
+<h2>建立 symbolic link</h2>
+<p>目前有一個需求是要建立 symbolic link 在某些特定的資料夾裡面。
+由於 autotools 是可以直接使用 script 的語法，所以建立起來非常簡單。</p>
+<pre class="code bash literal-block">
+install-exec-hook:
+     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path1
+     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path2
+     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path3
+     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path4
+     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path5
+</pre>
+<p>這樣只要直接呼叫 make install-exec-hook 就可以建立 symbolic link 了。
+但是如果要在 CMake 裡面作到一樣的事情要怎麼處理呢？</p>
+<pre class="code cmake literal-block">
+<span class="nb">Set</span><span class="p">(</span><span class="s">targets</span>
+    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path1</span>
+    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path2</span>
+    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path3</span>
+    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path4</span>
+    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path5</span>
+<span class="p">)</span>
+
+<span class="nb">Function</span><span class="p">(</span><span class="s">Create_symbolic_link</span> <span class="s">source</span> <span class="s">target</span><span class="p">)</span>
+    <span class="nb">Add_custom_command</span><span class="p">(</span>
+        <span class="s">OUTPUT</span> <span class="o">${</span><span class="nv">target</span><span class="o">}</span>
+        <span class="s">COMMAND</span> <span class="s">ln</span> <span class="s">-fs</span> <span class="o">${</span><span class="nv">source</span><span class="o">}</span> <span class="o">${</span><span class="nv">target</span><span class="o">}</span>
+    <span class="p">)</span>
+<span class="nb">Endfunction</span><span class="p">()</span>
+
+<span class="nb">Foreach</span><span class="p">(</span><span class="s">target</span> <span class="s">targets</span><span class="p">)</span>
+   <span class="nb">Create_symbolic_link</span><span class="p">(</span><span class="o">${</span><span class="nv">source_prefix</span><span class="o">}</span><span class="s">/a</span> <span class="o">${</span><span class="nv">target</span><span class="o">}</span><span class="p">)</span>
+<span class="nb">Endforeach</span><span class="p">()</span>
+
+<span class="nb">Add_custom_target</span><span class="p">(</span><span class="s">install-exec-hook</span> <span class="s">DEPENDS</span> <span class="o">${</span><span class="nv">targets</span><span class="o">}</span><span class="p">)</span>
+</pre>
+<p>因為 CMake 裡面沒有辦法像 shell script 一樣直接下指令，必須透過 Add_custom_command 或者是 Execute_process 等方式執行。
+但是若又要跟 Target 建立相依性的話，似乎就一定得靠 Add_custom_command，因為他會設定一個 output file。
+這樣就可以讓 Target 依賴這個檔案 ( 以我們的例子來說 Target 就是 install-exec-hook ) 來達到 make Target 就可以建立 symbolic link 的目的。</p>
+<p>閃死人不償命的組合 ...</p>
+<div class="figure">
+<img alt="https://dl.dropboxusercontent.com/u/15537823/Blog/banner-of-the-stars_2.jpg" src="https://dl.dropboxusercontent.com/u/15537823/Blog/banner-of-the-stars_2.jpg">
+</div>
+<blockquote>
+<p>星たちよ</p>
+<p>汝の命短き眷族の望みを聞くがよい。</p>
+<p>我らの望みヽ</p>
+<p>それは</p>
+<p>汝の本降ちゆくを看取ること</p>
+<cite title="Source Title">星界的紋章</cite>
+</blockquote></div>
+        
+    <p>
+        <a href="posts/cmake-add_custom_command.html#disqus_thread" data-disqus-identifier="cache/posts/2013-06-25-cmake-add-custom-command.html">Comments</a>
+
+        </p></div>
+        <div class="postbox">
         <h1><a href="posts/c-thread-pool.html">C 的 Thread Pool 筆記</a>
         <small>  
              Posted: 2013-06-07 21:43
@@ -435,30 +498,6 @@ parallelism-factor * 你的處理器核心數</blockquote>
         
     <p>
         <a href="posts/akka-2_0-note-5.html#disqus_thread" data-disqus-identifier="cache/posts/2012-06-15-akka-note-5-aggregator.html">Comments</a>
-
-        </p></div>
-        <div class="postbox">
-        <h1><a href="posts/akka-2_0-note-4.html">Akka 2.0 筆記(4) - Dataflow 請不要期待這篇我會提到什麼</a>
-        <small>  
-             Posted: 2012-06-12 21:55
-        </small></h1>
-        <hr>
-        <p>這整篇的原因起於，洗澡的時候想到的，
-Akka 的 Future 到底有沒有存在的意義呢？</p>
-<p>因為當一個 Actor 用 reply 或者 sender 回傳結果的時候，其實可以再 receive 不同的型態的 Message 就好了。
-而且這樣還不會因為 Await 而需要 block thread，減少 dead lock 的發生。
-我之前就幹過很蠢的事情，因為 Actor 把 Thread Pool 裡面的 Thread 用光了，所以他底下幫他工作的 Actor 就取不到 Thread 可以執行，
-因此全部 Timeout Orz ...</p>
-<p>目前唯一能想到的用法就是在發出訊息的地方不是一個 Actor 的時候，這時候就沒有 receive 可以接收結果了。
-所以需要使用 Future 來等待結果，也就是 Future 應該只被用在需要等待的時候，如果是在一個 Actor 被執行的時候使用 Future。
-很容易浪費掉一個 Thread，應該是要另外開一個新的 case class 來專門處理結果才是。</p>
-<p>但是這邊又出現了一個更複雜的問題了，因為我將工作分給不同的 Actor 去執行，必須要等到所有 Actor 都執行完畢，整合所有的結果。
-那麼如果是用 receive 我要怎樣才能知道我所有的工作都已經完成了呢？</p>
-<p>簡單來說，我就是需要實做一個  <a class="reference external" href="http://www.eaipatterns.com/BroadcastAggregate.html">Scatter-Gather</a> ，才會莫名其妙的看到 Akka 的 Dataflow。</p>
-<p><a href="posts/akka-2_0-note-4.html">Read more...</a></p>
-        
-    <p>
-        <a href="posts/akka-2_0-note-4.html#disqus_thread" data-disqus-identifier="cache/posts/2012-06-12-akka-dataflow.html">Comments</a>
 
         </p></div>
     

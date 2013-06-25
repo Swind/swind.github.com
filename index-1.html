@@ -70,6 +70,30 @@
     <div class="span8">
     
         <div class="postbox">
+        <h1><a href="posts/akka-2_0-note-4.html">Akka 2.0 筆記(4) - Dataflow 請不要期待這篇我會提到什麼</a>
+        <small>  
+             Posted: 2012-06-12 21:55
+        </small></h1>
+        <hr>
+        <p>這整篇的原因起於，洗澡的時候想到的，
+Akka 的 Future 到底有沒有存在的意義呢？</p>
+<p>因為當一個 Actor 用 reply 或者 sender 回傳結果的時候，其實可以再 receive 不同的型態的 Message 就好了。
+而且這樣還不會因為 Await 而需要 block thread，減少 dead lock 的發生。
+我之前就幹過很蠢的事情，因為 Actor 把 Thread Pool 裡面的 Thread 用光了，所以他底下幫他工作的 Actor 就取不到 Thread 可以執行，
+因此全部 Timeout Orz ...</p>
+<p>目前唯一能想到的用法就是在發出訊息的地方不是一個 Actor 的時候，這時候就沒有 receive 可以接收結果了。
+所以需要使用 Future 來等待結果，也就是 Future 應該只被用在需要等待的時候，如果是在一個 Actor 被執行的時候使用 Future。
+很容易浪費掉一個 Thread，應該是要另外開一個新的 case class 來專門處理結果才是。</p>
+<p>但是這邊又出現了一個更複雜的問題了，因為我將工作分給不同的 Actor 去執行，必須要等到所有 Actor 都執行完畢，整合所有的結果。
+那麼如果是用 receive 我要怎樣才能知道我所有的工作都已經完成了呢？</p>
+<p>簡單來說，我就是需要實做一個  <a class="reference external" href="http://www.eaipatterns.com/BroadcastAggregate.html">Scatter-Gather</a> ，才會莫名其妙的看到 Akka 的 Dataflow。</p>
+<p><a href="posts/akka-2_0-note-4.html">Read more...</a></p>
+        
+    <p>
+        <a href="posts/akka-2_0-note-4.html#disqus_thread" data-disqus-identifier="cache/posts/2012-06-12-akka-dataflow.html">Comments</a>
+
+        </p></div>
+        <div class="postbox">
         <h1><a href="posts/akka-2_0-note-3.html">Akka 2.0 筆記(3) - Future 之實在不是我想要拖稿</a>
         <small>  
              Posted: 2012-06-10 17:30
