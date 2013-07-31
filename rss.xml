@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Corleonis</title><link>http://swind.code-life.info</link><description>I am Swind.</description><lastBuildDate>Tue, 25 Jun 2013 20:42:21 GMT</lastBuildDate><generator>nikola</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>CMake - add_custom_command</title><link>http://swind.code-life.info/posts/cmake-add_custom_command.html</link><description>&lt;html&gt;&lt;body&gt;&lt;p&gt;最近因為必須要示範如何將公司的 autoconf 與 automake 轉成 CMake，所以稍微研究了一下之前完全沒有用過得 &lt;a class="reference external" href="http://www.cmake.org/cmake/help/cmake2.6docs.html#command:add_custom_command"&gt;add_custom_command&lt;/a&gt; 跟 &lt;a class="reference external" href="http://www.cmake.org/cmake/help/cmake2.6docs.html#command:add_custom_target"&gt;add_custom_target&lt;/a&gt;&lt;/p&gt;
+<rss version="2.0"><channel><title>Corleonis</title><link>http://swind.code-life.info</link><description>I am Swind.</description><lastBuildDate>Wed, 31 Jul 2013 18:25:19 GMT</lastBuildDate><generator>nikola</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>CMake - add_custom_command</title><link>http://swind.code-life.info/posts/cmake-add_custom_command.html</link><description>&lt;p&gt;最近因為必須要示範如何將公司的 autoconf 與 automake 轉成 CMake，所以稍微研究了一下之前完全沒有用過得 &lt;a class="reference external" href="http://www.cmake.org/cmake/help/cmake2.6docs.html#command:add_custom_command"&gt;add_custom_command&lt;/a&gt; 跟 &lt;a class="reference external" href="http://www.cmake.org/cmake/help/cmake2.6docs.html#command:add_custom_target"&gt;add_custom_target&lt;/a&gt;&lt;/p&gt;
 &lt;div class="section" id="symbolic-link"&gt;
 &lt;h2&gt;建立 symbolic link&lt;/h2&gt;
 &lt;p&gt;目前有一個需求是要建立 symbolic link 在某些特定的資料夾裡面。
@@ -41,39 +41,34 @@ install-exec-hook:
 這樣就可以讓 Target 依賴這個檔案 ( 以我們的例子來說 Target 就是 install-exec-hook ) 來達到 make Target 就可以建立 symbolic link 的目的。&lt;/p&gt;
 &lt;p&gt;閃死人不償命的組合 ...&lt;/p&gt;
 &lt;div class="figure"&gt;
-&lt;img alt="https://dl.dropboxusercontent.com/u/15537823/Blog/banner-of-the-stars_2.jpg" src="https://dl.dropboxusercontent.com/u/15537823/Blog/banner-of-the-stars_2.jpg"&gt;
-&lt;/div&gt;
+&lt;img alt="https://dl.dropboxusercontent.com/u/15537823/Blog/banner-of-the-stars_2.jpg" src="https://dl.dropboxusercontent.com/u/15537823/Blog/banner-of-the-stars_2.jpg"&gt;&lt;/div&gt;
 &lt;blockquote&gt;
 &lt;p&gt;星たちよ&lt;/p&gt;
 &lt;p&gt;汝の命短き眷族の望みを聞くがよい。&lt;/p&gt;
 &lt;p&gt;我らの望みヽ&lt;/p&gt;
 &lt;p&gt;それは&lt;/p&gt;
 &lt;p&gt;汝の本降ちゆくを看取ること&lt;/p&gt;
-&lt;/blockquote&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;</description><guid>http://swind.code-life.info/posts/cmake-add_custom_command.html</guid><pubDate>Tue, 25 Jun 2013 19:20:46 GMT</pubDate></item><item><title>C 的 Thread Pool 筆記</title><link>http://swind.code-life.info/posts/c-thread-pool.html</link><description>&lt;html&gt;&lt;body&gt;&lt;p&gt;最近被丟到 FreeBSD 跟 C 的世界裡面，沒有 Scala 的 Actor 可以用。
+&lt;/blockquote&gt;&lt;/div&gt;</description><category>CMake</category><category>C/C++</category><guid>http://swind.code-life.info/posts/cmake-add_custom_command.html</guid><pubDate>Tue, 25 Jun 2013 19:20:46 GMT</pubDate></item><item><title>C 的 Thread Pool 筆記</title><link>http://swind.code-life.info/posts/c-thread-pool.html</link><description>&lt;p&gt;最近被丟到 FreeBSD 跟 C 的世界裡面，沒有 Scala 的 Actor 可以用。
 所以只好參考別人的 Thread Pool 來看一下，在 C 的世界裡面 Thread Pool 是怎麼實作的。&lt;/p&gt;
 &lt;p&gt;首先先去 StackOverFlow 中尋找是否有人問過類似的問題&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="http://stackoverflow.com/questions/6297428/existing-threadpool-c-implementation"&gt;Existing threadpool C implementation&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;裡面有提到幾個 C Thread Pool 的實作範例與可參考的文件&lt;/p&gt;
-&lt;ol class="arabic simple"&gt;
-&lt;li&gt;&lt;a class="reference external" href="https://github.com/mbrossard/threadpool"&gt;threadpool-mbrossard&lt;/a&gt;&lt;/li&gt;
+&lt;ol class="arabic simple"&gt;&lt;li&gt;&lt;a class="reference external" href="https://github.com/mbrossard/threadpool"&gt;threadpool-mbrossard&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="reference external" href="http://people.clarkson.edu/~jmatthew/cs644.archive/cs644.fa2001/proj/locksmith/code/ExampleTest/"&gt;threadpool-jmatthew&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="reference external" href="http://sourceforge.net/projects/cthpool/"&gt;cthreadpool&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="reference external" href="https://github.com/Pithikos/C-Thread-Pool"&gt;C-Thread-Pool&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;我這邊是直接應該是會以 threadpool-mbrossard 作為第一個研究的版本，因為他一直有在維護。
+&lt;/ol&gt;&lt;p&gt;我這邊是直接應該是會以 threadpool-mbrossard 作為第一個研究的版本，因為他一直有在維護。
 而且作者就是 &lt;a class="reference external" href="http://stackoverflow.com/questions/6297428/existing-threadpool-c-implementation"&gt;Existing threadpool C implementation&lt;/a&gt; 的發文者，感覺他還蠻熱心的。&lt;/p&gt;
 &lt;div class="section" id="threadpool"&gt;
 &lt;h2&gt;threadpool&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;A simple C thread pool implementation&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;Currently, the implementation:&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;Works with pthreads only, but API is intentionally opaque to allow
+&lt;ul class="simple"&gt;&lt;li&gt;Works with pthreads only, but API is intentionally opaque to allow
 other implementations (Windows for instance).&lt;/li&gt;
 &lt;li&gt;Starts all threads on creation of the thread pool.&lt;/li&gt;
 &lt;li&gt;Reserves one task for signaling the queue is full.&lt;/li&gt;
 &lt;li&gt;Stops and joins all worker threads on destroy.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class="figure"&gt;
+&lt;/ul&gt;&lt;div class="figure"&gt;
 &lt;object data="http://upload.wikimedia.org/wikipedia/commons/0/0c/Thread_pool.svg" type="image/svg+xml"&gt;
 http://upload.wikimedia.org/wikipedia/commons/0/0c/Thread_pool.svg&lt;/object&gt;
 &lt;/div&gt;
@@ -175,12 +170,11 @@ threadpool_task_t 也是一樣的原理，真是出乎意料的簡單。&lt;/p&g
 &lt;p&gt;&lt;a class="reference external" href="https://github.com/mbrossard/threadpool/blob/master/src/threadpool.c"&gt;mbrossard 完整的 ThreadPool 原始碼&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;其實寫這篇筆記應該只是想貼這個&lt;/p&gt;
 &lt;div class="figure"&gt;
-&lt;img alt="https://dl.dropboxusercontent.com/u/15537823/Blog/%E7%94%9F%E5%AD%98%E6%88%B0%E7%95%A5.jpg" src="https://dl.dropboxusercontent.com/u/15537823/Blog/%E7%94%9F%E5%AD%98%E6%88%B0%E7%95%A5.jpg"&gt;
-&lt;/div&gt;
+&lt;img alt="https://dl.dropboxusercontent.com/u/15537823/Blog/%E7%94%9F%E5%AD%98%E6%88%B0%E7%95%A5.jpg" src="https://dl.dropboxusercontent.com/u/15537823/Blog/%E7%94%9F%E5%AD%98%E6%88%B0%E7%95%A5.jpg"&gt;&lt;/div&gt;
 &lt;blockquote&gt;
 &lt;p&gt;生存戦略！&lt;/p&gt;
 &lt;cite title="Source Title"&gt;輪るピングドラム&lt;/cite&gt;
-&lt;/blockquote&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;</description><guid>http://swind.code-life.info/posts/c-thread-pool.html</guid><pubDate>Fri, 07 Jun 2013 21:43:28 GMT</pubDate></item><item><title>Scala 使用 Play 筆記 (1)</title><link>http://swind.code-life.info/posts/play-note-1.html</link><description>&lt;html&gt;&lt;body&gt;&lt;p&gt;會想要重拾 Scala 跟 Play 主要是因為看到了這篇文章&lt;/p&gt;
+&lt;/blockquote&gt;&lt;/div&gt;</description><guid>http://swind.code-life.info/posts/c-thread-pool.html</guid><pubDate>Fri, 07 Jun 2013 21:43:28 GMT</pubDate></item><item><title>Scala 使用 Play 筆記 (1)</title><link>http://swind.code-life.info/posts/play-note-1.html</link><description>&lt;div&gt;&lt;p&gt;會想要重拾 Scala 跟 Play 主要是因為看到了這篇文章&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="http://minipai.tumblr.com/post/41882685541/22k"&gt;怎麼設計22K?&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;因為覺得這個設計理念真的是太正面了 XDDD&lt;/p&gt;
 &lt;blockquote&gt;
@@ -193,7 +187,7 @@ threadpool_task_t 也是一樣的原理，真是出乎意料的簡單。&lt;/p&g
 所以我決定把使用 Play 實作的過程記錄一下，以方便我日後回憶。&lt;/p&gt;
 &lt;p&gt;整個實作過程是參考 &lt;a class="reference external" href="http://www.playframework.org/documentation/2.1-RC4/ScalaTodoList"&gt;Your first Play application&lt;/a&gt; 這篇文章的。&lt;/p&gt;
 &lt;p&gt;P.S 這篇文章寫到一半的時候 Play 2.1 出了 Orz ...&lt;/p&gt;
-&lt;p&gt;&lt;a href="/posts/play-note-1.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</description><guid>http://swind.code-life.info/posts/play-note-1.html</guid><pubDate>Sat, 02 Feb 2013 09:11:00 GMT</pubDate></item><item><title>Pelican 轉移到 Nikola</title><link>http://swind.code-life.info/posts/pelican-to-nikola.html</link><description>&lt;html&gt;&lt;body&gt;&lt;p&gt;之前雖然從 Octopress 跳到 Pelican 脫離了 Ruby 的環境，也花了一些時間在修改 Theme。
+&lt;p&gt;&lt;a href="/posts/play-note-1.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Other</category><guid>http://swind.code-life.info/posts/play-note-1.html</guid><pubDate>Sat, 02 Feb 2013 09:11:00 GMT</pubDate></item><item><title>Pelican 轉移到 Nikola</title><link>http://swind.code-life.info/posts/pelican-to-nikola.html</link><description>&lt;div&gt;&lt;p&gt;之前雖然從 Octopress 跳到 Pelican 脫離了 Ruby 的環境，也花了一些時間在修改 Theme。
 但是還是很難喜歡上 Pelican，最主要的就是他的手冊很難閱讀，而且資訊有點少 Orz。&lt;/p&gt;
 &lt;p&gt;Nikola 的手冊就比較簡潔清楚，也比較好查詢。
 且查詢了一下 Nikola 的事蹟之後發現他太帥了！&lt;/p&gt;
@@ -219,13 +213,11 @@ C:&lt;span class="se"&gt;\P&lt;/span&gt;ython27&lt;span class="se"&gt;\p&lt;/spa
 &lt;p&gt;上面的 Script 因為我找不到 Windows 裡面代表所有傳入參數的符號，
 只好就土法煉鋼一個一個輸入，所以最多只能輸入四個參數。&lt;/p&gt;
 &lt;p&gt;（如果有人有好得解決方式也請教我一下 m(_ _)m )&lt;/p&gt;
-&lt;p&gt;&lt;a href="/posts/pelican-to-nikola.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;</description><guid>http://swind.code-life.info/posts/pelican-to-nikola.html</guid><pubDate>Tue, 22 Jan 2013 09:11:00 GMT</pubDate></item><item><title>一鍵安裝 Linux 設定檔</title><link>http://swind.code-life.info/posts/install-linux-config.html</link><description>&lt;html&gt;&lt;body&gt;&lt;p&gt;我常用的 Linux 環境一定會裝下面幾個工具&lt;/p&gt;
-&lt;ol class="arabic simple"&gt;
-&lt;li&gt;zsh 與 oh-my-zsh&lt;/li&gt;
+&lt;p&gt;&lt;a href="/posts/pelican-to-nikola.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</description><category>Other</category><guid>http://swind.code-life.info/posts/pelican-to-nikola.html</guid><pubDate>Tue, 22 Jan 2013 09:11:00 GMT</pubDate></item><item><title>一鍵安裝 Linux 設定檔</title><link>http://swind.code-life.info/posts/install-linux-config.html</link><description>&lt;div&gt;&lt;p&gt;我常用的 Linux 環境一定會裝下面幾個工具&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;&lt;li&gt;zsh 與 oh-my-zsh&lt;/li&gt;
 &lt;li&gt;vim 很多很多 vim plugin&lt;/li&gt;
 &lt;li&gt;tmux 與他的快樂設定檔&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;一開始開發環境只有一兩台，一個個手動安裝還沒什麼問題。
+&lt;/ol&gt;&lt;p&gt;一開始開發環境只有一兩台，一個個手動安裝還沒什麼問題。
 再加上那時後有從 vgod 的 &lt;a class="reference external" href="http://blog.vgod.tw/2011/03/19/vimrc/"&gt;分享我的 vim 設定檔&lt;/a&gt; 這文章中學到使用 pathogen + github 來管理 vim。
 所以一直就懶得去想辦法整理這些設定檔。&lt;/p&gt;
 &lt;p&gt;可是最近要管理的機器變多了，而且加上最近再進行 porting 的工作，所以又有各種不同版本的 Linux 需要設定。&lt;/p&gt;
@@ -252,12 +244,12 @@ wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/maste
 &lt;p&gt;除此之外 JosephJ 所給的建議也非常的實用，
 將常用的工具與指令整理成一份文件，來協助管理與記憶。
 目前我是用 Nikola (對沒錯，所從 Octopress 跳到 Pelican 又跳到 Nikola 了 XD) stories 來作筆記。&lt;/p&gt;
-&lt;p&gt;&lt;a href="/posts/install-linux-config.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</description><guid>http://swind.code-life.info/posts/install-linux-config.html</guid><pubDate>Mon, 21 Jan 2013 22:36:41 GMT</pubDate></item><item><title>Golang - Goroutine 筆記 (1)</title><link>http://swind.code-life.info/posts/goroutine-note-1.html</link><description>&lt;html&gt;&lt;body&gt;&lt;p&gt;會想到用這個是由於 EPUBConverter Go 的版本雖然運作上已經比 Scala 版本快上不少了。
+&lt;p&gt;&lt;a href="/posts/install-linux-config.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><guid>http://swind.code-life.info/posts/install-linux-config.html</guid><pubDate>Mon, 21 Jan 2013 22:36:41 GMT</pubDate></item><item><title>Golang - Goroutine 筆記 (1)</title><link>http://swind.code-life.info/posts/goroutine-note-1.html</link><description>&lt;div&gt;&lt;p&gt;會想到用這個是由於 EPUBConverter Go 的版本雖然運作上已經比 Scala 版本快上不少了。
 但我發現在執行的時候 CPU 使用率一直都只有 25 %，所以才想試試看使用 goroutine 看能不能讓他轉換更快一點。&lt;/p&gt;
 &lt;p&gt;依照文件所說，在執行 IO 相關動作的時候，會將 CPU 讓給 goroutine 來使用，那麼對於 EPUBConverter 的效能應該會有顯著的提昇。&lt;/p&gt;
 &lt;p&gt;雖然有人說 goroutine 跟 Scala 的 actor 有點像，但是 actor 的模型就很具體跟明確。
 而 goroutine 則是提供一個方便快速的 thread 操作方式。&lt;/p&gt;
-&lt;p&gt;&lt;a href="/posts/goroutine-note-1.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</description><guid>http://swind.code-life.info/posts/goroutine-note-1.html</guid><pubDate>Sun, 09 Dec 2012 18:00:00 GMT</pubDate></item><item><title>EPUBConverter 0.0.2 - 其實已經重寫了 Orz</title><link>http://swind.code-life.info/posts/epubconverter-0_0_2.html</link><description>&lt;html&gt;&lt;body&gt;&lt;p&gt;一開始的 Scala 版本本來是自己寫來自己用的小工具，可是沒想到竟然有人有用還有回報問題。
+&lt;p&gt;&lt;a href="/posts/goroutine-note-1.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Go</category><guid>http://swind.code-life.info/posts/goroutine-note-1.html</guid><pubDate>Sun, 09 Dec 2012 18:00:00 GMT</pubDate></item><item><title>EPUBConverter 0.0.2 - 其實已經重寫了 Orz</title><link>http://swind.code-life.info/posts/epubconverter-0_0_2.html</link><description>&lt;div&gt;&lt;p&gt;一開始的 Scala 版本本來是自己寫來自己用的小工具，可是沒想到竟然有人有用還有回報問題。
 大受感動之餘（誤），而出現了這個全新感受的 EPUBConverter 0.0.2，絕對不是因為手癢想要試試看 Go。&lt;/p&gt;
 &lt;p&gt;P.S 2012.12.09 更新 - 修正了鳥 Bug 所以到 0.0.3 了。&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://dl.dropbox.com/u/15537823/EPUBConverter_0.0.3.7z"&gt;EPUBConverter 0.0.3 下載&lt;/a&gt;&lt;/p&gt;
@@ -269,14 +261,14 @@ wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/maste
 &lt;p&gt;但是由於我直接將對照表轉換成 Golang 裡面的 map 了，所以這次就沒有辦法讓使用者自己改對照表了。&lt;/p&gt;
 &lt;p&gt;不過有興趣的人，在原始碼的 &lt;a class="reference external" href="https://github.com/Swind/EPUBConverter-Go/tree/master/tongwen_table"&gt;tongwen_table&lt;/a&gt; 資料夾底下，我有放了一個簡單的轉換工具。
 可以利用那個重新產生 Go 的 map，但是最後還是得重新編譯整個 EPUBConverter 就是了。&lt;/p&gt;
-&lt;p&gt;&lt;a href="/posts/epubconverter-0_0_2.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</description><guid>http://swind.code-life.info/posts/epubconverter-0_0_2.html</guid><pubDate>Sat, 08 Dec 2012 18:00:00 GMT</pubDate></item><item><title>用 Spray 建立一個簡單的 RESTful API Server</title><link>http://swind.code-life.info/posts/build-restful-api-server-by-spray.html</link><description>&lt;html&gt;&lt;body&gt;&lt;p&gt;&lt;a class="reference external" href="http://spray.cc/"&gt;Spray&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/epubconverter-0_0_2.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Go</category><guid>http://swind.code-life.info/posts/epubconverter-0_0_2.html</guid><pubDate>Sat, 08 Dec 2012 18:00:00 GMT</pubDate></item><item><title>用 Spray 建立一個簡單的 RESTful API Server</title><link>http://swind.code-life.info/posts/build-restful-api-server-by-spray.html</link><description>&lt;div&gt;&lt;p&gt;&lt;a class="reference external" href="http://spray.cc/"&gt;Spray&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;最初是想要建立一個提供查詢服務的 RESTful API Server，可以讓 Client 的應用程式透過 RESTful API 查詢一些資料。
 但是看來看去，用 Play2、Jersey、RESTEasy 等都蠻麻煩的，而且還需要使用 Web container（像 Tomcat、Jetty 等）。
 所以才找到這個 Spray，而且又是用 Scala 開發的，實在沒有理由不試試看阿。 XD&lt;/p&gt;
 &lt;p&gt;若你連到官網看會發現他分成很多模組，老實說我也沒有詳細研究每個模組的功能。
 因為 &lt;a class="reference external" href="http://spray.cc/documentation/spray-can/"&gt;spray-can&lt;/a&gt; 的範例看起來最簡單並且也符合我的需求，所以就直接用他了。&lt;/p&gt;
 &lt;p&gt;想瞭解更詳細內容的可以參考 &lt;a class="reference external" href="https://github.com/spray/spray/tree/release-1.0-M2/examples/spray-can/simple-http-server/"&gt;spray-can 範例文件&lt;/a&gt; 與 &lt;a class="reference external" href="http://blog.cloudfoundry.com/2012/05/11/running-standalone-web-applications-on-cloud-foundry/"&gt;Running Standalone Web Applications on Cloud Foundry&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href="/posts/build-restful-api-server-by-spray.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</description><guid>http://swind.code-life.info/posts/build-restful-api-server-by-spray.html</guid><pubDate>Tue, 06 Nov 2012 20:11:00 GMT</pubDate></item><item><title>Akka 2.0 筆記(6) - Dispatcher 的設定</title><link>http://swind.code-life.info/posts/akka-2_0-note-6.html</link><description>&lt;html&gt;&lt;body&gt;&lt;p&gt;今天早上先簡單了依照昨天畫得架構圖做了一個雛型，整個跑起來功能是以了，但是流程整個悲劇 Orz ...
+&lt;p&gt;&lt;a href="/posts/build-restful-api-server-by-spray.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Scala</category><category>Akka</category><guid>http://swind.code-life.info/posts/build-restful-api-server-by-spray.html</guid><pubDate>Tue, 06 Nov 2012 20:11:00 GMT</pubDate></item><item><title>Akka 2.0 筆記(6) - Dispatcher 的設定</title><link>http://swind.code-life.info/posts/akka-2_0-note-6.html</link><description>&lt;div&gt;&lt;p&gt;今天早上先簡單了依照昨天畫得架構圖做了一個雛型，整個跑起來功能是以了，但是流程整個悲劇 Orz ...
 先是 Exception Handling 做的不夠好，結果就真的是 "Let it Crash" 一直死一直死一直死，好像在玩 D3 的煉獄模式一樣。&lt;/p&gt;
 &lt;p&gt;再來是我沒有去設定 Dispatcher 所以 Thread 用了十幾個。如果我沒有看錯的話，依照 Akka &lt;a class="reference external" href="https://github.com/akka/akka/blob/master/akka-actor/src/main/resources/reference.conf"&gt;reference.conf&lt;/a&gt; 的設定，
 Default Dispatcher 使用 fork-join-executor，他的預設設定如下&lt;/p&gt;
@@ -297,16 +289,13 @@ Default Dispatcher 使用 fork-join-executor，他的預設設定如下&lt;/p&gt
 &lt;blockquote&gt;
 parallelism-factor * 你的處理器核心數&lt;/blockquote&gt;
 &lt;p&gt;所以我的四核心桌機使用這個 Dispatcher 最多會開到 12 個 Thread Orz ...&lt;/p&gt;
-&lt;p&gt;&lt;a href="/posts/akka-2_0-note-6.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</description><guid>http://swind.code-life.info/posts/akka-2_0-note-6.html</guid><pubDate>Sun, 17 Jun 2012 20:19:00 GMT</pubDate></item><item><title>Akka 2.0 筆記(5) - Scatter Gather</title><link>http://swind.code-life.info/posts/akka-2_0-note-5.html</link><description>&lt;html&gt;&lt;body&gt;&lt;p&gt;繼上次完全看不懂的 Dataflow 之後，我還是想要一個 Akka 的 Scatter Gather 實作方式，因此想試著自己實做看看。&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/akka-2_0-note-6.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Scala</category><category>Akka</category><guid>http://swind.code-life.info/posts/akka-2_0-note-6.html</guid><pubDate>Sun, 17 Jun 2012 20:19:00 GMT</pubDate></item><item><title>Akka 2.0 筆記(5) - Scatter Gather</title><link>http://swind.code-life.info/posts/akka-2_0-note-5.html</link><description>&lt;div&gt;&lt;p&gt;繼上次完全看不懂的 Dataflow 之後，我還是想要一個 Akka 的 Scatter Gather 實作方式，因此想試著自己實做看看。&lt;/p&gt;
 &lt;p&gt;下圖是 &lt;a class="reference external" href="http://www.eaipatterns.com/"&gt;Enterprise Integration Patterns&lt;/a&gt;  書中的 Scatter-Gather 概念圖。&lt;/p&gt;
-&lt;img alt="http://www.eaipatterns.com/img/BroadcastAggregate.gif" src="http://www.eaipatterns.com/img/BroadcastAggregate.gif"&gt;
-&lt;p&gt;從圖中可以發現，中間對於 Vendor A、B 與 C 進行 Broadcast 的行為跟 Akka 內的 &lt;a class="reference external" href="http://doc.akka.io/docs/akka/2.0/scala/routing.html"&gt;Router&lt;/a&gt; 很像，
+&lt;img alt="http://www.eaipatterns.com/img/BroadcastAggregate.gif" src="http://www.eaipatterns.com/img/BroadcastAggregate.gif"&gt;&lt;p&gt;從圖中可以發現，中間對於 Vendor A、B 與 C 進行 Broadcast 的行為跟 Akka 內的 &lt;a class="reference external" href="http://doc.akka.io/docs/akka/2.0/scala/routing.html"&gt;Router&lt;/a&gt; 很像，
 所以當我正在思考 Router 是否合適作為這種用途的時候，我想到了 &lt;a class="reference external" href="http://letitcrash.com/"&gt;Let it Crash&lt;/a&gt; 裡面 &lt;a class="reference external" href="http://letitcrash.com/post/23532935686/watch-the-routees"&gt;Watch the Routees&lt;/a&gt; 這篇文章。&lt;/p&gt;
 &lt;p&gt;這篇文章裡面他紀錄了在 Akka mailinglist 中回答別人問題時所寫的範例程式。&lt;/p&gt;
 &lt;p&gt;整個 use case 是要執行一個 Job，這個 Job 由許多 Tasks 組成，在執行的過程中&lt;/p&gt;
-&lt;ol class="arabic simple"&gt;
-&lt;li&gt;會將這些 Tasks 透過 router 分派給 worker actors 執行。&lt;/li&gt;
+&lt;ol class="arabic simple"&gt;&lt;li&gt;會將這些 Tasks 透過 router 分派給 worker actors 執行。&lt;/li&gt;
 &lt;li&gt;最後收集所有 worker 的執行結果，並且將他們合併之後回傳。&lt;/li&gt;
 &lt;li&gt;除此之外， worker 在執行過程中發生錯誤時，應該要進行 retry，在進行幾次 retry 後依然有錯誤時，Worker 就會停止，並且中止整個 Job。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;a href="/posts/akka-2_0-note-5.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</description><guid>http://swind.code-life.info/posts/akka-2_0-note-5.html</guid><pubDate>Fri, 15 Jun 2012 08:58:00 GMT</pubDate></item></channel></rss>
+&lt;/ol&gt;&lt;p&gt;&lt;a href="/posts/akka-2_0-note-5.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Scala</category><category>Akka</category><guid>http://swind.code-life.info/posts/akka-2_0-note-5.html</guid><pubDate>Fri, 15 Jun 2012 08:58:00 GMT</pubDate></item></channel></rss>
