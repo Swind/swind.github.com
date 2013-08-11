@@ -5,323 +5,358 @@
     xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
-  <loc>http://swind.code-life.info/</loc>
-  <lastmod>2013-07-31</lastmod>
+  <loc>http://swind.code-life.info</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/.git/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/.git/hooks/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/.git/info/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/.git/logs/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/.git/logs/refs/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/.git/logs/refs/heads/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/.git/logs/refs/remotes/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/.git/logs/refs/remotes/origin/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/.git/objects/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/.git/objects/11/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/.git/objects/18/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/.git/objects/43/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/.git/objects/4c/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/.git/objects/65/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/.git/objects/95/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/.git/objects/de/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/.git/objects/ec/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/.git/objects/info/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/.git/objects/pack/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/.git/refs/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/.git/refs/heads/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/.git/refs/remotes/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/.git/refs/remotes/origin/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/.git/refs/tags/</loc>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/2011/</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/2011/index.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/2012/</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/2012/index.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/2013/</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/2013/index.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/archive.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/assets/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/assets/css/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/assets/css/images/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/assets/css/images/ie6/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/assets/css/img/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/assets/img/</loc>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/assets/js/</loc>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/categories/</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/categories/akka.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/categories/cc.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/categories/cmake.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/categories/go.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/categories/index.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/categories/octopress.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/categories/other.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/categories/python.html</loc>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/categories/scala-1.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/categories/scala.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/galleries/</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/galleries/demo/</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/galleries/demo/index.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/galleries/index.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/index-1.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/index.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/listings/</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/listings/hello.py.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/listings/index.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/mustache-template.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/mustache.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
-  <loc>http://swind.code-life.info/posts/akka-2_0-note-1.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <loc>http://swind.code-life.info/posts/</loc>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
-  <loc>http://swind.code-life.info/posts/akka-2_0-note-2.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/posts/akka-2_0-note-3.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/posts/akka-2_0-note-4.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/posts/akka-2_0-note-5.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/posts/akka-2_0-note-6.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/posts/build-restful-api-server-by-spray.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/posts/c-thread-pool.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/posts/cmake-add_custom_command.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/posts/epubconverter-0_0_2.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/posts/epubconverter-implement-note.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/posts/epubconverter.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/posts/goroutine-note-1.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/posts/install-linux-config.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/posts/jsoup.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/posts/octopress-note.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/posts/pelican-to-nikola.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/posts/play-note-1.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/posts/scala-log-tool.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/posts/scala-orm-note.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/stories/freebsd-driver-dev.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <loc>http://swind.code-life.info/stories/</loc>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/stories/freebsd-note.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/stories/freebsd-socket-note.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/stories/handbook.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/stories/iscsi_rest_api.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/stories/iscsi_target_note.html</loc>
-  <lastmod>2013-07-31</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://swind.code-life.info/stories/linux-note.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/stories/listings-demo.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/stories/quickref.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/stories/quickstart.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/stories/sampleconfig.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/stories/setup-iscsi-in-freebsd.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/stories/slides-demo.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/stories/theming.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://swind.code-life.info/tipue_search.html</loc>
-  <lastmod>2013-07-31</lastmod>
+  <lastmod>2013-08-11</lastmod>
   <priority>0.5000</priority>
  </url>
 </urlset>

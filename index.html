@@ -34,6 +34,23 @@
     <div class="span8">
     
         <div class="postbox">
+        <h1><a href="posts/send-scsi-command-from-python-on-linux.html">使用 Python 結合 C 在 Linux 發送 SCSI Command</a>
+        <small>  
+             Posted: 2013-08-03 10:38
+        </small></h1>
+        <hr><p>最近因為工作的需要，所以要撰寫很多 SCSI 相關的測試。
+目前可以用的測試工具有 fio, iometer 以及一個自行開發的 SCSI Command 驗證的工具。
+但是這些都是使用 C 撰寫的，所以要撰寫一些流程比較複雜的驗證時，就變得非常的麻煩。
+絕對不是因為我想試試看 Python 或者是因為自行開發的驗證工具程式碼已經無法閱讀的原因，才想要重造輪子。</p>
+<p>Orz 而且我受夠了手動測試的生活了 ...</p>
+<p>所以想將測試運行的邏輯搬移到 Python 的部份，加速測試案例的開發速度。</p>
+<p><a href="posts/send-scsi-command-from-python-on-linux.html">Read more...</a></p>
+        
+    <p>
+        <a href="posts/send-scsi-command-from-python-on-linux.html#disqus_thread" data-disqus-identifier="cache/posts/2013-08-03-send-scsi-command-from-python-on-linux.html">Comments</a>
+
+        </p></div>
+        <div class="postbox">
         <h1><a href="posts/cmake-add_custom_command.html">CMake - add_custom_command</a>
         <small>  
              Posted: 2013-06-25 19:20
@@ -235,7 +252,7 @@ threadpool_task_t 也是一樣的原理，真是出乎意料的簡單。</p>
         <small>  
              Posted: 2013-02-02 09:11
         </small></h1>
-        <hr><div><p>會想要重拾 Scala 跟 Play 主要是因為看到了這篇文章</p>
+        <hr><p>會想要重拾 Scala 跟 Play 主要是因為看到了這篇文章</p>
 <p><a class="reference external" href="http://minipai.tumblr.com/post/41882685541/22k">怎麼設計22K?</a></p>
 <p>因為覺得這個設計理念真的是太正面了 XDDD</p>
 <blockquote>
@@ -248,7 +265,7 @@ threadpool_task_t 也是一樣的原理，真是出乎意料的簡單。</p>
 所以我決定把使用 Play 實作的過程記錄一下，以方便我日後回憶。</p>
 <p>整個實作過程是參考 <a class="reference external" href="http://www.playframework.org/documentation/2.1-RC4/ScalaTodoList">Your first Play application</a> 這篇文章的。</p>
 <p>P.S 這篇文章寫到一半的時候 Play 2.1 出了 Orz ...</p>
-<p><a href="posts/play-note-1.html">Read more...</a></p></div>
+<p><a href="posts/play-note-1.html">Read more...</a></p>
         
     <p>
         <a href="posts/play-note-1.html#disqus_thread" data-disqus-identifier="cache/posts/2013-02-02-implement-22k-job-by-play.html">Comments</a>
@@ -259,7 +276,7 @@ threadpool_task_t 也是一樣的原理，真是出乎意料的簡單。</p>
         <small>  
              Posted: 2013-01-22 09:11
         </small></h1>
-        <hr><div><p>之前雖然從 Octopress 跳到 Pelican 脫離了 Ruby 的環境，也花了一些時間在修改 Theme。
+        <hr><p>之前雖然從 Octopress 跳到 Pelican 脫離了 Ruby 的環境，也花了一些時間在修改 Theme。
 但是還是很難喜歡上 Pelican，最主要的就是他的手冊很難閱讀，而且資訊有點少 Orz。</p>
 <p>Nikola 的手冊就比較簡潔清楚，也比較好查詢。
 且查詢了一下 Nikola 的事蹟之後發現他太帥了！</p>
@@ -285,7 +302,7 @@ C:<span class="se">\P</span>ython27<span class="se">\p</span>ython.exe C:<span c
 <p>上面的 Script 因為我找不到 Windows 裡面代表所有傳入參數的符號，
 只好就土法煉鋼一個一個輸入，所以最多只能輸入四個參數。</p>
 <p>（如果有人有好得解決方式也請教我一下 m(_ _)m )</p>
-<p><a href="posts/pelican-to-nikola.html">Read more...</a></p></div></div>
+<p><a href="posts/pelican-to-nikola.html">Read more...</a></p></div>
         
     <p>
         <a href="posts/pelican-to-nikola.html#disqus_thread" data-disqus-identifier="cache/posts/2013-01-22-pelican-to-nikola.html">Comments</a>
@@ -296,7 +313,7 @@ C:<span class="se">\P</span>ython27<span class="se">\p</span>ython.exe C:<span c
         <small>  
              Posted: 2013-01-21 22:36
         </small></h1>
-        <hr><div><p>我常用的 Linux 環境一定會裝下面幾個工具</p>
+        <hr><p>我常用的 Linux 環境一定會裝下面幾個工具</p>
 <ol class="arabic simple"><li>zsh 與 oh-my-zsh</li>
 <li>vim 很多很多 vim plugin</li>
 <li>tmux 與他的快樂設定檔</li>
@@ -327,7 +344,7 @@ wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/maste
 <p>除此之外 JosephJ 所給的建議也非常的實用，
 將常用的工具與指令整理成一份文件，來協助管理與記憶。
 目前我是用 Nikola (對沒錯，所從 Octopress 跳到 Pelican 又跳到 Nikola 了 XD) stories 來作筆記。</p>
-<p><a href="posts/install-linux-config.html">Read more...</a></p></div>
+<p><a href="posts/install-linux-config.html">Read more...</a></p>
         
     <p>
         <a href="posts/install-linux-config.html#disqus_thread" data-disqus-identifier="cache/posts/2013-01-21-install-linux-config.html">Comments</a>
@@ -338,12 +355,12 @@ wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/maste
         <small>  
              Posted: 2012-12-09 18:00
         </small></h1>
-        <hr><div><p>會想到用這個是由於 EPUBConverter Go 的版本雖然運作上已經比 Scala 版本快上不少了。
+        <hr><p>會想到用這個是由於 EPUBConverter Go 的版本雖然運作上已經比 Scala 版本快上不少了。
 但我發現在執行的時候 CPU 使用率一直都只有 25 %，所以才想試試看使用 goroutine 看能不能讓他轉換更快一點。</p>
 <p>依照文件所說，在執行 IO 相關動作的時候，會將 CPU 讓給 goroutine 來使用，那麼對於 EPUBConverter 的效能應該會有顯著的提昇。</p>
 <p>雖然有人說 goroutine 跟 Scala 的 actor 有點像，但是 actor 的模型就很具體跟明確。
 而 goroutine 則是提供一個方便快速的 thread 操作方式。</p>
-<p><a href="posts/goroutine-note-1.html">Read more...</a></p></div>
+<p><a href="posts/goroutine-note-1.html">Read more...</a></p>
         
     <p>
         <a href="posts/goroutine-note-1.html#disqus_thread" data-disqus-identifier="cache/posts/2012-12-09-golang-goroutine-note1.html">Comments</a>
@@ -354,7 +371,7 @@ wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/maste
         <small>  
              Posted: 2012-12-08 18:00
         </small></h1>
-        <hr><div><p>一開始的 Scala 版本本來是自己寫來自己用的小工具，可是沒想到竟然有人有用還有回報問題。
+        <hr><p>一開始的 Scala 版本本來是自己寫來自己用的小工具，可是沒想到竟然有人有用還有回報問題。
 大受感動之餘（誤），而出現了這個全新感受的 EPUBConverter 0.0.2，絕對不是因為手癢想要試試看 Go。</p>
 <p>P.S 2012.12.09 更新 - 修正了鳥 Bug 所以到 0.0.3 了。</p>
 <p><a class="reference external" href="https://dl.dropbox.com/u/15537823/EPUBConverter_0.0.3.7z">EPUBConverter 0.0.3 下載</a></p>
@@ -366,7 +383,7 @@ wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/maste
 <p>但是由於我直接將對照表轉換成 Golang 裡面的 map 了，所以這次就沒有辦法讓使用者自己改對照表了。</p>
 <p>不過有興趣的人，在原始碼的 <a class="reference external" href="https://github.com/Swind/EPUBConverter-Go/tree/master/tongwen_table">tongwen_table</a> 資料夾底下，我有放了一個簡單的轉換工具。
 可以利用那個重新產生 Go 的 map，但是最後還是得重新編譯整個 EPUBConverter 就是了。</p>
-<p><a href="posts/epubconverter-0_0_2.html">Read more...</a></p></div>
+<p><a href="posts/epubconverter-0_0_2.html">Read more...</a></p>
         
     <p>
         <a href="posts/epubconverter-0_0_2.html#disqus_thread" data-disqus-identifier="cache/posts/2012-12-08-epubconverter-go.html">Comments</a>
@@ -377,14 +394,14 @@ wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/maste
         <small>  
              Posted: 2012-11-06 20:11
         </small></h1>
-        <hr><div><p><a class="reference external" href="http://spray.cc/">Spray</a></p>
+        <hr><p><a class="reference external" href="http://spray.cc/">Spray</a></p>
 <p>最初是想要建立一個提供查詢服務的 RESTful API Server，可以讓 Client 的應用程式透過 RESTful API 查詢一些資料。
 但是看來看去，用 Play2、Jersey、RESTEasy 等都蠻麻煩的，而且還需要使用 Web container（像 Tomcat、Jetty 等）。
 所以才找到這個 Spray，而且又是用 Scala 開發的，實在沒有理由不試試看阿。 XD</p>
 <p>若你連到官網看會發現他分成很多模組，老實說我也沒有詳細研究每個模組的功能。
 因為 <a class="reference external" href="http://spray.cc/documentation/spray-can/">spray-can</a> 的範例看起來最簡單並且也符合我的需求，所以就直接用他了。</p>
 <p>想瞭解更詳細內容的可以參考 <a class="reference external" href="https://github.com/spray/spray/tree/release-1.0-M2/examples/spray-can/simple-http-server/">spray-can 範例文件</a> 與 <a class="reference external" href="http://blog.cloudfoundry.com/2012/05/11/running-standalone-web-applications-on-cloud-foundry/">Running Standalone Web Applications on Cloud Foundry</a></p>
-<p><a href="posts/build-restful-api-server-by-spray.html">Read more...</a></p></div>
+<p><a href="posts/build-restful-api-server-by-spray.html">Read more...</a></p>
         
     <p>
         <a href="posts/build-restful-api-server-by-spray.html#disqus_thread" data-disqus-identifier="cache/posts/2012-11-06-spray.html">Comments</a>
@@ -395,7 +412,7 @@ wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/maste
         <small>  
              Posted: 2012-06-17 20:19
         </small></h1>
-        <hr><div><p>今天早上先簡單了依照昨天畫得架構圖做了一個雛型，整個跑起來功能是以了，但是流程整個悲劇 Orz ...
+        <hr><p>今天早上先簡單了依照昨天畫得架構圖做了一個雛型，整個跑起來功能是以了，但是流程整個悲劇 Orz ...
 先是 Exception Handling 做的不夠好，結果就真的是 "Let it Crash" 一直死一直死一直死，好像在玩 D3 的煉獄模式一樣。</p>
 <p>再來是我沒有去設定 Dispatcher 所以 Thread 用了十幾個。如果我沒有看錯的話，依照 Akka <a class="reference external" href="https://github.com/akka/akka/blob/master/akka-actor/src/main/resources/reference.conf">reference.conf</a> 的設定，
 Default Dispatcher 使用 fork-join-executor，他的預設設定如下</p>
@@ -416,35 +433,18 @@ Default Dispatcher 使用 fork-join-executor，他的預設設定如下</p>
 <blockquote>
 parallelism-factor * 你的處理器核心數</blockquote>
 <p>所以我的四核心桌機使用這個 Dispatcher 最多會開到 12 個 Thread Orz ...</p>
-<p><a href="posts/akka-2_0-note-6.html">Read more...</a></p></div>
+<p><a href="posts/akka-2_0-note-6.html">Read more...</a></p>
         
     <p>
         <a href="posts/akka-2_0-note-6.html#disqus_thread" data-disqus-identifier="cache/posts/2012-06-17-akka-note-6-my-aggregator.html">Comments</a>
 
         </p></div>
-        <div class="postbox">
-        <h1><a href="posts/akka-2_0-note-5.html">Akka 2.0 筆記(5) - Scatter Gather</a>
-        <small>  
-             Posted: 2012-06-15 08:58
-        </small></h1>
-        <hr><div><p>繼上次完全看不懂的 Dataflow 之後，我還是想要一個 Akka 的 Scatter Gather 實作方式，因此想試著自己實做看看。</p>
-<p>下圖是 <a class="reference external" href="http://www.eaipatterns.com/">Enterprise Integration Patterns</a>  書中的 Scatter-Gather 概念圖。</p>
-<img alt="http://www.eaipatterns.com/img/BroadcastAggregate.gif" src="http://www.eaipatterns.com/img/BroadcastAggregate.gif"><p>從圖中可以發現，中間對於 Vendor A、B 與 C 進行 Broadcast 的行為跟 Akka 內的 <a class="reference external" href="http://doc.akka.io/docs/akka/2.0/scala/routing.html">Router</a> 很像，
-所以當我正在思考 Router 是否合適作為這種用途的時候，我想到了 <a class="reference external" href="http://letitcrash.com/">Let it Crash</a> 裡面 <a class="reference external" href="http://letitcrash.com/post/23532935686/watch-the-routees">Watch the Routees</a> 這篇文章。</p>
-<p>這篇文章裡面他紀錄了在 Akka mailinglist 中回答別人問題時所寫的範例程式。</p>
-<p>整個 use case 是要執行一個 Job，這個 Job 由許多 Tasks 組成，在執行的過程中</p>
-<ol class="arabic simple"><li>會將這些 Tasks 透過 router 分派給 worker actors 執行。</li>
-<li>最後收集所有 worker 的執行結果，並且將他們合併之後回傳。</li>
-<li>除此之外， worker 在執行過程中發生錯誤時，應該要進行 retry，在進行幾次 retry 後依然有錯誤時，Worker 就會停止，並且中止整個 Job。</li>
-</ol><p><a href="posts/akka-2_0-note-5.html">Read more...</a></p></div>
-        
-    <p>
-        <a href="posts/akka-2_0-note-5.html#disqus_thread" data-disqus-identifier="cache/posts/2012-06-15-akka-note-5-aggregator.html">Comments</a>
-
-        </p></div>
     
 <div>
-<ul class="pager"></ul></div>
+<ul class="pager"><li class="next">
+        <a href="index-1.html">Older posts →</a>
+    </li>
+</ul></div>
 
     
        <script type="text/javascript">var disqus_shortname="swindgithub";(function(){var a=document.createElement("script");a.async=true;a.type="text/javascript";a.src="http://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("HEAD")[0]||document.getElementsByTagName("BODY")[0]).appendChild(a)}());</script></div>
@@ -457,13 +457,4 @@ parallelism-factor * 你的處理器核心數</blockquote>
 </div>
 
     
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-42855873-1', 'code-life.info');
-  ga('send', 'pageview');
-
-</script><script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script></body></html>
+    <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script></body></html>
