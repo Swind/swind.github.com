@@ -1,0 +1,232 @@
+<!DOCTYPE html><html lang="en"><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta charset="utf-8"><meta name="title" content="使用 Python 結合 C 在 Linux 發送 SCSI Command | Corleonis"><meta name="description" content=""><meta name="author" content="Swind"><title>使用 Python 結合 C 在 Linux 發送 SCSI Command | Corleonis</title><!-- Le styles --><link href="../assets/css/bootstrap.css" rel="stylesheet" type="text/css"><link href="../assets/css/rst.css" rel="stylesheet" type="text/css"><link href="../assets/css/monokai.css" rel="stylesheet" type="text/css"><link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css"><link href="../assets/css/slides.css" rel="stylesheet" type="text/css"><link href="../assets/css/theme.css" rel="stylesheet" type="text/css"><link href="../assets/css/bootstrap-responsive.css" rel="stylesheet" type="text/css"><script src="../assets/js/jquery-1.7.2.min.js" type="text/javascript"></script><script src="../assets/js/jquery.colorbox-min.js" type="text/javascript"></script><script src="../assets/js/slides.min.jquery.js" type="text/javascript"></script><script src="../assets/js/bootstrap.min.js" type="text/javascript"></script><!-- Le HTML5 shim, for IE6-8 support of HTML5 elements --><!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]--><link rel="alternate" type="application/rss+xml" title="RSS (en)" href="../rss.xml"></head><body>
+<!-- Menubar -->
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+        
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </a>        
+        
+            <a class="brand" href="../">
+            Corleonis
+            </a>
+            <!-- Everything you want hidden at 940px or less, place within here -->
+            <div class="nav-collapse collapse">
+                <ul class="nav"><li><a href="../archive.html">Archives</a>
+            </li><li><a href="../categories/index.html">Tags</a>
+            </li><li><a href="../stories/linux-note.html">Linux 筆記</a>
+
+                </li></ul><ul class="nav pull-right"><li>
+    <a href="send-scsi-command-from-python-on-linux.rst">Source</a>
+    </li>
+
+                </ul></div>
+        </div>
+    </div>
+</div>
+<!-- End of Menubar -->
+<div class="container-fluid" id="container-fluid">
+    <!--Body content-->
+    <div class="row-fluid">
+    <div class="span2"></div>
+    <div class="span8">
+    
+    <div class="postbox">
+	
+	
+    <h1>使用 Python 結合 C 在 Linux 發送 SCSI Command</h1>
+
+
+    <hr><small>
+        Posted: 2013-08-03 10:38
+        
+
+        
+          |  More posts about
+            <a class="tag" href="../categories/python.html"><span class="badge badge-info">Python</span></a>
+            <a class="tag" href="../categories/cc.html"><span class="badge badge-info">C/C++</span></a>
+
+    </small>
+    <hr><p>最近因為工作的需要，所以要撰寫很多 SCSI 相關的測試。
+目前可以用的測試工具有 fio, iometer 以及一個自行開發的 SCSI Command 驗證的工具。
+但是這些都是使用 C 撰寫的，所以要撰寫一些流程比較複雜的驗證時，就變得非常的麻煩。
+絕對不是因為我想試試看 Python 或者是因為自行開發的驗證工具程式碼已經無法閱讀的原因，才想要重造輪子。</p>
+<p>Orz 而且我受夠了手動測試的生活了 ...</p>
+<p>所以想將測試運行的邏輯搬移到 Python 的部份，加速測試案例的開發速度。</p>
+<!-- TEASER_END -->
+<p>= 使用 C 發送 SCSI Command =</p>
+<p>這邊第一部就是要先想辦法讓 SCSI Command 可以送到 SCSI Device 上面。
+一般都是透過 ioctl 在進行，最早也有想過使用 Python 的 ioctl 來作。
+但是 ioctl 的資料結構全部都定義在 .h 檔裡面，如果使用 Python 我就勢必要將這些資料結構作轉換。
+所以我最後選擇第二條路，讓 Python 呼叫 C function。</p>
+<pre class="code c literal-block">
+<span class="cp">#include &lt;inttypes.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;sys/ioctl.h&gt;
+#include &lt;scsi/sg.h&gt; </span><span class="cm">/* take care: fetches glibc's /usr/include/scsi/sg.h */</span><span class="cp">
+</span>
+
+<span class="kt">int</span> <span class="nf">execute_scsi_command</span><span class="p">(</span>
+        <span class="kt">int</span> <span class="n">fd</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="n">cmd_size</span><span class="p">,</span>   <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">cmd_buffer</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="n">out_size</span><span class="p">,</span>   <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">out_buffer</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="n">sense_size</span><span class="p">,</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">sense_buffer</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">sg_io_hdr_t</span> <span class="n">io_hdr</span><span class="p">;</span>
+
+    <span class="c1">//Prepare SCSI Command
+</span>    <span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">io_hdr</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">sg_io_hdr_t</span><span class="p">));</span>
+
+    <span class="n">io_hdr</span><span class="p">.</span><span class="n">interface_id</span> <span class="o">=</span> <span class="sc">'S'</span><span class="p">;</span> <span class="c1">//required
+</span>
+    <span class="n">io_hdr</span><span class="p">.</span><span class="n">cmd_len</span> <span class="o">=</span> <span class="n">cmd_size</span><span class="p">;</span>
+    <span class="n">io_hdr</span><span class="p">.</span><span class="n">mx_sb_len</span> <span class="o">=</span> <span class="n">sense_size</span><span class="p">;</span>
+
+    <span class="cm">/*
+     *  SG_DXFER_NONE   -   SCSI Test Unit Ready command
+     *  SG_DXFER_TO_DEV -   SCSI WRITE command
+     *  SG_DXFER_FROM_DEV - SCSI READ command
+     */</span>
+    <span class="n">io_hdr</span><span class="p">.</span><span class="n">dxfer_direction</span> <span class="o">=</span> <span class="n">SG_DXFER_FROM_DEV</span><span class="p">;</span>
+    <span class="n">io_hdr</span><span class="p">.</span><span class="n">dxfer_len</span>       <span class="o">=</span> <span class="n">out_size</span><span class="p">;</span>
+    <span class="n">io_hdr</span><span class="p">.</span><span class="n">dxferp</span>          <span class="o">=</span> <span class="n">out_buffer</span><span class="p">;</span>
+
+    <span class="n">io_hdr</span><span class="p">.</span><span class="n">cmdp</span> <span class="o">=</span> <span class="n">cmd_buffer</span><span class="p">;</span>
+    <span class="n">io_hdr</span><span class="p">.</span><span class="n">sbp</span>  <span class="o">=</span> <span class="n">sense_buffer</span><span class="p">;</span>
+    <span class="n">io_hdr</span><span class="p">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="mi">20000</span><span class="p">;</span> <span class="c1">// 20000 millisecs = 20 seconds
+</span>    <span class="cm">/* io_hdr.flags = 0; */</span>     <span class="cm">/* take defaults: indirect IO, etc */</span>
+    <span class="cm">/* io_hdr.pack_id = 0; */</span>
+    <span class="cm">/* io_hdr.usr_ptr = NULL; */</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">ioctl</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">SG_IO</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">io_hdr</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">perror</span><span class="p">(</span><span class="s">"sg_simple0: Inquiry SG_IO ioctl error"</span><span class="p">);</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">io_hdr</span><span class="p">.</span><span class="n">resid</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+<p>這份程式碼是從 <a class="reference external" href="http://www.tldp.org/HOWTO/SCSI-Generic-HOWTO/pexample.html">The Linux SCSI Generic (sg) HOWTO</a> 的 Program Example 改過來的，
+透過 SG_IO 這個 ioctl 將 CDB、Data Buffer 與 Sense Buffer 傳入，等執行完畢之後我們就可以從這些 Buffer 取得 SCSI Command 結果。</p>
+<p>接著就是編譯一個 shared library</p>
+<pre class="code makefile literal-block">
+<span class="nv">CFLAG</span> <span class="o">=</span> -shared -fPIC -Wall
+<span class="nv">LIB_NAME</span> <span class="o">=</span> linux_ioctl.so
+
+<span class="nf">all</span><span class="o">:</span><span class="m">make_lib</span>
+
+<span class="nf">make_lib</span><span class="o">:</span><span class="m">linux_ioctl.c</span>
+        <span class="k">$(</span>CC<span class="k">)</span> -o <span class="k">$(</span>LIB_NAME<span class="k">)</span> <span class="k">$(</span>CFLAG<span class="k">)</span> linux_ioctl.c
+
+<span class="nf">clean</span><span class="o">:</span>
+        rm -f *.so
+</pre>
+<p>然後就只要輸入</p>
+<blockquote>
+make</blockquote>
+<p>就會得到一個 linux_ioctl.so 的 shared library 了。</p>
+<p>= 使用 Python 呼叫 C function =</p>
+<p>這部份就是我完全不熟的地方了，因為 Python 我也很少用，
+所以 Python 語法非常生澀。</p>
+<p>不過主要是透過 ctypes 來傳送 CDB、buffer pointer 到 C function 中。</p>
+<pre class="code python literal-block">
+<span class="kn">from</span> <span class="nn">ctypes</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">def</span> <span class="nf">hexdump</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">column_length</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">digits</span> <span class="o">=</span> <span class="mi">4</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">)</span> <span class="k">else</span> <span class="mi">2</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">column_length</span><span class="p">):</span>
+       <span class="n">s</span> <span class="o">=</span> <span class="n">src</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">column_length</span><span class="p">]</span>
+       <span class="n">hexa</span> <span class="o">=</span> <span class="n">b</span><span class="s">' '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">"</span><span class="si">%0*X</span><span class="s">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">digits</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>  <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">s</span><span class="p">])</span>
+       <span class="n">text</span> <span class="o">=</span> <span class="n">b</span><span class="s">''</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="mh">0x20</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mh">0x7F</span> <span class="k">else</span> <span class="n">b</span><span class="s">'.'</span>  <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">s</span><span class="p">])</span>
+       <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">b</span><span class="s">"</span><span class="si">%04X</span><span class="s">   </span><span class="si">%-*s</span><span class="s">   </span><span class="si">%s</span><span class="s">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">column_length</span><span class="o">*</span><span class="p">(</span><span class="n">digits</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">hexa</span> <span class="p">,</span> <span class="n">text</span><span class="p">)</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">b</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+<span class="n">dyn</span> <span class="o">=</span> <span class="n">CDLL</span><span class="p">(</span><span class="s">"./linux_ioctl.so"</span><span class="p">)</span>
+
+<span class="n">fo</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">"/dev/sda"</span><span class="p">,</span> <span class="s">"r"</span><span class="p">)</span>
+<span class="n">fid</span> <span class="o">=</span> <span class="n">fo</span><span class="o">.</span><span class="n">fileno</span><span class="p">()</span>
+
+<span class="n">CDB</span> <span class="o">=</span> <span class="n">c_byte</span> <span class="o">*</span> <span class="mi">6</span>
+<span class="n">CDB_array</span> <span class="o">=</span> <span class="n">CDB</span><span class="p">()</span>
+
+<span class="n">CDB_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x12</span>
+<span class="n">CDB_array</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span>
+<span class="n">CDB_array</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span>
+<span class="n">CDB_array</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span>
+<span class="n">CDB_array</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">96</span>
+<span class="n">CDB_array</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span>
+
+<span class="n">CDB_p</span> <span class="o">=</span> <span class="n">pointer</span><span class="p">(</span><span class="n">CDB_array</span><span class="p">)</span>
+
+<span class="n">SENSE</span> <span class="o">=</span> <span class="n">c_byte</span> <span class="o">*</span> <span class="mi">36</span>
+<span class="n">SENSE_array</span> <span class="o">=</span> <span class="n">SENSE</span><span class="p">()</span>
+
+<span class="n">DATA</span> <span class="o">=</span> <span class="n">c_byte</span> <span class="o">*</span> <span class="mi">96</span>
+<span class="n">DATA_array</span> <span class="o">=</span> <span class="n">DATA</span><span class="p">()</span>
+<span class="n">DATA_p</span> <span class="o">=</span> <span class="n">pointer</span><span class="p">(</span><span class="n">DATA_array</span><span class="p">)</span>
+
+<span class="n">SENSE_p</span> <span class="o">=</span> <span class="n">pointer</span><span class="p">(</span><span class="n">SENSE_array</span><span class="p">)</span>
+
+<span class="n">resid</span> <span class="o">=</span> <span class="n">dyn</span><span class="o">.</span><span class="n">execute_scsi_command</span><span class="p">(</span><span class="n">fid</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">CDB_p</span><span class="p">,</span> <span class="mi">96</span><span class="p">,</span> <span class="n">DATA_p</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">SENSE_p</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="n">hexdump</span><span class="p">(</span><span class="n">DATA_array</span><span class="p">,</span> <span class="mi">96</span> <span class="o">-</span> <span class="n">resid</span><span class="p">)</span>
+
+<span class="n">fo</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre>
+<p>透過 CDLL 將剛剛編譯好的 shared library 載入, c_byte 的型態建立 binary array ( 這部份我覺得應該有更好的方式可以處理 )，
+否則每次要建立 binary array 就都得透過 c_bytes * length 宣告 array 型態，然後在用這個型態去建立 binary array，
+再透過 pointer 取得 address。
+我在這部份的理解一定是有問題的，不然這樣的作法實在很奇怪。</p>
+<p>但是無論如何，他可以動 ............</p>
+<p>後面的</p>
+<pre class="code python literal-block">
+<span class="n">CDB_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x12</span>
+<span class="n">CDB_array</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span>
+<span class="n">CDB_array</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span>
+<span class="n">CDB_array</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span>
+<span class="n">CDB_array</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">96</span>
+<span class="n">CDB_array</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span>
+</pre>
+<p>就是一個標準的 INQUIRY Command 然後希望的長度是 96 bytes，
+所以這個程式你可以安心測試，基本上應該是不會把硬碟弄炸掉。</p>
+    
+    <ul class="pager"><li class="previous">
+            <a href="cmake-add_custom_command.html">← Previous post</a>
+        </li>
+    </ul><div id="disqus_thread"></div>
+        <script type="text/javascript">
+        var disqus_shortname ="swindgithub";
+            var disqus_url="http://swind.code-life.info/posts/send-scsi-command-from-python-on-linux.html";
+        var disqus_title="使用 Python 結合 C 在 Linux 發送 SCSI Command";
+        var disqus_identifier="cache/posts/2013-08-03-send-scsi-command-from-python-on-linux.html";
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+    </div>
+
+    </div>
+    </div> 
+    <!--End of body content-->
+</div>
+
+<div class="footerbox">
+    Contents © 2013 <a href="mailto:">Swind</a> - Powered by <a href="http://nikola.ralsina.com.ar">Nikola</a>
+</div>
+
+    
+    <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script></body></html>
