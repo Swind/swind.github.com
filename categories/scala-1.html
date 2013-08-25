@@ -22,7 +22,11 @@
             </li><li><a href="index.html">Tags</a>
             </li><li><a href="../stories/linux-note.html">Linux 筆記</a>
 
-                </li></ul><ul class="nav pull-right"></ul></div>
+                </li></ul><!-- Custom search --><form method="get" id="search" action="http://duckduckgo.com/" class="navbar-form pull-right">
+<input type="hidden" name="sites" value="http://swind.code-life.info"><input type="hidden" name="k8" value="#444444"><input type="hidden" name="k9" value="#D51920"><input type="hidden" name="kt" value="h"><input type="text" name="q" maxlength="255" placeholder="Search…" class="span2"><input type="submit" value="DuckDuckGo Search" style="visibility: hidden;"></form>
+<!-- End of custom search -->
+
+                <ul class="nav pull-right"></ul></div>
         </div>
     </div>
 </div>
@@ -38,14 +42,14 @@
         <small>  
              Posted: 2012-01-22 15:59
         </small></h1>
-        <hr><p>之前偷懶都直接使用 println 來輸出訊息，但是最近在玩 <a class="reference external" href="http://akka.io/">Akka</a> ，我發現如果沒有使用 log tool 的話我根本不知道是哪個 Actor 印訊息的。
+        <hr><div><p>之前偷懶都直接使用 println 來輸出訊息，但是最近在玩 <a class="reference external" href="http://akka.io/">Akka</a> ，我發現如果沒有使用 log tool 的話我根本不知道是哪個 Actor 印訊息的。
 只好搜尋一下 Scala 上面有沒有什麼好用的 Log 工具。</p>
 <div class="section" id="slf4s-slf4j-logback">
 <h2>slf4s + slf4j + logback</h2>
 <p>一般依照以往的習慣基本就是 <a class="reference external" href="http://logging.apache.org/log4j/">log4j</a> + <a class="reference external" href="http://www.slf4j.org/">slf4j</a> ，這算是最通用的工具組了。但是 Scala 有這麼多特異功能，說不定會有更神奇的 Log 工具，
 於是就抱著這樣的心態跟 Google 大神詢問求籤。最後看到 logback 這個工具（雖然跟 Scala 完全沒有關係）但是人都是喜新厭舊 XD，所以
 我就從 slf4j + log4j 轉到 slf4j + logback，附帶一提 logback 是 slf4j 預設的 log 工具，因此使用這兩個的組合不需要另外抓 Adapter。（ex.slf4j-log4j12-1.6.4.jar之類的）</p>
-<p><a href="../posts/scala-log-tool.html">Read more...</a></p></div>
+<p><a href="../posts/scala-log-tool.html">Read more...</a></p></div></div>
         
     <p>
         <a href="../posts/scala-log-tool.html#disqus_thread" data-disqus-identifier="cache/posts/2012-01-22-scala-log-tools.html">Comments</a>
@@ -56,13 +60,13 @@
         <small>  
              Posted: 2011-10-27 08:47
         </small></h1>
-        <hr><p>HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
+        <hr><div><p>HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
 為了要從網頁中可以取出內容,我曾經用過不少方式,包括直接硬幹用字串搜尋、修改Scala本身內部的XML Parser等。
 但是一直都找不到一個滿意又順手的解決方式,一直到後來在 <a class="reference external" href="http://www.oschina.net/">CSDN</a> 沒錯就是那個大陸網站 <a class="reference external" href="http://www.oschina.net/">CSDN</a>
 (雖然說CSDN訊息太多太雜亂,但是偶爾還是可以看到一些不錯的東西),才找到jsoup這個library。</p>
 <p><a class="reference external" href="http://jsoup.org/">jsoup的官方網站</a></p>
 <p><a class="reference external" href="http://jsoup.org/cookbook/">jsoup的教學文件</a></p>
-<p><a href="../posts/jsoup.html">Read more...</a></p>
+<p><a href="../posts/jsoup.html">Read more...</a></p></div>
         
     <p>
         <a href="../posts/jsoup.html#disqus_thread" data-disqus-identifier="cache/posts/2011-10-27-jsoup.html">Comments</a>
@@ -86,13 +90,13 @@
 </div>
 
    
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-      ga('create', UA-42855873-1, 'code-life.info');
-      ga('send', 'pageview');
+  ga('create', 'UA-42855873-1', 'code-life.info');
+  ga('send', 'pageview');
 
-    </script><script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script></body></html>
+</script><script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script></body></html>

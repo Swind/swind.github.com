@@ -22,7 +22,11 @@
             </li><li><a href="categories/index.html">Tags</a>
             </li><li><a href="stories/linux-note.html">Linux 筆記</a>
 
-                </li></ul><ul class="nav pull-right"></ul></div>
+                </li></ul><!-- Custom search --><form method="get" id="search" action="http://duckduckgo.com/" class="navbar-form pull-right">
+<input type="hidden" name="sites" value="http://swind.code-life.info"><input type="hidden" name="k8" value="#444444"><input type="hidden" name="k9" value="#D51920"><input type="hidden" name="kt" value="h"><input type="text" name="q" maxlength="255" placeholder="Search…" class="span2"><input type="submit" value="DuckDuckGo Search" style="visibility: hidden;"></form>
+<!-- End of custom search -->
+
+                <ul class="nav pull-right"></ul></div>
         </div>
     </div>
 </div>
@@ -34,63 +38,11 @@
     <div class="span8">
     
         <div class="postbox">
-        <h1><a href="posts/akka-2_0-note-6.html">Akka 2.0 筆記(6) - Dispatcher 的設定</a>
-        <small>  
-             Posted: 2012-06-17 20:19
-        </small></h1>
-        <hr><p>今天早上先簡單了依照昨天畫得架構圖做了一個雛型，整個跑起來功能是以了，但是流程整個悲劇 Orz ...
-先是 Exception Handling 做的不夠好，結果就真的是 "Let it Crash" 一直死一直死一直死，好像在玩 D3 的煉獄模式一樣。</p>
-<p>再來是我沒有去設定 Dispatcher 所以 Thread 用了十幾個。如果我沒有看錯的話，依照 Akka <a class="reference external" href="https://github.com/akka/akka/blob/master/akka-actor/src/main/resources/reference.conf">reference.conf</a> 的設定，
-Default Dispatcher 使用 fork-join-executor，他的預設設定如下</p>
-<pre class="code scala literal-block">
-<span class="n">fork</span><span class="o">-</span><span class="n">join</span><span class="o">-</span><span class="n">executor</span> <span class="o">{</span>
-  <span class="k">#</span> <span class="nc">Min</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span> <span class="n">to</span> <span class="n">cap</span> <span class="n">factor</span><span class="o">-</span><span class="n">based</span> <span class="n">parallelism</span> <span class="n">number</span> <span class="n">to</span>
-  <span class="n">parallelism</span><span class="o">-</span><span class="n">min</span> <span class="k">=</span> <span class="mi">8</span>
-
-  <span class="k">#</span> <span class="nc">Parallelism</span> <span class="o">(</span><span class="n">threads</span><span class="o">)</span> <span class="o">...</span> <span class="n">ceil</span><span class="o">(</span><span class="n">available</span> <span class="n">processors</span> <span class="o">*</span> <span class="n">factor</span><span class="o">)</span>
-  <span class="n">parallelism</span><span class="o">-</span><span class="n">factor</span> <span class="k">=</span> <span class="mf">3.0</span>
-
-  <span class="k">#</span> <span class="nc">Max</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span> <span class="n">to</span> <span class="n">cap</span> <span class="n">factor</span><span class="o">-</span><span class="n">based</span> <span class="n">parallelism</span> <span class="n">number</span> <span class="n">to</span>
-  <span class="n">parallelism</span><span class="o">-</span><span class="n">max</span> <span class="k">=</span> <span class="mi">64</span>
-<span class="o">}</span>
-</pre>
-<p>很簡單的 parallelism-min 與 parallelism-max 的值代表著 Thread 的上下限，那麼 parallelism_factor 呢？</p>
-<p>他同樣也是限制 Thread 的上限，上限的計算方式為</p>
-<blockquote>
-parallelism-factor * 你的處理器核心數</blockquote>
-<p>所以我的四核心桌機使用這個 Dispatcher 最多會開到 12 個 Thread Orz ...</p>
-<p><a href="posts/akka-2_0-note-6.html">Read more...</a></p>
-        
-    <p>
-        <a href="posts/akka-2_0-note-6.html#disqus_thread" data-disqus-identifier="cache/posts/2012-06-17-akka-note-6-my-aggregator.html">Comments</a>
-
-        </p></div>
-        <div class="postbox">
-        <h1><a href="posts/akka-2_0-note-5.html">Akka 2.0 筆記(5) - Scatter Gather</a>
-        <small>  
-             Posted: 2012-06-15 08:58
-        </small></h1>
-        <hr><p>繼上次完全看不懂的 Dataflow 之後，我還是想要一個 Akka 的 Scatter Gather 實作方式，因此想試著自己實做看看。</p>
-<p>下圖是 <a class="reference external" href="http://www.eaipatterns.com/">Enterprise Integration Patterns</a>  書中的 Scatter-Gather 概念圖。</p>
-<img alt="http://www.eaipatterns.com/img/BroadcastAggregate.gif" src="http://www.eaipatterns.com/img/BroadcastAggregate.gif"><p>從圖中可以發現，中間對於 Vendor A、B 與 C 進行 Broadcast 的行為跟 Akka 內的 <a class="reference external" href="http://doc.akka.io/docs/akka/2.0/scala/routing.html">Router</a> 很像，
-所以當我正在思考 Router 是否合適作為這種用途的時候，我想到了 <a class="reference external" href="http://letitcrash.com/">Let it Crash</a> 裡面 <a class="reference external" href="http://letitcrash.com/post/23532935686/watch-the-routees">Watch the Routees</a> 這篇文章。</p>
-<p>這篇文章裡面他紀錄了在 Akka mailinglist 中回答別人問題時所寫的範例程式。</p>
-<p>整個 use case 是要執行一個 Job，這個 Job 由許多 Tasks 組成，在執行的過程中</p>
-<ol class="arabic simple"><li>會將這些 Tasks 透過 router 分派給 worker actors 執行。</li>
-<li>最後收集所有 worker 的執行結果，並且將他們合併之後回傳。</li>
-<li>除此之外， worker 在執行過程中發生錯誤時，應該要進行 retry，在進行幾次 retry 後依然有錯誤時，Worker 就會停止，並且中止整個 Job。</li>
-</ol><p><a href="posts/akka-2_0-note-5.html">Read more...</a></p>
-        
-    <p>
-        <a href="posts/akka-2_0-note-5.html#disqus_thread" data-disqus-identifier="cache/posts/2012-06-15-akka-note-5-aggregator.html">Comments</a>
-
-        </p></div>
-        <div class="postbox">
         <h1><a href="posts/akka-2_0-note-4.html">Akka 2.0 筆記(4) - Dataflow 請不要期待這篇我會提到什麼</a>
         <small>  
              Posted: 2012-06-12 21:55
         </small></h1>
-        <hr><p>這整篇的原因起於，洗澡的時候想到的，
+        <hr><div><p>這整篇的原因起於，洗澡的時候想到的，
 Akka 的 Future 到底有沒有存在的意義呢？</p>
 <p>因為當一個 Actor 用 reply 或者 sender 回傳結果的時候，其實可以再 receive 不同的型態的 Message 就好了。
 而且這樣還不會因為 Await 而需要 block thread，減少 dead lock 的發生。
@@ -102,7 +54,7 @@ Akka 的 Future 到底有沒有存在的意義呢？</p>
 <p>但是這邊又出現了一個更複雜的問題了，因為我將工作分給不同的 Actor 去執行，必須要等到所有 Actor 都執行完畢，整合所有的結果。
 那麼如果是用 receive 我要怎樣才能知道我所有的工作都已經完成了呢？</p>
 <p>簡單來說，我就是需要實做一個  <a class="reference external" href="http://www.eaipatterns.com/BroadcastAggregate.html">Scatter-Gather</a> ，才會莫名其妙的看到 Akka 的 Dataflow。</p>
-<p><a href="posts/akka-2_0-note-4.html">Read more...</a></p>
+<p><a href="posts/akka-2_0-note-4.html">Read more...</a></p></div>
         
     <p>
         <a href="posts/akka-2_0-note-4.html#disqus_thread" data-disqus-identifier="cache/posts/2012-06-12-akka-dataflow.html">Comments</a>
@@ -113,9 +65,9 @@ Akka 的 Future 到底有沒有存在的意義呢？</p>
         <small>  
              Posted: 2012-06-10 17:30
         </small></h1>
-        <hr><p>而是我實在是不擅長寫作，過去作文只有 20 分真的不是拿假的。
+        <hr><div><p>而是我實在是不擅長寫作，過去作文只有 20 分真的不是拿假的。
 前一篇的 <strong>開始使用 Future</strong> 只有介紹一些基本的使用方式而已，然後依照前面的程式碼是絕對跑不起來的 Orz ...</p>
-<p><a href="posts/akka-2_0-note-3.html">Read more...</a></p>
+<p><a href="posts/akka-2_0-note-3.html">Read more...</a></p></div>
         
     <p>
         <a href="posts/akka-2_0-note-3.html#disqus_thread" data-disqus-identifier="cache/posts/2012-06-10-akka-note-3-future.html">Comments</a>
@@ -126,12 +78,12 @@ Akka 的 Future 到底有沒有存在的意義呢？</p>
         <small>  
              Posted: 2012-06-08 12:18
         </small></h1>
-        <hr><p>以前再使用 Java Thread 的時候最困擾我的就是 Thread 之間的溝通。
+        <hr><div><p>以前再使用 Java Thread 的時候最困擾我的就是 Thread 之間的溝通。
 要怎樣讓一個 Thread 去等待另外一個 Thread？要怎樣才能讓工作分配的平均？
 最後是靠 BlockingQueue 才讓實作變得簡單一點，
 不過想當然問題當然一大堆 ... Orz</p>
 <p>所以想來實驗看看 Akka 的 Future 與 Router 到底是如何使用，與可以做到什麼事情。</p>
-<p><a href="posts/akka-2_0-note-2.html">Read more...</a></p>
+<p><a href="posts/akka-2_0-note-2.html">Read more...</a></p></div>
         
     <p>
         <a href="posts/akka-2_0-note-2.html#disqus_thread" data-disqus-identifier="cache/posts/2012-05-23-akka-note-2-eventstream.html">Comments</a>
@@ -142,13 +94,13 @@ Akka 的 Future 到底有沒有存在的意義呢？</p>
         <small>  
              Posted: 2012-05-17 18:03
         </small></h1>
-        <hr><p>因為我的程式還沒有寫完，所以是筆記 (1)，寫的過程應該還會有 2 3 ... 出現 Orz。</p>
+        <hr><div><p>因為我的程式還沒有寫完，所以是筆記 (1)，寫的過程應該還會有 2 3 ... 出現 Orz。</p>
 <blockquote>
 Akka 2.0 - 要升級了
 你的時間的庫存量足夠嗎 ?</blockquote>
 <p>Akka 進入了 2.0 時代，恭喜你如果你是用 1.x 的話，請準備改寫吧 ...
 先從幾個方面來看 2.0 的新增事項。</p>
-<p><a href="posts/akka-2_0-note-1.html">Read more...</a></p>
+<p><a href="posts/akka-2_0-note-1.html">Read more...</a></p></div>
         
     <p>
         <a href="posts/akka-2_0-note-1.html#disqus_thread" data-disqus-identifier="cache/posts/2012-05-17-akka-note-1.html">Comments</a>
@@ -159,12 +111,12 @@ Akka 2.0 - 要升級了
         <small>  
              Posted: 2012-05-11 18:19
         </small></h1>
-        <hr><p>好吧，我要開始筆記一下這次的實作心得了</p>
+        <hr><div><p>好吧，我要開始筆記一下這次的實作心得了</p>
 <p>其實在學 Scala 的這一段時間中，我最困擾的就是到底怎樣才是好的 Scala 寫作風格。
 因為 Scala 最吸引我的部份就是在於他的語法可以不斷的精鍊再精鍊，最後變成*魔法文字* Orz。
 所以要怎樣善用 Scala 的語言特性，卻又不失可讀性，我覺得真的很難。
 因此在這次的小工具實作中，我試著摸索 Curry 的用法。</p>
-<p><a href="posts/epubconverter-implement-note.html">Read more...</a></p>
+<p><a href="posts/epubconverter-implement-note.html">Read more...</a></p></div>
         
     <p>
         <a href="posts/epubconverter-implement-note.html#disqus_thread" data-disqus-identifier="cache/posts/2012-05-11-epubconverter-implement-note.html">Comments</a>
@@ -175,9 +127,9 @@ Akka 2.0 - 要升級了
         <small>  
              Posted: 2012-05-11 16:56
         </small></h1>
-        <hr><p><a class="reference external" href="https://github.com/Swind/EPUBConverter/downloads">EPUBConverter 0.0.1</a></p>
+        <hr><div><p><a class="reference external" href="https://github.com/Swind/EPUBConverter/downloads">EPUBConverter 0.0.1</a></p>
 <p>這個版號我覺得也沒有機會到 0.0.2 了，不過還是讓我命名個版號滿足小小的虛榮心好了。</p>
-<p><a href="posts/epubconverter.html">Read more...</a></p>
+<p><a href="posts/epubconverter.html">Read more...</a></p></div>
         
     <p>
         <a href="posts/epubconverter.html#disqus_thread" data-disqus-identifier="cache/posts/2012-05-11-epubconverter.html">Comments</a>
@@ -316,26 +268,69 @@ activejdbc會自動對應複數名詞的Table與單數名詞的Model。(不知�
         <small>  
              Posted: 2012-01-22 15:59
         </small></h1>
-        <hr><p>之前偷懶都直接使用 println 來輸出訊息，但是最近在玩 <a class="reference external" href="http://akka.io/">Akka</a> ，我發現如果沒有使用 log tool 的話我根本不知道是哪個 Actor 印訊息的。
+        <hr><div><p>之前偷懶都直接使用 println 來輸出訊息，但是最近在玩 <a class="reference external" href="http://akka.io/">Akka</a> ，我發現如果沒有使用 log tool 的話我根本不知道是哪個 Actor 印訊息的。
 只好搜尋一下 Scala 上面有沒有什麼好用的 Log 工具。</p>
 <div class="section" id="slf4s-slf4j-logback">
 <h2>slf4s + slf4j + logback</h2>
 <p>一般依照以往的習慣基本就是 <a class="reference external" href="http://logging.apache.org/log4j/">log4j</a> + <a class="reference external" href="http://www.slf4j.org/">slf4j</a> ，這算是最通用的工具組了。但是 Scala 有這麼多特異功能，說不定會有更神奇的 Log 工具，
 於是就抱著這樣的心態跟 Google 大神詢問求籤。最後看到 logback 這個工具（雖然跟 Scala 完全沒有關係）但是人都是喜新厭舊 XD，所以
 我就從 slf4j + log4j 轉到 slf4j + logback，附帶一提 logback 是 slf4j 預設的 log 工具，因此使用這兩個的組合不需要另外抓 Adapter。（ex.slf4j-log4j12-1.6.4.jar之類的）</p>
-<p><a href="posts/scala-log-tool.html">Read more...</a></p></div>
+<p><a href="posts/scala-log-tool.html">Read more...</a></p></div></div>
         
     <p>
         <a href="posts/scala-log-tool.html#disqus_thread" data-disqus-identifier="cache/posts/2012-01-22-scala-log-tools.html">Comments</a>
 
         </p></div>
+        <div class="postbox">
+        <h1><a href="posts/jsoup.html">好用的 HTML Parser - jsoup</a>
+        <small>  
+             Posted: 2011-10-27 08:47
+        </small></h1>
+        <hr><div><p>HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
+為了要從網頁中可以取出內容,我曾經用過不少方式,包括直接硬幹用字串搜尋、修改Scala本身內部的XML Parser等。
+但是一直都找不到一個滿意又順手的解決方式,一直到後來在 <a class="reference external" href="http://www.oschina.net/">CSDN</a> 沒錯就是那個大陸網站 <a class="reference external" href="http://www.oschina.net/">CSDN</a>
+(雖然說CSDN訊息太多太雜亂,但是偶爾還是可以看到一些不錯的東西),才找到jsoup這個library。</p>
+<p><a class="reference external" href="http://jsoup.org/">jsoup的官方網站</a></p>
+<p><a class="reference external" href="http://jsoup.org/cookbook/">jsoup的教學文件</a></p>
+<p><a href="posts/jsoup.html">Read more...</a></p></div>
+        
+    <p>
+        <a href="posts/jsoup.html#disqus_thread" data-disqus-identifier="cache/posts/2011-10-27-jsoup.html">Comments</a>
+
+        </p></div>
+        <div class="postbox">
+        <h1><a href="posts/octopress-note.html">Octopress安裝筆記 - 我跳槽到 Pelican 了 - 又跳到 Nikola 了</a>
+        <small>  
+             Posted: 2011-10-19 11:17
+        </small></h1>
+        <hr><div><div class="section" id="nikola">
+<h2>2013.01.20 我又跳槽到 Nikola 了</h2>
+</div>
+<div class="section" id="pelican">
+<h2>2012.11.28 我已經跳槽到 Pelican 了，不過還是把這篇留著當紀念好了。</h2>
+</div>
+<div class="section" id="win7">
+<h2>2012.05.21 更新這次好像真的解決在 Win7 上面的問題了</h2>
+<p>其實在 Windows 上面使用 Octopress 沒有什麼特別大的問題，注意文章的編碼就好。
+但是有一點一直非常困擾著我的就是， Codeblock 的問題。由於 rake generator 所提供的錯誤訊息非常的少，所以很難找出錯誤。
+最常在網頁上面看到的就是這個</p>
+<pre class="literal-block">
+Liquid error: undefined method `Py_IsInitialized’ for RubyPython::Python:Module
+</pre>
+<p>一直到我今天無意間搜尋到這篇文章 (話說 Octopress 的安裝教學文真的越來越多了)
+<a class="reference external" href="http://hivan.me/octopress-install-to-windows8/">Windows 8 安裝 Octopress 紀錄</a> 他真的找出問題了，重點就在於！ <em>Python 請安裝 32-bit 的版本</em>。
+真的這樣就讓 Codeblock 可以正常運作了 T_T
+真的是太讓人心酸了。</p>
+<p><a href="posts/octopress-note.html">Read more...</a></p></div></div>
+        
+    <p>
+        <a href="posts/octopress-note.html#disqus_thread" data-disqus-identifier="cache/posts/2011-10-19-ban-jia-hou-di-1pian.html">Comments</a>
+
+        </p></div>
     
 <div>
 <ul class="pager"><li class="previous">
-        <a href="index.html">← Newer posts</a>
-    </li>
-    <li class="next">
-        <a href="index-2.html">Older posts →</a>
+        <a href="index-2.html">← Newer posts</a>
     </li>
 </ul></div>
 
@@ -350,13 +345,13 @@ activejdbc會自動對應複數名詞的Table與單數名詞的Model。(不知�
 </div>
 
    
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-      ga('create', UA-42855873-1, 'code-life.info');
-      ga('send', 'pageview');
+  ga('create', 'UA-42855873-1', 'code-life.info');
+  ga('send', 'pageview');
 
-    </script><script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script></body></html>
+</script><script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script></body></html>

@@ -22,7 +22,11 @@
             </li><li><a href="index.html">Tags</a>
             </li><li><a href="../stories/linux-note.html">Linux 筆記</a>
 
-                </li></ul><ul class="nav pull-right"></ul></div>
+                </li></ul><!-- Custom search --><form method="get" id="search" action="http://duckduckgo.com/" class="navbar-form pull-right">
+<input type="hidden" name="sites" value="http://swind.code-life.info"><input type="hidden" name="k8" value="#444444"><input type="hidden" name="k9" value="#D51920"><input type="hidden" name="kt" value="h"><input type="text" name="q" maxlength="255" placeholder="Search…" class="span2"><input type="submit" value="DuckDuckGo Search" style="visibility: hidden;"></form>
+<!-- End of custom search -->
+
+                <ul class="nav pull-right"></ul></div>
         </div>
     </div>
 </div>
@@ -38,12 +42,12 @@
         <small>  
              Posted: 2012-12-09 18:00
         </small></h1>
-        <hr><p>會想到用這個是由於 EPUBConverter Go 的版本雖然運作上已經比 Scala 版本快上不少了。
+        <hr><div><p>會想到用這個是由於 EPUBConverter Go 的版本雖然運作上已經比 Scala 版本快上不少了。
 但我發現在執行的時候 CPU 使用率一直都只有 25 %，所以才想試試看使用 goroutine 看能不能讓他轉換更快一點。</p>
 <p>依照文件所說，在執行 IO 相關動作的時候，會將 CPU 讓給 goroutine 來使用，那麼對於 EPUBConverter 的效能應該會有顯著的提昇。</p>
 <p>雖然有人說 goroutine 跟 Scala 的 actor 有點像，但是 actor 的模型就很具體跟明確。
 而 goroutine 則是提供一個方便快速的 thread 操作方式。</p>
-<p><a href="../posts/goroutine-note-1.html">Read more...</a></p>
+<p><a href="../posts/goroutine-note-1.html">Read more...</a></p></div>
         
     <p>
         <a href="../posts/goroutine-note-1.html#disqus_thread" data-disqus-identifier="cache/posts/2012-12-09-golang-goroutine-note1.html">Comments</a>
@@ -54,7 +58,7 @@
         <small>  
              Posted: 2012-12-08 18:00
         </small></h1>
-        <hr><p>一開始的 Scala 版本本來是自己寫來自己用的小工具，可是沒想到竟然有人有用還有回報問題。
+        <hr><div><p>一開始的 Scala 版本本來是自己寫來自己用的小工具，可是沒想到竟然有人有用還有回報問題。
 大受感動之餘（誤），而出現了這個全新感受的 EPUBConverter 0.0.2，絕對不是因為手癢想要試試看 Go。</p>
 <p>P.S 2012.12.09 更新 - 修正了鳥 Bug 所以到 0.0.3 了。</p>
 <p><a class="reference external" href="https://dl.dropbox.com/u/15537823/EPUBConverter_0.0.3.7z">EPUBConverter 0.0.3 下載</a></p>
@@ -66,7 +70,7 @@
 <p>但是由於我直接將對照表轉換成 Golang 裡面的 map 了，所以這次就沒有辦法讓使用者自己改對照表了。</p>
 <p>不過有興趣的人，在原始碼的 <a class="reference external" href="https://github.com/Swind/EPUBConverter-Go/tree/master/tongwen_table">tongwen_table</a> 資料夾底下，我有放了一個簡單的轉換工具。
 可以利用那個重新產生 Go 的 map，但是最後還是得重新編譯整個 EPUBConverter 就是了。</p>
-<p><a href="../posts/epubconverter-0_0_2.html">Read more...</a></p>
+<p><a href="../posts/epubconverter-0_0_2.html">Read more...</a></p></div>
         
     <p>
         <a href="../posts/epubconverter-0_0_2.html#disqus_thread" data-disqus-identifier="cache/posts/2012-12-08-epubconverter-go.html">Comments</a>
@@ -87,13 +91,13 @@
 </div>
 
    
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-      ga('create', UA-42855873-1, 'code-life.info');
-      ga('send', 'pageview');
+  ga('create', 'UA-42855873-1', 'code-life.info');
+  ga('send', 'pageview');
 
-    </script><script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script></body></html>
+</script><script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script></body></html>

@@ -22,7 +22,11 @@
             </li><li><a href="index.html">Tags</a>
             </li><li><a href="../stories/linux-note.html">Linux 筆記</a>
 
-                </li></ul><ul class="nav pull-right"></ul></div>
+                </li></ul><!-- Custom search --><form method="get" id="search" action="http://duckduckgo.com/" class="navbar-form pull-right">
+<input type="hidden" name="sites" value="http://swind.code-life.info"><input type="hidden" name="k8" value="#444444"><input type="hidden" name="k9" value="#D51920"><input type="hidden" name="kt" value="h"><input type="text" name="q" maxlength="255" placeholder="Search…" class="span2"><input type="submit" value="DuckDuckGo Search" style="visibility: hidden;"></form>
+<!-- End of custom search -->
+
+                <ul class="nav pull-right"></ul></div>
         </div>
     </div>
 </div>
@@ -38,13 +42,13 @@
         <small>  
              Posted: 2013-08-25 15:26
         </small></h1>
-        <hr><p>學習用 Python 寫測試工具快兩個星期了，主要使用 clime + ucltip 跟 pyinstaller。
+        <hr><div><p>學習用 Python 寫測試工具快兩個星期了，主要使用 clime + ucltip 跟 pyinstaller。
 可是目前遇到一個問題，當我使用 pyinstaller 將測試工具打包之後，
 他會很貼心的幫你將所有 .py 檔包裝成一個可執行檔。
 所以當我要任何新增 command 都必須要重新部屬那個執行檔，這樣實在非常的麻煩。</p>
 <p>因此才會開始嘗試是否有可能執行檔只包裝 clime, ucltip 以及我自己所提供的 API，
 然後 command 的部份就利用 plugin 的方式來增加。</p>
-<p><a href="../posts/simple-python-plugin-framework.html">Read more...</a></p>
+<p><a href="../posts/simple-python-plugin-framework.html">Read more...</a></p></div>
         
     <p>
         <a href="../posts/simple-python-plugin-framework.html#disqus_thread" data-disqus-identifier="cache/posts/2013-08-25-simply-python-plugin-framework.html">Comments</a>
@@ -65,13 +69,13 @@
 </div>
 
    
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-      ga('create', UA-42855873-1, 'code-life.info');
-      ga('send', 'pageview');
+  ga('create', 'UA-42855873-1', 'code-life.info');
+  ga('send', 'pageview');
 
-    </script><script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script></body></html>
+</script><script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script></body></html>

@@ -22,7 +22,11 @@
             </li><li><a href="index.html">Tags</a>
             </li><li><a href="../stories/linux-note.html">Linux 筆記</a>
 
-                </li></ul><ul class="nav pull-right"></ul></div>
+                </li></ul><!-- Custom search --><form method="get" id="search" action="http://duckduckgo.com/" class="navbar-form pull-right">
+<input type="hidden" name="sites" value="http://swind.code-life.info"><input type="hidden" name="k8" value="#444444"><input type="hidden" name="k9" value="#D51920"><input type="hidden" name="kt" value="h"><input type="text" name="q" maxlength="255" placeholder="Search…" class="span2"><input type="submit" value="DuckDuckGo Search" style="visibility: hidden;"></form>
+<!-- End of custom search -->
+
+                <ul class="nav pull-right"></ul></div>
         </div>
     </div>
 </div>
@@ -38,14 +42,14 @@
         <small>  
              Posted: 2012-11-06 20:11
         </small></h1>
-        <hr><p><a class="reference external" href="http://spray.cc/">Spray</a></p>
+        <hr><div><p><a class="reference external" href="http://spray.cc/">Spray</a></p>
 <p>最初是想要建立一個提供查詢服務的 RESTful API Server，可以讓 Client 的應用程式透過 RESTful API 查詢一些資料。
 但是看來看去，用 Play2、Jersey、RESTEasy 等都蠻麻煩的，而且還需要使用 Web container（像 Tomcat、Jetty 等）。
 所以才找到這個 Spray，而且又是用 Scala 開發的，實在沒有理由不試試看阿。 XD</p>
 <p>若你連到官網看會發現他分成很多模組，老實說我也沒有詳細研究每個模組的功能。
 因為 <a class="reference external" href="http://spray.cc/documentation/spray-can/">spray-can</a> 的範例看起來最簡單並且也符合我的需求，所以就直接用他了。</p>
 <p>想瞭解更詳細內容的可以參考 <a class="reference external" href="https://github.com/spray/spray/tree/release-1.0-M2/examples/spray-can/simple-http-server/">spray-can 範例文件</a> 與 <a class="reference external" href="http://blog.cloudfoundry.com/2012/05/11/running-standalone-web-applications-on-cloud-foundry/">Running Standalone Web Applications on Cloud Foundry</a></p>
-<p><a href="../posts/build-restful-api-server-by-spray.html">Read more...</a></p>
+<p><a href="../posts/build-restful-api-server-by-spray.html">Read more...</a></p></div>
         
     <p>
         <a href="../posts/build-restful-api-server-by-spray.html#disqus_thread" data-disqus-identifier="cache/posts/2012-11-06-spray.html">Comments</a>
@@ -56,7 +60,7 @@
         <small>  
              Posted: 2012-06-17 20:19
         </small></h1>
-        <hr><p>今天早上先簡單了依照昨天畫得架構圖做了一個雛型，整個跑起來功能是以了，但是流程整個悲劇 Orz ...
+        <hr><div><p>今天早上先簡單了依照昨天畫得架構圖做了一個雛型，整個跑起來功能是以了，但是流程整個悲劇 Orz ...
 先是 Exception Handling 做的不夠好，結果就真的是 "Let it Crash" 一直死一直死一直死，好像在玩 D3 的煉獄模式一樣。</p>
 <p>再來是我沒有去設定 Dispatcher 所以 Thread 用了十幾個。如果我沒有看錯的話，依照 Akka <a class="reference external" href="https://github.com/akka/akka/blob/master/akka-actor/src/main/resources/reference.conf">reference.conf</a> 的設定，
 Default Dispatcher 使用 fork-join-executor，他的預設設定如下</p>
@@ -77,7 +81,7 @@ Default Dispatcher 使用 fork-join-executor，他的預設設定如下</p>
 <blockquote>
 parallelism-factor * 你的處理器核心數</blockquote>
 <p>所以我的四核心桌機使用這個 Dispatcher 最多會開到 12 個 Thread Orz ...</p>
-<p><a href="../posts/akka-2_0-note-6.html">Read more...</a></p>
+<p><a href="../posts/akka-2_0-note-6.html">Read more...</a></p></div>
         
     <p>
         <a href="../posts/akka-2_0-note-6.html#disqus_thread" data-disqus-identifier="cache/posts/2012-06-17-akka-note-6-my-aggregator.html">Comments</a>
@@ -88,7 +92,7 @@ parallelism-factor * 你的處理器核心數</blockquote>
         <small>  
              Posted: 2012-06-15 08:58
         </small></h1>
-        <hr><p>繼上次完全看不懂的 Dataflow 之後，我還是想要一個 Akka 的 Scatter Gather 實作方式，因此想試著自己實做看看。</p>
+        <hr><div><p>繼上次完全看不懂的 Dataflow 之後，我還是想要一個 Akka 的 Scatter Gather 實作方式，因此想試著自己實做看看。</p>
 <p>下圖是 <a class="reference external" href="http://www.eaipatterns.com/">Enterprise Integration Patterns</a>  書中的 Scatter-Gather 概念圖。</p>
 <img alt="http://www.eaipatterns.com/img/BroadcastAggregate.gif" src="http://www.eaipatterns.com/img/BroadcastAggregate.gif"><p>從圖中可以發現，中間對於 Vendor A、B 與 C 進行 Broadcast 的行為跟 Akka 內的 <a class="reference external" href="http://doc.akka.io/docs/akka/2.0/scala/routing.html">Router</a> 很像，
 所以當我正在思考 Router 是否合適作為這種用途的時候，我想到了 <a class="reference external" href="http://letitcrash.com/">Let it Crash</a> 裡面 <a class="reference external" href="http://letitcrash.com/post/23532935686/watch-the-routees">Watch the Routees</a> 這篇文章。</p>
@@ -97,7 +101,7 @@ parallelism-factor * 你的處理器核心數</blockquote>
 <ol class="arabic simple"><li>會將這些 Tasks 透過 router 分派給 worker actors 執行。</li>
 <li>最後收集所有 worker 的執行結果，並且將他們合併之後回傳。</li>
 <li>除此之外， worker 在執行過程中發生錯誤時，應該要進行 retry，在進行幾次 retry 後依然有錯誤時，Worker 就會停止，並且中止整個 Job。</li>
-</ol><p><a href="../posts/akka-2_0-note-5.html">Read more...</a></p>
+</ol><p><a href="../posts/akka-2_0-note-5.html">Read more...</a></p></div>
         
     <p>
         <a href="../posts/akka-2_0-note-5.html#disqus_thread" data-disqus-identifier="cache/posts/2012-06-15-akka-note-5-aggregator.html">Comments</a>
@@ -108,7 +112,7 @@ parallelism-factor * 你的處理器核心數</blockquote>
         <small>  
              Posted: 2012-06-12 21:55
         </small></h1>
-        <hr><p>這整篇的原因起於，洗澡的時候想到的，
+        <hr><div><p>這整篇的原因起於，洗澡的時候想到的，
 Akka 的 Future 到底有沒有存在的意義呢？</p>
 <p>因為當一個 Actor 用 reply 或者 sender 回傳結果的時候，其實可以再 receive 不同的型態的 Message 就好了。
 而且這樣還不會因為 Await 而需要 block thread，減少 dead lock 的發生。
@@ -120,7 +124,7 @@ Akka 的 Future 到底有沒有存在的意義呢？</p>
 <p>但是這邊又出現了一個更複雜的問題了，因為我將工作分給不同的 Actor 去執行，必須要等到所有 Actor 都執行完畢，整合所有的結果。
 那麼如果是用 receive 我要怎樣才能知道我所有的工作都已經完成了呢？</p>
 <p>簡單來說，我就是需要實做一個  <a class="reference external" href="http://www.eaipatterns.com/BroadcastAggregate.html">Scatter-Gather</a> ，才會莫名其妙的看到 Akka 的 Dataflow。</p>
-<p><a href="../posts/akka-2_0-note-4.html">Read more...</a></p>
+<p><a href="../posts/akka-2_0-note-4.html">Read more...</a></p></div>
         
     <p>
         <a href="../posts/akka-2_0-note-4.html#disqus_thread" data-disqus-identifier="cache/posts/2012-06-12-akka-dataflow.html">Comments</a>
@@ -131,9 +135,9 @@ Akka 的 Future 到底有沒有存在的意義呢？</p>
         <small>  
              Posted: 2012-06-10 17:30
         </small></h1>
-        <hr><p>而是我實在是不擅長寫作，過去作文只有 20 分真的不是拿假的。
+        <hr><div><p>而是我實在是不擅長寫作，過去作文只有 20 分真的不是拿假的。
 前一篇的 <strong>開始使用 Future</strong> 只有介紹一些基本的使用方式而已，然後依照前面的程式碼是絕對跑不起來的 Orz ...</p>
-<p><a href="../posts/akka-2_0-note-3.html">Read more...</a></p>
+<p><a href="../posts/akka-2_0-note-3.html">Read more...</a></p></div>
         
     <p>
         <a href="../posts/akka-2_0-note-3.html#disqus_thread" data-disqus-identifier="cache/posts/2012-06-10-akka-note-3-future.html">Comments</a>
@@ -144,12 +148,12 @@ Akka 的 Future 到底有沒有存在的意義呢？</p>
         <small>  
              Posted: 2012-06-08 12:18
         </small></h1>
-        <hr><p>以前再使用 Java Thread 的時候最困擾我的就是 Thread 之間的溝通。
+        <hr><div><p>以前再使用 Java Thread 的時候最困擾我的就是 Thread 之間的溝通。
 要怎樣讓一個 Thread 去等待另外一個 Thread？要怎樣才能讓工作分配的平均？
 最後是靠 BlockingQueue 才讓實作變得簡單一點，
 不過想當然問題當然一大堆 ... Orz</p>
 <p>所以想來實驗看看 Akka 的 Future 與 Router 到底是如何使用，與可以做到什麼事情。</p>
-<p><a href="../posts/akka-2_0-note-2.html">Read more...</a></p>
+<p><a href="../posts/akka-2_0-note-2.html">Read more...</a></p></div>
         
     <p>
         <a href="../posts/akka-2_0-note-2.html#disqus_thread" data-disqus-identifier="cache/posts/2012-05-23-akka-note-2-eventstream.html">Comments</a>
@@ -160,13 +164,13 @@ Akka 的 Future 到底有沒有存在的意義呢？</p>
         <small>  
              Posted: 2012-05-17 18:03
         </small></h1>
-        <hr><p>因為我的程式還沒有寫完，所以是筆記 (1)，寫的過程應該還會有 2 3 ... 出現 Orz。</p>
+        <hr><div><p>因為我的程式還沒有寫完，所以是筆記 (1)，寫的過程應該還會有 2 3 ... 出現 Orz。</p>
 <blockquote>
 Akka 2.0 - 要升級了
 你的時間的庫存量足夠嗎 ?</blockquote>
 <p>Akka 進入了 2.0 時代，恭喜你如果你是用 1.x 的話，請準備改寫吧 ...
 先從幾個方面來看 2.0 的新增事項。</p>
-<p><a href="../posts/akka-2_0-note-1.html">Read more...</a></p>
+<p><a href="../posts/akka-2_0-note-1.html">Read more...</a></p></div>
         
     <p>
         <a href="../posts/akka-2_0-note-1.html#disqus_thread" data-disqus-identifier="cache/posts/2012-05-17-akka-note-1.html">Comments</a>
@@ -187,13 +191,13 @@ Akka 2.0 - 要升級了
 </div>
 
    
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-      ga('create', UA-42855873-1, 'code-life.info');
-      ga('send', 'pageview');
+  ga('create', 'UA-42855873-1', 'code-life.info');
+  ga('send', 'pageview');
 
-    </script><script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script></body></html>
+</script><script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"80%",maxHeight:"80%",scalePhotos:true});</script></body></html>
