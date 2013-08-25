@@ -248,27 +248,26 @@ RSS_TEASERS = True
 # custom search (http://www.google.com/cse/)
 # Or a duckduckgo search: https://duckduckgo.com/search_box.html
 # This example should work for pretty much any site we generate.
-SEARCH_FORM = ""
+#SEARCH_FORM = ""
 # This search form is better for the "site" theme where it
 # appears on the navigation bar
-#SEARCH_FORM = """
-#<!-- Custom search -->
-#<form method="get" id="search" action="http://duckduckgo.com/"
-# class="navbar-form pull-left">
-#<input type="hidden" name="sites" value="%s"/>
-#<input type="hidden" name="k8" value="#444444"/>
-#<input type="hidden" name="k9" value="#D51920"/>
-#<input type="hidden" name="kt" value="h"/>
-#<input type="text" name="q" maxlength="255"
-# placeholder="Search&hellip;" class="span2" style="margin-top: 4px;"/>
-#<input type="submit" value="DuckDuckGo Search" style="visibility: hidden;" />
-#</form>
-#<!-- End of custom search -->
-#""" % BLOG_URL
+SEARCH_FORM = """
+<!-- Custom search -->
+<form method="get" id="search" action="http://duckduckgo.com/"
+ class="navbar-form pull-right">
+<input type="hidden" name="sites" value="%s"/>
+<input type="hidden" name="k8" value="#444444"/>
+<input type="hidden" name="k9" value="#D51920"/>
+<input type="hidden" name="kt" value="h"/>
+<input type="text" name="q" maxlength="255"
+ placeholder="Search&hellip;" class="span2"/>
+<input type="submit" value="DuckDuckGo Search" style="visibility: hidden;" />
+</form>
+<!-- End of custom search -->
+""" % BLOG_URL
 
 # Google analytics or whatever else you use. Added to the bottom of <body>
 # in the default template (base.tmpl).
-#ANALYTICS = "UA-15910682-2"
 ANALYTICS = "UA-42855873-1"
 
 # Put in global_context things you want available on all your templates.
@@ -297,6 +296,7 @@ GLOBAL_CONTEXT = {
             ),
         }
     }
+
 ENABLED_EXTRAS = [
      'mustache'
 ]
