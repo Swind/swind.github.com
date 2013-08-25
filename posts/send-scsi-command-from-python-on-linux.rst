@@ -16,7 +16,8 @@ Orz 而且我受夠了手動測試的生活了 ...
 
 .. TEASER_END
 
-= 使用 C 發送 SCSI Command =
+使用 C 發送 SCSI Command
+===============================
 
 這邊第一部就是要先想辦法讓 SCSI Command 可以送到 SCSI Device 上面。
 一般都是透過 ioctl 在進行，最早也有想過使用 Python 的 ioctl 來作。
@@ -99,7 +100,8 @@ Orz 而且我受夠了手動測試的生活了 ...
 
 就會得到一個 linux_ioctl.so 的 shared library 了。
 
-= 使用 Python 呼叫 C function =
+使用 Python 呼叫 C function
+======================================
 
 這部份就是我完全不熟的地方了，因為 Python 我也很少用，
 所以 Python 語法非常生澀。
