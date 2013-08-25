@@ -269,7 +269,7 @@ SEARCH_FORM = ""
 # Google analytics or whatever else you use. Added to the bottom of <body>
 # in the default template (base.tmpl).
 #ANALYTICS = "UA-15910682-2"
-ANALYTICS = ""
+ANALYTICS = "UA-42855873-1"
 
 # Put in global_context things you want available on all your templates.
 # It can be anything, data, functions, modules, etc.

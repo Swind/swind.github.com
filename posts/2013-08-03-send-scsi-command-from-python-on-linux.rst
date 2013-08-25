@@ -1,8 +1,8 @@
-.. link: 
-.. description: 
+.. link:
+.. description:
 .. tags: Python, C/C++
 .. date: 2013/08/03 10:38:06
-.. title: 使用 Python 結合 C 在 Linux 發送 SCSI Command 
+.. title: 使用 Python 結合 C 在 Linux 發送 SCSI Command
 .. slug: send-scsi-command-from-python-on-linux
 
 最近因為工作的需要，所以要撰寫很多 SCSI 相關的測試。
@@ -48,7 +48,7 @@ Orz 而且我受夠了手動測試的生活了 ...
 
         io_hdr.interface_id = 'S'; //required
 
-        io_hdr.cmd_len = cmd_size; 
+        io_hdr.cmd_len = cmd_size;
         io_hdr.mx_sb_len = sense_size;
 
         /*
@@ -58,7 +58,7 @@ Orz 而且我受夠了手動測試的生活了 ...
          */
         io_hdr.dxfer_direction = SG_DXFER_FROM_DEV;
         io_hdr.dxfer_len       = out_size;
-        io_hdr.dxferp          = out_buffer; 
+        io_hdr.dxferp          = out_buffer;
 
         io_hdr.cmdp = cmd_buffer;
         io_hdr.sbp  = sense_buffer;
@@ -94,7 +94,7 @@ Orz 而且我受夠了手動測試的生活了 ...
             rm -f *.so
 
 然後就只要輸入
-    
+
     make
 
 就會得到一個 linux_ioctl.so 的 shared library 了。
@@ -132,8 +132,8 @@ Orz 而且我受夠了手動測試的生活了 ...
     CDB_array[1] = 0x00
     CDB_array[2] = 0x00
     CDB_array[3] = 0x00
-    CDB_array[4] = 96 
-    CDB_array[5] = 0x00 
+    CDB_array[4] = 96
+    CDB_array[5] = 0x00
 
     CDB_p = pointer(CDB_array)
 
@@ -167,8 +167,8 @@ Orz 而且我受夠了手動測試的生活了 ...
     CDB_array[1] = 0x00
     CDB_array[2] = 0x00
     CDB_array[3] = 0x00
-    CDB_array[4] = 96 
-    CDB_array[5] = 0x00 
+    CDB_array[4] = 96
+    CDB_array[5] = 0x00
 
 就是一個標準的 INQUIRY Command 然後希望的長度是 96 bytes，
 所以這個程式你可以安心測試，基本上應該是不會把硬碟弄炸掉。
