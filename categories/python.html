@@ -1,6 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta charset="utf-8"><meta name="title" content="Posts about Python | Corleonis"><meta name="description" content="I am Swind."><meta name="author" content="Swind"><title>Posts about Python | Corleonis</title><!-- Le styles --><link href="../assets/css/bootstrap.css" rel="stylesheet" type="text/css"><link href="../assets/css/rst.css" rel="stylesheet" type="text/css"><link href="../assets/css/monokai.css" rel="stylesheet" type="text/css"><link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css"><link href="../assets/css/slides.css" rel="stylesheet" type="text/css"><link href="../assets/css/theme.css" rel="stylesheet" type="text/css"><link href="../assets/css/bootstrap-responsive.css" rel="stylesheet" type="text/css"><script src="../assets/js/jquery-1.7.2.min.js" type="text/javascript"></script><script src="../assets/js/jquery.colorbox-min.js" type="text/javascript"></script><script src="../assets/js/slides.min.jquery.js" type="text/javascript"></script><script src="../assets/js/bootstrap.min.js" type="text/javascript"></script><!-- Le HTML5 shim, for IE6-8 support of HTML5 elements --><!--[if lt IE 9]>
+<!DOCTYPE html><html lang="en"><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta charset="utf-8"><meta name="title" content="Posts about python | Corleonis"><meta name="description" content="I am Swind."><meta name="author" content="Swind"><title>Posts about python | Corleonis</title><!-- Le styles --><link href="../assets/css/bootstrap.css" rel="stylesheet" type="text/css"><link href="../assets/css/rst.css" rel="stylesheet" type="text/css"><link href="../assets/css/monokai.css" rel="stylesheet" type="text/css"><link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css"><link href="../assets/css/slides.css" rel="stylesheet" type="text/css"><link href="../assets/css/theme.css" rel="stylesheet" type="text/css"><link href="../assets/css/bootstrap-responsive.css" rel="stylesheet" type="text/css"><script src="../assets/js/jquery-1.7.2.min.js" type="text/javascript"></script><script src="../assets/js/jquery.colorbox-min.js" type="text/javascript"></script><script src="../assets/js/slides.min.jquery.js" type="text/javascript"></script><script src="../assets/js/bootstrap.min.js" type="text/javascript"></script><!-- Le HTML5 shim, for IE6-8 support of HTML5 elements --><!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
-    <![endif]--><link rel="alternate" type="application/rss+xml" title="RSS for tag Python (en)" href="python.xml"></head><body>
+    <![endif]--><link rel="alternate" type="application/rss+xml" title="RSS for tag python (en)" href="python.xml"></head><body>
 <!-- Menubar -->
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
@@ -34,20 +34,20 @@
     <div class="span8">
     
         <div class="postbox">
-        <h1><a href="../posts/send-scsi-command-from-python-on-linux.html">使用 Python 結合 C 在 Linux 發送 SCSI Command</a>
+        <h1><a href="../posts/simple-python-plugin-framework.html">簡單易懂的 Python Plugin 架構 (大概 ...)</a>
         <small>  
-             Posted: 2013-08-03 10:38
+             Posted: 2013-08-25 15:26
         </small></h1>
-        <hr><p>最近因為工作的需要，所以要撰寫很多 SCSI 相關的測試。
-目前可以用的測試工具有 fio, iometer 以及一個自行開發的 SCSI Command 驗證的工具。
-但是這些都是使用 C 撰寫的，所以要撰寫一些流程比較複雜的驗證時，就變得非常的麻煩。
-絕對不是因為我想試試看 Python 或者是因為自行開發的驗證工具程式碼已經無法閱讀的原因，才想要重造輪子。</p>
-<p>Orz 而且我受夠了手動測試的生活了 ...</p>
-<p>所以想將測試運行的邏輯搬移到 Python 的部份，加速測試案例的開發速度。</p>
-<p><a href="../posts/send-scsi-command-from-python-on-linux.html">Read more...</a></p>
+        <hr><p>學習用 Python 寫測試工具快兩個星期了，主要使用 clime + ucltip 跟 pyinstaller。
+可是目前遇到一個問題，當我使用 pyinstaller 將測試工具打包之後，
+他會很貼心的幫你將所有 .py 檔包裝成一個可執行檔。
+所以當我要任何新增 command 都必須要重新部屬那個執行檔，這樣實在非常的麻煩。</p>
+<p>因此才會開始嘗試是否有可能執行檔只包裝 clime, ucltip 以及我自己所提供的 API，
+然後 command 的部份就利用 plugin 的方式來增加。</p>
+<p><a href="../posts/simple-python-plugin-framework.html">Read more...</a></p>
         
     <p>
-        <a href="../posts/send-scsi-command-from-python-on-linux.html#disqus_thread" data-disqus-identifier="cache/posts/2013-08-03-send-scsi-command-from-python-on-linux.html">Comments</a>
+        <a href="../posts/simple-python-plugin-framework.html#disqus_thread" data-disqus-identifier="cache/posts/2013-08-25-simply-python-plugin-framework.html">Comments</a>
 
         </p></div>
     

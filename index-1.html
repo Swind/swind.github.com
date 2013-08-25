@@ -34,6 +34,38 @@
     <div class="span8">
     
         <div class="postbox">
+        <h1><a href="posts/akka-2_0-note-6.html">Akka 2.0 筆記(6) - Dispatcher 的設定</a>
+        <small>  
+             Posted: 2012-06-17 20:19
+        </small></h1>
+        <hr><p>今天早上先簡單了依照昨天畫得架構圖做了一個雛型，整個跑起來功能是以了，但是流程整個悲劇 Orz ...
+先是 Exception Handling 做的不夠好，結果就真的是 "Let it Crash" 一直死一直死一直死，好像在玩 D3 的煉獄模式一樣。</p>
+<p>再來是我沒有去設定 Dispatcher 所以 Thread 用了十幾個。如果我沒有看錯的話，依照 Akka <a class="reference external" href="https://github.com/akka/akka/blob/master/akka-actor/src/main/resources/reference.conf">reference.conf</a> 的設定，
+Default Dispatcher 使用 fork-join-executor，他的預設設定如下</p>
+<pre class="code scala literal-block">
+<span class="n">fork</span><span class="o">-</span><span class="n">join</span><span class="o">-</span><span class="n">executor</span> <span class="o">{</span>
+  <span class="k">#</span> <span class="nc">Min</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span> <span class="n">to</span> <span class="n">cap</span> <span class="n">factor</span><span class="o">-</span><span class="n">based</span> <span class="n">parallelism</span> <span class="n">number</span> <span class="n">to</span>
+  <span class="n">parallelism</span><span class="o">-</span><span class="n">min</span> <span class="k">=</span> <span class="mi">8</span>
+
+  <span class="k">#</span> <span class="nc">Parallelism</span> <span class="o">(</span><span class="n">threads</span><span class="o">)</span> <span class="o">...</span> <span class="n">ceil</span><span class="o">(</span><span class="n">available</span> <span class="n">processors</span> <span class="o">*</span> <span class="n">factor</span><span class="o">)</span>
+  <span class="n">parallelism</span><span class="o">-</span><span class="n">factor</span> <span class="k">=</span> <span class="mf">3.0</span>
+
+  <span class="k">#</span> <span class="nc">Max</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span> <span class="n">to</span> <span class="n">cap</span> <span class="n">factor</span><span class="o">-</span><span class="n">based</span> <span class="n">parallelism</span> <span class="n">number</span> <span class="n">to</span>
+  <span class="n">parallelism</span><span class="o">-</span><span class="n">max</span> <span class="k">=</span> <span class="mi">64</span>
+<span class="o">}</span>
+</pre>
+<p>很簡單的 parallelism-min 與 parallelism-max 的值代表著 Thread 的上下限，那麼 parallelism_factor 呢？</p>
+<p>他同樣也是限制 Thread 的上限，上限的計算方式為</p>
+<blockquote>
+parallelism-factor * 你的處理器核心數</blockquote>
+<p>所以我的四核心桌機使用這個 Dispatcher 最多會開到 12 個 Thread Orz ...</p>
+<p><a href="posts/akka-2_0-note-6.html">Read more...</a></p>
+        
+    <p>
+        <a href="posts/akka-2_0-note-6.html#disqus_thread" data-disqus-identifier="cache/posts/2012-06-17-akka-note-6-my-aggregator.html">Comments</a>
+
+        </p></div>
+        <div class="postbox">
         <h1><a href="posts/akka-2_0-note-5.html">Akka 2.0 筆記(5) - Scatter Gather</a>
         <small>  
              Posted: 2012-06-15 08:58
@@ -295,23 +327,6 @@ activejdbc會自動對應複數名詞的Table與單數名詞的Model。(不知�
         
     <p>
         <a href="posts/scala-log-tool.html#disqus_thread" data-disqus-identifier="cache/posts/2012-01-22-scala-log-tools.html">Comments</a>
-
-        </p></div>
-        <div class="postbox">
-        <h1><a href="posts/jsoup.html">好用的 HTML Parser - jsoup</a>
-        <small>  
-             Posted: 2011-10-27 08:47
-        </small></h1>
-        <hr><p>HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
-為了要從網頁中可以取出內容,我曾經用過不少方式,包括直接硬幹用字串搜尋、修改Scala本身內部的XML Parser等。
-但是一直都找不到一個滿意又順手的解決方式,一直到後來在 <a class="reference external" href="http://www.oschina.net/">CSDN</a> 沒錯就是那個大陸網站 <a class="reference external" href="http://www.oschina.net/">CSDN</a>
-(雖然說CSDN訊息太多太雜亂,但是偶爾還是可以看到一些不錯的東西),才找到jsoup這個library。</p>
-<p><a class="reference external" href="http://jsoup.org/">jsoup的官方網站</a></p>
-<p><a class="reference external" href="http://jsoup.org/cookbook/">jsoup的教學文件</a></p>
-<p><a href="posts/jsoup.html">Read more...</a></p>
-        
-    <p>
-        <a href="posts/jsoup.html#disqus_thread" data-disqus-identifier="cache/posts/2011-10-27-jsoup.html">Comments</a>
 
         </p></div>
     
