@@ -139,26 +139,13 @@ plugin_name 是要載入的 python 檔案名稱，在這裡為 "hello"。</p>
 </pre>
 <p>就可以將 cmd_obj 以 cmd 結尾的 function 轉成 command 了。</p>
 <p>下面附上完整的程式碼</p>
-<script src="https://gist.github.com/6332885.js"></script><noscript><pre class="literal-block">
-from random import randint
-import ucltip
-
-def hello_world_cmd(name):
-    """Execute remote performance test.
-
-    -n=&lt;str&gt; --name=&lt;str&gt;       Hello Name
-    """
-    print "hello world cmd %s" % name
-    print "Test import random %d" % randint(0, 51)
-
-def test_site_packages_cmd():
-    echo = ucltip.Cmd("echo")
-    print echo("Hello World ucltip")
-</pre>
-</noscript></div>
+</div>
     
     <ul class="pager"><li class="previous">
             <a href="send-scsi-command-from-python-on-linux.html">← Previous post</a>
+        </li>
+        <li class="next">
+            <a href="use_ccache_to_build_freebsd_kernel.html">Next post →</a>
         </li>
     </ul><div id="disqus_thread"></div>
         <script type="text/javascript">

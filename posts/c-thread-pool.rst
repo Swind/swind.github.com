@@ -1,7 +1,7 @@
 .. title: C 的 Thread Pool 筆記
 .. slug: c-thread-pool
 .. date: 2013/06/07 21:43:28
-.. tags: 
+.. tags: C
 .. link: 
 .. description: 
 

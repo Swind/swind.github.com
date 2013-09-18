@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Corleonis</title><link>http://swind.code-life.info</link><description>I am Swind.</description><lastBuildDate>Sun, 25 Aug 2013 18:13:14 GMT</lastBuildDate><generator>nikola</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>簡單易懂的 Python Plugin 架構 (大概 ...)</title><link>http://swind.code-life.info/posts/simple-python-plugin-framework.html</link><description>&lt;div&gt;&lt;p&gt;學習用 Python 寫測試工具快兩個星期了，主要使用 clime + ucltip 跟 pyinstaller。
+<rss version="2.0"><channel><title>Corleonis</title><link>http://swind.code-life.info</link><description>I am Swind.</description><lastBuildDate>Wed, 18 Sep 2013 17:08:11 GMT</lastBuildDate><generator>nikola</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>加速 FreeBSD Kernel 的編譯</title><link>http://swind.code-life.info/posts/use_ccache_to_build_freebsd_kernel.html</link><description>&lt;div&gt;&lt;p&gt;這幾天要開始 Build FreeBSD Kernel 了，
+可是 buildworld 跟 buildkernel 都需要花費非常久的時間。&lt;/p&gt;
+&lt;p&gt;因此想要研究一下是否能加速 FreeBSD Kernel 的編譯速度，
+加快開發測試的流程，以及減少 CI 所需要花費的時間。&lt;/p&gt;
+&lt;p&gt;&lt;a href="/posts/use_ccache_to_build_freebsd_kernel.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>FreeBSD</category><category>C</category><guid>http://swind.code-life.info/posts/use_ccache_to_build_freebsd_kernel.html</guid><pubDate>Wed, 18 Sep 2013 14:00:09 GMT</pubDate></item><item><title>簡單易懂的 Python Plugin 架構 (大概 ...)</title><link>http://swind.code-life.info/posts/simple-python-plugin-framework.html</link><description>&lt;div&gt;&lt;p&gt;學習用 Python 寫測試工具快兩個星期了，主要使用 clime + ucltip 跟 pyinstaller。
 可是目前遇到一個問題，當我使用 pyinstaller 將測試工具打包之後，
 他會很貼心的幫你將所有 .py 檔包裝成一個可執行檔。
 所以當我要任何新增 command 都必須要重新部屬那個執行檔，這樣實在非常的麻煩。&lt;/p&gt;
@@ -186,7 +190,7 @@ threadpool_task_t 也是一樣的原理，真是出乎意料的簡單。&lt;/p&g
 &lt;blockquote&gt;
 &lt;p&gt;生存戦略！&lt;/p&gt;
 &lt;cite title="Source Title"&gt;輪るピングドラム&lt;/cite&gt;
-&lt;/blockquote&gt;&lt;/div&gt;</description><guid>http://swind.code-life.info/posts/c-thread-pool.html</guid><pubDate>Fri, 07 Jun 2013 21:43:28 GMT</pubDate></item><item><title>Scala 使用 Play 筆記 (1)</title><link>http://swind.code-life.info/posts/play-note-1.html</link><description>&lt;div&gt;&lt;p&gt;會想要重拾 Scala 跟 Play 主要是因為看到了這篇文章&lt;/p&gt;
+&lt;/blockquote&gt;&lt;/div&gt;</description><category>C</category><guid>http://swind.code-life.info/posts/c-thread-pool.html</guid><pubDate>Fri, 07 Jun 2013 21:43:28 GMT</pubDate></item><item><title>Scala 使用 Play 筆記 (1)</title><link>http://swind.code-life.info/posts/play-note-1.html</link><description>&lt;div&gt;&lt;p&gt;會想要重拾 Scala 跟 Play 主要是因為看到了這篇文章&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="http://minipai.tumblr.com/post/41882685541/22k"&gt;怎麼設計22K?&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;因為覺得這個設計理念真的是太正面了 XDDD&lt;/p&gt;
 &lt;blockquote&gt;
@@ -273,11 +277,4 @@ wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/maste
 &lt;p&gt;但是由於我直接將對照表轉換成 Golang 裡面的 map 了，所以這次就沒有辦法讓使用者自己改對照表了。&lt;/p&gt;
 &lt;p&gt;不過有興趣的人，在原始碼的 &lt;a class="reference external" href="https://github.com/Swind/EPUBConverter-Go/tree/master/tongwen_table"&gt;tongwen_table&lt;/a&gt; 資料夾底下，我有放了一個簡單的轉換工具。
 可以利用那個重新產生 Go 的 map，但是最後還是得重新編譯整個 EPUBConverter 就是了。&lt;/p&gt;
-&lt;p&gt;&lt;a href="/posts/epubconverter-0_0_2.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Go</category><guid>http://swind.code-life.info/posts/epubconverter-0_0_2.html</guid><pubDate>Sat, 08 Dec 2012 18:00:00 GMT</pubDate></item><item><title>用 Spray 建立一個簡單的 RESTful API Server</title><link>http://swind.code-life.info/posts/build-restful-api-server-by-spray.html</link><description>&lt;div&gt;&lt;p&gt;&lt;a class="reference external" href="http://spray.cc/"&gt;Spray&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;最初是想要建立一個提供查詢服務的 RESTful API Server，可以讓 Client 的應用程式透過 RESTful API 查詢一些資料。
-但是看來看去，用 Play2、Jersey、RESTEasy 等都蠻麻煩的，而且還需要使用 Web container（像 Tomcat、Jetty 等）。
-所以才找到這個 Spray，而且又是用 Scala 開發的，實在沒有理由不試試看阿。 XD&lt;/p&gt;
-&lt;p&gt;若你連到官網看會發現他分成很多模組，老實說我也沒有詳細研究每個模組的功能。
-因為 &lt;a class="reference external" href="http://spray.cc/documentation/spray-can/"&gt;spray-can&lt;/a&gt; 的範例看起來最簡單並且也符合我的需求，所以就直接用他了。&lt;/p&gt;
-&lt;p&gt;想瞭解更詳細內容的可以參考 &lt;a class="reference external" href="https://github.com/spray/spray/tree/release-1.0-M2/examples/spray-can/simple-http-server/"&gt;spray-can 範例文件&lt;/a&gt; 與 &lt;a class="reference external" href="http://blog.cloudfoundry.com/2012/05/11/running-standalone-web-applications-on-cloud-foundry/"&gt;Running Standalone Web Applications on Cloud Foundry&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;a href="/posts/build-restful-api-server-by-spray.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Scala</category><category>Akka</category><guid>http://swind.code-life.info/posts/build-restful-api-server-by-spray.html</guid><pubDate>Tue, 06 Nov 2012 20:11:00 GMT</pubDate></item></channel></rss>
+&lt;p&gt;&lt;a href="/posts/epubconverter-0_0_2.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Go</category><guid>http://swind.code-life.info/posts/epubconverter-0_0_2.html</guid><pubDate>Sat, 08 Dec 2012 18:00:00 GMT</pubDate></item></channel></rss>

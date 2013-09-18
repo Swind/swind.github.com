@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Corleonis (python)</title><link>http://swind.code-life.info</link><description>I am Swind.</description><lastBuildDate>Sun, 25 Aug 2013 18:13:15 GMT</lastBuildDate><generator>nikola</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>簡單易懂的 Python Plugin 架構 (大概 ...)</title><link>http://swind.code-life.info/posts/simple-python-plugin-framework.html</link><description>&lt;div&gt;&lt;p&gt;學習用 Python 寫測試工具快兩個星期了，主要使用 clime + ucltip 跟 pyinstaller。
+<rss version="2.0"><channel><title>Corleonis (python)</title><link>http://swind.code-life.info</link><description>I am Swind.</description><lastBuildDate>Wed, 18 Sep 2013 17:08:11 GMT</lastBuildDate><generator>nikola</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>簡單易懂的 Python Plugin 架構 (大概 ...)</title><link>http://swind.code-life.info/posts/simple-python-plugin-framework.html</link><description>&lt;div&gt;&lt;p&gt;學習用 Python 寫測試工具快兩個星期了，主要使用 clime + ucltip 跟 pyinstaller。
 可是目前遇到一個問題，當我使用 pyinstaller 將測試工具打包之後，
 他會很貼心的幫你將所有 .py 檔包裝成一個可執行檔。
 所以當我要任何新增 command 都必須要重新部屬那個執行檔，這樣實在非常的麻煩。&lt;/p&gt;
