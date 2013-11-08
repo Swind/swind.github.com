@@ -1,0 +1,195 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Swind">
+    <title>epub格式簡轉繁小工具 | Corleonis</title>
+    
+            <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]-->
+            <link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+
+    
+
+
+
+    
+<link rel="stylesheet" type="text/css" href="../assets/css/tipuesearch.css">
+</head><body><div id="tipue_search_content" style="margin-left: auto; margin-right: auto; padding: 20px;"></div>
+
+
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../">Corleonis</a>
+    </div>
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <ul class="nav navbar-nav">
+            
+                <li><a href="../archive.html">Archives</a>
+                </li><li><a href="../categories/index.html">Tags</a>
+                </li><li><a href="../rss.xml">RSS</a>
+
+        </li></ul>
+            
+<span class="navbar-form pull-left">
+<input type="text" id="tipue_search_input">
+</span>
+
+        <ul class="nav navbar-nav navbar-right">
+            
+            
+                
+    <li>
+    <a href="epubconverter.rst" id="sourcelink">Source</a>
+    </li>
+
+        </ul>
+    </div><!-- /.navbar-collapse -->
+</nav>
+
+<!-- End of Menubar -->
+
+<div class="container">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+    <div class="postbox">
+    
+    <h1 class="p-name" itemprop="headline name">epub格式簡轉繁小工具</h1>
+
+    <hr>
+    <small>
+        Posted: <time class="published" datetime="2012-05-11T16:56:00">2012-05-11 16:56</time>
+        
+
+        
+          |  More posts about
+        <span itemprop="keywords">
+            <a class="tag p-category" href="../categories/scala.html"><span class="badge badge-info">Scala</span></a>
+        </span>
+
+    </small>
+    <hr>
+    <p><a class="reference external" href="https://github.com/Swind/EPUBConverter/downloads">EPUBConverter 0.0.1</a></p>
+<p>這個版號我覺得也沒有機會到 0.0.2 了，不過還是讓我命名個版號滿足小小的虛榮心好了。</p>
+<!-- TEASER_END -->
+<div class="section" id="id1">
+<h2>不負責任的使用教學</h2>
+<p>這只是一個非常簡單的小工具，用 Scala 撰寫而成，因此執行環境需要使用 JVM。
+我只有測試過 JDK 7 的環境，理論上 JDK 6 應該也沒有問題。
+如果有人有測試到有問題的話（默...）我也不知道有沒有時間改 Orz。</p>
+<div class="section" id="id2">
+<h3>轉換方式</h3>
+<p>轉換方式感謝 <a class="reference external" href="http://jeremy.ssinrc.org/?p=327">六度數位空間</a> 的分享。
+其實 epub 的格式是以 zip 格式壓縮，所以這個程式的執行流程是</p>
+<ol class="arabic simple">
+<li>將 epub 檔解壓縮到暫存資料夾</li>
+<li>將 暫存資料夾裡面的所有檔案從 UTF-8 簡體 轉成 UTF-8 繁體</li>
+<li>將資料夾壓縮，並且順便將檔名轉成繁體</li>
+</ol>
+<p>簡體轉繁體的程式碼是使用 <a class="reference external" href="http://www.mandarintools.com/zhcode.html">zhcode</a></p>
+<p>整個步驟就只有這樣而已。</p>
+</div>
+<div class="section" id="id4">
+<h3>使用方式</h3>
+<p>整個程式的資料夾結構如下</p>
+<pre class="literal-block">
+/EPUBConverter
+  |---Source
+  |---Result
+  |---Converter.bat
+  |---Converter.jar
+  |---hcutf8.txt
+</pre>
+<p>hcutf8.txt 是個對應表，他列出了簡體字跟繁體字的對應。所以如果想自行更改轉換字的話，可以修改這個檔案（應該可以）。
+要使用只要執行 Converter.bat 就會自動將 Source 資料夾底下 <em>所有</em> 的檔案，轉換到 Result 資料夾底下，就這樣而已了。</p>
+</div>
+</div>
+    
+    <ul class="pager">
+        <li class="previous">
+            <a href="scala-orm-note.html" rel="prev">← Previous post</a>
+        </li>
+        <li class="next">
+            <a href="epubconverter-implement-note.html" rel="next">Next post →</a>
+        </li>
+    </ul>
+
+        
+        
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+        var disqus_shortname ="swindgithub";
+            var disqus_url="http://swind.code-life.info/posts/epubconverter.html";
+        var disqus_title="epub\u683c\u5f0f\u7c21\u8f49\u7e41\u5c0f\u5de5\u5177";
+        var disqus_identifier="cache/posts/2012-05-11-epubconverter.html";
+        var disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+    
+
+    </div>
+
+        </div>
+        <!--End of body content-->
+
+        <footer>
+            Contents © 2013         <a href="mailto:">Swind</a> - Powered by         <a href="http://getnikola.com">Nikola</a>         
+        </footer>
+    </div>
+</div>
+
+
+            <script src="../assets/js/jquery-1.10.2.min.js" type="text/javascript"></script>
+            <script src="../assets/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="../assets/js/jquery.colorbox-min.js" type="text/javascript"></script>
+
+
+	
+
+    <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
+    
+
+<script type="text/javascript" src="../assets/js/tipuesearch_set.js"></script>
+<script type="text/javascript" src="../assets/js/tipuesearch.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#tipue_search_input').tipuesearch({
+        'mode': 'json',
+        'contentLocation': '/assets/js/tipuesearch_content.json',
+        'showUrl': false
+    });
+});
+</script>
+
+
+</body></html>

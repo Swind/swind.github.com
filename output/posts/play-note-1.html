@@ -1,0 +1,603 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Swind">
+    <title>Scala 使用 Play 筆記 (1) | Corleonis</title>
+    
+            <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]-->
+            <link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+
+    
+
+
+
+    
+<link rel="stylesheet" type="text/css" href="../assets/css/tipuesearch.css">
+</head><body><div id="tipue_search_content" style="margin-left: auto; margin-right: auto; padding: 20px;"></div>
+
+
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../">Corleonis</a>
+    </div>
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <ul class="nav navbar-nav">
+            
+                <li><a href="../archive.html">Archives</a>
+                </li><li><a href="../categories/index.html">Tags</a>
+                </li><li><a href="../rss.xml">RSS</a>
+
+        </li></ul>
+            
+<span class="navbar-form pull-left">
+<input type="text" id="tipue_search_input">
+</span>
+
+        <ul class="nav navbar-nav navbar-right">
+            
+            
+                
+    <li>
+    <a href="play-note-1.rst" id="sourcelink">Source</a>
+    </li>
+
+        </ul>
+    </div><!-- /.navbar-collapse -->
+</nav>
+
+<!-- End of Menubar -->
+
+<div class="container">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+    <div class="postbox">
+    
+    <h1 class="p-name" itemprop="headline name">Scala 使用 Play 筆記 (1)</h1>
+
+    <hr>
+    <small>
+        Posted: <time class="published" datetime="2013-02-02T09:11:00">2013-02-02 09:11</time>
+        
+
+        
+          |  More posts about
+        <span itemprop="keywords">
+            <a class="tag p-category" href="../categories/other.html"><span class="badge badge-info">Other</span></a>
+        </span>
+
+    </small>
+    <hr>
+    <p>會想要重拾 Scala 跟 Play 主要是因為看到了這篇文章</p>
+<p><a class="reference external" href="http://minipai.tumblr.com/post/41882685541/22k">怎麼設計22K?</a></p>
+<p>因為覺得這個設計理念真的是太正面了 XDDD</p>
+<blockquote>
+<p>所以我要以正面的意念來設計這個網站！</p>
+<p class="attribution">—Art Pai</p>
+</blockquote>
+<p>剛好之前也一直對 Play Framework 很有興趣，所以就大概花了兩個小時把 API 簡單的接上去，順便玩一下 Play Framework 2.0。</p>
+<p><a class="reference external" href="https://github.com/Swind/22k">原始碼</a></p>
+<p>自從開始工作之後，我就放棄了我會把東西記起來這件事情。
+所以我決定把使用 Play 實作的過程記錄一下，以方便我日後回憶。</p>
+<p>整個實作過程是參考 <a class="reference external" href="http://www.playframework.org/documentation/2.1-RC4/ScalaTodoList">Your first Play application</a> 這篇文章的。</p>
+<p>P.S 這篇文章寫到一半的時候 Play 2.1 出了 Orz ...</p>
+<!-- TEASER_END -->
+<div class="section" id="play-framework">
+<h2>安裝 Play Framework</h2>
+<p>Play 聽說是學習 Ruby On Rails 風格的 Java/Scala web framework，我從 1.x 的時候就有在關注他了。
+也曾經想要推坑給學弟，讓實驗室使用 Play + Scala 來開發，可惜最後因為這兩者都太新還不穩定而作廢。</p>
+<p>但是到了現在，我發現他的安裝與使用變得非常容易上手。
+安裝 Play 唯一要作得事情就是下載 Play。</p>
+<p><a class="reference external" href="http://www.playframework.org/">Play官網</a></p>
+<p><a class="reference external" href="http://download.playframework.org/releases/play-2.0.4.zip">play-2.0.4.zip下載點</a></p>
+<p>解壓縮之後，將你解壓縮的目錄位置加入 PATH 就算安裝完畢了。</p>
+</div>
+<div class="section" id="play-project">
+<h2>建立 Play Project</h2>
+<blockquote>
+play new 22k</blockquote>
+<div class="figure">
+<img alt="https://dl.dropbox.com/u/15537823/Blog/Play%E7%AD%86%E8%A8%98/CreateProject.png" src="https://dl.dropbox.com/u/15537823/Blog/Play%E7%AD%86%E8%A8%98/CreateProject.png">
+</div>
+<p>會在你所執行的位置下建立一個 22k 的資料夾，其資料夾結構如下</p>
+<pre class="literal-block">
+├── app
+│   ├── controllers
+│   │   └── Application.scala
+│   └── views
+│       ├── index.scala.html
+│       └── main.scala.html
+├── conf
+│   ├── application.conf
+│   └── routes
+├── project
+│   ├── build.properties
+│   ├── Build.scala
+│   └── plugins.sbt
+├── public
+│   ├── images
+│   │   └── favicon.png
+│   ├── javascripts
+│   │   └── jquery-1.7.1.min.js
+│   └── stylesheets
+│       └── main.css
+└── README
+</pre>
+</div>
+<div class="section" id="play">
+<h2>使用 Play</h2>
+<p>在 22k 的資料夾底下輸入</p>
+<blockquote>
+play</blockquote>
+<div class="figure">
+<img alt="https://dl.dropbox.com/u/15537823/Blog/Play%E7%AD%86%E8%A8%98/StartPlay.png" src="https://dl.dropbox.com/u/15537823/Blog/Play%E7%AD%86%E8%A8%98/StartPlay.png">
+</div>
+<p>之後就進入 Play 的命令列模式:</p>
+<pre class="literal-block">
+Welcome to Play 2.0!
+
+These commands are available:
+-----------------------------
+classpath                  Display the project classpath.
+clean                      Clean all generated files.
+compile                    Compile the current application.
+console                    Launch the interactive Scala console (use :quit to exit).
+dependencies               Display the dependencies summary.
+dist                       Construct standalone application package.
+exit                       Exit the console.
+h2-browser                 Launch the H2 Web browser.
+license                    Display licensing informations.
+package                    Package your application as a JAR.
+play-version               Display the Play version.
+publish                    Publish your application in a remote repository.
+publish-local              Publish your application in the local repository.
+reload                     Reload the current application build file.
+run &lt;port&gt;                 Run the current application in DEV mode.
+test                       Run Junit tests and/or Specs from the command line
+eclipsify                  generate eclipse project file
+idea                       generate Intellij IDEA project file
+sh &lt;command to run&gt;        execute a shell command
+start &lt;port&gt;               Start the current application in another JVM in PROD mode.
+update                     Update application dependencies.
+
+Type `help` to get the standard sbt help.
+</pre>
+<p>Play 本身也將開發常用的工具都整合在一起了，所以不需要去煩惱 Scala 或 Library 要哪裡下載等問題。
+並且也提供了跟 IDE 整合的方式。:</p>
+<pre class="literal-block">
+eclipsify
+idea
+</pre>
+<p>會自動產生 eclipse 或 idea 的 Project 設定，讓使用者以直接匯入 IDE 中開發，
+但是我在使用的時候發現 eclipse 並無法正確編譯與檢查語法錯誤，因此還是只能靠 play 來進行編譯與偵錯。</p>
+<blockquote>
+run</blockquote>
+<p>可以啟動 Server ( <a class="reference external" href="http://localhost:9000">http://localhost:9000</a> ) 讓你直接觀看執行結果，並且也有提供良好的 error 畫面讓你可以直接在瀏覽器上面看到執行錯誤的地方。</p>
+<div class="figure">
+<img alt="https://dl.dropbox.com/u/15537823/Blog/Play%E7%AD%86%E8%A8%98/RunPlay.png" src="https://dl.dropbox.com/u/15537823/Blog/Play%E7%AD%86%E8%A8%98/RunPlay.png">
+</div>
+</div>
+<div class="section" id="k-api">
+<h2>連接 <a class="reference external" href="http://www.22kopendata.org/">揭露22k</a> 的 API</h2>
+<p>揭露22k 所提供的 API 是 XML 的格式，正好是 Scala 的強項之一，因此分析內容變得非常容易。</p>
+<pre class="code scala literal-block">
+<span class="k">package</span> <span class="nn">models</span>
+
+<span class="k">import</span> <span class="nn">scala.xml.XML</span>
+<span class="k">import</span> <span class="nn">java.net.URL</span>
+<span class="k">import</span> <span class="nn">scala.xml.Node</span>
+
+<span class="k">object</span> <span class="err">22</span><span class="nc">KOpenData</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">listDataURL</span> <span class="k">=</span> <span class="s">"http://www.22kopendata.org/api/list_data"</span>
+
+  <span class="k">def</span> <span class="n">listData</span><span class="o">(</span><span class="n">size</span><span class="k">:</span><span class="kt">Int</span><span class="o">,</span> <span class="n">pageNum</span><span class="k">:</span><span class="kt">Int</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
+        <span class="k">val</span> <span class="n">url</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">URL</span><span class="o">(</span><span class="n">listDataURL</span><span class="o">+</span><span class="s">"/"</span><span class="o">+</span><span class="n">size</span><span class="o">+</span><span class="s">"/"</span><span class="o">+</span><span class="n">pageNum</span><span class="o">)</span>
+    <span class="k">val</span> <span class="n">connection</span> <span class="k">=</span> <span class="n">url</span><span class="o">.</span><span class="n">openConnection</span><span class="o">()</span>
+    <span class="k">val</span> <span class="n">feedXML</span> <span class="k">=</span> <span class="nc">XML</span><span class="o">.</span><span class="n">load</span><span class="o">(</span><span class="n">connection</span><span class="o">.</span><span class="n">getInputStream</span><span class="o">)</span>
+    <span class="n">parseFeedXML</span><span class="o">(</span><span class="n">feedXML</span><span class="o">)</span>
+  <span class="o">}</span>
+
+  <span class="k">def</span> <span class="n">parseFeedXML</span><span class="o">(</span><span class="n">feedXML</span><span class="k">:</span> <span class="kt">Node</span><span class="o">)</span> <span class="k">=</span> <span class="o">(</span><span class="n">feedXML</span> <span class="o">\</span> <span class="s">"job"</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="n">parseJob</span><span class="o">)</span>
+
+  <span class="k">def</span> <span class="n">findFirstElement</span><span class="o">(</span><span class="n">node</span><span class="k">:</span> <span class="kt">Node</span><span class="o">)(</span><span class="n">tagName</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">=</span> <span class="o">(</span><span class="n">node</span> <span class="o">\</span> <span class="n">tagName</span><span class="o">).</span><span class="n">first</span><span class="o">.</span><span class="n">text</span>
+
+  <span class="k">def</span> <span class="n">parseJob</span><span class="o">(</span><span class="n">jobNode</span><span class="k">:</span> <span class="kt">Node</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">val</span> <span class="n">nodeParser</span> <span class="k">=</span> <span class="n">findFirstElement</span><span class="o">(</span><span class="n">jobNode</span><span class="o">)</span><span class="k">_</span>
+    <span class="nc">Job</span><span class="o">(</span>
+      <span class="n">nodeParser</span><span class="o">(</span><span class="s">"count"</span><span class="o">),</span>
+      <span class="n">nodeParser</span><span class="o">(</span><span class="s">"company_name"</span><span class="o">),</span>
+      <span class="n">nodeParser</span><span class="o">(</span><span class="s">"company_location"</span><span class="o">),</span>
+      <span class="n">nodeParser</span><span class="o">(</span><span class="s">"job_name"</span><span class="o">),</span>
+      <span class="n">nodeParser</span><span class="o">(</span><span class="s">"salary"</span><span class="o">),</span>
+      <span class="n">nodeParser</span><span class="o">(</span><span class="s">"note1"</span><span class="o">),</span>
+      <span class="n">nodeParser</span><span class="o">(</span><span class="s">"note2"</span><span class="o">),</span>
+      <span class="n">nodeParser</span><span class="o">(</span><span class="s">"job_url"</span><span class="o">),</span>
+      <span class="n">nodeParser</span><span class="o">(</span><span class="s">"job_url_screenshot"</span><span class="o">),</span>
+      <span class="n">nodeParser</span><span class="o">(</span><span class="s">"job_salary_pic"</span><span class="o">))</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Job</span><span class="o">(</span>
+        <span class="n">count</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+        <span class="n">company_name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+        <span class="n">company_location</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+        <span class="n">job_name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+        <span class="n">salary</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+        <span class="n">note1</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+        <span class="n">note2</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+        <span class="n">job_url</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+        <span class="n">job_url_screenshort</span><span class="k">:</span><span class="kt">String</span><span class="o">,</span>
+        <span class="n">job_salary_pic</span><span class="k">:</span> <span class="kt">String</span>
+<span class="o">)</span>
+</pre>
+<p>主要就只是將 XML 的內容對應到一個 case class 內而已。</p>
+<p>這個我將他歸類在 models 底下，所以目前 app 的資料夾結構長成這樣:</p>
+<pre class="literal-block">
+├── app
+│   ├── controllers
+│   │   └── Application.scala
+│   └── views
+│       ├── index.scala.html
+│       └── main.scala.html
+│   ├── models
+│   │   └── 22KOpenData.scala
+</pre>
+</div>
+<div class="section" id="art-pai-css-template">
+<h2>套用 <a class="reference external" href="http://minipai.tumblr.com/">Art Pai</a> 所設計的 CSS Template</h2>
+<p>至 <a class="reference external" href="http://minipai.tumblr.com/">Art Pai</a> 的網站下載 <a class="reference external" href="http://cl.ly/MYmn">CSS Template</a></p>
+<p>將壓縮檔的檔案除了 index.html 之外，全部複製到 22k 資料夾中 public 資料夾底下:</p>
+<pre class="literal-block">
+public
+├── images
+│   ├── background.png
+│   ├── glyphicons-halflings.png
+│   ├── glyphicons-halflings-white.png
+│   └── middleman.png
+├── javascripts
+│   ├── all.js
+│   ├── bootstrap.min.js
+│   └── jquery.min.js
+└── stylesheets
+│   ├── all.css
+│   ├── bootstrap.min.css
+│   ├── bootstrap-responsive.min.css
+│   └── normalize.css
+</pre>
+</div>
+<div class="section" id="controller">
+<h2>建立 Controller</h2>
+<p>Play 設定 routes 的方式非常的直覺（遠望 struts 1.x Orz）:</p>
+<pre class="literal-block">
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Application.index
+
+# Tasks
+GET             /jobs/:pageNum                          controllers.Application.jobs(pageNum: Int)
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+</pre>
+<p>可以直接將 path 與 function 做對應。</p>
+<p>配合 API 的設計方式，所以我直接增加了一個</p>
+<blockquote>
+/jobs/:pageNum</blockquote>
+<p>的路徑，對應 <a class="reference external" href="http://www.22kopendata.org/">揭露22k</a> 的</p>
+<blockquote>
+<a class="reference external" href="http://www.22kopendata.org/api/list_data">http://www.22kopendata.org/api/list_data</a>/(每頁筆數,最大20)/(目前頁數)</blockquote>
+<p>筆數則對應 Art Pai 的設計每頁 9 筆。</p>
+<pre class="code scala literal-block">
+<span class="k">package</span> <span class="nn">controllers</span>
+
+<span class="k">import</span> <span class="nn">play.api._</span>
+<span class="k">import</span> <span class="nn">play.api.mvc._</span>
+<span class="k">import</span> <span class="nn">play.api.data._</span>
+<span class="k">import</span> <span class="nn">play.api.data.Forms._</span>
+<span class="k">import</span> <span class="nn">models._</span>
+
+<span class="k">object</span> <span class="nc">Application</span> <span class="k">extends</span> <span class="nc">Controller</span> <span class="o">{</span>
+
+  <span class="k">val</span> <span class="n">rowSize</span> <span class="k">=</span> <span class="mi">3</span>
+
+  <span class="k">def</span> <span class="n">index</span> <span class="k">=</span> <span class="nc">Action</span> <span class="o">{</span>
+    <span class="nc">Redirect</span><span class="o">(</span><span class="n">routes</span><span class="o">.</span><span class="nc">Application</span><span class="o">.</span><span class="n">jobs</span><span class="o">(</span><span class="mi">1</span><span class="o">))</span>
+  <span class="o">}</span>
+
+  <span class="k">def</span> <span class="n">jobs</span><span class="o">(</span><span class="n">pageNum</span><span class="k">:</span><span class="kt">Int</span> <span class="o">=</span> <span class="mi">1</span><span class="o">)</span> <span class="k">=</span> <span class="nc">Action</span> <span class="o">{</span>
+    <span class="k">val</span> <span class="n">dataList</span> <span class="k">=</span> <span class="nc">OpenDataAPI</span><span class="o">.</span><span class="n">listData</span><span class="o">(</span><span class="mi">9</span><span class="o">,</span><span class="n">pageNum</span><span class="o">).</span><span class="n">toList</span>
+        <span class="nc">Ok</span><span class="o">(</span><span class="n">views</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">index</span><span class="o">(</span><span class="n">dataList</span><span class="o">.</span><span class="n">grouped</span><span class="o">(</span><span class="n">rowSize</span><span class="o">).</span><span class="n">toList</span><span class="o">,</span> <span class="n">dataList</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="mi">9</span> <span class="o">?</span> <span class="mi">1</span><span class="k">:</span><span class="kt">pageNum</span> <span class="kt">+</span> <span class="err">1</span> <span class="o">))</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+</pre>
+<p>之後 index 這個 function 再 redirect 至 jobs 這個 function 並且預設值為 page 1。</p>
+</div>
+<div class="section" id="view">
+<h2>建立 View</h2>
+<p>參考 Art Pai 的 index.html 來建立 view。</p>
+<p><strong>view 的 參數</strong></p>
+<p>在 view 的檔案裡面，雖然是 html 的格式，但是我們還是可以在這裡面使用 scala 的語法。
+所以要表示這個 view 可以接收兩個參數的話，使用 @ 作為跳脫符號</p>
+<blockquote>
+@(jobrows: List[List[Job]], nextPageNum: Int)
+@import helper._</blockquote>
+<p>對應到 controller 的</p>
+<pre class="code scala literal-block">
+<span class="nc">Ok</span><span class="o">(</span><span class="n">views</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">index</span><span class="o">(</span><span class="n">dataList</span><span class="o">.</span><span class="n">grouped</span><span class="o">(</span><span class="n">rowSize</span><span class="o">).</span><span class="n">toList</span><span class="o">,</span> <span class="n">dataList</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="mi">9</span> <span class="o">?</span> <span class="mi">1</span><span class="k">:</span><span class="kt">pageNum</span> <span class="kt">+</span> <span class="err">1</span> <span class="o">))</span>
+</pre>
+<p>可是個人覺得不應該在 view 裡面放太多邏輯，否則會讓 view 的權責太複雜。</p>
+<p><strong>修改 css 的 include 路徑</strong></p>
+<pre class="code html literal-block">
+<span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"@routes.Assets.at("</span><span class="na">stylesheets</span><span class="err">/</span><span class="na">bootstrap</span><span class="err">.</span><span class="na">min</span><span class="err">.</span><span class="na">css</span><span class="err">")"</span> <span class="na">media=</span><span class="s">"screen"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">type=</span><span class="s">"text/css"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"@routes.Assets.at("</span><span class="na">stylesheets</span><span class="err">/</span><span class="na">all</span><span class="err">.</span><span class="na">css</span><span class="err">")"</span> <span class="na">media=</span><span class="s">"screen"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">type=</span><span class="s">"text/css"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"@routes.Assets.at("</span><span class="na">javascripts</span><span class="err">/</span><span class="na">jquery</span><span class="err">.</span><span class="na">min</span><span class="err">.</span><span class="na">js</span><span class="err">")"</span> <span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"@routes.Assets.at("</span><span class="na">javascripts</span><span class="err">/</span><span class="na">bootstrap</span><span class="err">.</span><span class="na">min</span><span class="err">.</span><span class="na">js</span><span class="err">")"</span> <span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre>
+<p>其中的</p>
+<blockquote>
+@routes.Assets.at("stylesheets/bootstrap.min.css")</blockquote>
+<p>對應到 route 中預設的:</p>
+<pre class="literal-block">
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+</pre>
+<p>也就是連結到 public 資料夾中的 stylesheets/bootstrap.min.css。</p>
+<p><strong>使用 for 迴圈</strong></p>
+<p>在接收了 List 型態的 Job 資料之後，就可以使用 for 迴圈來處理，不要手工複製 1, 2 ,3 ... 的貼上 Orz。
+我看過類似的程式碼，非常的 ...</p>
+<pre class="code scala literal-block">
+<span class="nd">@for</span><span class="o">(</span><span class="n">jobrow</span> <span class="k">&lt;-</span> <span class="n">jobrows</span><span class="o">){</span>
+<span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s">"row"</span><span class="o">&gt;</span>
+   <span class="nd">@for</span><span class="o">(</span><span class="n">job</span> <span class="k">&lt;-</span> <span class="n">jobrow</span><span class="o">){</span>
+   <span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s">"span4"</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="n">article</span> <span class="n">class</span><span class="o">=</span><span class="s">"job"</span><span class="o">&gt;</span>
+         <span class="o">&lt;</span><span class="n">header</span> <span class="n">class</span><span class="o">=</span><span class="s">"clearfix"</span><span class="o">&gt;</span>
+            <span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s">"meta"</span><span class="o">&gt;</span>
+               <span class="o">&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="s">"count"</span><span class="o">&gt;@</span><span class="n">job</span><span class="o">.</span><span class="n">count</span><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;</span>
+            <span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+            <span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s">"more"</span><span class="o">&gt;</span>
+               <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">"#job-detail@job.count"</span> <span class="n">data</span><span class="o">-</span><span class="n">toggle</span><span class="o">=</span><span class="s">"modal"</span><span class="o">&gt;</span><span class="n">詳細資訊</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+            <span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+         <span class="o">&lt;/</span><span class="n">header</span><span class="o">&gt;</span>
+         <span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s">"card"</span><span class="o">&gt;</span>
+            <span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s">"card-body"</span><span class="o">&gt;</span>
+               <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;@</span><span class="n">job</span><span class="o">.</span><span class="n">company_name</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+               <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;@</span><span class="n">job</span><span class="o">.</span><span class="n">job_name</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+            <span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+            <span class="o">&lt;</span><span class="n">div</span> <span class="n">class</span><span class="o">=</span><span class="s">"card-footer"</span><span class="o">&gt;</span>
+               <span class="o">&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="s">"label label-important"</span><span class="o">&gt;@</span><span class="n">job</span><span class="o">.</span><span class="n">note1</span><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;</span>
+               <span class="o">&lt;</span><span class="n">span</span> <span class="n">class</span><span class="o">=</span><span class="s">"label label-info"</span><span class="o">&gt;@</span><span class="n">job</span><span class="o">.</span><span class="n">note2</span><span class="o">&lt;/</span><span class="n">span</span><span class="o">&gt;</span>
+            <span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+         <span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+      <span class="o">&lt;/</span><span class="n">article</span><span class="o">&gt;</span>
+   <span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+   <span class="o">}</span>
+<span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+<span class="o">}</span>
+</pre>
+<p>這邊我用了兩個 for 迴圈來處理九宮格的排版方式（第一個 for 處理 row，第二個處理 job 的資料）</p>
+<p>在這裡面可以看到</p>
+<blockquote>
+@job.company_name</blockquote>
+<p>之類的語法，這代表直接存取這個變數。</p>
+<p>下面是 index.scala.html 的完整內容。</p>
+<pre class="code html literal-block">
+@(jobrows: List[List[Job]], nextPageNum: Int)
+@import helper._
+@main("22K Job Board") {
+<span class="cp">&lt;!doctype html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+   <span class="nt">&lt;head&gt;</span>
+      <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"utf-8"</span> <span class="nt">/&gt;</span>
+      <span class="c">&lt;!-- Always force latest IE rendering engine or request Chrome Frame --&gt;</span>
+      <span class="nt">&lt;meta</span> <span class="na">content=</span><span class="s">"IE=edge,chrome=1"</span> <span class="na">http-equiv=</span><span class="s">"X-UA-Compatible"</span> <span class="nt">/&gt;</span>
+      <span class="c">&lt;!-- Use title if it's in the page YAML frontmatter --&gt;</span>
+      <span class="nt">&lt;title&gt;</span>22K Job Board<span class="nt">&lt;/title&gt;</span>
+      <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"@routes.Assets.at("</span><span class="na">stylesheets</span><span class="err">/</span><span class="na">bootstrap</span><span class="err">.</span><span class="na">min</span><span class="err">.</span><span class="na">css</span><span class="err">")"</span> <span class="na">media=</span><span class="s">"screen"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">type=</span><span class="s">"text/css"</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"@routes.Assets.at("</span><span class="na">stylesheets</span><span class="err">/</span><span class="na">all</span><span class="err">.</span><span class="na">css</span><span class="err">")"</span> <span class="na">media=</span><span class="s">"screen"</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">type=</span><span class="s">"text/css"</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"@routes.Assets.at("</span><span class="na">javascripts</span><span class="err">/</span><span class="na">jquery</span><span class="err">.</span><span class="na">min</span><span class="err">.</span><span class="na">js</span><span class="err">")"</span> <span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;&lt;/script&gt;</span>
+      <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"@routes.Assets.at("</span><span class="na">javascripts</span><span class="err">/</span><span class="na">bootstrap</span><span class="err">.</span><span class="na">min</span><span class="err">.</span><span class="na">js</span><span class="err">")"</span> <span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;&lt;/script&gt;</span>
+   <span class="nt">&lt;/head&gt;</span>
+   <span class="nt">&lt;body</span> <span class="na">class=</span><span class="s">"index"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"navbar navbar-fixed-top"</span><span class="nt">&gt;</span>
+         <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"navbar-inner"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"container"</span><span class="nt">&gt;</span>
+               <span class="nt">&lt;a</span> <span class="na">class=</span><span class="s">"brand"</span> <span class="na">href=</span><span class="s">"1"</span><span class="nt">&gt;</span>22K Job Board <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"slogan"</span><span class="nt">&gt;</span>22K也有超級好工作<span class="nt">&lt;/span&gt;&lt;/a&gt;</span>
+            <span class="nt">&lt;/div&gt;</span>
+         <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"main"</span><span class="nt">&gt;</span>
+         <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"container"</span><span class="nt">&gt;</span>
+            @for(jobrow <span class="err">&lt;</span>- jobrows){
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row"</span><span class="nt">&gt;</span>
+               @for(job <span class="err">&lt;</span>- jobrow){
+               <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"span4"</span><span class="nt">&gt;</span>
+                  <span class="nt">&lt;article</span> <span class="na">class=</span><span class="s">"job"</span><span class="nt">&gt;</span>
+                     <span class="nt">&lt;header</span> <span class="na">class=</span><span class="s">"clearfix"</span><span class="nt">&gt;</span>
+                        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"meta"</span><span class="nt">&gt;</span>
+                           <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"count"</span><span class="nt">&gt;</span>@job.count<span class="nt">&lt;/span&gt;</span>
+                        <span class="nt">&lt;/div&gt;</span>
+                        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"more"</span><span class="nt">&gt;</span>
+                           <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"#job-detail@job.count"</span> <span class="na">data-toggle=</span><span class="s">"modal"</span><span class="nt">&gt;</span>詳細資訊<span class="nt">&lt;/a&gt;</span>
+                        <span class="nt">&lt;/div&gt;</span>
+                     <span class="nt">&lt;/header&gt;</span>
+                     <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"card"</span><span class="nt">&gt;</span>
+                        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"card-body"</span><span class="nt">&gt;</span>
+                           <span class="nt">&lt;h1&gt;</span>@job.company_name<span class="nt">&lt;/h1&gt;</span>
+                           <span class="nt">&lt;p&gt;</span>@job.job_name<span class="nt">&lt;/p&gt;</span>
+                        <span class="nt">&lt;/div&gt;</span>
+                        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"card-footer"</span><span class="nt">&gt;</span>
+                           <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"label label-important"</span><span class="nt">&gt;</span>@job.note1<span class="nt">&lt;/span&gt;</span>
+                           <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"label label-info"</span><span class="nt">&gt;</span>@job.note2<span class="nt">&lt;/span&gt;</span>
+                        <span class="nt">&lt;/div&gt;</span>
+                     <span class="nt">&lt;/div&gt;</span>
+                  <span class="nt">&lt;/article&gt;</span>
+               <span class="nt">&lt;/div&gt;</span>
+               }
+            <span class="nt">&lt;/div&gt;</span>
+            }
+         <span class="nt">&lt;/div&gt;</span>
+         <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"more-job"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"@nextPageNum"</span> <span class="na">class=</span><span class="s">"btn btn-large btn-block"</span><span class="nt">&gt;</span>更多學習機會<span class="nt">&lt;/a&gt;</span>
+         <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;footer</span> <span class="na">id=</span><span class="s">"footer"</span><span class="nt">&gt;</span>
+         <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"container"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;blockquote&gt;</span>
+               <span class="nt">&lt;p&gt;</span>同樣在「22K 薪水」這條垂直虛線上，有超級爛的工作，也有超級好的工作，端看你如何選擇。事實上，同樣在任何薪資水準的垂直線上，都有超級爛的工作，也有超級好的工作。
+               <span class="nt">&lt;/p&gt;</span>
+               <span class="nt">&lt;small&gt;</span>Mr Jamie <span class="nt">&lt;cite</span> <span class="na">title=</span><span class="s">"Source Title"</span><span class="nt">&gt;</span>林之晨<span class="nt">&lt;/cite&gt;&lt;/small&gt;</span>
+            <span class="nt">&lt;/blockquote&gt;</span>
+            <span class="nt">&lt;blockquote&gt;</span>
+               <span class="nt">&lt;p&gt;</span>所以重點根本不是 22K，重點是年輕人，既然你的政府、你的學校已經誤了你，你該用什麼方法，找到願意教你的師父，花 1 萬個小時跟他學習，最後變成炙手可熱，有超強戰力的人才。那時什麼 22K，花 100K 也不一定請得動你。
+               <span class="nt">&lt;/p&gt;</span>
+               <span class="nt">&lt;small&gt;</span>Mr Jamie <span class="nt">&lt;cite</span> <span class="na">title=</span><span class="s">"Source Title"</span><span class="nt">&gt;</span>林之晨<span class="nt">&lt;/cite&gt;&lt;/small&gt;</span>
+            <span class="nt">&lt;/blockquote&gt;</span>
+         <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;/footer&gt;</span>
+      @for(jobrow <span class="err">&lt;</span>- jobrows){
+      @for(job <span class="err">&lt;</span>- jobrow){
+      <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"job-detail@job.count"</span> <span class="na">class=</span><span class="s">"modal job-detail hide fade"</span><span class="nt">&gt;</span>
+         <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"modal-header"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;button</span> <span class="na">type=</span><span class="s">"button"</span> <span class="na">class=</span><span class="s">"close"</span> <span class="na">data-dismiss=</span><span class="s">"modal"</span> <span class="na">aria-hidden=</span><span class="s">"true"</span><span class="nt">&gt;</span><span class="ni">&amp;times;</span><span class="nt">&lt;/button&gt;</span>
+            <span class="nt">&lt;h3&gt;&lt;span</span> <span class="na">class=</span><span class="s">"salary"</span><span class="nt">&gt;</span>月薪 @job.salary 元<span class="nt">&lt;/span&gt;</span>的學習機會！<span class="nt">&lt;/h3&gt;</span>
+         <span class="nt">&lt;/div&gt;</span>
+         <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"modal-body"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">"table table-bordered"</span><span class="nt">&gt;</span>
+               <span class="nt">&lt;tr&gt;</span>
+                  <span class="nt">&lt;th&gt;</span>學習環境<span class="nt">&lt;/th&gt;</span>
+                  <span class="nt">&lt;td&gt;</span>@job.company_name<span class="nt">&lt;/td&gt;</span>
+                  <span class="nt">&lt;th&gt;</span>學習職位<span class="nt">&lt;/th&gt;</span>
+                  <span class="nt">&lt;td&gt;</span>@job.job_name<span class="nt">&lt;/td&gt;</span>
+               <span class="nt">&lt;/tr&gt;</span>
+               <span class="nt">&lt;tr&gt;</span>
+                  <span class="nt">&lt;th&gt;</span>學習地點<span class="nt">&lt;/th&gt;</span>
+                  <span class="nt">&lt;td&gt;</span>@job.company_location<span class="nt">&lt;/td&gt;</span>
+                  <span class="nt">&lt;th&gt;</span>學習內容<span class="nt">&lt;/th&gt;</span>
+                  <span class="nt">&lt;td&gt;&lt;a</span> <span class="na">href=</span><span class="s">"@job.job_url"</span><span class="nt">&gt;</span>你可以學到...<span class="nt">&lt;/a&gt;&lt;/td&gt;</span>
+               <span class="nt">&lt;/tr&gt;</span>
+            <span class="nt">&lt;/table&gt;</span>
+         <span class="nt">&lt;/div&gt;</span>
+         <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"modal-footer"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"@job.job_url"</span> <span class="na">class=</span><span class="s">"btn btn-primary btn-block btn-large"</span><span class="nt">&gt;</span>應徵職缺<span class="nt">&lt;/a&gt;</span>
+         <span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;/div&gt;</span>
+      }
+      }
+   <span class="nt">&lt;/body&gt;</span>
+   }
+</pre>
+</div>
+<div class="section" id="id1">
+<h2>測試結果</h2>
+<p>執行</p>
+<blockquote>
+run</blockquote>
+<p>就可以在 <a class="reference external" href="http://localhost:9000">http://localhost:9000</a> 看到執行結果了。</p>
+</div>
+<div class="section" id="heroku">
+<h2>部屬到 Heroku</h2>
+<p>Heroku 現在有支援 Play framework 了，所以整個部屬的過程也非常簡單。
+可以參考 <a class="reference external" href="https://devcenter.heroku.com/articles/play">Getting Started with Play! on Heroku</a>。</p>
+<div class="figure">
+<img alt="https://dl.dropbox.com/u/15537823/Blog/Scala-Play-%E7%AD%86%E8%A8%98/%E7%AB%B9%E6%9C%AC%E8%85%B3%E8%B8%8F%E8%BB%8A.jpg" src="https://dl.dropbox.com/u/15537823/Blog/Scala-Play-%E7%AD%86%E8%A8%98/%E7%AB%B9%E6%9C%AC%E8%85%B3%E8%B8%8F%E8%BB%8A.jpg">
+</div>
+<blockquote>
+<p>我從來都不知道自己房間的那扇門就是任意門， 只要走出去就能連到任何地方去。</p>
+<small>竹本祐太</small><cite title="Source Title">蜂蜜與四葉草</cite>
+</blockquote></div>
+    
+    <ul class="pager">
+        <li class="previous">
+            <a href="pelican-to-nikola.html" rel="prev">← Previous post</a>
+        </li>
+        <li class="next">
+            <a href="c-thread-pool.html" rel="next">Next post →</a>
+        </li>
+    </ul>
+
+        
+        
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+        var disqus_shortname ="swindgithub";
+            var disqus_url="http://swind.code-life.info/posts/play-note-1.html";
+        var disqus_title="Scala \u4f7f\u7528 Play \u7b46\u8a18 (1)";
+        var disqus_identifier="cache/posts/2013-02-02-implement-22k-job-by-play.html";
+        var disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+    
+
+    </div>
+
+        </div>
+        <!--End of body content-->
+
+        <footer>
+            Contents © 2013         <a href="mailto:">Swind</a> - Powered by         <a href="http://getnikola.com">Nikola</a>         
+        </footer>
+    </div>
+</div>
+
+
+            <script src="../assets/js/jquery-1.10.2.min.js" type="text/javascript"></script>
+            <script src="../assets/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="../assets/js/jquery.colorbox-min.js" type="text/javascript"></script>
+
+
+	
+
+    <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
+    
+
+<script type="text/javascript" src="../assets/js/tipuesearch_set.js"></script>
+<script type="text/javascript" src="../assets/js/tipuesearch.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#tipue_search_input').tipuesearch({
+        'mode': 'json',
+        'contentLocation': '/assets/js/tipuesearch_content.json',
+        'showUrl': false
+    });
+});
+</script>
+
+
+</body></html>

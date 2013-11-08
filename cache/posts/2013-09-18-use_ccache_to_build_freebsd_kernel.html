@@ -1,0 +1,63 @@
+<p>這幾天要開始 Build FreeBSD Kernel 了，
+可是 buildworld 跟 buildkernel 都需要花費非常久的時間。</p>
+<p>因此想要研究一下是否能加速 FreeBSD Kernel 的編譯速度，
+加快開發測試的流程，以及減少 CI 所需要花費的時間。</p>
+<!-- TEASER_END -->
+<div class="section" id="ccache">
+<h2>ccache</h2>
+<p><a class="reference external" href="http://ccache.samba.org/">ccache</a></p>
+<p>第一個想到的工具是之前有使用過的 ccache，
+在前公司的時候，因為編譯過程非常複雜 (寫 build script 的人也藏了很多東西)，
+很難透過修改 build script 去加速建置流程。</p>
+<p>只好先試著透過 ccache 來加速，後來又加上 ramdisk 來放置 cache，
+終於將編譯時間從 15 分鐘縮短到 1 分多鐘完成。
+(但是有同事跟我說他這樣就沒以煮咖啡的時間了 ...)</p>
+<p>所以我對 ccache 印象還蠻良好的，加上影響又低。
+所以首先就用他來加速看看啦~~</p>
+<div class="section" id="id1">
+<h3>安裝 ccache</h3>
+<p>FreeBSD 可以使用 pkg_add 無腦安裝，也可以到 /usr/ports/devel/ccache 手動編譯安裝。</p>
+<pre class="code bash literal-block">
+pkg_add -r ccache
+</pre>
+</div>
+<div class="section" id="etc-make-conf">
+<h3>修改 /etc/make.conf</h3>
+<pre class="code bash literal-block">
+<span class="c">#CCACHE
+</span>.if !defined<span class="o">(</span>NO_CCACHE<span class="o">)</span>
+<span class="nv">CC</span><span class="o">=</span> /usr/local/libexec/ccache/world/cc
+<span class="nv">CCX</span><span class="o">=</span> /usr/local/libexec/ccache/world/c++
+.endif
+
+.if <span class="k">${</span><span class="p">.CURDIR:</span><span class="nv">M</span><span class="p">*/ports/devel/ccache</span><span class="k">}</span>
+<span class="nv">NO_CCACHE</span><span class="o">=</span>yes
+.endif
+</pre>
+</div>
+<div class="section" id="zshrc-profile">
+<h3>修改 .zshrc 或者是 .profile</h3>
+<pre class="code bash literal-block">
+<span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span>/usr/local/libexec/ccache:<span class="nv">$PATH</span>
+<span class="nb">export </span><span class="nv">CCACHE_PATH</span><span class="o">=</span>/usr/bin:/usr/local/bin
+<span class="nb">export </span><span class="nv">CCACHE_DIR</span><span class="o">=</span>/var/tmp/ccache
+<span class="nb">export </span><span class="nv">CCACHE_LOGFILE</span><span class="o">=</span>/var/log/ccache.log
+</pre>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>ccache 指令</h2>
+<p>Display statistics summary</p>
+<blockquote>
+ccache -s</blockquote>
+<p>To zero statistics</p>
+<blockquote>
+ccache -z</blockquote>
+<p>To set ccache temp size ( for example 512MB )</p>
+<blockquote>
+ccache -M 512m</blockquote>
+</div>
+<div class="section" id="id3">
+<h2>參考資料</h2>
+<p><a class="reference external" href="http://blog.up-link.ro/freebsd-how-to-enable-ccache-on-freebsd-8-2/">How to enable ccache on FreeBSD 8.2</a></p>
+</div>

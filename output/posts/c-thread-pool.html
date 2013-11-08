@@ -1,0 +1,292 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Swind">
+    <title>C 的 Thread Pool 筆記 | Corleonis</title>
+    
+            <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css">
+        <link href="../assets/css/theme.css" rel="stylesheet" type="text/css">
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]-->
+            <link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+
+    
+
+
+
+    
+<link rel="stylesheet" type="text/css" href="../assets/css/tipuesearch.css">
+</head><body><div id="tipue_search_content" style="margin-left: auto; margin-right: auto; padding: 20px;"></div>
+
+
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../">Corleonis</a>
+    </div>
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <ul class="nav navbar-nav">
+            
+                <li><a href="../archive.html">Archives</a>
+                </li><li><a href="../categories/index.html">Tags</a>
+                </li><li><a href="../rss.xml">RSS</a>
+
+        </li></ul>
+            
+<span class="navbar-form pull-left">
+<input type="text" id="tipue_search_input">
+</span>
+
+        <ul class="nav navbar-nav navbar-right">
+            
+            
+                
+    <li>
+    <a href="c-thread-pool.rst" id="sourcelink">Source</a>
+    </li>
+
+        </ul>
+    </div><!-- /.navbar-collapse -->
+</nav>
+
+<!-- End of Menubar -->
+
+<div class="container">
+    <div class="body-content">
+        <!--Body content-->
+        <div class="row">
+            
+    <div class="postbox">
+    
+    <h1 class="p-name" itemprop="headline name">C 的 Thread Pool 筆記</h1>
+
+    <hr>
+    <small>
+        Posted: <time class="published" datetime="2013-06-07T21:43:28">2013-06-07 21:43</time>
+        
+
+        
+          |  More posts about
+        <span itemprop="keywords">
+            <a class="tag p-category" href="../categories/c.html"><span class="badge badge-info">C</span></a>
+        </span>
+
+    </small>
+    <hr>
+    <p>最近被丟到 FreeBSD 跟 C 的世界裡面，沒有 Scala 的 Actor 可以用。
+所以只好參考別人的 Thread Pool 來看一下，在 C 的世界裡面 Thread Pool 是怎麼實作的。</p>
+<p>首先先去 StackOverFlow 中尋找是否有人問過類似的問題</p>
+<p><a class="reference external" href="http://stackoverflow.com/questions/6297428/existing-threadpool-c-implementation">Existing threadpool C implementation</a></p>
+<p>裡面有提到幾個 C Thread Pool 的實作範例與可參考的文件</p>
+<ol class="arabic simple">
+<li><a class="reference external" href="https://github.com/mbrossard/threadpool">threadpool-mbrossard</a></li>
+<li><a class="reference external" href="http://people.clarkson.edu/~jmatthew/cs644.archive/cs644.fa2001/proj/locksmith/code/ExampleTest/">threadpool-jmatthew</a></li>
+<li><a class="reference external" href="http://sourceforge.net/projects/cthpool/">cthreadpool</a></li>
+<li><a class="reference external" href="https://github.com/Pithikos/C-Thread-Pool">C-Thread-Pool</a></li>
+</ol>
+<p>我這邊是直接應該是會以 threadpool-mbrossard 作為第一個研究的版本，因為他一直有在維護。
+而且作者就是 <a class="reference external" href="http://stackoverflow.com/questions/6297428/existing-threadpool-c-implementation">Existing threadpool C implementation</a> 的發文者，感覺他還蠻熱心的。</p>
+<div class="section" id="threadpool">
+<h2>threadpool</h2>
+<p><strong>A simple C thread pool implementation</strong></p>
+<p>Currently, the implementation:</p>
+<ul class="simple">
+<li>Works with pthreads only, but API is intentionally opaque to allow
+other implementations (Windows for instance).</li>
+<li>Starts all threads on creation of the thread pool.</li>
+<li>Reserves one task for signaling the queue is full.</li>
+<li>Stops and joins all worker threads on destroy.</li>
+</ul>
+<div class="figure">
+<object data="http://upload.wikimedia.org/wikipedia/commons/0/0c/Thread_pool.svg" type="image/svg+xml">
+http://upload.wikimedia.org/wikipedia/commons/0/0c/Thread_pool.svg</object>
+</div>
+<p>from wikipedia</p>
+</div>
+<div class="section" id="thread-pool">
+<h2>Thread Pool 的資料結構</h2>
+<p>首先 Thread Pool 要有的東西就是 job 或者是 task 讓 Thread 知道他們要做什麼事情。</p>
+<pre class="code c literal-block">
+<span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">function</span><span class="p">)(</span><span class="kt">void</span> <span class="o">*</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="o">*</span><span class="n">argument</span><span class="p">;</span>
+<span class="p">}</span> <span class="kt">threadpool_task_t</span><span class="p">;</span>
+</pre>
+<p>所以只要有一個資料結構紀錄要執行的 function pointer 與要傳遞的參數即可。
+接下來就是 Thread Pool 本身，他必須存放所有的 Thread 與 Job Queue</p>
+<pre class="code c literal-block">
+<span class="k">struct</span> <span class="kt">threadpool_t</span> <span class="p">{</span>
+    <span class="kt">pthread_mutex_t</span> <span class="n">lock</span><span class="p">;</span>
+    <span class="kt">pthread_cond_t</span> <span class="n">notify</span><span class="p">;</span>
+    <span class="kt">pthread_t</span> <span class="o">*</span><span class="n">threads</span><span class="p">;</span>
+    <span class="kt">threadpool_task_t</span> <span class="o">*</span><span class="n">queue</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">thread_count</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">queue_size</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">head</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">tail</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">count</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">shutdown</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">started</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+<p>這邊他使用了一個 pthread_t 的 pointer 來紀錄所有的 Thread，簡單來說就是一個 pthread_t 的 array，而 head, tail 就是紀錄 array 的 offset。
+threadpool_task_t 也是一樣的原理，真是出乎意料的簡單。</p>
+</div>
+<div class="section" id="id1">
+<h2>ThreadPool 的建立與工作的執行</h2>
+<p>再來就是 Thread Pool 的建立，由於剛剛提到的他其實是使用一個 pthread array 與一個 job array 來存放所有的 thread 與 jobs。
+因此需要在一開始的時候就決定 Thread Pool 與 Jobs 的最大數量。</p>
+<pre class="code c literal-block">
+<span class="cm">/* Allocate thread and task queue */</span>
+<span class="n">pool</span><span class="o">-&gt;</span><span class="n">threads</span> <span class="o">=</span> <span class="p">(</span><span class="kt">pthread_t</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">pthread_t</span><span class="p">)</span> <span class="o">*</span> <span class="n">thread_count</span><span class="p">);</span>
+<span class="n">pool</span><span class="o">-&gt;</span><span class="n">queue</span> <span class="o">=</span> <span class="p">(</span><span class="kt">threadpool_task_t</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">threadpool_task_t</span><span class="p">)</span> <span class="o">*</span> <span class="n">queue_size</span><span class="p">);</span>
+</pre>
+<p>而每個 Thread 要執行的 Function 是</p>
+<pre class="code c literal-block">
+<span class="k">static</span> <span class="kt">void</span> <span class="o">*</span><span class="nf">threadpool_thread</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">threadpool</span><span class="p">)</span>
+ <span class="p">{</span>
+     <span class="kt">threadpool_t</span> <span class="o">*</span><span class="n">pool</span> <span class="o">=</span> <span class="p">(</span><span class="kt">threadpool_t</span> <span class="o">*</span><span class="p">)</span><span class="n">threadpool</span><span class="p">;</span>
+     <span class="kt">threadpool_task_t</span> <span class="n">task</span><span class="p">;</span>
+
+     <span class="k">for</span><span class="p">(;;)</span> <span class="p">{</span>
+         <span class="cm">/* Lock must be taken to wait on conditional variable */</span>
+         <span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="p">(</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">));</span>
+
+         <span class="cm">/* Wait on condition variable, check for spurious wakeups.
+            When returning from pthread_cond_wait(), we own the lock. */</span>
+         <span class="k">while</span><span class="p">((</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">shutdown</span><span class="p">))</span> <span class="p">{</span>
+             <span class="n">pthread_cond_wait</span><span class="p">(</span><span class="o">&amp;</span><span class="p">(</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">notify</span><span class="p">),</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">));</span>
+         <span class="p">}</span>
+
+         <span class="k">if</span><span class="p">((</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">shutdown</span> <span class="o">==</span> <span class="n">immediate_shutdown</span><span class="p">)</span> <span class="o">||</span>
+            <span class="p">((</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">shutdown</span> <span class="o">==</span> <span class="n">graceful_shutdown</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+             <span class="p">(</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)))</span> <span class="p">{</span>
+             <span class="k">break</span><span class="p">;</span>
+         <span class="p">}</span>
+
+         <span class="cm">/* Grab our task */</span>
+         <span class="n">task</span><span class="p">.</span><span class="n">function</span> <span class="o">=</span> <span class="n">pool</span><span class="o">-&gt;</span><span class="n">queue</span><span class="p">[</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">head</span><span class="p">].</span><span class="n">function</span><span class="p">;</span>
+         <span class="n">task</span><span class="p">.</span><span class="n">argument</span> <span class="o">=</span> <span class="n">pool</span><span class="o">-&gt;</span><span class="n">queue</span><span class="p">[</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">head</span><span class="p">].</span><span class="n">argument</span><span class="p">;</span>
+         <span class="n">pool</span><span class="o">-&gt;</span><span class="n">head</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+         <span class="n">pool</span><span class="o">-&gt;</span><span class="n">head</span> <span class="o">=</span> <span class="p">(</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">head</span> <span class="o">==</span> <span class="n">pool</span><span class="o">-&gt;</span><span class="n">queue_size</span><span class="p">)</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">pool</span><span class="o">-&gt;</span><span class="n">head</span><span class="p">;</span>
+         <span class="n">pool</span><span class="o">-&gt;</span><span class="n">count</span> <span class="o">-=</span> <span class="mi">1</span><span class="p">;</span>
+
+         <span class="cm">/* Unlock */</span>
+         <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="p">(</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">));</span>
+
+         <span class="cm">/* Get to work */</span>
+         <span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">task</span><span class="p">.</span><span class="n">function</span><span class="p">))(</span><span class="n">task</span><span class="p">.</span><span class="n">argument</span><span class="p">);</span>
+     <span class="p">}</span>
+
+     <span class="n">pool</span><span class="o">-&gt;</span><span class="n">started</span><span class="o">--</span><span class="p">;</span>
+
+     <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="p">(</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">));</span>
+     <span class="n">pthread_exit</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+     <span class="k">return</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+ <span class="p">}</span>
+</pre>
+<p>在 <strong>for(;;)</strong> 裡面，Thread 第一件要做的事情就是去搶奪 pool 的 lock，當搶到 lock 的 Thread 發現沒有工作可以做的時候，
+就會執行 pthread_cond_wait 來等待通知。這時候 pool-&gt;lock 會被 Unlock，因此這時候其他 Thread 也可以進來這個區域。
+所以在完全沒有工作的情況下，所有的 Thread 都會在這邊 Waiting。</p>
+<p>當 Thread 被透過 pthread_cond_signal 喚醒的時候，該 Thread 就會重新取得 pool-&gt;lock。
+這時他就可以安心的取出 queue 中的 task，等待取出完畢之後，再 unlock 讓其他被喚醒的 Thread 也可以去取得 Task。</p>
+<p>之後就是執行 task 中的 function pointer 做該做的工作。</p>
+</div>
+<div class="section" id="threadpool-destory">
+<h2>ThreadPool 的 destory</h2>
+<p>destory 就更簡單了，只要使用 pthread_cond_broadcast 通知所有的 Thread 起來，由於 shoutdown 的確認會在執行工作之前。
+所以該 thread 就會離開執行工作的迴圈，並且結束。</p>
+<p><a class="reference external" href="https://github.com/mbrossard/threadpool/blob/master/src/threadpool.c">mbrossard 完整的 ThreadPool 原始碼</a></p>
+<p>其實寫這篇筆記應該只是想貼這個</p>
+<div class="figure">
+<img alt="https://dl.dropboxusercontent.com/u/15537823/Blog/%E7%94%9F%E5%AD%98%E6%88%B0%E7%95%A5.jpg" src="https://dl.dropboxusercontent.com/u/15537823/Blog/%E7%94%9F%E5%AD%98%E6%88%B0%E7%95%A5.jpg">
+</div>
+<blockquote>
+<p>生存戦略！</p>
+<cite title="Source Title">輪るピングドラム</cite>
+</blockquote></div>
+    
+    <ul class="pager">
+        <li class="previous">
+            <a href="play-note-1.html" rel="prev">← Previous post</a>
+        </li>
+        <li class="next">
+            <a href="cmake-add_custom_command.html" rel="next">Next post →</a>
+        </li>
+    </ul>
+
+        
+        
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+        var disqus_shortname ="swindgithub";
+            var disqus_url="http://swind.code-life.info/posts/c-thread-pool.html";
+        var disqus_title="C \u7684 Thread Pool \u7b46\u8a18";
+        var disqus_identifier="cache/posts/2013-06-07-c-thread-pool.html";
+        var disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+    
+
+    </div>
+
+        </div>
+        <!--End of body content-->
+
+        <footer>
+            Contents © 2013         <a href="mailto:">Swind</a> - Powered by         <a href="http://getnikola.com">Nikola</a>         
+        </footer>
+    </div>
+</div>
+
+
+            <script src="../assets/js/jquery-1.10.2.min.js" type="text/javascript"></script>
+            <script src="../assets/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="../assets/js/jquery.colorbox-min.js" type="text/javascript"></script>
+
+
+	
+
+    <script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script>
+    
+
+<script type="text/javascript" src="../assets/js/tipuesearch_set.js"></script>
+<script type="text/javascript" src="../assets/js/tipuesearch.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#tipue_search_input').tipuesearch({
+        'mode': 'json',
+        'contentLocation': '/assets/js/tipuesearch_content.json',
+        'showUrl': false
+    });
+});
+</script>
+
+
+</body></html>

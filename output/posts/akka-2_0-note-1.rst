@@ -1,0 +1,194 @@
+.. title: Akka 2.0 筆記 (1)
+.. slug: akka-2_0-note-1
+.. date: 2012-05-17 18:03
+.. tags: Scala,Akka
+.. link: 
+.. description:
+
+因為我的程式還沒有寫完，所以是筆記 (1)，寫的過程應該還會有 2 3 ... 出現 Orz。
+
+    Akka 2.0 - 要升級了
+    你的時間的庫存量足夠嗎 ? 
+
+Akka 進入了 2.0 時代，恭喜你如果你是用 1.x 的話，請準備改寫吧 ...
+先從幾個方面來看 2.0 的新增事項。
+
+.. TEASER_END
+
+以下算是筆記，如有錯誤請多指教
+
+Actor
+-----------------------
+
+從官網範例來看，Actor 的架構還是跟之前一樣沒有什麼改變
+
+.. code-block:: scala
+
+    import akka.actor.Actor
+    import akka.actor.Props
+    import akka.event.Logging
+     
+    class MyActor extends Actor {
+      val log = Logging(context.system, this)
+      def receive = {
+        case "test" => log.info("received test")
+        case _      => log.info("received unknown message")
+      }
+    }
+
+但是上面的程式碼你會看到一個有點陌生的東西 *context.system*。
+2.0 建立 Actor 的方式已經有了改變，現在的 Actor 可以有階層關係（就像老鼠會一樣 Orz）。
+從 Actor 的 context 中可以取得很多該 Actor 的資訊與操作方式。而 ActorSystem 建立出來的 Actor 就會位於最上層。
+
+.. code-block:: scala
+
+    object Main extends App 
+    {
+      val system = ActorSystem("MySystem")
+      val myActor = system.actorOf(Props[MyActor], name = "myactor")
+    }
+
+延續上面的例子，如果MyActor內需要建立其他Actor
+
+.. code-block:: scala
+
+    context.actorof(Props[children], name = "children")
+
+利用這種階層關係有什麼好處呢？
+
+在之前 Akka1.3 的時代，我就經歷過非常痛苦的過程，那時候還沒有像 2.0 這樣的階層關係。
+所以如果我在停止一個 Actor 之前沒有先把他底下的 Actor 都停止的話，程式是沒有辦法正常結束的（因為還有 Actor 活著）。
+
+所以必須 override Actor 裡面的 function 讓他在停止之前，會先去結束他底下的 Actor。
+為了作到這件事，我還要多弄一個 List 去紀錄他有建立哪些 Actor。
+然後拼命的發 message 叫 Actor 去死去死去死去死 Orz。
+
+但是這些煩惱在2.0就通通不見啦！！！！！
+現在要停止只要用
+
+.. code-block:: scala
+
+       context.stop(self)
+
+就會幹掉底下的部屬之後再做掉自己，真是讓人清爽又愉快（煙）
+
+EventStream
+-----------------------------
+
+最早知道 EventStream 或 EventBus 這種架構是在 GWT 的時後，那時候一用實在驚為天人。
+真是太方便了，雖然整體架構跟 Observer Pattern 一樣，但是人家就是用得很漂亮。
+
+EventStream 只存在於 ActorSystem 底下，要使用 EventStream 的第一步就是先註冊 Actor 與他要接收的物件類型。
+
+.. code-block:: scala
+
+    import akka.actor.{ Actor, DeadLetter, Props }
+     
+    val listener = system.actorOf(Props(new Actor {
+      def receive = {
+        case d: DeadLetter => println(d)
+      }
+    }))
+    system.eventStream.subscribe(listener, classOf[DeadLetter])   
+
+上面的程式碼產生了一個 listener 的 Actor 並且註冊說如果有 DeadLeatter 類型的物件送到 EventStream 內，就會傳送給他。
+雖然文件說主要是拿來作 Log 或者是監聽事件，但我拿來當其他的用途，例如發給所有的 Actor 讓他們自己認領工作之類的。
+
+Event Handler
+-------------------------------
+
+Event Handler 是拿來作 log 的工具，可以實作一個 EventListener 來監聽所有的事件。
+跟 Log4j 等工具一樣，可以分成 
+
+- Error
+- Warning
+- Info
+- Debug
+
+看起來似乎可以拿來作為例外處理或者作一個事件重發的工具。
+
+實作EventListener
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: scala
+
+    val errorHandlerEventListener = Actor.actorOf(new Actor {
+      self.dispatcher = EventHandler.EventHandlerDispatcher
+    
+      def receive = {
+        case EventHandler.Error(cause, instance, message) => ...
+        case EventHandler.Warning(instance, message) => ...
+        case EventHandler.Info(instance, message) => ...
+        case EventHandler.Debug(instance, message) => ...
+        case genericEvent => ...
+      }
+    })
+
+加入EventListener 
+
+.. code-block:: scala
+
+    EventHandler.addListener(errorHandlerEventListener)
+
+移除EventListener
+
+.. code-block:: scala
+
+    EventHandler.removeListener(errorHandlerEventListener)
+
+Log 訊息
+
+.. code-block:: scala
+
+    EventHandler.error(exception, this, message)
+    EventHandler.error(this, message)
+    EventHandler.warning(this, message)
+    EventHandler.info(this, message)
+    EventHandler.debug(this, message)
+
+Scheduler
+---------------------------
+
+Akka 內有附一個簡單的 Scheduler，他可以讓你排程什麼時候要發訊息給 Actor
+
+.. code-block:: scala
+
+    import akka.actor.Scheduler
+    
+    //Sends messageToBeSent to receiverActor after initialDelayBeforeSending and then after each delayBetweenMessages
+    Scheduler.schedule(receiverActor, messageToBeSent, initialDelayBeforeSending, delayBetweenMessages, timeUnit)
+    
+    //Sends messageToBeSent to receiverActor after delayUntilSend
+    Scheduler.scheduleOnce(receiverActor, messageToBeSent, delayUntilSend, timeUnit)
+
+Event Driven
+-----------------------------
+
+一直到最近在實作小玩具才想到的，我想這不是新的東西，可是用Akka或許可以把這件事情變得非常方便。
+以前在學Design Pattern的時候，其實整體架構算是很容易理解的東西。
+
+But ! 就是這個But，在寫的時候卻會常常綁手綁腳，例如MVC的Pattern，我到底要不要在Control中紀錄Model與View的位置，如果不紀錄的話我又要怎麼找到他們，然後整個執行流程又是如何？
+這是一件很麻煩的事情，雖然現在用起來是沒啥感覺，但是我也常為了Model之間的溝通流程感到困擾。
+
+小的在下我，寫論文的時候實作的東西其基礎架構是建立在JavaSpace上面，這個東西不要說現在沒啥人聽過了，就連我在用的時候都很悲劇。
+但是他設計概念我覺得很棒，他提供一個Pool可以讓你把Object丟進去，有興趣的Process就可以自己去那個Pool搶。
+但是這個東西就悲劇在他後來沒有在維護了，而且他的Server架設非常麻煩，API非常難用。
+
+一直到後來在GWT中看到Event Bus，我覺得這真是TMD的好東西。
+反正每個Model就是把Event丟到Event Bus裡面就好了，然後誰愛撿就撿去玩，射後不理真是男人的浪漫（誤）。
+因此最近才想到，如果利用Akka來作一個類似JavaSpace的東西如何，每個Module都是一個獨立的Actor，Module在接收到工作把工作完成就，就將結果丟回Space。
+
+舉個例子就像之前舉例舉到爛掉的某大論壇Parser，需要將文章內容紀錄到資料庫裡面，並且還要去下載相關的圖片。
+因此我就模仿Eva Magi系統（大誤），將Parser Module、Data Module與Download Module各自獨立成一個Actor。
+系統啟動的時候，由系統去建立Space，並且將這三個Module依照其MetaData的設定要將哪些Event傳送給他們（其實就是Observer Pattern）。
+
+Parser定時自動去論壇取得文章內容，並且將內容丟到Space裡面。這時Data Module就可以將文章資料寫到資料庫中，而Download Module也同時進行下載。
+這樣的架構可以視情況讓他是Single Thread或Multiple Thread的程式。只要好好管理Event的流動方式就可以了。
+
+至於這樣的架構好不好測試呢？我覺得這樣寫有一個好處，就是可以強迫Programmer寫出沒有副作用的程式，因為你必須要將所以處理結果都丟回Space裡面。
+因此測試的時候，只要建立該Module，並且傳送Mock Event給他就可以了，其他Module並不需要被建立起來。這樣的架構也降低了各Module之間的coupling。
+
+最後如果想要作所謂的雲～～～～～～～～端系統（老實說連我都不知道啥鬼才叫TMD的雲～～～～～～端系統），就可以利用Akka的Remote Actor的功能，
+將不同的Module丟到不同的機器上面作，甚至是同一個Module可以有好幾個來分工。
+
+Wao cow 越想感覺越夢幻，有空來實作看看到底會遇到什麼問題好了。 

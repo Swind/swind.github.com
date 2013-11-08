@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis (Go)</title><link>http://swind.code-life.info/</link><description></description><atom:link href="http://swind.code-life.info/categories/go.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Mon, 04 Nov 2013 14:57:02 GMT</lastBuildDate><generator>nikola</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Golang - Goroutine 筆記 (1)</title><link>http://swind.code-life.info/posts/goroutine-note-1.html</link><description>&lt;div&gt;&lt;p&gt;會想到用這個是由於 EPUBConverter Go 的版本雖然運作上已經比 Scala 版本快上不少了。
+但我發現在執行的時候 CPU 使用率一直都只有 25 %，所以才想試試看使用 goroutine 看能不能讓他轉換更快一點。&lt;/p&gt;
+&lt;p&gt;依照文件所說，在執行 IO 相關動作的時候，會將 CPU 讓給 goroutine 來使用，那麼對於 EPUBConverter 的效能應該會有顯著的提昇。&lt;/p&gt;
+&lt;p&gt;雖然有人說 goroutine 跟 Scala 的 actor 有點像，但是 actor 的模型就很具體跟明確。
+而 goroutine 則是提供一個方便快速的 thread 操作方式。&lt;/p&gt;
+&lt;p class="more"&gt;&lt;a href="http://swind.code-life.info/posts/goroutine-note-1.html"&gt;Read more…&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Go</category><guid>http://swind.code-life.info/posts/goroutine-note-1.html</guid><pubDate>Sun, 09 Dec 2012 18:00:00 GMT</pubDate></item><item><title>EPUBConverter 0.0.2 - 其實已經重寫了 Orz</title><link>http://swind.code-life.info/posts/epubconverter-0_0_2.html</link><description>&lt;div&gt;&lt;p&gt;一開始的 Scala 版本本來是自己寫來自己用的小工具，可是沒想到竟然有人有用還有回報問題。
+大受感動之餘（誤），而出現了這個全新感受的 EPUBConverter 0.0.2，絕對不是因為手癢想要試試看 Go。&lt;/p&gt;
+&lt;p&gt;P.S 2012.12.09 更新 - 修正了鳥 Bug 所以到 0.0.3 了。&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://dl.dropbox.com/u/15537823/EPUBConverter_0.0.3.7z"&gt;EPUBConverter 0.0.3 下載&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://github.com/Swind/EPUBConverter-Go"&gt;EPUBConverter Source Code&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;這個版本比之前好得地方在於，這次使用了 &lt;a class="reference external" href="http://tongwen.openfoundry.org/"&gt;新同文堂&lt;/a&gt; 的簡繁轉換對照表。
+除了單字轉換之外，還多了一個詞彙轉換。&lt;/p&gt;
+&lt;p&gt;所以轉換品質應該會比之前 Scala 的版本好很多，感謝新同文堂分享對照表。
+他的 Bookmarklet 版本也非常好用，基本上我 Go 的轉換邏輯就是從 Bookmarklet 版本移植過來的。&lt;/p&gt;
+&lt;p&gt;但是由於我直接將對照表轉換成 Golang 裡面的 map 了，所以這次就沒有辦法讓使用者自己改對照表了。&lt;/p&gt;
+&lt;p&gt;不過有興趣的人，在原始碼的 &lt;a class="reference external" href="https://github.com/Swind/EPUBConverter-Go/tree/master/tongwen_table"&gt;tongwen_table&lt;/a&gt; 資料夾底下，我有放了一個簡單的轉換工具。
+可以利用那個重新產生 Go 的 map，但是最後還是得重新編譯整個 EPUBConverter 就是了。&lt;/p&gt;
+&lt;p class="more"&gt;&lt;a href="http://swind.code-life.info/posts/epubconverter-0_0_2.html"&gt;Read more…&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Go</category><guid>http://swind.code-life.info/posts/epubconverter-0_0_2.html</guid><pubDate>Sat, 08 Dec 2012 18:00:00 GMT</pubDate></item></channel></rss>
