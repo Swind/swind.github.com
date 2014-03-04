@@ -2,31 +2,31 @@ language: python
 
 branches:
   only:
-    - source
-
+  - source
 cache:
-  - pip
+- pip
 
 python:
-  - "2.7"
+- '2.7'
 
-# command to install dependencies
-install: 
-  - "pip install nikola"
+install:
+- pip install nikola
 
-# command to run tests
-before_script: 
-  - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-  - git config --global user.name "Swind (via Travis-CI)"
-  - git config --global user.email "swind@code-life.info"
-  - git clone git@github.com:Swind/swind.github.com.git -b master output
+before_script:
+- echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+- git config --global user.name "Swind (via Travis-CI)"
+- git config --global user.email "swind@code-life.info"
+- git clone --quiet https://${GH_TOKEN}@github.com/Swind/swind.github.com -b master output > /dev/null
 
-script: 
-  - "nikola build"
+script:
+- nikola build
 
 after_success:
-  - cd output
-  - git add .
-  - git commit -m "Update output from Travis CI"
-  - git push origin source
+- cd output
+- git add .
+- git commit -m "Update output from Travis CI"
+- git push origin source
 
+env:
+  global:
+    secure: bgD+Q7LIpym+pEmrL2+Ro3VfCLhSOGddRDcDXQoA6wAoL7ZIlXeVSgh2Q/iLy1SlEwIVhA+M9wPCDXbhRgWT54/qgDofwutLTmGZCU2ACN3XH4ZVfrqP13FdQ/+qiSRyOBnlmqPlxnDt6gHI7aRpC0fsBLIFiwWYpLDuqhWK2LU=
