@@ -1,6 +1,6 @@
 .. link: 
 .. description: 
-.. tags: python
+.. tags: 
 .. date: 2013/08/25 15:26:12
 .. title: 簡單易懂的 Python Plugin 架構 (大概 ...)
 .. slug: simple-python-plugin-framework

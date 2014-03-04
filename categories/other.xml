@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Corleonis (Other)</title><link>http://swind.code-life.info</link><description>I am Swind.</description><lastBuildDate>Wed, 18 Sep 2013 17:08:12 GMT</lastBuildDate><generator>nikola</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Scala 使用 Play 筆記 (1)</title><link>http://swind.code-life.info/posts/play-note-1.html</link><description>&lt;div&gt;&lt;p&gt;會想要重拾 Scala 跟 Play 主要是因為看到了這篇文章&lt;/p&gt;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis (Other)</title><link>http://swind.code-life.info/</link><description></description><atom:link href="http://swind.code-life.info/categories/other.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Tue, 04 Mar 2014 09:29:45 GMT</lastBuildDate><generator>Nikola &lt;http://getnikola.com/&gt;</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Scala 使用 Play 筆記 (1)</title><link>http://swind.code-life.info/posts/play-note-1.html</link><description>&lt;div&gt;&lt;p&gt;會想要重拾 Scala 跟 Play 主要是因為看到了這篇文章&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="http://minipai.tumblr.com/post/41882685541/22k"&gt;怎麼設計22K?&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;因為覺得這個設計理念真的是太正面了 XDDD&lt;/p&gt;
 &lt;blockquote&gt;
@@ -12,7 +12,7 @@
 所以我決定把使用 Play 實作的過程記錄一下，以方便我日後回憶。&lt;/p&gt;
 &lt;p&gt;整個實作過程是參考 &lt;a class="reference external" href="http://www.playframework.org/documentation/2.1-RC4/ScalaTodoList"&gt;Your first Play application&lt;/a&gt; 這篇文章的。&lt;/p&gt;
 &lt;p&gt;P.S 這篇文章寫到一半的時候 Play 2.1 出了 Orz ...&lt;/p&gt;
-&lt;p&gt;&lt;a href="/posts/play-note-1.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Other</category><guid>http://swind.code-life.info/posts/play-note-1.html</guid><pubDate>Sat, 02 Feb 2013 09:11:00 GMT</pubDate></item><item><title>Pelican 轉移到 Nikola</title><link>http://swind.code-life.info/posts/pelican-to-nikola.html</link><description>&lt;div&gt;&lt;p&gt;之前雖然從 Octopress 跳到 Pelican 脫離了 Ruby 的環境，也花了一些時間在修改 Theme。
+&lt;p class="more"&gt;&lt;a href="http://swind.code-life.info/posts/play-note-1.html"&gt;Read more…&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Other</category><guid>http://swind.code-life.info/posts/play-note-1.html</guid><pubDate>Sat, 02 Feb 2013 09:11:00 GMT</pubDate></item><item><title>Pelican 轉移到 Nikola</title><link>http://swind.code-life.info/posts/pelican-to-nikola.html</link><description>&lt;div&gt;&lt;p&gt;之前雖然從 Octopress 跳到 Pelican 脫離了 Ruby 的環境，也花了一些時間在修改 Theme。
 但是還是很難喜歡上 Pelican，最主要的就是他的手冊很難閱讀，而且資訊有點少 Orz。&lt;/p&gt;
 &lt;p&gt;Nikola 的手冊就比較簡潔清楚，也比較好查詢。
 且查詢了一下 Nikola 的事蹟之後發現他太帥了！&lt;/p&gt;
@@ -38,4 +38,4 @@ C:&lt;span class="se"&gt;\P&lt;/span&gt;ython27&lt;span class="se"&gt;\p&lt;/spa
 &lt;p&gt;上面的 Script 因為我找不到 Windows 裡面代表所有傳入參數的符號，
 只好就土法煉鋼一個一個輸入，所以最多只能輸入四個參數。&lt;/p&gt;
 &lt;p&gt;（如果有人有好得解決方式也請教我一下 m(_ _)m )&lt;/p&gt;
-&lt;p&gt;&lt;a href="/posts/pelican-to-nikola.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</description><category>Other</category><guid>http://swind.code-life.info/posts/pelican-to-nikola.html</guid><pubDate>Tue, 22 Jan 2013 09:11:00 GMT</pubDate></item></channel></rss>
+&lt;p class="more"&gt;&lt;a href="http://swind.code-life.info/posts/pelican-to-nikola.html"&gt;Read more…&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</description><category>Other</category><guid>http://swind.code-life.info/posts/pelican-to-nikola.html</guid><pubDate>Tue, 22 Jan 2013 09:11:00 GMT</pubDate></item></channel></rss>

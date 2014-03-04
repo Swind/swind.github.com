@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Corleonis (python)</title><link>http://swind.code-life.info</link><description>I am Swind.</description><lastBuildDate>Wed, 18 Sep 2013 17:08:11 GMT</lastBuildDate><generator>nikola</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>簡單易懂的 Python Plugin 架構 (大概 ...)</title><link>http://swind.code-life.info/posts/simple-python-plugin-framework.html</link><description>&lt;div&gt;&lt;p&gt;學習用 Python 寫測試工具快兩個星期了，主要使用 clime + ucltip 跟 pyinstaller。
-可是目前遇到一個問題，當我使用 pyinstaller 將測試工具打包之後，
-他會很貼心的幫你將所有 .py 檔包裝成一個可執行檔。
-所以當我要任何新增 command 都必須要重新部屬那個執行檔，這樣實在非常的麻煩。&lt;/p&gt;
-&lt;p&gt;因此才會開始嘗試是否有可能執行檔只包裝 clime, ucltip 以及我自己所提供的 API，
-然後 command 的部份就利用 plugin 的方式來增加。&lt;/p&gt;
-&lt;p&gt;&lt;a href="/posts/simple-python-plugin-framework.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>python</category><guid>http://swind.code-life.info/posts/simple-python-plugin-framework.html</guid><pubDate>Sun, 25 Aug 2013 15:26:12 GMT</pubDate></item></channel></rss>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis (Python)</title><link>http://swind.code-life.info/</link><description></description><atom:link href="http://swind.code-life.info/categories/python.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Tue, 04 Mar 2014 09:29:45 GMT</lastBuildDate><generator>Nikola &lt;http://getnikola.com/&gt;</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>使用 Python 結合 C 在 Linux 發送 SCSI Command</title><link>http://swind.code-life.info/posts/send-scsi-command-from-python-on-linux.html</link><description>&lt;div&gt;&lt;p&gt;最近因為工作的需要，所以要撰寫很多 SCSI 相關的測試。
+目前可以用的測試工具有 fio, iometer 以及一個自行開發的 SCSI Command 驗證的工具。
+但是這些都是使用 C 撰寫的，所以要撰寫一些流程比較複雜的驗證時，就變得非常的麻煩。
+絕對不是因為我想試試看 Python 或者是因為自行開發的驗證工具程式碼已經無法閱讀的原因，才想要重造輪子。&lt;/p&gt;
+&lt;p&gt;Orz 而且我受夠了手動測試的生活了 ...&lt;/p&gt;
+&lt;p&gt;所以想將測試運行的邏輯搬移到 Python 的部份，加速測試案例的開發速度。&lt;/p&gt;
+&lt;p class="more"&gt;&lt;a href="http://swind.code-life.info/posts/send-scsi-command-from-python-on-linux.html"&gt;Read more…&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Python</category><category>C/C++</category><guid>http://swind.code-life.info/posts/send-scsi-command-from-python-on-linux.html</guid><pubDate>Sat, 03 Aug 2013 10:38:06 GMT</pubDate></item></channel></rss>

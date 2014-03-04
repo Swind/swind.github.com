@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Corleonis</title><link>http://swind.code-life.info</link><description>I am Swind.</description><lastBuildDate>Wed, 18 Sep 2013 17:08:11 GMT</lastBuildDate><generator>nikola</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>加速 FreeBSD Kernel 的編譯</title><link>http://swind.code-life.info/posts/use_ccache_to_build_freebsd_kernel.html</link><description>&lt;div&gt;&lt;p&gt;這幾天要開始 Build FreeBSD Kernel 了，
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis</title><link>http://swind.code-life.info/</link><description>Corleonis</description><atom:link href="http://swind.code-life.info/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Tue, 04 Mar 2014 09:29:45 GMT</lastBuildDate><generator>Nikola &lt;http://getnikola.com/&gt;</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>加速 FreeBSD Kernel 的編譯</title><link>http://swind.code-life.info/posts/use_ccache_to_build_freebsd_kernel.html</link><description>&lt;div&gt;&lt;p&gt;這幾天要開始 Build FreeBSD Kernel 了，
 可是 buildworld 跟 buildkernel 都需要花費非常久的時間。&lt;/p&gt;
 &lt;p&gt;因此想要研究一下是否能加速 FreeBSD Kernel 的編譯速度，
 加快開發測試的流程，以及減少 CI 所需要花費的時間。&lt;/p&gt;
-&lt;p&gt;&lt;a href="/posts/use_ccache_to_build_freebsd_kernel.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>FreeBSD</category><category>C</category><guid>http://swind.code-life.info/posts/use_ccache_to_build_freebsd_kernel.html</guid><pubDate>Wed, 18 Sep 2013 14:00:09 GMT</pubDate></item><item><title>簡單易懂的 Python Plugin 架構 (大概 ...)</title><link>http://swind.code-life.info/posts/simple-python-plugin-framework.html</link><description>&lt;div&gt;&lt;p&gt;學習用 Python 寫測試工具快兩個星期了，主要使用 clime + ucltip 跟 pyinstaller。
+&lt;p class="more"&gt;&lt;a href="http://swind.code-life.info/posts/use_ccache_to_build_freebsd_kernel.html"&gt;Read more…&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>FreeBSD</category><category>C</category><guid>http://swind.code-life.info/posts/use_ccache_to_build_freebsd_kernel.html</guid><pubDate>Wed, 18 Sep 2013 14:00:09 GMT</pubDate></item><item><title>簡單易懂的 Python Plugin 架構 (大概 ...)</title><link>http://swind.code-life.info/posts/simple-python-plugin-framework.html</link><description>&lt;div&gt;&lt;p&gt;學習用 Python 寫測試工具快兩個星期了，主要使用 clime + ucltip 跟 pyinstaller。
 可是目前遇到一個問題，當我使用 pyinstaller 將測試工具打包之後，
 他會很貼心的幫你將所有 .py 檔包裝成一個可執行檔。
 所以當我要任何新增 command 都必須要重新部屬那個執行檔，這樣實在非常的麻煩。&lt;/p&gt;
 &lt;p&gt;因此才會開始嘗試是否有可能執行檔只包裝 clime, ucltip 以及我自己所提供的 API，
 然後 command 的部份就利用 plugin 的方式來增加。&lt;/p&gt;
-&lt;p&gt;&lt;a href="/posts/simple-python-plugin-framework.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>python</category><guid>http://swind.code-life.info/posts/simple-python-plugin-framework.html</guid><pubDate>Sun, 25 Aug 2013 15:26:12 GMT</pubDate></item><item><title>使用 Python 結合 C 在 Linux 發送 SCSI Command</title><link>http://swind.code-life.info/posts/send-scsi-command-from-python-on-linux.html</link><description>&lt;div&gt;&lt;p&gt;最近因為工作的需要，所以要撰寫很多 SCSI 相關的測試。
+&lt;p class="more"&gt;&lt;a href="http://swind.code-life.info/posts/simple-python-plugin-framework.html"&gt;Read more…&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><guid>http://swind.code-life.info/posts/simple-python-plugin-framework.html</guid><pubDate>Sun, 25 Aug 2013 15:26:12 GMT</pubDate></item><item><title>使用 Python 結合 C 在 Linux 發送 SCSI Command</title><link>http://swind.code-life.info/posts/send-scsi-command-from-python-on-linux.html</link><description>&lt;div&gt;&lt;p&gt;最近因為工作的需要，所以要撰寫很多 SCSI 相關的測試。
 目前可以用的測試工具有 fio, iometer 以及一個自行開發的 SCSI Command 驗證的工具。
 但是這些都是使用 C 撰寫的，所以要撰寫一些流程比較複雜的驗證時，就變得非常的麻煩。
 絕對不是因為我想試試看 Python 或者是因為自行開發的驗證工具程式碼已經無法閱讀的原因，才想要重造輪子。&lt;/p&gt;
 &lt;p&gt;Orz 而且我受夠了手動測試的生活了 ...&lt;/p&gt;
 &lt;p&gt;所以想將測試運行的邏輯搬移到 Python 的部份，加速測試案例的開發速度。&lt;/p&gt;
-&lt;p&gt;&lt;a href="/posts/send-scsi-command-from-python-on-linux.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Python</category><category>C/C++</category><guid>http://swind.code-life.info/posts/send-scsi-command-from-python-on-linux.html</guid><pubDate>Sat, 03 Aug 2013 10:38:06 GMT</pubDate></item><item><title>CMake - add_custom_command</title><link>http://swind.code-life.info/posts/cmake-add_custom_command.html</link><description>&lt;p&gt;最近因為必須要示範如何將公司的 autoconf 與 automake 轉成 CMake，所以稍微研究了一下之前完全沒有用過得 &lt;a class="reference external" href="http://www.cmake.org/cmake/help/cmake2.6docs.html#command:add_custom_command"&gt;add_custom_command&lt;/a&gt; 跟 &lt;a class="reference external" href="http://www.cmake.org/cmake/help/cmake2.6docs.html#command:add_custom_target"&gt;add_custom_target&lt;/a&gt;&lt;/p&gt;
+&lt;p class="more"&gt;&lt;a href="http://swind.code-life.info/posts/send-scsi-command-from-python-on-linux.html"&gt;Read more…&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Python</category><category>C/C++</category><guid>http://swind.code-life.info/posts/send-scsi-command-from-python-on-linux.html</guid><pubDate>Sat, 03 Aug 2013 10:38:06 GMT</pubDate></item><item><title>CMake - add_custom_command</title><link>http://swind.code-life.info/posts/cmake-add_custom_command.html</link><description>&lt;div&gt;&lt;p&gt;最近因為必須要示範如何將公司的 autoconf 與 automake 轉成 CMake，所以稍微研究了一下之前完全沒有用過得 &lt;a class="reference external" href="http://www.cmake.org/cmake/help/cmake2.6docs.html#command:add_custom_command"&gt;add_custom_command&lt;/a&gt; 跟 &lt;a class="reference external" href="http://www.cmake.org/cmake/help/cmake2.6docs.html#command:add_custom_target"&gt;add_custom_target&lt;/a&gt;&lt;/p&gt;
 &lt;div class="section" id="symbolic-link"&gt;
 &lt;h2&gt;建立 symbolic link&lt;/h2&gt;
 &lt;p&gt;目前有一個需求是要建立 symbolic link 在某些特定的資料夾裡面。
@@ -64,7 +64,7 @@ install-exec-hook:
 &lt;p&gt;我らの望みヽ&lt;/p&gt;
 &lt;p&gt;それは&lt;/p&gt;
 &lt;p&gt;汝の本降ちゆくを看取ること&lt;/p&gt;
-&lt;/blockquote&gt;&lt;/div&gt;</description><category>CMake</category><category>C/C++</category><guid>http://swind.code-life.info/posts/cmake-add_custom_command.html</guid><pubDate>Tue, 25 Jun 2013 19:20:46 GMT</pubDate></item><item><title>C 的 Thread Pool 筆記</title><link>http://swind.code-life.info/posts/c-thread-pool.html</link><description>&lt;p&gt;最近被丟到 FreeBSD 跟 C 的世界裡面，沒有 Scala 的 Actor 可以用。
+&lt;/blockquote&gt;&lt;/div&gt;&lt;/div&gt;</description><category>CMake</category><category>C/C++</category><guid>http://swind.code-life.info/posts/cmake-add_custom_command.html</guid><pubDate>Tue, 25 Jun 2013 19:20:46 GMT</pubDate></item><item><title>C 的 Thread Pool 筆記</title><link>http://swind.code-life.info/posts/c-thread-pool.html</link><description>&lt;div&gt;&lt;p&gt;最近被丟到 FreeBSD 跟 C 的世界裡面，沒有 Scala 的 Actor 可以用。
 所以只好參考別人的 Thread Pool 來看一下，在 C 的世界裡面 Thread Pool 是怎麼實作的。&lt;/p&gt;
 &lt;p&gt;首先先去 StackOverFlow 中尋找是否有人問過類似的問題&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="http://stackoverflow.com/questions/6297428/existing-threadpool-c-implementation"&gt;Existing threadpool C implementation&lt;/a&gt;&lt;/p&gt;
@@ -190,7 +190,7 @@ threadpool_task_t 也是一樣的原理，真是出乎意料的簡單。&lt;/p&g
 &lt;blockquote&gt;
 &lt;p&gt;生存戦略！&lt;/p&gt;
 &lt;cite title="Source Title"&gt;輪るピングドラム&lt;/cite&gt;
-&lt;/blockquote&gt;&lt;/div&gt;</description><category>C</category><guid>http://swind.code-life.info/posts/c-thread-pool.html</guid><pubDate>Fri, 07 Jun 2013 21:43:28 GMT</pubDate></item><item><title>Scala 使用 Play 筆記 (1)</title><link>http://swind.code-life.info/posts/play-note-1.html</link><description>&lt;div&gt;&lt;p&gt;會想要重拾 Scala 跟 Play 主要是因為看到了這篇文章&lt;/p&gt;
+&lt;/blockquote&gt;&lt;/div&gt;&lt;/div&gt;</description><category>C</category><guid>http://swind.code-life.info/posts/c-thread-pool.html</guid><pubDate>Fri, 07 Jun 2013 21:43:28 GMT</pubDate></item><item><title>Scala 使用 Play 筆記 (1)</title><link>http://swind.code-life.info/posts/play-note-1.html</link><description>&lt;div&gt;&lt;p&gt;會想要重拾 Scala 跟 Play 主要是因為看到了這篇文章&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="http://minipai.tumblr.com/post/41882685541/22k"&gt;怎麼設計22K?&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;因為覺得這個設計理念真的是太正面了 XDDD&lt;/p&gt;
 &lt;blockquote&gt;
@@ -203,7 +203,7 @@ threadpool_task_t 也是一樣的原理，真是出乎意料的簡單。&lt;/p&g
 所以我決定把使用 Play 實作的過程記錄一下，以方便我日後回憶。&lt;/p&gt;
 &lt;p&gt;整個實作過程是參考 &lt;a class="reference external" href="http://www.playframework.org/documentation/2.1-RC4/ScalaTodoList"&gt;Your first Play application&lt;/a&gt; 這篇文章的。&lt;/p&gt;
 &lt;p&gt;P.S 這篇文章寫到一半的時候 Play 2.1 出了 Orz ...&lt;/p&gt;
-&lt;p&gt;&lt;a href="/posts/play-note-1.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Other</category><guid>http://swind.code-life.info/posts/play-note-1.html</guid><pubDate>Sat, 02 Feb 2013 09:11:00 GMT</pubDate></item><item><title>Pelican 轉移到 Nikola</title><link>http://swind.code-life.info/posts/pelican-to-nikola.html</link><description>&lt;div&gt;&lt;p&gt;之前雖然從 Octopress 跳到 Pelican 脫離了 Ruby 的環境，也花了一些時間在修改 Theme。
+&lt;p class="more"&gt;&lt;a href="http://swind.code-life.info/posts/play-note-1.html"&gt;Read more…&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Other</category><guid>http://swind.code-life.info/posts/play-note-1.html</guid><pubDate>Sat, 02 Feb 2013 09:11:00 GMT</pubDate></item><item><title>Pelican 轉移到 Nikola</title><link>http://swind.code-life.info/posts/pelican-to-nikola.html</link><description>&lt;div&gt;&lt;p&gt;之前雖然從 Octopress 跳到 Pelican 脫離了 Ruby 的環境，也花了一些時間在修改 Theme。
 但是還是很難喜歡上 Pelican，最主要的就是他的手冊很難閱讀，而且資訊有點少 Orz。&lt;/p&gt;
 &lt;p&gt;Nikola 的手冊就比較簡潔清楚，也比較好查詢。
 且查詢了一下 Nikola 的事蹟之後發現他太帥了！&lt;/p&gt;
@@ -229,7 +229,7 @@ C:&lt;span class="se"&gt;\P&lt;/span&gt;ython27&lt;span class="se"&gt;\p&lt;/spa
 &lt;p&gt;上面的 Script 因為我找不到 Windows 裡面代表所有傳入參數的符號，
 只好就土法煉鋼一個一個輸入，所以最多只能輸入四個參數。&lt;/p&gt;
 &lt;p&gt;（如果有人有好得解決方式也請教我一下 m(_ _)m )&lt;/p&gt;
-&lt;p&gt;&lt;a href="/posts/pelican-to-nikola.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</description><category>Other</category><guid>http://swind.code-life.info/posts/pelican-to-nikola.html</guid><pubDate>Tue, 22 Jan 2013 09:11:00 GMT</pubDate></item><item><title>一鍵安裝 Linux 設定檔</title><link>http://swind.code-life.info/posts/install-linux-config.html</link><description>&lt;div&gt;&lt;p&gt;我常用的 Linux 環境一定會裝下面幾個工具&lt;/p&gt;
+&lt;p class="more"&gt;&lt;a href="http://swind.code-life.info/posts/pelican-to-nikola.html"&gt;Read more…&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</description><category>Other</category><guid>http://swind.code-life.info/posts/pelican-to-nikola.html</guid><pubDate>Tue, 22 Jan 2013 09:11:00 GMT</pubDate></item><item><title>一鍵安裝 Linux 設定檔</title><link>http://swind.code-life.info/posts/install-linux-config.html</link><description>&lt;div&gt;&lt;p&gt;我常用的 Linux 環境一定會裝下面幾個工具&lt;/p&gt;
 &lt;ol class="arabic simple"&gt;&lt;li&gt;zsh 與 oh-my-zsh&lt;/li&gt;
 &lt;li&gt;vim 很多很多 vim plugin&lt;/li&gt;
 &lt;li&gt;tmux 與他的快樂設定檔&lt;/li&gt;
@@ -260,12 +260,12 @@ wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/maste
 &lt;p&gt;除此之外 JosephJ 所給的建議也非常的實用，
 將常用的工具與指令整理成一份文件，來協助管理與記憶。
 目前我是用 Nikola (對沒錯，所從 Octopress 跳到 Pelican 又跳到 Nikola 了 XD) stories 來作筆記。&lt;/p&gt;
-&lt;p&gt;&lt;a href="/posts/install-linux-config.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><guid>http://swind.code-life.info/posts/install-linux-config.html</guid><pubDate>Mon, 21 Jan 2013 22:36:41 GMT</pubDate></item><item><title>Golang - Goroutine 筆記 (1)</title><link>http://swind.code-life.info/posts/goroutine-note-1.html</link><description>&lt;div&gt;&lt;p&gt;會想到用這個是由於 EPUBConverter Go 的版本雖然運作上已經比 Scala 版本快上不少了。
+&lt;p class="more"&gt;&lt;a href="http://swind.code-life.info/posts/install-linux-config.html"&gt;Read more…&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><guid>http://swind.code-life.info/posts/install-linux-config.html</guid><pubDate>Mon, 21 Jan 2013 22:36:41 GMT</pubDate></item><item><title>Golang - Goroutine 筆記 (1)</title><link>http://swind.code-life.info/posts/goroutine-note-1.html</link><description>&lt;div&gt;&lt;p&gt;會想到用這個是由於 EPUBConverter Go 的版本雖然運作上已經比 Scala 版本快上不少了。
 但我發現在執行的時候 CPU 使用率一直都只有 25 %，所以才想試試看使用 goroutine 看能不能讓他轉換更快一點。&lt;/p&gt;
 &lt;p&gt;依照文件所說，在執行 IO 相關動作的時候，會將 CPU 讓給 goroutine 來使用，那麼對於 EPUBConverter 的效能應該會有顯著的提昇。&lt;/p&gt;
 &lt;p&gt;雖然有人說 goroutine 跟 Scala 的 actor 有點像，但是 actor 的模型就很具體跟明確。
 而 goroutine 則是提供一個方便快速的 thread 操作方式。&lt;/p&gt;
-&lt;p&gt;&lt;a href="/posts/goroutine-note-1.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Go</category><guid>http://swind.code-life.info/posts/goroutine-note-1.html</guid><pubDate>Sun, 09 Dec 2012 18:00:00 GMT</pubDate></item><item><title>EPUBConverter 0.0.2 - 其實已經重寫了 Orz</title><link>http://swind.code-life.info/posts/epubconverter-0_0_2.html</link><description>&lt;div&gt;&lt;p&gt;一開始的 Scala 版本本來是自己寫來自己用的小工具，可是沒想到竟然有人有用還有回報問題。
+&lt;p class="more"&gt;&lt;a href="http://swind.code-life.info/posts/goroutine-note-1.html"&gt;Read more…&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Go</category><guid>http://swind.code-life.info/posts/goroutine-note-1.html</guid><pubDate>Sun, 09 Dec 2012 18:00:00 GMT</pubDate></item><item><title>EPUBConverter 0.0.2 - 其實已經重寫了 Orz</title><link>http://swind.code-life.info/posts/epubconverter-0_0_2.html</link><description>&lt;div&gt;&lt;p&gt;一開始的 Scala 版本本來是自己寫來自己用的小工具，可是沒想到竟然有人有用還有回報問題。
 大受感動之餘（誤），而出現了這個全新感受的 EPUBConverter 0.0.2，絕對不是因為手癢想要試試看 Go。&lt;/p&gt;
 &lt;p&gt;P.S 2012.12.09 更新 - 修正了鳥 Bug 所以到 0.0.3 了。&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://dl.dropbox.com/u/15537823/EPUBConverter_0.0.3.7z"&gt;EPUBConverter 0.0.3 下載&lt;/a&gt;&lt;/p&gt;
@@ -277,4 +277,4 @@ wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/maste
 &lt;p&gt;但是由於我直接將對照表轉換成 Golang 裡面的 map 了，所以這次就沒有辦法讓使用者自己改對照表了。&lt;/p&gt;
 &lt;p&gt;不過有興趣的人，在原始碼的 &lt;a class="reference external" href="https://github.com/Swind/EPUBConverter-Go/tree/master/tongwen_table"&gt;tongwen_table&lt;/a&gt; 資料夾底下，我有放了一個簡單的轉換工具。
 可以利用那個重新產生 Go 的 map，但是最後還是得重新編譯整個 EPUBConverter 就是了。&lt;/p&gt;
-&lt;p&gt;&lt;a href="/posts/epubconverter-0_0_2.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Go</category><guid>http://swind.code-life.info/posts/epubconverter-0_0_2.html</guid><pubDate>Sat, 08 Dec 2012 18:00:00 GMT</pubDate></item></channel></rss>
+&lt;p class="more"&gt;&lt;a href="http://swind.code-life.info/posts/epubconverter-0_0_2.html"&gt;Read more…&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>Go</category><guid>http://swind.code-life.info/posts/epubconverter-0_0_2.html</guid><pubDate>Sat, 08 Dec 2012 18:00:00 GMT</pubDate></item></channel></rss>

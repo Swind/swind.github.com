@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Corleonis (C)</title><link>http://swind.code-life.info</link><description>I am Swind.</description><lastBuildDate>Wed, 18 Sep 2013 17:08:11 GMT</lastBuildDate><generator>nikola</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>加速 FreeBSD Kernel 的編譯</title><link>http://swind.code-life.info/posts/use_ccache_to_build_freebsd_kernel.html</link><description>&lt;div&gt;&lt;p&gt;這幾天要開始 Build FreeBSD Kernel 了，
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis (C)</title><link>http://swind.code-life.info/</link><description></description><atom:link href="http://swind.code-life.info/categories/c.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Tue, 04 Mar 2014 09:29:46 GMT</lastBuildDate><generator>Nikola &lt;http://getnikola.com/&gt;</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>加速 FreeBSD Kernel 的編譯</title><link>http://swind.code-life.info/posts/use_ccache_to_build_freebsd_kernel.html</link><description>&lt;div&gt;&lt;p&gt;這幾天要開始 Build FreeBSD Kernel 了，
 可是 buildworld 跟 buildkernel 都需要花費非常久的時間。&lt;/p&gt;
 &lt;p&gt;因此想要研究一下是否能加速 FreeBSD Kernel 的編譯速度，
 加快開發測試的流程，以及減少 CI 所需要花費的時間。&lt;/p&gt;
-&lt;p&gt;&lt;a href="/posts/use_ccache_to_build_freebsd_kernel.html"&gt;Read more...&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>FreeBSD</category><category>C</category><guid>http://swind.code-life.info/posts/use_ccache_to_build_freebsd_kernel.html</guid><pubDate>Wed, 18 Sep 2013 14:00:09 GMT</pubDate></item><item><title>C 的 Thread Pool 筆記</title><link>http://swind.code-life.info/posts/c-thread-pool.html</link><description>&lt;p&gt;最近被丟到 FreeBSD 跟 C 的世界裡面，沒有 Scala 的 Actor 可以用。
+&lt;p class="more"&gt;&lt;a href="http://swind.code-life.info/posts/use_ccache_to_build_freebsd_kernel.html"&gt;Read more…&lt;/a&gt;&lt;/p&gt;&lt;/div&gt;</description><category>FreeBSD</category><category>C</category><guid>http://swind.code-life.info/posts/use_ccache_to_build_freebsd_kernel.html</guid><pubDate>Wed, 18 Sep 2013 14:00:09 GMT</pubDate></item><item><title>C 的 Thread Pool 筆記</title><link>http://swind.code-life.info/posts/c-thread-pool.html</link><description>&lt;div&gt;&lt;p&gt;最近被丟到 FreeBSD 跟 C 的世界裡面，沒有 Scala 的 Actor 可以用。
 所以只好參考別人的 Thread Pool 來看一下，在 C 的世界裡面 Thread Pool 是怎麼實作的。&lt;/p&gt;
 &lt;p&gt;首先先去 StackOverFlow 中尋找是否有人問過類似的問題&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="http://stackoverflow.com/questions/6297428/existing-threadpool-c-implementation"&gt;Existing threadpool C implementation&lt;/a&gt;&lt;/p&gt;
@@ -129,4 +129,4 @@ threadpool_task_t 也是一樣的原理，真是出乎意料的簡單。&lt;/p&g
 &lt;blockquote&gt;
 &lt;p&gt;生存戦略！&lt;/p&gt;
 &lt;cite title="Source Title"&gt;輪るピングドラム&lt;/cite&gt;
-&lt;/blockquote&gt;&lt;/div&gt;</description><category>C</category><guid>http://swind.code-life.info/posts/c-thread-pool.html</guid><pubDate>Fri, 07 Jun 2013 21:43:28 GMT</pubDate></item></channel></rss>
+&lt;/blockquote&gt;&lt;/div&gt;&lt;/div&gt;</description><category>C</category><guid>http://swind.code-life.info/posts/c-thread-pool.html</guid><pubDate>Fri, 07 Jun 2013 21:43:28 GMT</pubDate></item></channel></rss>
