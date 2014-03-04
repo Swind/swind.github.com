@@ -4,6 +4,9 @@ branches:
   only:
     - source
 
+cache:
+  - pip
+
 python:
   - "2.7"
 
