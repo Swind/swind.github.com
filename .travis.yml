@@ -25,7 +25,7 @@ after_success:
 - cd output
 - git add .
 - git commit -m "Update output from Travis CI"
-- git push origin source
+- git push origin master
 
 env:
   global:
