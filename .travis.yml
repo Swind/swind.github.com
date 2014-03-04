@@ -1,7 +1,14 @@
 language: python
+
 python:
   - "2.7"
+
+secure: "AnipyOhrhj8LRy8WxdSDe+gb8BY0K9QaXKp5YJKybK4Jhu3mlzChuu9vNGl5QdmZk1aygG7gx0vQkdM4OeDQHzs61/QSFkpBTscVnpozOkbt1qpBzcaiFh+VxSCb8wiPlMxewybC/QtVfzH4v5Gv8A4IGn3CKFBm3/poH8TgrP0="
+
 # command to install dependencies
-install: "pip install nikola"
+install: 
+  - "pip install nikola"
+
 # command to run tests
 script: nikola build
+
