@@ -1,8 +1,9 @@
 language: python
 
 branches:
-  only:
-  - source
+  expect:
+    - master
+
 cache:
 - pip
 
