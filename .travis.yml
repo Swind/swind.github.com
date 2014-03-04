@@ -13,7 +13,8 @@ install:
 
 # command to run tests
 before_script: 
-  - git config --global user.name "Swind (via Travis-CI)"
+  - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+  - git cenfig --global user.name "Swind (via Travis-CI)"
   - git config --global user.email "swind@code-life.info"
   - git clone git@github.com:Swind/swind.github.com.git -b master output
 
