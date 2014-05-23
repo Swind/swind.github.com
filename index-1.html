@@ -1,39 +1,64 @@
-<!DOCTYPE html><html lang="en"><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="Corleonis"><meta name="author" content="Swind"><title>Corleonis (old posts, page 1) | Corleonis</title><link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"><link href="assets/css/rst.css" rel="stylesheet" type="text/css"><link href="assets/css/code.css" rel="stylesheet" type="text/css"><link href="assets/css/colorbox.css" rel="stylesheet" type="text/css"><link href="assets/css/theme.css" rel="stylesheet" type="text/css"><!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
-    <![endif]--><link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml"><link rel="stylesheet" type="text/css" href="assets/css/tipuesearch.css"></head><body><div id="tipue_search_content" style="margin-left: auto; margin-right: auto; padding: 20px;"></div>
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Corleonis">
+<meta name="viewport" content="width=device-width">
+<title>Corleonis (old posts, page 1) | Corleonis</title>
+<link href="assets/css/bitter.css" rel="stylesheet" type="text/css">
+<link href="assets/css/main.css" rel="stylesheet" type="text/css">
+<link href="assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="assets/css/code.css" rel="stylesheet" type="text/css">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
+<link rel="canonical" href="http://swind.code-life.info/index-1.html">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    },
+    displayAlign: 'left', // Change this to 'center' to center equations.
+    "HTML-CSS": {
+        styles: {'.MathJax_Display': {"margin": 0}}
+    }
+});
+</script><!--[if lt IE 9]><script src="/assets/js/html5.js"></script><![endif]-->
+</head>
+<body>
+    <section class="social"><ul>
+<li><a href="index.html" title="Home"><i class="icon-home"></i></a></li>
+            <li><a href="archive.html" title="Archives"><i class="icon-folder-open-alt"></i></a></li>
+            <li><a href="categories/index.html" title="Tags"><i class="icon-tags"></i></a></li>
+            <li><a href="rss.xml" title="RSS"><i class="icon-rss"></i></a></li>
+            <li><a href="https://github.com/damianavila" title="My Github"><i class="icon-github"></i></a></li>
 
-
-
-<!-- Menubar -->
-
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"><div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="http://swind.code-life.info/">Corleonis</a>
-    </div>
-    <div class="collapse navbar-collapse navbar-ex1-collapse">
-        <ul class="nav navbar-nav"><li><a href="archive.html">Archives</a>
-                </li><li><a href="categories/index.html">Tags</a>
-                </li><li><a href="rss.xml">RSS</a>
-
-        </li></ul><span class="navbar-form pull-left">
-<input type="text" id="tipue_search_input"></span>
-
-        <ul class="nav navbar-nav navbar-right"></ul></div><!-- /.navbar-collapse -->
-</nav><!-- End of Menubar --><div class="container">
-    <div class="body-content">
-        <!--Body content-->
-        <div class="row">
+        </ul></section><section class="page-content"><div class="content" rel="main">
             
-        <article class="postbox h-entry post-text"><h1 class="p-name"><a href="posts/akka-2_0-note-4.html" class="u-url">Akka 2.0 筆記(4) - Dataflow 請不要期待這篇我會提到什麼</a>
-        <small>  
-             Posted: <time class="published dt-published" datetime="2012-06-12T21:55:00+00:00">2012-06-12 21:55</time></small></h1>
-        <hr><div class="p-summary">
-        <div><p>這整篇的原因起於，洗澡的時候想到的，
+        <div class="post">
+            <h1 class="title"><a href="posts/akka-2_0-note-4.html">Akka 2.0 筆記(4) - Dataflow 請不要期待這篇我會提到什麼</a></h1>
+            <div class="meta">
+                <div class="authordate">
+                    <time class="timeago" datetime="2012-06-12T21:55:00+08:00">2012-06-12 21:55</time>
+</div>
+                <div class="stats">
+                    
+        
+    <a href="posts/akka-2_0-note-4.html#disqus_thread" data-disqus-identifier="cache/posts/2012-06-12-akka-dataflow.html">Comments</a>
+
+
+                </div>
+            
+        <div itemprop="keywords" class="tags">
+        <ul>
+        Tags : 
+           <li><a class="tag p-category" href="categories/akka.html" rel="tag">Akka</a></li>
+           <li><a class="tag p-category" href="categories/scala.html" rel="tag">Scala</a></li>
+        </ul>
+</div>
+
+            </div>
+            <div class="body">
+                <p>這整篇的原因起於，洗澡的時候想到的，
 Akka 的 Future 到底有沒有存在的意義呢？</p>
 <p>因為當一個 Actor 用 reply 或者 sender 回傳結果的時候，其實可以再 receive 不同的型態的 Message 就好了。
 而且這樣還不會因為 Await 而需要 block thread，減少 dead lock 的發生。
@@ -45,105 +70,194 @@ Akka 的 Future 到底有沒有存在的意義呢？</p>
 <p>但是這邊又出現了一個更複雜的問題了，因為我將工作分給不同的 Actor 去執行，必須要等到所有 Actor 都執行完畢，整合所有的結果。
 那麼如果是用 receive 我要怎樣才能知道我所有的工作都已經完成了呢？</p>
 <p>簡單來說，我就是需要實做一個  <a class="reference external" href="http://www.eaipatterns.com/BroadcastAggregate.html">Scatter-Gather</a> ，才會莫名其妙的看到 Akka 的 Dataflow。</p>
-<p class="more"><a href="posts/akka-2_0-note-4.html">Read more…</a></p></div>
+<p class="more"><a href="posts/akka-2_0-note-4.html">Read more…</a></p>
+            </div>
         </div>
-            
+        <div class="post">
+            <h1 class="title"><a href="posts/akka-2_0-note-3.html">Akka 2.0 筆記(3) - Future 之實在不是我想要拖稿</a></h1>
+            <div class="meta">
+                <div class="authordate">
+                    <time class="timeago" datetime="2012-06-10T17:30:00+08:00">2012-06-10 17:30</time>
+</div>
+                <div class="stats">
+                    
         
-    <p>
-        <a href="posts/akka-2_0-note-4.html#disqus_thread" data-disqus-identifier="cache/posts/2012-06-12-akka-dataflow.html">Comments</a>
+    <a href="posts/akka-2_0-note-3.html#disqus_thread" data-disqus-identifier="cache/posts/2012-06-10-akka-note-3-future.html">Comments</a>
 
 
-        </p></article><article class="postbox h-entry post-text"><h1 class="p-name"><a href="posts/akka-2_0-note-3.html" class="u-url">Akka 2.0 筆記(3) - Future 之實在不是我想要拖稿</a>
-        <small>  
-             Posted: <time class="published dt-published" datetime="2012-06-10T17:30:00+00:00">2012-06-10 17:30</time></small></h1>
-        <hr><div class="p-summary">
-        <div><p>而是我實在是不擅長寫作，過去作文只有 20 分真的不是拿假的。
+                </div>
+            
+        <div itemprop="keywords" class="tags">
+        <ul>
+        Tags : 
+           <li><a class="tag p-category" href="categories/akka.html" rel="tag">Akka</a></li>
+           <li><a class="tag p-category" href="categories/scala.html" rel="tag">Scala</a></li>
+        </ul>
+</div>
+
+            </div>
+            <div class="body">
+                <p>而是我實在是不擅長寫作，過去作文只有 20 分真的不是拿假的。
 前一篇的 <strong>開始使用 Future</strong> 只有介紹一些基本的使用方式而已，然後依照前面的程式碼是絕對跑不起來的 Orz ...</p>
-<p class="more"><a href="posts/akka-2_0-note-3.html">Read more…</a></p></div>
+<p class="more"><a href="posts/akka-2_0-note-3.html">Read more…</a></p>
+            </div>
         </div>
-            
+        <div class="post">
+            <h1 class="title"><a href="posts/akka-2_0-note-2.html">Akka 2.0 筆記 (2) - 開始使用 Future</a></h1>
+            <div class="meta">
+                <div class="authordate">
+                    <time class="timeago" datetime="2012-06-08T12:18:00+08:00">2012-06-08 12:18</time>
+</div>
+                <div class="stats">
+                    
         
-    <p>
-        <a href="posts/akka-2_0-note-3.html#disqus_thread" data-disqus-identifier="cache/posts/2012-06-10-akka-note-3-future.html">Comments</a>
+    <a href="posts/akka-2_0-note-2.html#disqus_thread" data-disqus-identifier="cache/posts/2012-05-23-akka-note-2-eventstream.html">Comments</a>
 
 
-        </p></article><article class="postbox h-entry post-text"><h1 class="p-name"><a href="posts/akka-2_0-note-2.html" class="u-url">Akka 2.0 筆記 (2) - 開始使用 Future</a>
-        <small>  
-             Posted: <time class="published dt-published" datetime="2012-06-08T12:18:00+00:00">2012-06-08 12:18</time></small></h1>
-        <hr><div class="p-summary">
-        <div><p>以前再使用 Java Thread 的時候最困擾我的就是 Thread 之間的溝通。
+                </div>
+            
+        <div itemprop="keywords" class="tags">
+        <ul>
+        Tags : 
+           <li><a class="tag p-category" href="categories/akka.html" rel="tag">Akka</a></li>
+           <li><a class="tag p-category" href="categories/scala.html" rel="tag">Scala</a></li>
+        </ul>
+</div>
+
+            </div>
+            <div class="body">
+                <p>以前再使用 Java Thread 的時候最困擾我的就是 Thread 之間的溝通。
 要怎樣讓一個 Thread 去等待另外一個 Thread？要怎樣才能讓工作分配的平均？
 最後是靠 BlockingQueue 才讓實作變得簡單一點，
 不過想當然問題當然一大堆 ... Orz</p>
 <p>所以想來實驗看看 Akka 的 Future 與 Router 到底是如何使用，與可以做到什麼事情。</p>
-<p class="more"><a href="posts/akka-2_0-note-2.html">Read more…</a></p></div>
+<p class="more"><a href="posts/akka-2_0-note-2.html">Read more…</a></p>
+            </div>
         </div>
-            
+        <div class="post">
+            <h1 class="title"><a href="posts/akka-2_0-note-1.html">Akka 2.0 筆記 (1)</a></h1>
+            <div class="meta">
+                <div class="authordate">
+                    <time class="timeago" datetime="2012-05-17T18:03:00+08:00">2012-05-17 18:03</time>
+</div>
+                <div class="stats">
+                    
         
-    <p>
-        <a href="posts/akka-2_0-note-2.html#disqus_thread" data-disqus-identifier="cache/posts/2012-05-23-akka-note-2-eventstream.html">Comments</a>
+    <a href="posts/akka-2_0-note-1.html#disqus_thread" data-disqus-identifier="cache/posts/2012-05-17-akka-note-1.html">Comments</a>
 
 
-        </p></article><article class="postbox h-entry post-text"><h1 class="p-name"><a href="posts/akka-2_0-note-1.html" class="u-url">Akka 2.0 筆記 (1)</a>
-        <small>  
-             Posted: <time class="published dt-published" datetime="2012-05-17T18:03:00+00:00">2012-05-17 18:03</time></small></h1>
-        <hr><div class="p-summary">
-        <div><p>因為我的程式還沒有寫完，所以是筆記 (1)，寫的過程應該還會有 2 3 ... 出現 Orz。</p>
+                </div>
+            
+        <div itemprop="keywords" class="tags">
+        <ul>
+        Tags : 
+           <li><a class="tag p-category" href="categories/akka.html" rel="tag">Akka</a></li>
+           <li><a class="tag p-category" href="categories/scala.html" rel="tag">Scala</a></li>
+        </ul>
+</div>
+
+            </div>
+            <div class="body">
+                <p>因為我的程式還沒有寫完，所以是筆記 (1)，寫的過程應該還會有 2 3 ... 出現 Orz。</p>
 <blockquote>
 Akka 2.0 - 要升級了
 你的時間的庫存量足夠嗎 ?</blockquote>
 <p>Akka 進入了 2.0 時代，恭喜你如果你是用 1.x 的話，請準備改寫吧 ...
 先從幾個方面來看 2.0 的新增事項。</p>
-<p class="more"><a href="posts/akka-2_0-note-1.html">Read more…</a></p></div>
+<p class="more"><a href="posts/akka-2_0-note-1.html">Read more…</a></p>
+            </div>
         </div>
-            
+        <div class="post">
+            <h1 class="title"><a href="posts/epubconverter-implement-note.html">實作 EPUBConverter 的筆記</a></h1>
+            <div class="meta">
+                <div class="authordate">
+                    <time class="timeago" datetime="2012-05-11T18:19:00+08:00">2012-05-11 18:19</time>
+</div>
+                <div class="stats">
+                    
         
-    <p>
-        <a href="posts/akka-2_0-note-1.html#disqus_thread" data-disqus-identifier="cache/posts/2012-05-17-akka-note-1.html">Comments</a>
+    <a href="posts/epubconverter-implement-note.html#disqus_thread" data-disqus-identifier="cache/posts/2012-05-11-epubconverter-implement-note.html">Comments</a>
 
 
-        </p></article><article class="postbox h-entry post-text"><h1 class="p-name"><a href="posts/epubconverter-implement-note.html" class="u-url">實作 EPUBConverter 的筆記</a>
-        <small>  
-             Posted: <time class="published dt-published" datetime="2012-05-11T18:19:00+00:00">2012-05-11 18:19</time></small></h1>
-        <hr><div class="p-summary">
-        <div><p>好吧，我要開始筆記一下這次的實作心得了</p>
+                </div>
+            
+        <div itemprop="keywords" class="tags">
+        <ul>
+        Tags : 
+           <li><a class="tag p-category" href="categories/scala.html" rel="tag">Scala</a></li>
+        </ul>
+</div>
+
+            </div>
+            <div class="body">
+                <p>好吧，我要開始筆記一下這次的實作心得了</p>
 <p>其實在學 Scala 的這一段時間中，我最困擾的就是到底怎樣才是好的 Scala 寫作風格。
 因為 Scala 最吸引我的部份就是在於他的語法可以不斷的精鍊再精鍊，最後變成*魔法文字* Orz。
 所以要怎樣善用 Scala 的語言特性，卻又不失可讀性，我覺得真的很難。
 因此在這次的小工具實作中，我試著摸索 Curry 的用法。</p>
-<p class="more"><a href="posts/epubconverter-implement-note.html">Read more…</a></p></div>
+<p class="more"><a href="posts/epubconverter-implement-note.html">Read more…</a></p>
+            </div>
         </div>
-            
+        <div class="post">
+            <h1 class="title"><a href="posts/epubconverter.html">epub格式簡轉繁小工具</a></h1>
+            <div class="meta">
+                <div class="authordate">
+                    <time class="timeago" datetime="2012-05-11T16:56:00+08:00">2012-05-11 16:56</time>
+</div>
+                <div class="stats">
+                    
         
-    <p>
-        <a href="posts/epubconverter-implement-note.html#disqus_thread" data-disqus-identifier="cache/posts/2012-05-11-epubconverter-implement-note.html">Comments</a>
+    <a href="posts/epubconverter.html#disqus_thread" data-disqus-identifier="cache/posts/2012-05-11-epubconverter.html">Comments</a>
 
 
-        </p></article><article class="postbox h-entry post-text"><h1 class="p-name"><a href="posts/epubconverter.html" class="u-url">epub格式簡轉繁小工具</a>
-        <small>  
-             Posted: <time class="published dt-published" datetime="2012-05-11T16:56:00+00:00">2012-05-11 16:56</time></small></h1>
-        <hr><div class="p-summary">
-        <div><p><a class="reference external" href="https://github.com/Swind/EPUBConverter/downloads">EPUBConverter 0.0.1</a></p>
+                </div>
+            
+        <div itemprop="keywords" class="tags">
+        <ul>
+        Tags : 
+           <li><a class="tag p-category" href="categories/scala.html" rel="tag">Scala</a></li>
+        </ul>
+</div>
+
+            </div>
+            <div class="body">
+                <p><a class="reference external" href="https://github.com/Swind/EPUBConverter/downloads">EPUBConverter 0.0.1</a></p>
 <p>這個版號我覺得也沒有機會到 0.0.2 了，不過還是讓我命名個版號滿足小小的虛榮心好了。</p>
-<p class="more"><a href="posts/epubconverter.html">Read more…</a></p></div>
+<p class="more"><a href="posts/epubconverter.html">Read more…</a></p>
+            </div>
         </div>
-            
+        <div class="post">
+            <h1 class="title"><a href="posts/scala-orm-note.html">Scala ORM 工具筆記-Circumflex與ActiveJDBC</a></h1>
+            <div class="meta">
+                <div class="authordate">
+                    <time class="timeago" datetime="2012-02-07T13:44:00+08:00">2012-02-07 13:44</time>
+</div>
+                <div class="stats">
+                    
         
-    <p>
-        <a href="posts/epubconverter.html#disqus_thread" data-disqus-identifier="cache/posts/2012-05-11-epubconverter.html">Comments</a>
+    <a href="posts/scala-orm-note.html#disqus_thread" data-disqus-identifier="cache/posts/2011-02-07-scala-orm-libraries.html">Comments</a>
 
 
-        </p></article><article class="postbox h-entry post-text"><h1 class="p-name"><a href="posts/scala-orm-note.html" class="u-url">Scala ORM 工具筆記-Circumflex與ActiveJDBC</a>
-        <small>  
-             Posted: <time class="published dt-published" datetime="2012-02-07T13:44:00+00:00">2012-02-07 13:44</time></small></h1>
-        <hr><div class="p-summary">
-        <div><div class="section" id="circumflex">
+                </div>
+            
+        <div itemprop="keywords" class="tags">
+        <ul>
+        Tags : 
+           <li><a class="tag p-category" href="categories/scala.html" rel="tag">Scala</a></li>
+        </ul>
+</div>
+
+            </div>
+            <div class="body">
+                <div class="section" id="circumflex">
 <h2>Circumflex</h2>
 <div class="section" id="prepare">
 <h3>Prepare</h3>
 <p><a class="reference external" href="http://circumflex.ru/">Circumflex</a> 我是使用SBT連到Maven repository去載入他所有的Library。</p>
-<dl class="docutils"><dt>載入的項目有</dt>
-<dd><ul class="first last simple"><li>circumflex-orm-2.1.jar</li>
+<dl class="docutils">
+<dt>載入的項目有</dt>
+<dd><ul class="first last simple">
+<li>circumflex-orm-2.1.jar</li>
 <li>circumflex-core-2.1.jar</li>
 <li>commons-io-2.0.1</li>
 <li>circumflex-cache-2.1.jar</li>
@@ -152,7 +266,8 @@ Akka 2.0 - 要升級了
 <li>jta-1.1.jar</li>
 <li>c3p0-0.9.1.1.jar</li>
 </ul></dd>
-</dl><p>Circumflex全部載入約2.3MB左右，比其他LightWeight的Library要大的很多。</p>
+</dl>
+<p>Circumflex全部載入約2.3MB左右，比其他LightWeight的Library要大的很多。</p>
 </div>
 <div class="section" id="create-table">
 <h3>Create Table</h3>
@@ -206,13 +321,16 @@ Circumflex的設定方式是將變數宣告成inverseMany或inverseOne的型態�
 <p><a class="reference external" href="http://code.google.com/p/activejdbc/">activejdbc</a> 所需要的Library比較多一點，因此建議使用Maven去匯入，或者使用SBT將會減少很多麻煩。
 匯入的方式可以參考 <a class="reference external" href="http://code.google.com/p/activejdbc/wiki/GettingStarted">Getting Start</a> 。
 我在這邊也簡單列出一下使用activejdbc有匯入的Library</p>
-<dl class="docutils"><dt>activejdbc 所需要的 Library</dt>
-<dd><ul class="first last simple"><li>activejdbc-1.2-SNAPSHOT.jar</li>
+<dl class="docutils">
+<dt>activejdbc 所需要的 Library</dt>
+<dd><ul class="first last simple">
+<li>activejdbc-1.2-SNAPSHOT.jar</li>
 <li>slf4j-api-1.5.10</li>
 <li>javalite-common-1.2-SNAPSHOT.jar</li>
 <li>ehcache-core-2.4.5</li>
 </ul></dd>
-</dl><p>上面這幾個Library中，以ehcache最大約 9xx KB</p>
+</dl>
+<p>上面這幾個Library中，以ehcache最大約 9xx KB</p>
 </div>
 <div class="section" id="id3">
 <h3>Create Table</h3>
@@ -254,56 +372,99 @@ activejdbc會自動對應複數名詞的Table與單數名詞的Model。(不知�
 <h3>放棄activejdbc</h3>
 <p>他還有一個instrumentation的步驟，這個步驟我覺得影響太多了，不適合拿來跟Scala一起合用。</p>
 </div>
-</div></div>
+</div>
+            </div>
         </div>
-            
+        <div class="post">
+            <h1 class="title"><a href="posts/scala-log-tool.html">Scala log 工具 - slf4j + logback</a></h1>
+            <div class="meta">
+                <div class="authordate">
+                    <time class="timeago" datetime="2012-01-22T15:59:00+08:00">2012-01-22 15:59</time>
+</div>
+                <div class="stats">
+                    
         
-    <p>
-        <a href="posts/scala-orm-note.html#disqus_thread" data-disqus-identifier="cache/posts/2011-02-07-scala-orm-libraries.html">Comments</a>
+    <a href="posts/scala-log-tool.html#disqus_thread" data-disqus-identifier="cache/posts/2012-01-22-scala-log-tools.html">Comments</a>
 
 
-        </p></article><article class="postbox h-entry post-text"><h1 class="p-name"><a href="posts/scala-log-tool.html" class="u-url">Scala log 工具 - slf4j + logback</a>
-        <small>  
-             Posted: <time class="published dt-published" datetime="2012-01-22T15:59:00+00:00">2012-01-22 15:59</time></small></h1>
-        <hr><div class="p-summary">
-        <div><p>之前偷懶都直接使用 println 來輸出訊息，但是最近在玩 <a class="reference external" href="http://akka.io/">Akka</a> ，我發現如果沒有使用 log tool 的話我根本不知道是哪個 Actor 印訊息的。
+                </div>
+            
+        <div itemprop="keywords" class="tags">
+        <ul>
+        Tags : 
+           <li><a class="tag p-category" href="categories/scala.html" rel="tag">Scala</a></li>
+        </ul>
+</div>
+
+            </div>
+            <div class="body">
+                <p>之前偷懶都直接使用 println 來輸出訊息，但是最近在玩 <a class="reference external" href="http://akka.io/">Akka</a> ，我發現如果沒有使用 log tool 的話我根本不知道是哪個 Actor 印訊息的。
 只好搜尋一下 Scala 上面有沒有什麼好用的 Log 工具。</p>
 <div class="section" id="slf4s-slf4j-logback">
 <h2>slf4s + slf4j + logback</h2>
 <p>一般依照以往的習慣基本就是 <a class="reference external" href="http://logging.apache.org/log4j/">log4j</a> + <a class="reference external" href="http://www.slf4j.org/">slf4j</a> ，這算是最通用的工具組了。但是 Scala 有這麼多特異功能，說不定會有更神奇的 Log 工具，
 於是就抱著這樣的心態跟 Google 大神詢問求籤。最後看到 logback 這個工具（雖然跟 Scala 完全沒有關係）但是人都是喜新厭舊 XD，所以
 我就從 slf4j + log4j 轉到 slf4j + logback，附帶一提 logback 是 slf4j 預設的 log 工具，因此使用這兩個的組合不需要另外抓 Adapter。（ex.slf4j-log4j12-1.6.4.jar之類的）</p>
-<p class="more"><a href="posts/scala-log-tool.html">Read more…</a></p></div></div>
+<p class="more"><a href="posts/scala-log-tool.html">Read more…</a></p>
+</div>
+            </div>
         </div>
-            
+        <div class="post">
+            <h1 class="title"><a href="posts/jsoup.html">好用的 HTML Parser - jsoup</a></h1>
+            <div class="meta">
+                <div class="authordate">
+                    <time class="timeago" datetime="2011-10-27T08:47:00+08:00">2011-10-27 08:47</time>
+</div>
+                <div class="stats">
+                    
         
-    <p>
-        <a href="posts/scala-log-tool.html#disqus_thread" data-disqus-identifier="cache/posts/2012-01-22-scala-log-tools.html">Comments</a>
+    <a href="posts/jsoup.html#disqus_thread" data-disqus-identifier="cache/posts/2011-10-27-jsoup.html">Comments</a>
 
 
-        </p></article><article class="postbox h-entry post-text"><h1 class="p-name"><a href="posts/jsoup.html" class="u-url">好用的 HTML Parser - jsoup</a>
-        <small>  
-             Posted: <time class="published dt-published" datetime="2011-10-27T08:47:00+00:00">2011-10-27 08:47</time></small></h1>
-        <hr><div class="p-summary">
-        <div><p>HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
+                </div>
+            
+        <div itemprop="keywords" class="tags">
+        <ul>
+        Tags : 
+           <li><a class="tag p-category" href="categories/scala.html" rel="tag">Scala</a></li>
+        </ul>
+</div>
+
+            </div>
+            <div class="body">
+                <p>HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
 為了要從網頁中可以取出內容,我曾經用過不少方式,包括直接硬幹用字串搜尋、修改Scala本身內部的XML Parser等。
 但是一直都找不到一個滿意又順手的解決方式,一直到後來在 <a class="reference external" href="http://www.oschina.net/">CSDN</a> 沒錯就是那個大陸網站 <a class="reference external" href="http://www.oschina.net/">CSDN</a>
 (雖然說CSDN訊息太多太雜亂,但是偶爾還是可以看到一些不錯的東西),才找到jsoup這個library。</p>
 <p><a class="reference external" href="http://jsoup.org/">jsoup的官方網站</a></p>
 <p><a class="reference external" href="http://jsoup.org/cookbook/">jsoup的教學文件</a></p>
-<p class="more"><a href="posts/jsoup.html">Read more…</a></p></div>
+<p class="more"><a href="posts/jsoup.html">Read more…</a></p>
+            </div>
         </div>
-            
+        <div class="post">
+            <h1 class="title"><a href="posts/octopress-note.html">Octopress安裝筆記 - 我跳槽到 Pelican 了 - 又跳到 Nikola 了</a></h1>
+            <div class="meta">
+                <div class="authordate">
+                    <time class="timeago" datetime="2011-10-19T11:17:00+08:00">2011-10-19 11:17</time>
+</div>
+                <div class="stats">
+                    
         
-    <p>
-        <a href="posts/jsoup.html#disqus_thread" data-disqus-identifier="cache/posts/2011-10-27-jsoup.html">Comments</a>
+    <a href="posts/octopress-note.html#disqus_thread" data-disqus-identifier="cache/posts/2011-10-19-ban-jia-hou-di-1pian.html">Comments</a>
 
 
-        </p></article><article class="postbox h-entry post-text"><h1 class="p-name"><a href="posts/octopress-note.html" class="u-url">Octopress安裝筆記 - 我跳槽到 Pelican 了 - 又跳到 Nikola 了</a>
-        <small>  
-             Posted: <time class="published dt-published" datetime="2011-10-19T11:17:00+00:00">2011-10-19 11:17</time></small></h1>
-        <hr><div class="p-summary">
-        <div><div class="section" id="nikola">
+                </div>
+            
+        <div itemprop="keywords" class="tags">
+        <ul>
+        Tags : 
+           <li><a class="tag p-category" href="categories/octopress.html" rel="tag">Octopress</a></li>
+        </ul>
+</div>
+
+            </div>
+            <div class="body">
+                <div class="section" id="nikola">
 <h2>2013.01.20 我又跳槽到 Nikola 了</h2>
 </div>
 <div class="section" id="pelican">
@@ -321,37 +482,52 @@ Liquid error: undefined method `Py_IsInitialized’ for RubyPython::Python:Modul
 <a class="reference external" href="http://hivan.me/octopress-install-to-windows8/">Windows 8 安裝 Octopress 紀錄</a> 他真的找出問題了，重點就在於！ <em>Python 請安裝 32-bit 的版本</em>。
 真的這樣就讓 Codeblock 可以正常運作了 T_T
 真的是太讓人心酸了。</p>
-<p class="more"><a href="posts/octopress-note.html">Read more…</a></p></div></div>
-        </div>
-            
-        
-    <p>
-        <a href="posts/octopress-note.html#disqus_thread" data-disqus-identifier="cache/posts/2011-10-19-ban-jia-hou-di-1pian.html">Comments</a>
-
-
-        </p></article><div>
-        <ul class="pager"><li class="previous">
-                <a href="index-2.html" rel="prev">← Newer posts</a>
-            </li>
-        </ul></div>
-
-    
-        
-       <script>var disqus_shortname="swindgithub";(function(){var a=document.createElement("script");a.async=true;a.src="//"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script></div>
-        <!--End of body content-->
-
-        <footer>
-            Contents © 2014         <a href="mailto:">Swind</a> - Powered by         <a href="http://getnikola.com">Nikola</a>         
-        </footer></div>
+<p class="more"><a href="posts/octopress-note.html">Read more…</a></p>
 </div>
+            </div>
+        </div>
+    
+        <nav class="postindexpager"><ul class="pager">
+<li class="previous">
+                <a href="index-2.html" rel="prev">Newer posts</a>
+            </li>
+        </ul></nav><script>var disqus_shortname="swindgithub";(function(){var a=document.createElement("script");a.async=true;a.src="//"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><footer id="footer" role="contentinfo"><p>Contents © 2014 <a href="mailto:">Swind</a> - 
+Powered by <a href="http://getnikola.com">Nikola</a> - 
+Zen theme based in <a href="https://github.com/arusahni/website-template">Arusahni's website-template</a><br><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/ar/">
+<img alt="Creative Commons License BY-NC-SA" style="border-width:0; margin-bottom:12px;" src="http://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a></p>
+            
+        </footer>
+</div>
+    </section><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
+  ga('create', 'UA-42855873-1', 'code-life.info');
+  ga('send', 'pageview');
 
-            <script src="assets/js/jquery-1.10.2.min.js" type="text/javascript"></script><script src="assets/js/bootstrap.min.js" type="text/javascript"></script><script src="assets/js/jquery.colorbox-min.js" type="text/javascript"></script><script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><script type="text/javascript" src="assets/js/tipuesearch_set.js"></script><script type="text/javascript" src="assets/js/tipuesearch.js"></script><script type="text/javascript">
-$(document).ready(function() {
-    $('#tipue_search_input').tipuesearch({
-        'mode': 'json',
-        'contentLocation': '/assets/js/tipuesearch_content.json',
-        'showUrl': false
-    });
-});
-</script></body></html>
+</script><script src="assets/js/jquery-1.10.2.min.js" type="text/javascript"></script><script src="assets/js/jquery.timeago.js" type="text/javascript"></script><!-- Social buttons --><div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
+ <a class="addthis_button_more"><i class="icon-share-sign icon-2x"></i>    Share</a>
+ <ul>
+<li>
+<a class="addthis_button_twitter"><i class="icon-twitter icon-2x"></i>    Twitter</a>
+ </li>
+<li>
+<a class="addthis_button_google_plusone_share"><i class="icon-google-plus-sign icon-2x"></i>    Google+</a>
+ </li>
+<li>
+<a class="addthis_button_linkedin"><i class="icon-linkedin icon-2x"></i>    Linkedin</a>
+ </li>
+<li>
+<a class="addthis_button_facebook"><i class="icon-facebook-sign icon-2x"></i>    Facebook</a>
+ </li>
+</ul>
+</div>
+ <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script><!-- End of social buttons --><script type="text/javascript">
+            $(function(){
+                $('.timeago').timeago();
+            });
+        </script>
+</body>
+</html>

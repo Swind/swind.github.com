@@ -1,57 +1,75 @@
-<!DOCTYPE html><html lang="en"><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="author" content="Swind"><title>Akka 2.0 筆記(3) - Future 之實在不是我想要拖稿 | Corleonis</title><link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"><link href="../assets/css/rst.css" rel="stylesheet" type="text/css"><link href="../assets/css/code.css" rel="stylesheet" type="text/css"><link href="../assets/css/colorbox.css" rel="stylesheet" type="text/css"><link href="../assets/css/theme.css" rel="stylesheet" type="text/css"><!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
-    <![endif]--><link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml"><link rel="stylesheet" type="text/css" href="../assets/css/tipuesearch.css"></head><body><div id="tipue_search_content" style="margin-left: auto; margin-right: auto; padding: 20px;"></div>
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Akka 2.0 筆記(3) - Future 之實在不是我想要拖稿 | Corleonis</title>
+<link href="../assets/css/bitter.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/main.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../assets/css/code.css" rel="stylesheet" type="text/css">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
+<link rel="canonical" href="http://swind.code-life.info/posts/akka-2_0-note-3.html">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+    },
+    displayAlign: 'left', // Change this to 'center' to center equations.
+    "HTML-CSS": {
+        styles: {'.MathJax_Display': {"margin": 0}}
+    }
+});
+</script><!--[if lt IE 9]><script src="/assets/js/html5.js"></script><![endif]--><meta name="author" content="Swind">
+<meta name="og:title" content="Akka 2.0 筆記(3) - Future 之實在不是我想要拖稿">
+<meta name="og:url" content="http://swind.code-life.info/posts/akka-2_0-note-3.html">
+<meta name="og:description" content="而是我實在是不擅長寫作，過去作文只有 20 分真的不是拿假的。
+前一篇的 開始使用 Future 只有介紹一些基本的使用方式而已，然後依照前面的程式碼是絕對跑不起來的 Orz ...
 
+原因在於 Future 需要一個 Execution Contexts 類似 Java 裡面的 Executor，也就是 Thread Pool。
 
+Execution Contexts
+因為 Future 除了跟">
+<meta name="og:site_name" content="Corleonis">
+<meta name="og:type" content="article">
+</head>
+<body>
+    <section class="social"><ul>
+<li><a href="../index.html" title="Home"><i class="icon-home"></i></a></li>
+            <li><a href="../archive.html" title="Archives"><i class="icon-folder-open-alt"></i></a></li>
+            <li><a href="../categories/index.html" title="Tags"><i class="icon-tags"></i></a></li>
+            <li><a href="../rss.xml" title="RSS"><i class="icon-rss"></i></a></li>
+            <li><a href="https://github.com/damianavila" title="My Github"><i class="icon-github"></i></a></li>
 
-<!-- Menubar -->
-
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"><div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="http://swind.code-life.info/">Corleonis</a>
-    </div>
-    <div class="collapse navbar-collapse navbar-ex1-collapse">
-        <ul class="nav navbar-nav"><li><a href="../archive.html">Archives</a>
-                </li><li><a href="../categories/index.html">Tags</a>
-                </li><li><a href="../rss.xml">RSS</a>
-
-        </li></ul><span class="navbar-form pull-left">
-<input type="text" id="tipue_search_input"></span>
-
-        <ul class="nav navbar-nav navbar-right"><li>
-    <a href="akka-2_0-note-3.rst" id="sourcelink">Source</a>
-    </li>
-
-        </ul></div><!-- /.navbar-collapse -->
-</nav><!-- End of Menubar --><div class="container">
-    <div class="body-content">
-        <!--Body content-->
-        <div class="row">
+        </ul></section><section class="page-content"><div class="content" rel="main">
             
-    <div class="postbox">
+    <div class="post">
     
-    <h1 class="p-name" itemprop="headline name">Akka 2.0 筆記(3) - Future 之實在不是我想要拖稿</h1>
+    <h1 class="p-name entry-title" itemprop="headline name">Akka 2.0 筆記(3) - Future 之實在不是我想要拖稿</h1>
 
-    <hr><small>
-        Posted: <time class="published" datetime="2012-06-10T17:30:00+00:00">2012-06-10 17:30</time>
-        
+        <div class="meta">
+            <div class="authordate">
+                <time class="timeago" datetime="2012-06-10T17:30:00+08:00">2012-06-10 17:30</time>
+            
 
-        
+            
           |  
-        More posts about 
-    <span itemprop="keywords">
-        <a class="tag p-category" href="../categories/scala.html"><span class="badge badge-info">Scala</span></a>
-        <a class="tag p-category" href="../categories/akka.html"><span class="badge badge-info">Akka</span></a>
-    </span>
+        <a href="akka-2_0-note-3.rst" id="sourcelink">Source</a>
 
+            </div>
+            
+        <div itemprop="keywords" class="tags">
+        <ul>
+        Tags : 
+           <li><a class="tag p-category" href="../categories/akka.html" rel="tag">Akka</a></li>
+           <li><a class="tag p-category" href="../categories/scala.html" rel="tag">Scala</a></li>
+        </ul>
+</div>
 
-    </small>
-    <hr><div><p>而是我實在是不擅長寫作，過去作文只有 20 分真的不是拿假的。
+        </div>
+        <div class="body">
+            <p>而是我實在是不擅長寫作，過去作文只有 20 分真的不是拿假的。
 前一篇的 <strong>開始使用 Future</strong> 只有介紹一些基本的使用方式而已，然後依照前面的程式碼是絕對跑不起來的 Orz ...</p>
 <!-- TEASER_END -->
 <p>原因在於 Future 需要一個 Execution Contexts 類似 Java 裡面的 Executor，也就是 Thread Pool。</p>
@@ -72,11 +90,13 @@
 <span class="k">val</span> <span class="n">futureList</span> <span class="k">=</span> <span class="nc">Future</span><span class="o">.</span><span class="n">sequence</span><span class="o">(</span><span class="n">list</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">name</span> <span class="k">=&gt;</span> <span class="nc">Future</span><span class="o">(</span><span class="n">name</span><span class="o">.</span><span class="n">length</span><span class="o">)))</span>
 </pre>
 <p>因此在使用 Future 之前必須要設定 ExecutionContext 讓 Future 可用來執行工作。</p>
-<dl class="docutils"><dt>P.S</dt>
+<dl class="docutils">
+<dt>P.S</dt>
 <dd>這樣的結果也是會回傳一個 Future[List[Int]]。
 很明顯的這樣的作法簡單很多，因為少建立 Actor 也不需要再將 Actor 所回傳的值轉型（就是前面看到的 mapTo[Int]）。
 我是還蠻喜歡這樣做的，不過由於後面要使用到 Router 所以就沒有直接使用 Future 了。</dd>
-</dl><div class="section" id="execution-context">
+</dl>
+<div class="section" id="execution-context">
 <h3>設定 Execution Context</h3>
 <p>雖然文件中有提到如果 scope 內存在 ActorSystem ，他會自己使用 ActorSystem 的 default dispatcher，
 不過很可惜的這個功能我沒有測試出來，不然就是我誤解了這段話的意思。
@@ -114,15 +134,18 @@
 <p>而 recover 與 recoverWith 的差別就在於，recoverWith 內的 Function 要回傳的型態是 Future[Int] 而 recover 則是 Int。</p>
 <p>晚點整理一個使用 Future 的完整例子好了，現在寫的東西真的太不入流了 XDDDDDD
 我很難把程式碼直接貼上來當範例。</p>
-</div></div>
-    
-        <ul class="pager"><li class="previous">
-                <a href="akka-2_0-note-2.html" rel="prev">← Previous post</a>
+</div>
+        </div>
+        
+        <ul class="pager">
+<li class="previous">
+                <a href="akka-2_0-note-2.html" rel="prev" title="Akka 2.0 筆記 (2) - 開始使用 Future">Previous post</a>
             </li>
             <li class="next">
-                <a href="akka-2_0-note-4.html" rel="next">Next post →</a>
+                <a href="akka-2_0-note-4.html" rel="next" title="Akka 2.0 筆記(4) - Dataflow 請不要期待這篇我會提到什麼">Next post</a>
             </li>
-        </ul><div id="disqus_thread"></div>
+        </ul>
+<div id="disqus_thread"></div>
         <script>
         var disqus_shortname ="swindgithub",
             disqus_url="http://swind.code-life.info/posts/akka-2_0-note-3.html",
@@ -136,29 +159,53 @@
             dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
             (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
         })();
-    </script><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
-    <a href="http://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+    </script><noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="//disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
 
 
-    
+        
 
     </div>
 
-        </div>
-        <!--End of body content-->
-
-        <footer>
-            Contents © 2014         <a href="mailto:">Swind</a> - Powered by         <a href="http://getnikola.com">Nikola</a>         
-        </footer></div>
+        
+       <script>var disqus_shortname="swindgithub";(function(){var a=document.createElement("script");a.async=true;a.src="//"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><footer id="footer" role="contentinfo"><p>Contents © 2014 <a href="mailto:">Swind</a> - 
+Powered by <a href="http://getnikola.com">Nikola</a> - 
+Zen theme based in <a href="https://github.com/arusahni/website-template">Arusahni's website-template</a><br><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/ar/">
+<img alt="Creative Commons License BY-NC-SA" style="border-width:0; margin-bottom:12px;" src="http://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a></p>
+            
+        </footer>
 </div>
+    </section><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
+  ga('create', 'UA-42855873-1', 'code-life.info');
+  ga('send', 'pageview');
 
-            <script src="../assets/js/jquery-1.10.2.min.js" type="text/javascript"></script><script src="../assets/js/bootstrap.min.js" type="text/javascript"></script><script src="../assets/js/jquery.colorbox-min.js" type="text/javascript"></script><script type="text/javascript">jQuery("a.image-reference").colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><script type="text/javascript" src="../assets/js/tipuesearch_set.js"></script><script type="text/javascript" src="../assets/js/tipuesearch.js"></script><script type="text/javascript">
-$(document).ready(function() {
-    $('#tipue_search_input').tipuesearch({
-        'mode': 'json',
-        'contentLocation': '/assets/js/tipuesearch_content.json',
-        'showUrl': false
-    });
-});
-</script></body></html>
+</script><script src="../assets/js/jquery-1.10.2.min.js" type="text/javascript"></script><script src="../assets/js/jquery.timeago.js" type="text/javascript"></script><!-- Social buttons --><div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
+ <a class="addthis_button_more"><i class="icon-share-sign icon-2x"></i>    Share</a>
+ <ul>
+<li>
+<a class="addthis_button_twitter"><i class="icon-twitter icon-2x"></i>    Twitter</a>
+ </li>
+<li>
+<a class="addthis_button_google_plusone_share"><i class="icon-google-plus-sign icon-2x"></i>    Google+</a>
+ </li>
+<li>
+<a class="addthis_button_linkedin"><i class="icon-linkedin icon-2x"></i>    Linkedin</a>
+ </li>
+<li>
+<a class="addthis_button_facebook"><i class="icon-facebook-sign icon-2x"></i>    Facebook</a>
+ </li>
+</ul>
+</div>
+ <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script><!-- End of social buttons --><script type="text/javascript">
+            $(function(){
+                $('.timeago').timeago();
+            });
+        </script>
+</body>
+</html>
