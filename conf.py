@@ -20,23 +20,15 @@ BLOG_DESCRIPTION = "Corleonis"
 # Nikola is multilingual!
 #
 # Currently supported languages are:
-# en     English
-# bg     Bulgarian
-# ca     Catalan
-# zh_cn  Chinese (Simplified)
-# hr     Croatian
-# nl     Dutch
-# fr     French
-# el     Greek [NOT gr!]
-# de     German
-# it     Italian
-# jp     Japanese
-# fa     Persian
-# pl     Polish
-# pt_br  Portuguese (Brasil)
-# ru     Russian
-# es     Spanish
-# tr_tr  Turkish (Turkey)
+#   English -> en
+#   Greek -> gr
+#   German -> de
+#   French -> fr
+#   Polish -> pl
+#   Russian -> ru
+#   Spanish -> es
+#   Italian -> it
+#   Simplified Chinese -> zh-cn
 #
 # If you want to use Nikola with a non-supported language you have to provide
 # a module containing the necessary translations
@@ -53,17 +45,19 @@ DEFAULT_LANG = "en"
 TRANSLATIONS = {
     DEFAULT_LANG: "",
     # Example for another language:
-    # "es": "./es",
+    #"es": "./es",
 }
 
 # Links for the sidebar / navigation bar.
 # You should provide a key-value pair for each used language.
 NAVIGATION_LINKS = {
     DEFAULT_LANG: (
-        ('/archive.html', 'Archives'),
-        ('/categories/index.html', 'Tags'),
-        ('/rss.xml', 'RSS'),
-    ),
+        ('/index.html', 'Home', 'icon-home'),
+        ('/archive.html', 'Archives', 'icon-folder-open-alt'),
+        ('/categories/index.html', 'Tags', 'icon-tags'),
+        ('/rss.xml', 'RSS', 'icon-rss'),
+        ('https://github.com/damianavila', 'My Github', 'icon-github'),
+    )
 }
 
 # Below this point, everything is optional
@@ -94,10 +88,12 @@ NAVIGATION_LINKS = {
 POSTS = (
     ("posts/*.txt", "posts", "post.tmpl"),
     ("posts/*.rst", "posts", "post.tmpl"),
+    ("posts/*.ipynb", "posts", "post.tmpl"),
 )
 PAGES = (
     ("stories/*.txt", "stories", "story.tmpl"),
     ("stories/*.rst", "stories", "story.tmpl"),
+    ("stories/*.ipynb", "stories", "story.tmpl"),
 )
 
 # One or more folders containing files to be copied as-is into the output.
@@ -155,7 +151,7 @@ COMPILERS = {
 # INDEX_PATH = ""
 
 # Create per-month archives instead of per-year
-# CREATE_MONTHLY_ARCHIVE = False
+#CREATE_MONTHLY_ARCHIVE = True
 # Final locations for the archives are:
 # output / TRANSLATION[lang] / ARCHIVE_PATH / ARCHIVE_FILENAME
 # output / TRANSLATION[lang] / ARCHIVE_PATH / YEAR / index.html
@@ -188,7 +184,12 @@ COMPILERS = {
 # "rsync -rav output/* joe@my.site:/srv/www/site"
 # And then do a backup, or ping pingomatic.
 # To do manual deployment, set it to []
-# DEPLOY_COMMANDS = []
+DEPLOY_COMMANDS = ["git add .",
+                   "git commit -am 'Update'",
+                   "git push origin master",
+                   "git subtree split --prefix output -b gh-pages",
+                   "git push -f origin gh-pages:gh-pages",
+                   "git branch -D gh-pages"]
 
 # Where the output site should be located
 # If you don't use an absolute path, it will be considered as relative
@@ -217,9 +218,6 @@ COMPILERS = {
 # argument.
 #
 # By default, there are no filters.
-#
-# Many filters are shipped with Nikola.  A list is available in the manual:
-# <http://getnikola.com/handbook.html#post-processing-filters>
 # FILTERS = {
 #    ".jpg": ["jpegoptim --strip-all -m75 -v %s"],
 # }
@@ -228,9 +226,6 @@ COMPILERS = {
 # GZIP_FILES = False
 # File extensions that will be compressed
 # GZIP_EXTENSIONS = ('.txt', '.htm', '.html', '.css', '.js', '.json')
-# Use an external gzip command? None means no.
-# Example: GZIP_COMMAND = "pigz -k {filename}"
-# GZIP_COMMAND = None
 
 # #############################################################################
 # Image Gallery Options
@@ -253,7 +248,7 @@ COMPILERS = {
 # translated
 
 # Name of the theme to use.
-THEME = "custom"
+THEME = 'zen'
 
 # Color scheme to be used for code blocks. If your theme provides
 # "assets/css/code.css" this is ignored.
@@ -262,7 +257,7 @@ THEME = "custom"
 CODE_COLOR_SCHEME = 'monokai'
 
 # If you use 'site-reveal' theme you can select several subthemes
-# THEME_REVEAL_CONFIG_SUBTHEME = 'night'
+# THEME_REVEAL_CONFIG_SUBTHEME = 'sky'
 # You can also use: beige/serif/simple/night/default
 
 # Again, if you use 'site-reveal' theme you can select several transitions
@@ -273,6 +268,7 @@ CODE_COLOR_SCHEME = 'monokai'
 # date format used to display post dates.
 # (str used by datetime.datetime.strftime)
 # DATE_FORMAT = '%Y-%m-%d %H:%M'
+# DATE_FORMAT = '%d-%m-%y %H:%M'
 
 # FAVICONS contains (name, file, size) tuples.
 # Used for create favicon link like this:
@@ -296,18 +292,21 @@ INDEX_TEASERS = True
 # READ_MORE_LINK = '<p class="more"><a href="{link}">{read_more}…</a></p>'
 
 # A HTML fragment describing the license, for the sidebar.
-LICENSE = ""
+# LICENSE = ""
 # I recommend using the Creative Commons' wizard:
 # http://creativecommons.org/choose/
-# LICENSE = """
-# <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/ar/">
-# <img alt="Creative Commons License BY-NC-SA"
-# style="border-width:0; margin-bottom:12px;"
-# src="http://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a>"""
+LICENSE = """
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/ar/">
+<img alt="Creative Commons License BY-NC-SA"
+style="border-width:0; margin-bottom:12px;"
+src="http://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a>"""
 
 # A small copyright notice for the page footer (in HTML).
 # Default is ''
-CONTENT_FOOTER = 'Contents &copy; {date}         <a href="mailto:{email}">{author}</a> - Powered by         <a href="http://getnikola.com">Nikola</a>         {license}'
+CONTENT_FOOTER = """Contents &copy; {date} <a href="mailto:{email}">{author}</a> - 
+Powered by <a href="http://getnikola.com">Nikola</a> - 
+Zen theme based in <a href="https://github.com/arusahni/website-template">Arusahni's website-template</a><br>
+{license}"""
 CONTENT_FOOTER = CONTENT_FOOTER.format(email=BLOG_EMAIL,
                                        author=BLOG_AUTHOR,
                                        date=time.gmtime().tm_year,
@@ -381,20 +380,26 @@ COMMENT_SYSTEM_ID = "swindgithub"
 # MATHJAX_CONFIG = ""
 
 # If you are using the compile-ipynb plugin, just add this one:
-#MATHJAX_CONFIG = """
-#<script type="text/x-mathjax-config">
-#MathJax.Hub.Config({
-#    tex2jax: {
-#        inlineMath: [ ['$','$'], ["\\\(","\\\)"] ],
-#        displayMath: [ ['$$','$$'], ["\\\[","\\\]"] ]
-#    },
-#    displayAlign: 'left', // Change this to 'center' to center equations.
-#    "HTML-CSS": {
-#        styles: {'.MathJax_Display': {"margin": 0}}
-#    }
-#});
-#</script>
-#"""
+MATHJAX_CONFIG = """
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\\(","\\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\\[","\\\]"] ]
+    },
+    displayAlign: 'left', // Change this to 'center' to center equations.
+    "HTML-CSS": {
+        styles: {'.MathJax_Display': {"margin": 0}}
+    }
+});
+</script>
+"""
+
+# Do you want to customize the nbconversion of your IPython notebook?
+# IPYNB_CONFIG = {}
+# With the following example configuracion you can use a custom jinja template
+# called `toggle.tpl` which has to be located in your site/blog main folder:
+#IPYNB_CONFIG = {'Exporter':{'template_file': 'toggle'}}
 
 # What MarkDown extensions to enable?
 # You will also get gist, nikola and podcast because those are
@@ -403,20 +408,20 @@ COMMENT_SYSTEM_ID = "swindgithub"
 
 # Social buttons. This is sample code for AddThis (which was the default for a
 # long time). Insert anything you want here, or even make it empty.
-SOCIAL_BUTTONS_CODE = ""
-# SOCIAL_BUTTONS_CODE = """
-# <!-- Social buttons -->
-# <div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
-# <a class="addthis_button_more">Share</a>
-# <ul><li><a class="addthis_button_facebook"></a>
-# <li><a class="addthis_button_google_plusone_share"></a>
-# <li><a class="addthis_button_linkedin"></a>
-# <li><a class="addthis_button_twitter"></a>
-# </ul>
-# </div>
-# <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
-# <!-- End of social buttons -->
-# """
+SOCIAL_BUTTONS_CODE = """
+ <!-- Social buttons -->
+ <div id="addthisbox" class="addthis_toolbox addthis_peekaboo_style addthis_default_style addthis_label_style addthis_32x32_style">
+ <a class="addthis_button_more"><i class="icon-share-sign icon-2x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Share</a>
+ <ul>
+ <li><a class="addthis_button_twitter"><i class="icon-twitter icon-2x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Twitter</a>
+ <li><a class="addthis_button_google_plusone_share"><i class="icon-google-plus-sign icon-2x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Google+</a>
+ <li><a class="addthis_button_linkedin"><i class="icon-linkedin icon-2x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Linkedin</a>
+ <li><a class="addthis_button_facebook"><i class="icon-facebook-sign icon-2x"></i>&nbsp;&nbsp;&nbsp;&nbsp;Facebook</a>
+ </ul>
+ </div>
+ <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-4f7088a56bb93798"></script>
+ <!-- End of social buttons -->
+ """
 
 # Hide link to source for the posts?
 # HIDE_SOURCELINK = False
@@ -473,47 +478,56 @@ SOCIAL_BUTTONS_CODE = ""
 # Also, there is a local search plugin you can use, based on Tipue, but it requires setting several
 # options:
 
-SEARCH_FORM = """
-<span class="navbar-form pull-left">
-<input type="text" id="tipue_search_input">
-</span>"""
+# SEARCH_FORM = """
+# <span class="navbar-form pull-left">
+# <input type="text" id="tipue_search_input">
+# </span>"""
+#
+# BODY_END = """
+# <script type="text/javascript" src="/assets/js/tipuesearch_set.js"></script>
+# <script type="text/javascript" src="/assets/js/tipuesearch.js"></script>
+# <script type="text/javascript">
+# $(document).ready(function() {
+    # $('#tipue_search_input').tipuesearch({
+        # 'mode': 'json',
+        # 'contentLocation': '/assets/js/tipuesearch_content.json',
+        # 'showUrl': false
+    # });
+# });
+# </script>
+# """
 
-BODY_END = """
-<script type="text/javascript" src="/assets/js/tipuesearch_set.js"></script>
-<script type="text/javascript" src="/assets/js/tipuesearch.js"></script>
-<script type="text/javascript">
-$(document).ready(function() {
-    $('#tipue_search_input').tipuesearch({
-        'mode': 'json',
-        'contentLocation': '/assets/js/tipuesearch_content.json',
-        'showUrl': false
-    });
-});
-</script>
-"""
-
-EXTRA_HEAD_DATA = """
-<link rel="stylesheet" type="text/css" href="/assets/css/tipuesearch.css">
-<div id="tipue_search_content" style="margin-left: auto; margin-right: auto; padding: 20px;"></div>
-"""
-
-ENABLED_EXTRAS = ['local_search']
-
+# EXTRA_HEAD_DATA = """
+# <link rel="stylesheet" type="text/css" href="/assets/css/tipuesearch.css">
+# <div id="tipue_search_content" style="margin-left: auto; margin-right: auto; padding: 20px;"></div>
+# """
+# ENABLED_EXTRAS = ['local_search']
+#
 
 
 # Use content distribution networks for jquery and twitter-bootstrap css and js
 # If this is True, jquery is served from the Google CDN and twitter-bootstrap
 # is served from the NetDNA CDN
 # Set this to False if you want to host your site without requiring access to
-# external resources.
-# USE_CDN = False
+# USE_CDN = True
 
 # Extra things you want in the pages HEAD tag. This will be added right
 # before </HEAD>
 # EXTRA_HEAD_DATA = ""
 # Google analytics or whatever else you use. Added to the bottom of <body>
 # in the default template (base.tmpl).
-# BODY_END = ""
+BODY_END = """
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-42855873-1', 'code-life.info');
+  ga('send', 'pageview');
+
+</script>
+"""
 
 # The possibility to extract metadata from the filename by using a
 # regular expression.
@@ -556,14 +570,11 @@ ENABLED_EXTRAS = ['local_search']
 # }
 
 
-# Post's dates are considered in GMT by default, if you want to use 
-# another timezone, please set TIMEZONE to match. Check the available 
-# list from Wikipedia:
-# http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-# Also, if you want to use a different timezone in some of your posts, 
-# you can use W3C-DTF Format (ex. 2012-03-30T23:00:00+02:00)
+# If you want to use formatted post time in W3C-DTF Format
+# (ex. 2012-03-30T23:00:00+02:00),
+# set timzone if you want a localized posted date.
 #
-# TIMEZONE = 'Europe/Zurich'
+TIMEZONE = 'Asia/Taipei'
 
 # If webassets is installed, bundle JS and CSS to make site loading faster
 # USE_BUNDLES = True
@@ -592,3 +603,13 @@ ENABLED_EXTRAS = ['local_search']
 # It can be anything, data, functions, modules, etc.
 
 GLOBAL_CONTEXT = {}
+
+# What will translated input files be named like?
+
+# If you have a page something.rst, then something.pl.rst will be considered
+# its Polish translation.
+#     (in the above example: path == "something", ext == "rst", lang == "pl")
+# this pattern is also used for metadata:
+#     something.meta -> something.pl.meta
+
+#TRANSLATIONS_PATTERN = "{path}.{ext}.{lang}"
