@@ -61,7 +61,8 @@ MathJax.Hub.Config({
         <div itemprop="keywords" class="tags">
         <ul>
         Tags : 
-           <li><a class="tag p-category" href="../categories/nikola.html" rel="tag">Nikola</a></li>
+           <li><a class="tag p-category" href="../categories/python.html" rel="tag">Python</a></li>
+           <li><a class="tag p-category" href="../categories/test.html" rel="tag">Test</a></li>
         </ul>
 </div>
 
@@ -86,23 +87,111 @@ MathJax.Hub.Config({
 我覺的非常適合放在測試的之中進行操作。</p>
 <p><a class="reference external" href="http://bottlepy.org/docs/dev/index.html">Bottle</a> 的語法與使用方式也非常的直覺,  REST API 最基本要測試的情況就是 GET, POST, PUT 與 DELETE。
 這幾種功能要在 Bottle 裡面表達的話就只要</p>
-<!-- code:python
+<pre class="code python literal-block">
+<span class="nd">@get</span><span class="p">(</span><span class="s">"item"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">get_item</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s">"get_item"</span>
 
-@get("item")
-def get_item():
-    pass
+<span class="nd">@put</span><span class="p">(</span><span class="s">"item"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">put_item</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s">"put_item"</span>
 
-@put("item")
-def put_item():
-    pass
+<span class="nd">@post</span><span class="p">(</span><span class="s">"item"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">post_item</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s">"post_item"</span>
 
-@post("item")
-def post_item():
-    pass
+<span class="nd">@delete</span><span class="p">(</span><span class="s">"item"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">delete_item</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s">"delete_item"</span>
+</pre>
+<p>除此之外, Python 的 Decorator 是可以直接呼叫的。
+所以像上面 get, put, post 與 delete 等於</p>
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">get_item</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s">"get_item"</span>
 
-@delete("item")
-def delete_item():
-    pass -->
+<span class="k">def</span> <span class="nf">put_item</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s">"put_item"</span>
+
+<span class="k">def</span> <span class="nf">post_item</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s">"post_item"</span>
+
+<span class="k">def</span> <span class="nf">delete_item</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s">"delete_item"</span>
+
+<span class="n">get</span><span class="p">(</span><span class="s">"item"</span><span class="p">)(</span><span class="n">get_item</span><span class="p">)</span>
+<span class="n">put</span><span class="p">(</span><span class="s">"item"</span><span class="p">)(</span><span class="n">put_item</span><span class="p">)</span>
+<span class="n">delete</span><span class="p">(</span><span class="s">"item"</span><span class="p">)(</span><span class="n">delete_item</span><span class="p">)</span>
+<span class="n">post</span><span class="p">(</span><span class="s">"item"</span><span class="p">)(</span><span class="n">post_item</span><span class="p">)</span>
+</pre>
+<p>透過 Bottle 我們就可以很簡單的建立我們想要回傳的內容</p>
+<p>那麼，如果是想要測試 error 的情況呢？</p>
+<pre class="code python literal-block">
+<span class="nd">@get</span><span class="p">(</span><span class="s">"item"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">get_item</span><span class="p">():</span>
+    <span class="n">abort</span><span class="p">(</span><span class="mi">401</span><span class="p">,</span> <span class="s">"Access denied"</span><span class="p">)</span>
+</pre>
+<p>這樣就可以任意產生我們想要的資料給 CLI 進行測試了。</p>
+</div>
+<div class="section" id="unittest">
+<h2>結合 unittest</h2>
+<p>再來就是要在每一個 testcase 執行的時候，啟動我們的 REST API server。
+由於 Bottle 本身的啟動方式，並沒有提供結束的方法。
+所以這部份我是參考 <a class="reference external" href="http://stackoverflow.com/questions/11282218/bottle-web-framework-how-to-stop">Bottle web framework - How to stop</a>
+回到 Python 本身的 WSGI Server 去做處理。</p>
+<pre class="code python literal-block">
+<span class="kn">from</span> <span class="nn">bottle</span> <span class="kn">import</span> <span class="n">Bottle</span><span class="p">,</span> <span class="n">ServerAdapter</span>
+
+<span class="k">class</span> <span class="nc">MockRESTServer</span><span class="p">(</span><span class="n">ServerAdapter</span><span class="p">):</span>
+    <span class="n">server</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">wsgiref.simple_server</span> <span class="kn">import</span> <span class="n">make_server</span><span class="p">,</span> <span class="n">WSGIRequestHandler</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">quiet</span><span class="p">:</span>
+            <span class="k">class</span> <span class="nc">QuietHandler</span><span class="p">(</span><span class="n">WSGIRequestHandler</span><span class="p">):</span>
+                <span class="k">def</span> <span class="nf">log_request</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span> <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">'handler_class'</span><span class="p">]</span> <span class="o">=</span> <span class="n">QuietHandler</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="n">make_server</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># self.server.server_close() &lt;--- alternative but causes bad fd exception</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">shutdown</span>
+</pre>
+<p>最後，讓 testcase setUp 啟動 Server, tearDown 的時候結束 Server 就可以了。</p>
+<pre class="code python literal-block">
+<span class="k">class</span> <span class="nc">TestServerHandlers</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+    <span class="n">server</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">thread</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">app</span> <span class="o">=</span> <span class="n">Bottle</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="n">MockRESTServer</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">"127.0.0.1"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8357</span><span class="p">)</span>
+
+        <span class="nd">@app.get</span><span class="p">(</span><span class="s">"/hello_world"</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">hello_world</span><span class="p">():</span>
+            <span class="n">resp</span> <span class="o">=</span><span class="s">'{"hello":"world"}'</span>
+            <span class="k">return</span> <span class="n">resp</span>
+
+        <span class="k">def</span> <span class="nf">start_server</span><span class="p">():</span>
+            <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">server</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">start_server</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">test_case_1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+</pre>
+<p>中間會去 sleep(0.5) 是我發現如果我的 testcase 失敗的太快，或者太快結束。會導致 server 還沒有啟動結束，就停止
+而導致 testcase 卡住無法繼續執行下去。
+因此 sleep(0.5) 讓 server 可以啟動完畢。</p>
 </div>
         </div>
         
