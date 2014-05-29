@@ -157,8 +157,48 @@ MathJax.Hub.Config({
         <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c"># self.server.server_close() &lt;--- alternative but causes bad fd exception</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">shutdown</span>
+</pre>
+<p>另外，由於我們公司的 REST API 是透過 https 來存取的，
+所以這邊另外參考 <a class="reference external" href="http://www.socouldanyone.com/2014/01/bottle-with-ssl.html">SSL encryption in python bottle</a> 做的加上 SSL 的版本。</p>
+<p>並且先產生 SSL certificate</p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">&lt;string&gt;</tt>, line 114)</p>
+<p>Error in "code" directive:
+maximum 1 argument(s) allowed, 12 supplied.</p>
+<pre class="literal-block">
+.. code:: bash
+   openssl req -new -x509 -keyout testcase.pem -out testcase.pem -days 365 -nodes
+
+</pre>
+</div>
+<pre class="code python literal-block">
+<span class="kn">from</span> <span class="nn">bottle</span> <span class="kn">import</span> <span class="n">Bottle</span><span class="p">,</span> <span class="n">ServerAdapter</span>
+
+<span class="k">class</span> <span class="nc">MockRESTServer</span><span class="p">(</span><span class="n">ServerAdapter</span><span class="p">):</span>
+    <span class="n">server</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">wsgiref.simple_server</span> <span class="kn">import</span> <span class="n">make_server</span><span class="p">,</span> <span class="n">WSGIRequestHandler</span>
+        <span class="kn">import</span> <span class="nn">ssl</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">quiet</span><span class="p">:</span>
+            <span class="k">class</span> <span class="nc">QuietHandler</span><span class="p">(</span><span class="n">WSGIRequestHandler</span><span class="p">):</span>
+                <span class="k">def</span> <span class="nf">log_request</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span> <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">'handler_class'</span><span class="p">]</span> <span class="o">=</span> <span class="n">QuietHandler</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="n">make_server</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">)</span>
+
+        <span class="c">#Wrap the socket</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">socket</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">wrap_socket</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">socket</span><span class="p">,</span>
+            <span class="n">certfile</span><span class="o">=</span><span class="s">"testcase.pem"</span><span class="p">,</span>    <span class="c">#path to certificate</span>
+            <span class="n">server_side</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
 </pre>
 <p>最後，讓 testcase setUp 啟動 Server, tearDown 的時候結束 Server 就可以了。</p>
 <pre class="code python literal-block">
