@@ -112,8 +112,44 @@ Bottle_ 的語法與使用方式也非常的直覺,  REST API 最基本要測試
            self.server.serve_forever()
 
        def stop(self):
-           # self.server.server_close() <--- alternative but causes bad fd exception
            self.server.shutdown
+
+另外，由於我們公司的 REST API 是透過 https 來存取的，
+所以這邊另外參考 `SSL encryption in python bottle`_ 做的加上 SSL 的版本。
+
+並且先產生 SSL certificate 
+
+.. code:: bash
+   openssl req -new -x509 -keyout testcase.pem -out testcase.pem -days 365 -nodes
+
+.. code:: python
+
+   from bottle import Bottle, ServerAdapter
+
+   class MockRESTServer(ServerAdapter):
+       server = None
+
+       def run(self, handler):
+           from wsgiref.simple_server import make_server, WSGIRequestHandler
+           import ssl
+
+           if self.quiet:
+               class QuietHandler(WSGIRequestHandler):
+                   def log_request(*args, **kw): pass
+               self.options['handler_class'] = QuietHandler
+
+           self.server = make_server(self.host, self.port, handler, **self.options)
+
+           #Wrap the socket
+           self.server.socket = ssl.wrap_socket(
+               self.server.socket,
+               certfile="testcase.pem",    #path to certificate
+               server_side=True)
+
+           self.server.serve_forever()
+
+       def stop(self):
+           self.server.shutdown()
 
 
 最後，讓 testcase setUp 啟動 Server, tearDown 的時候結束 Server 就可以了。
@@ -154,3 +190,4 @@ Bottle_ 的語法與使用方式也非常的直覺,  REST API 最基本要測試
 
 .. _Bottle: http://bottlepy.org/docs/dev/index.html
 .. _Bottle web framework - How to stop: http://stackoverflow.com/questions/11282218/bottle-web-framework-how-to-stop
+.. _SSL encryption in python bottle: http://www.socouldanyone.com/2014/01/bottle-with-ssl.html
