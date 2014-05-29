@@ -56,7 +56,7 @@ NAVIGATION_LINKS = {
         ('/archive.html', 'Archives', 'icon-folder-open-alt'),
         ('/categories/index.html', 'Tags', 'icon-tags'),
         ('/rss.xml', 'RSS', 'icon-rss'),
-        ('https://github.com/damianavila', 'My Github', 'icon-github'),
+        ('https://github.com/Swind', 'My Github', 'icon-github'),
     )
 }
 
