@@ -1,12 +1,12 @@
 .. title: Testing your python REST client
 .. slug: testing-your-rest-client
 .. date: 05/24/2014 11:18:00 AM UTC+08:00
-.. tags: Python, Test, draft
+.. tags: Python, Test
 .. link: 
 .. description: 
 .. type: text
 
-我又換公司了
+又再做不同的東西了 Orz
 ============
 
 最近因為在修改新公司的 CLI 程式, 所以順便想了一下要怎麼測試比較好。
