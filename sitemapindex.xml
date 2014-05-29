@@ -45,6 +45,10 @@
   <lastmod>2014-05-29</lastmod>
  </sitemap>
  <sitemap>
+  <loc>http://swind.code-life.info/categories/test.xml</loc>
+  <lastmod>2014-05-29</lastmod>
+ </sitemap>
+ <sitemap>
   <loc>http://swind.code-life.info/rss.xml</loc>
   <lastmod>2014-05-29</lastmod>
  </sitemap>

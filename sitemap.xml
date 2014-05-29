@@ -17,6 +17,10 @@
   <lastmod>2014-05-29</lastmod>
  </url>
  <url>
+  <loc>http://swind.code-life.info/2014/index.html</loc>
+  <lastmod>2014-05-29</lastmod>
+ </url>
+ <url>
   <loc>http://swind.code-life.info/archive.html</loc>
   <lastmod>2014-05-29</lastmod>
  </url>
@@ -66,6 +70,10 @@
  </url>
  <url>
   <loc>http://swind.code-life.info/categories/scala.html</loc>
+  <lastmod>2014-05-29</lastmod>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/categories/test.html</loc>
   <lastmod>2014-05-29</lastmod>
  </url>
  <url>
@@ -182,6 +190,10 @@
  </url>
  <url>
   <loc>http://swind.code-life.info/posts/simple-python-plugin-framework.html</loc>
+  <lastmod>2014-05-29</lastmod>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/posts/testing-your-rest-client.html</loc>
   <lastmod>2014-05-29</lastmod>
  </url>
  <url>

@@ -35,6 +35,44 @@ MathJax.Hub.Config({
         </ul></section><section class="page-content"><div class="content" rel="main">
             
         <div class="post">
+            <h1 class="title"><a href="posts/epubconverter-0_0_2.html">EPUBConverter 0.0.2 - 其實已經重寫了 Orz</a></h1>
+            <div class="meta">
+                <div class="authordate">
+                    <time class="timeago" datetime="2012-12-08T18:00:00+08:00">2012-12-08 18:00</time>
+</div>
+                <div class="stats">
+                    
+        
+    <a href="posts/epubconverter-0_0_2.html#disqus_thread" data-disqus-identifier="cache/posts/2012-12-08-epubconverter-go.html">Comments</a>
+
+
+                </div>
+            
+        <div itemprop="keywords" class="tags">
+        <ul>
+        Tags : 
+           <li><a class="tag p-category" href="categories/go.html" rel="tag">Go</a></li>
+        </ul>
+</div>
+
+            </div>
+            <div class="body">
+                <p>一開始的 Scala 版本本來是自己寫來自己用的小工具，可是沒想到竟然有人有用還有回報問題。
+大受感動之餘（誤），而出現了這個全新感受的 EPUBConverter 0.0.2，絕對不是因為手癢想要試試看 Go。</p>
+<p>P.S 2012.12.09 更新 - 修正了鳥 Bug 所以到 0.0.3 了。</p>
+<p><a class="reference external" href="https://dl.dropbox.com/u/15537823/EPUBConverter_0.0.3.7z">EPUBConverter 0.0.3 下載</a></p>
+<p><a class="reference external" href="https://github.com/Swind/EPUBConverter-Go">EPUBConverter Source Code</a></p>
+<p>這個版本比之前好得地方在於，這次使用了 <a class="reference external" href="http://tongwen.openfoundry.org/">新同文堂</a> 的簡繁轉換對照表。
+除了單字轉換之外，還多了一個詞彙轉換。</p>
+<p>所以轉換品質應該會比之前 Scala 的版本好很多，感謝新同文堂分享對照表。
+他的 Bookmarklet 版本也非常好用，基本上我 Go 的轉換邏輯就是從 Bookmarklet 版本移植過來的。</p>
+<p>但是由於我直接將對照表轉換成 Golang 裡面的 map 了，所以這次就沒有辦法讓使用者自己改對照表了。</p>
+<p>不過有興趣的人，在原始碼的 <a class="reference external" href="https://github.com/Swind/EPUBConverter-Go/tree/master/tongwen_table">tongwen_table</a> 資料夾底下，我有放了一個簡單的轉換工具。
+可以利用那個重新產生 Go 的 map，但是最後還是得重新編譯整個 EPUBConverter 就是了。</p>
+<p class="more"><a href="posts/epubconverter-0_0_2.html">Read more…</a></p>
+            </div>
+        </div>
+        <div class="post">
             <h1 class="title"><a href="posts/build-restful-api-server-by-spray.html">用 Spray 建立一個簡單的 RESTful API Server</a></h1>
             <div class="meta">
                 <div class="authordate">
