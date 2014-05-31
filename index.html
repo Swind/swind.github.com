@@ -152,16 +152,9 @@ MathJax.Hub.Config({
 <p>另外，由於我們公司的 REST API 是透過 https 來存取的，
 所以這邊另外參考 <a class="reference external" href="http://www.socouldanyone.com/2014/01/bottle-with-ssl.html">SSL encryption in python bottle</a> 做的加上 SSL 的版本。</p>
 <p>並且先產生 SSL certificate</p>
-<div class="system-message">
-<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">&lt;string&gt;</tt>, line 114)</p>
-<p>Error in "code" directive:
-maximum 1 argument(s) allowed, 12 supplied.</p>
-<pre class="literal-block">
-.. code:: bash
-   openssl req -new -x509 -keyout testcase.pem -out testcase.pem -days 365 -nodes
-
+<pre class="code literal-block">
+openssl req -new -x509 -keyout testcase.pem -out testcase.pem -days 365 -nodes
 </pre>
-</div>
 <pre class="code python literal-block">
 <span class="kn">from</span> <span class="nn">bottle</span> <span class="kn">import</span> <span class="n">Bottle</span><span class="p">,</span> <span class="n">ServerAdapter</span>
 

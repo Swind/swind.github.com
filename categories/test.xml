@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis (Test)</title><link>http://swind.code-life.info/</link><description></description><language>en</language><lastBuildDate>Sat, 31 May 2014 03:25:40 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Testing your python REST client</title><link>http://swind.code-life.info/posts/testing-your-rest-client.html</link><dc:creator>Swind</dc:creator><description>&lt;div class="section" id="orz"&gt;
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis (Test)</title><link>http://swind.code-life.info/</link><description></description><language>en</language><lastBuildDate>Sat, 31 May 2014 14:22:28 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Testing your python REST client</title><link>http://swind.code-life.info/posts/testing-your-rest-client.html</link><dc:creator>Swind</dc:creator><description>&lt;div class="section" id="orz"&gt;
 &lt;h2&gt;又再做不同的東西了 Orz&lt;/h2&gt;
 &lt;p&gt;最近因為在修改新公司的 CLI 程式, 所以順便想了一下要怎麼測試比較好。
 這個 CLI 是透過 server 所提供的 REST API 來操作遠端的 Server,
@@ -93,16 +93,9 @@
 &lt;p&gt;另外，由於我們公司的 REST API 是透過 https 來存取的，
 所以這邊另外參考 &lt;a class="reference external" href="http://www.socouldanyone.com/2014/01/bottle-with-ssl.html"&gt;SSL encryption in python bottle&lt;/a&gt; 做的加上 SSL 的版本。&lt;/p&gt;
 &lt;p&gt;並且先產生 SSL certificate&lt;/p&gt;
-&lt;div class="system-message"&gt;
-&lt;p class="system-message-title"&gt;System Message: ERROR/3 (&lt;tt class="docutils"&gt;&amp;lt;string&amp;gt;&lt;/tt&gt;, line 114)&lt;/p&gt;
-&lt;p&gt;Error in "code" directive:
-maximum 1 argument(s) allowed, 12 supplied.&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-.. code:: bash
-   openssl req -new -x509 -keyout testcase.pem -out testcase.pem -days 365 -nodes
-
+&lt;pre class="code literal-block"&gt;
+openssl req -new -x509 -keyout testcase.pem -out testcase.pem -days 365 -nodes
 &lt;/pre&gt;
-&lt;/div&gt;
 &lt;pre class="code python literal-block"&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;bottle&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Bottle&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ServerAdapter&lt;/span&gt;
 
