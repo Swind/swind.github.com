@@ -120,6 +120,7 @@ Bottle_ 的語法與使用方式也非常的直覺,  REST API 最基本要測試
 並且先產生 SSL certificate 
 
 .. code:: bash
+
    openssl req -new -x509 -keyout testcase.pem -out testcase.pem -days 365 -nodes
 
 .. code:: python
