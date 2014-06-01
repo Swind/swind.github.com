@@ -1,9 +1,9 @@
-.. title: Auto-deploying my Nikola Blog to github by Travis-CI
+.. title: 透過 Travis 自動佈署 Nikola 產生的網頁到 GitHub 上
 .. slug: auto-deploying-my-nikola-blog-to-github-by-travis-ci
 .. date: 2014/03/04 17:49:24
 .. tags: Nikola, Python
 .. link: 
-.. description: 透過 Travis-CI 自動佈署 Nikola 產生的網頁到 GitHub 上
+.. description: 透過 Travis 自動佈署 Nikola 產生的網頁到 GitHub 上
 .. type: rst
 
 之前一直想要找 Server 可以結合 Jenkins 或者 Script 讓我不用每次都要重複安裝 Nikola 這件事情。
