@@ -1,4 +1,4 @@
-.. title: Testing your python REST client
+.. title: 用 Python 建立假的 REST API Server 進行測試
 .. slug: testing-your-rest-client
 .. date: 05/24/2014 11:18:00 AM UTC+08:00
 .. tags: Python, Test
