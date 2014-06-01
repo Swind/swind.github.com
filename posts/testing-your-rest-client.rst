@@ -191,7 +191,16 @@ Bottle_ 的語法與使用方式也非常的直覺,  REST API 最基本要測試
 而導致 testcase 卡住無法繼續執行下去。
 因此 sleep(0.5) 讓 server 可以啟動完畢。
 
-.. _imp: https://dl.dropboxusercontent.com/u/15537823/Blog/persona4_the_golden.jpg
+.. figure:: https://dl.dropboxusercontent.com/u/15537823/Blog/persona4_the_golden.jpg
+
+.. raw:: html
+
+	<blockquote>
+	<p>Persona !</p>
+	</blockquote>
+
+P4G 真的是不錯的遊戲阿 T_T
+可惜 P4 的動畫人物有時候壞的有點大 Orz
 
 .. _Bottle: http://bottlepy.org/docs/dev/index.html
 .. _Bottle web framework - How to stop: http://stackoverflow.com/questions/11282218/bottle-web-framework-how-to-stop
