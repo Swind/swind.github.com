@@ -20,6 +20,8 @@
 但我目前正在重構中, 要將 CLI 的架構重新設計, 並且在這過程之中要維持程式可以正常運作。
 所以我必須確保還未重構的功能還能正常運作, 因此我想建立假的 REST API Server 是個可以同時兼顧新舊架構的好方法。
 
+.. TEASER_END
+
 Web framework -- Bottle
 =======================
 
@@ -188,6 +190,8 @@ Bottle_ 的語法與使用方式也非常的直覺,  REST API 最基本要測試
 中間會去 sleep(0.5) 是我發現如果我的 testcase 失敗的太快，或者太快結束。會導致 server 還沒有啟動結束，就停止
 而導致 testcase 卡住無法繼續執行下去。
 因此 sleep(0.5) 讓 server 可以啟動完畢。
+
+.. _imp: https://dl.dropboxusercontent.com/u/15537823/Blog/persona4_the_golden.jpg
 
 .. _Bottle: http://bottlepy.org/docs/dev/index.html
 .. _Bottle web framework - How to stop: http://stackoverflow.com/questions/11282218/bottle-web-framework-how-to-stop
