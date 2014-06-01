@@ -71,6 +71,47 @@ MathJax.Hub.Config({
             </div>
         </div>
         <div class="post">
+            <h1 class="title"><a href="posts/auto-deploying-my-nikola-blog-to-github-by-travis-ci.html">Auto-deploying my Nikola Blog to github by Travis-CI</a></h1>
+            <div class="meta">
+                <div class="authordate">
+                    <time class="timeago" datetime="2014-03-04T17:49:24+08:00">2014-03-04 17:49</time>
+</div>
+                <div class="stats">
+                    
+        
+    <a href="posts/auto-deploying-my-nikola-blog-to-github-by-travis-ci.html#disqus_thread" data-disqus-identifier="cache/posts/2014-03-04-auto-deploying-my-nikola-blog-to-github-by-travis-ci.html">Comments</a>
+
+
+                </div>
+            
+        <div itemprop="keywords" class="tags">
+        <ul>
+        Tags : 
+           <li><a class="tag p-category" href="categories/nikola.html" rel="tag">Nikola</a></li>
+           <li><a class="tag p-category" href="categories/python.html" rel="tag">Python</a></li>
+        </ul>
+</div>
+
+            </div>
+            <div class="body">
+                <p>之前一直想要找 Server 可以結合 Jenkins 或者 Script 讓我不用每次都要重複安裝 Nikola 這件事情。
+可是一直都沒有找到合用的，後來發現 <a class="reference external" href="https://travis-ci.org">Travis</a> + <a class="reference external" href="https://github.com">GitHub</a> 這個很多人使用的組合。
+因此開始嘗試在將文章 commit 到 GitHub 上面之後， Travis 可以自動使用 nikola build 產生 HTML 檔案，
+並且 Commit 回去 GitHub。</p>
+<p>由於我的 GitHub 上面的網頁換了很多次系統 Octopress -&gt; Pelican -&gt; Nikola，在加上那時候對於 GitHub Pages 的設定不是很了解。
+所以 git 上的 branch 有點奇怪。</p>
+<p>我目前的 branch 有兩個</p>
+<pre class="code literal-block">
+- master
+- source
+</pre>
+<p>master 就是 GitHub Pages 的部份，而 source 則是放 Nikola 的設定檔以及文章的原始檔。
+現在 GitHub 預設放網頁的 branch 好像可以改成  gh-pages。不過改設定又是浩大工程，我以我就繼續沿用之前的 branch 了。
+另外 Nikola 現在應該也有部屬到 GitHub 的功能，所以下面的流程說不定可以弄個更簡潔。</p>
+<p class="more"><a href="posts/auto-deploying-my-nikola-blog-to-github-by-travis-ci.html">Read more…</a></p>
+            </div>
+        </div>
+        <div class="post">
             <h1 class="title"><a href="posts/use_ccache_to_build_freebsd_kernel.html">加速 FreeBSD Kernel 的編譯</a></h1>
             <div class="meta">
                 <div class="authordate">
@@ -539,37 +580,6 @@ wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/maste
 將常用的工具與指令整理成一份文件，來協助管理與記憶。
 目前我是用 Nikola (對沒錯，所從 Octopress 跳到 Pelican 又跳到 Nikola 了 XD) stories 來作筆記。</p>
 <p class="more"><a href="posts/install-linux-config.html">Read more…</a></p>
-            </div>
-        </div>
-        <div class="post">
-            <h1 class="title"><a href="posts/goroutine-note-1.html">Golang - Goroutine 筆記 (1)</a></h1>
-            <div class="meta">
-                <div class="authordate">
-                    <time class="timeago" datetime="2012-12-09T18:00:00+08:00">2012-12-09 18:00</time>
-</div>
-                <div class="stats">
-                    
-        
-    <a href="posts/goroutine-note-1.html#disqus_thread" data-disqus-identifier="cache/posts/2012-12-09-golang-goroutine-note1.html">Comments</a>
-
-
-                </div>
-            
-        <div itemprop="keywords" class="tags">
-        <ul>
-        Tags : 
-           <li><a class="tag p-category" href="categories/go.html" rel="tag">Go</a></li>
-        </ul>
-</div>
-
-            </div>
-            <div class="body">
-                <p>會想到用這個是由於 EPUBConverter Go 的版本雖然運作上已經比 Scala 版本快上不少了。
-但我發現在執行的時候 CPU 使用率一直都只有 25 %，所以才想試試看使用 goroutine 看能不能讓他轉換更快一點。</p>
-<p>依照文件所說，在執行 IO 相關動作的時候，會將 CPU 讓給 goroutine 來使用，那麼對於 EPUBConverter 的效能應該會有顯著的提昇。</p>
-<p>雖然有人說 goroutine 跟 Scala 的 actor 有點像，但是 actor 的模型就很具體跟明確。
-而 goroutine 則是提供一個方便快速的 thread 操作方式。</p>
-<p class="more"><a href="posts/goroutine-note-1.html">Read more…</a></p>
             </div>
         </div>
     

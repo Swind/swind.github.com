@@ -53,6 +53,10 @@
   <lastmod>2014-06-01</lastmod>
  </url>
  <url>
+  <loc>http://swind.code-life.info/categories/nikola.html</loc>
+  <lastmod>2014-06-01</lastmod>
+ </url>
+ <url>
   <loc>http://swind.code-life.info/categories/octopress.html</loc>
   <lastmod>2014-06-01</lastmod>
  </url>
@@ -126,6 +130,10 @@
  </url>
  <url>
   <loc>http://swind.code-life.info/posts/akka-2_0-note-6.html</loc>
+  <lastmod>2014-06-01</lastmod>
+ </url>
+ <url>
+  <loc>http://swind.code-life.info/posts/auto-deploying-my-nikola-blog-to-github-by-travis-ci.html</loc>
   <lastmod>2014-06-01</lastmod>
  </url>
  <url>

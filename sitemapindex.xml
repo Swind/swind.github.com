@@ -29,6 +29,10 @@
   <lastmod>2014-06-01</lastmod>
  </sitemap>
  <sitemap>
+  <loc>http://swind.code-life.info/categories/nikola.xml</loc>
+  <lastmod>2014-06-01</lastmod>
+ </sitemap>
+ <sitemap>
   <loc>http://swind.code-life.info/categories/octopress.xml</loc>
   <lastmod>2014-06-01</lastmod>
  </sitemap>
