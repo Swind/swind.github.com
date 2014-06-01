@@ -1,7 +1,8 @@
 language: python
 
+# blacklist
 branches:
-  expect:
+  except:
     - master
 
 cache:
