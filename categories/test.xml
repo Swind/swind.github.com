@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis (Test)</title><link>http://swind.code-life.info/</link><description></description><language>en</language><lastBuildDate>Sun, 01 Jun 2014 11:20:57 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>用 Python 建立假的 REST API Server 進行測試</title><link>http://swind.code-life.info/posts/testing-your-rest-client.html</link><dc:creator>Swind</dc:creator><description>&lt;h2&gt;又再做不同的東西了 Orz&lt;/h2&gt;
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis (Test)</title><link>http://swind.code-life.info/</link><description></description><language>en</language><lastBuildDate>Fri, 06 Jun 2014 15:09:59 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>用 Python 建立假的 REST API Server 進行測試</title><link>http://swind.code-life.info/posts/testing-your-rest-client.html</link><dc:creator>Swind</dc:creator><description>&lt;h2&gt;又再做不同的東西了 Orz&lt;/h2&gt;
 &lt;p&gt;最近因為在修改新公司的 CLI 程式, 所以順便想了一下要怎麼測試比較好。
 這個 CLI 是透過 server 所提供的 REST API 來操作遠端的 Server,
 因此我剛接手的時候都是真的去連到一個 Server 進行開發。&lt;/p&gt;

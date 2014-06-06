@@ -114,7 +114,7 @@ Bottle_ 的語法與使用方式也非常的直覺,  REST API 最基本要測試
            self.server.serve_forever()
 
        def stop(self):
-           self.server.shutdown
+           self.server.shutdown()
 
 另外，由於我們公司的 REST API 是透過 https 來存取的，
 所以這邊另外參考 `SSL encryption in python bottle`_ 做的加上 SSL 的版本。
@@ -153,6 +153,7 @@ Bottle_ 的語法與使用方式也非常的直覺,  REST API 最基本要測試
 
        def stop(self):
            self.server.shutdown()
+           self.server.socket.close()
 
 
 最後，讓 testcase setUp 啟動 Server, tearDown 的時候結束 Server 就可以了。
@@ -190,6 +191,21 @@ Bottle_ 的語法與使用方式也非常的直覺,  REST API 最基本要測試
 中間會去 sleep(0.5) 是我發現如果我的 testcase 失敗的太快，或者太快結束。會導致 server 還沒有啟動結束，就停止
 而導致 testcase 卡住無法繼續執行下去。
 因此 sleep(0.5) 讓 server 可以啟動完畢。
+
+----
+
+Update 2014.06.06
+
+在增加 https 的支援之後，沒有去 close socket ( 大概 Orz ) 所以 Server 沒有完全關閉，導致下個 TestCase 無法正常啟動。
+因此多增加了
+
+.. code:: python
+
+	def stop(self):
+	   self.server.shutdown()
+	   self.server.socket.close()
+	   
+在 stop 的 function 裡面
 
 .. figure:: https://dl.dropboxusercontent.com/u/15537823/Blog/persona4_the_golden.jpg
 
