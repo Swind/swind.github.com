@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis</title><link>http://swind.code-life.info/</link><description>Corleonis</description><language>en</language><lastBuildDate>Sun, 06 Jul 2014 02:54:48 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>用 Python 建立假的 REST API Server 進行測試</title><link>http://swind.code-life.info/posts/testing-your-rest-client.html</link><dc:creator>Swind</dc:creator><description>&lt;h2&gt;又再做不同的東西了 Orz&lt;/h2&gt;
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis</title><link>http://swind.code-life.info/</link><description>Corleonis</description><language>en</language><lastBuildDate>Sun, 06 Jul 2014 13:50:49 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>使用 Python 透過 SSH 讀取遠端的檔案</title><link>http://swind.code-life.info/posts/read_remote_file_using_python_and_ssh.html</link><dc:creator>Swind</dc:creator><description>&lt;h2&gt;tail 遠端的檔案&lt;/h2&gt;
+&lt;p&gt;最近的自動化測試需要去做類似 tail 的動作來確認在執行 TestCase 的過程中，
+server log 沒有吐出不該出現的錯誤。&lt;/p&gt;
+&lt;p&gt;可是又不能透過 fabric 直接下 tail 指令，因此這次透過了 SFTP 來實現這個功能。&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/read_remote_file_using_python_and_ssh.html"&gt;Read more…&lt;/a&gt; (1 min remaining to read)&lt;/p&gt;</description><category>Python</category><guid>http://swind.code-life.info/posts/read_remote_file_using_python_and_ssh.html</guid><pubDate>Sun, 06 Jul 2014 12:45:37 GMT</pubDate></item><item><title>用 Python 建立假的 REST API Server 進行測試</title><link>http://swind.code-life.info/posts/testing-your-rest-client.html</link><dc:creator>Swind</dc:creator><description>&lt;h2&gt;又再做不同的東西了 Orz&lt;/h2&gt;
 &lt;p&gt;最近因為在修改新公司的 CLI 程式, 所以順便想了一下要怎麼測試比較好。
 這個 CLI 是透過 server 所提供的 REST API 來操作遠端的 Server,
 因此我剛接手的時候都是真的去連到一個 Server 進行開發。&lt;/p&gt;
@@ -252,35 +256,4 @@ C:&lt;span class="se"&gt;\P&lt;/span&gt;ython27&lt;span class="se"&gt;\p&lt;/spa
 &lt;p&gt;上面的 Script 因為我找不到 Windows 裡面代表所有傳入參數的符號，
 只好就土法煉鋼一個一個輸入，所以最多只能輸入四個參數。&lt;/p&gt;
 &lt;p&gt;（如果有人有好得解決方式也請教我一下 m(_ _)m )&lt;/p&gt;
-&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/pelican-to-nikola.html"&gt;Read more…&lt;/a&gt; (1 min remaining to read)&lt;/p&gt;&lt;/div&gt;</description><category>Other</category><guid>http://swind.code-life.info/posts/pelican-to-nikola.html</guid><pubDate>Tue, 22 Jan 2013 01:11:00 GMT</pubDate></item><item><title>一鍵安裝 Linux 設定檔</title><link>http://swind.code-life.info/posts/install-linux-config.html</link><dc:creator>Swind</dc:creator><description>&lt;p&gt;我常用的 Linux 環境一定會裝下面幾個工具&lt;/p&gt;
-&lt;ol class="arabic simple"&gt;&lt;li&gt;zsh 與 oh-my-zsh&lt;/li&gt;
-&lt;li&gt;vim 很多很多 vim plugin&lt;/li&gt;
-&lt;li&gt;tmux 與他的快樂設定檔&lt;/li&gt;
-&lt;/ol&gt;&lt;p&gt;一開始開發環境只有一兩台，一個個手動安裝還沒什麼問題。
-再加上那時後有從 vgod 的 &lt;a class="reference external" href="http://blog.vgod.tw/2011/03/19/vimrc/"&gt;分享我的 vim 設定檔&lt;/a&gt; 這文章中學到使用 pathogen + github 來管理 vim。
-所以一直就懶得去想辦法整理這些設定檔。&lt;/p&gt;
-&lt;p&gt;可是最近要管理的機器變多了，而且加上最近再進行 porting 的工作，所以又有各種不同版本的 Linux 需要設定。&lt;/p&gt;
-&lt;p&gt;就在今天，終於 &lt;strong&gt;爆～～～～發～～～～啦！！！！&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;感謝 JosephJ 的 &lt;a class="reference external" href="http://josephj.com/entry.php?id=374"&gt;一個指令安裝所有 Linux 設定檔&lt;/a&gt; 以及該篇文章的回應。
-我最後也從 pathogen.vim 叛逃，使用 github + shell script + vundle 來完成我 zsh、tmux 與 vim 的設定。&lt;/p&gt;
-&lt;p&gt;關於 vundle 的使用方式與設定我是參考 &lt;a class="reference external" href="http://yishanhe.net/using-vim-vundle-for-better-plugin-management/"&gt;使用Vundle更好的管理你的Vim插件&lt;/a&gt; 雖然是簡體的。不過設定與使用方式都寫得非常詳細。&lt;/p&gt;
-&lt;p&gt;經過一個早上的努力，我也終於可以使用&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-wget -O - https://raw.github.com/Swind/linux-config/master/install.sh | sh
-&lt;/pre&gt;
-&lt;p&gt;把 Linux 給設定完畢了～&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;2013.02.08 update&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;我發現在其他機器上使用的時候會有:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-ERROR: certificate common name “*.a.ssl.fastly.net” doesn’t match requested host name “raw.github.com”.
-To connect to raw.github.com insecurely, use ‘--no-check-certificate’.
-&lt;/pre&gt;
-&lt;p&gt;的錯誤訊息，目前我還沒有很仔細的去找原因。&lt;/p&gt;
-&lt;p&gt;不過如他所敘述的，加入 --no-check-certificate 就沒有問題了。&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/master/install.sh | sh
-&lt;/pre&gt;
-&lt;p&gt;除此之外 JosephJ 所給的建議也非常的實用，
-將常用的工具與指令整理成一份文件，來協助管理與記憶。
-目前我是用 Nikola (對沒錯，所從 Octopress 跳到 Pelican 又跳到 Nikola 了 XD) stories 來作筆記。&lt;/p&gt;
-&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/install-linux-config.html"&gt;Read more…&lt;/a&gt; (1 min remaining to read)&lt;/p&gt;</description><guid>http://swind.code-life.info/posts/install-linux-config.html</guid><pubDate>Mon, 21 Jan 2013 14:36:41 GMT</pubDate></item></channel></rss>
+&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/pelican-to-nikola.html"&gt;Read more…&lt;/a&gt; (1 min remaining to read)&lt;/p&gt;&lt;/div&gt;</description><category>Other</category><guid>http://swind.code-life.info/posts/pelican-to-nikola.html</guid><pubDate>Tue, 22 Jan 2013 01:11:00 GMT</pubDate></item></channel></rss>
