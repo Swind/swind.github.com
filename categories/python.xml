@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis (Python)</title><link>http://swind.code-life.info/</link><description></description><language>en</language><lastBuildDate>Sun, 06 Jul 2014 13:50:49 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>使用 Python 透過 SSH 讀取遠端的檔案</title><link>http://swind.code-life.info/posts/read_remote_file_using_python_and_ssh.html</link><dc:creator>Swind</dc:creator><description>&lt;h2&gt;tail 遠端的檔案&lt;/h2&gt;
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis (Python)</title><link>http://swind.code-life.info/</link><description></description><language>en</language><lastBuildDate>Sat, 19 Jul 2014 14:13:35 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>使用 Python 透過 SSH 讀取遠端的檔案</title><link>http://swind.code-life.info/posts/read_remote_file_using_python_and_ssh.html</link><dc:creator>Swind</dc:creator><description>&lt;h2&gt;tail 遠端的檔案&lt;/h2&gt;
 &lt;p&gt;最近的自動化測試需要去做類似 tail 的動作來確認在執行 TestCase 的過程中，
 server log 沒有吐出不該出現的錯誤。&lt;/p&gt;
 &lt;p&gt;可是又不能透過 fabric 直接下 tail 指令，因此這次透過了 SFTP 來實現這個功能。&lt;/p&gt;
