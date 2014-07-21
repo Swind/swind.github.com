@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis (C)</title><link>http://swind.code-life.info/</link><description></description><language>en</language><lastBuildDate>Sat, 19 Jul 2014 14:21:30 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>加速 FreeBSD Kernel 的編譯</title><link>http://swind.code-life.info/posts/use_ccache_to_build_freebsd_kernel.html</link><dc:creator>Swind</dc:creator><description>&lt;p&gt;這幾天要開始 Build FreeBSD Kernel 了，
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis (C)</title><link>http://swind.code-life.info/</link><description></description><language>en</language><lastBuildDate>Mon, 21 Jul 2014 03:43:40 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>加速 FreeBSD Kernel 的編譯</title><link>http://swind.code-life.info/posts/use_ccache_to_build_freebsd_kernel.html</link><dc:creator>Swind</dc:creator><description>&lt;p&gt;這幾天要開始 Build FreeBSD Kernel 了，
 可是 buildworld 跟 buildkernel 都需要花費非常久的時間。&lt;/p&gt;
 &lt;p&gt;因此想要研究一下是否能加速 FreeBSD Kernel 的編譯速度，
 加快開發測試的流程，以及減少 CI 所需要花費的時間。&lt;/p&gt;
