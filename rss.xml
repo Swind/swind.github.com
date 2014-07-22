@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis</title><link>http://swind.code-life.info/</link><description>Corleonis</description><language>en</language><lastBuildDate>Mon, 21 Jul 2014 03:43:40 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Python logging 筆記</title><link>http://swind.code-life.info/posts/python_logging_note.html</link><dc:creator>Swind</dc:creator><description>&lt;p&gt;因為之前都偷懶使用 print 直接輸出一些 debug 訊息，沒有好好的進行分類。
-所以最後程式在執行的時候，看到了很多垃圾訊息，阻礙了開發。&lt;/p&gt;
-&lt;p&gt;尤其是之前都偷懶直接用 basicConfig 去設定，所以連第三方 package 的 log 都印出來了 Orz，
-因此想順便藉這個機會好好弄清楚 Python 裡面 logging 的使用方式。&lt;/p&gt;
-&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/python_logging_note.html"&gt;Read more…&lt;/a&gt; (1 min remaining to read)&lt;/p&gt;</description><category>Python draft</category><guid>http://swind.code-life.info/posts/python_logging_note.html</guid><pubDate>Sat, 19 Jul 2014 12:45:37 GMT</pubDate></item><item><title>使用 Python 透過 SSH 讀取遠端的檔案</title><link>http://swind.code-life.info/posts/read_remote_file_using_python_and_ssh.html</link><dc:creator>Swind</dc:creator><description>&lt;h2&gt;tail 遠端的檔案&lt;/h2&gt;
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis</title><link>http://swind.code-life.info/</link><description>Corleonis</description><language>en</language><lastBuildDate>Tue, 22 Jul 2014 06:20:09 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>使用 Python 透過 SSH 讀取遠端的檔案</title><link>http://swind.code-life.info/posts/read_remote_file_using_python_and_ssh.html</link><dc:creator>Swind</dc:creator><description>&lt;h2&gt;tail 遠端的檔案&lt;/h2&gt;
 &lt;p&gt;最近的自動化測試需要去做類似 tail 的動作來確認在執行 TestCase 的過程中，
 server log 沒有吐出不該出現的錯誤。&lt;/p&gt;
 &lt;p&gt;可是又不能透過 fabric 直接下 tail 指令，因此這次透過了 SFTP 來實現這個功能。&lt;/p&gt;
@@ -234,4 +230,30 @@ threadpool_task_t 也是一樣的原理，真是出乎意料的簡單。&lt;/p&g
 所以我決定把使用 Play 實作的過程記錄一下，以方便我日後回憶。&lt;/p&gt;
 &lt;p&gt;整個實作過程是參考 &lt;a class="reference external" href="http://www.playframework.org/documentation/2.1-RC4/ScalaTodoList"&gt;Your first Play application&lt;/a&gt; 這篇文章的。&lt;/p&gt;
 &lt;p&gt;P.S 這篇文章寫到一半的時候 Play 2.1 出了 Orz ...&lt;/p&gt;
-&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/play-note-1.html"&gt;Read more…&lt;/a&gt; (5 min remaining to read)&lt;/p&gt;</description><category>Other</category><guid>http://swind.code-life.info/posts/play-note-1.html</guid><pubDate>Sat, 02 Feb 2013 01:11:00 GMT</pubDate></item></channel></rss>
+&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/play-note-1.html"&gt;Read more…&lt;/a&gt; (5 min remaining to read)&lt;/p&gt;</description><category>Other</category><guid>http://swind.code-life.info/posts/play-note-1.html</guid><pubDate>Sat, 02 Feb 2013 01:11:00 GMT</pubDate></item><item><title>Pelican 轉移到 Nikola</title><link>http://swind.code-life.info/posts/pelican-to-nikola.html</link><dc:creator>Swind</dc:creator><description>&lt;p&gt;之前雖然從 Octopress 跳到 Pelican 脫離了 Ruby 的環境，也花了一些時間在修改 Theme。
+但是還是很難喜歡上 Pelican，最主要的就是他的手冊很難閱讀，而且資訊有點少 Orz。&lt;/p&gt;
+&lt;p&gt;Nikola 的手冊就比較簡潔清楚，也比較好查詢。
+且查詢了一下 Nikola 的事蹟之後發現他太帥了！&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="http://zh.wikipedia.org/wiki/%E5%B0%BC%E5%8F%A4%E6%8B%89%C2%B7%E7%89%B9%E6%96%AF%E6%8B%89"&gt;Wiki 尼古拉 特斯拉&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;所以後來就決定跳過來了～&lt;/p&gt;
+&lt;div class="section" id="windows-nikola"&gt;
+&lt;h2&gt;在 Windows 上安裝 Nikola&lt;/h2&gt;
+&lt;p&gt;在 Windows 上面安裝 Nikola 實在是有點悲劇，因為他所使用的 Library 有一些會使用到 C 的程式碼。
+因此需要編譯，可是他又會連結到其他 C Library（例如 pillow or pil），所以就卡在安裝相依性套件這一關。&lt;/p&gt;
+&lt;p&gt;雖然用 pip 安裝 pil 或者是 pillow 也可以，但是安裝完之後會因為缺少某些 library 而導致像 jpg 等圖片格式不被支援。&lt;/p&gt;
+&lt;p&gt;最後是找到了 &lt;a class="reference external" href="http://www.lfd.uci.edu/~gohlke/pythonlibs/"&gt;Unofficial Windows Binaries for Python Extension Packages&lt;/a&gt; 下載了 pil 才解決了相依性安裝問題。
+這些相依性的 Library 安裝完畢之後，就可以使用 pip 安裝 Nikola 了。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;But ! 就是這個 But !。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;當你開心安裝完畢 Nikola 之後會發現無法使用 nikola 的指令。&lt;/p&gt;
+&lt;p&gt;因為他放在 Python Scripts 資料夾底下的 Script 檔名是 &lt;strong&gt;nikola&lt;/strong&gt;，Windows 不會覺得他是執行檔，所以沒有辦法執行指令。
+( 如果有人有知道其他執行方式的話請跟我說 m(_ _)m )&lt;/p&gt;
+&lt;p&gt;一開始我很天真的覺得改成 nikola.py 就沒有問題了，但是在執行中 import 會出問題，因為 nikola 這個名字重複了 Orz。
+所以最後是多寫一個 nikola.bat&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+C:&lt;span class="se"&gt;\P&lt;/span&gt;ython27&lt;span class="se"&gt;\p&lt;/span&gt;ython.exe C:&lt;span class="se"&gt;\P&lt;/span&gt;ython27&lt;span class="se"&gt;\S&lt;/span&gt;cripts&lt;span class="se"&gt;\n&lt;/span&gt;ikola %1 %2 %3 %4
+&lt;/pre&gt;
+&lt;p&gt;放在 Scripts 資料夾底下，來解決這個問題。&lt;/p&gt;
+&lt;p&gt;上面的 Script 因為我找不到 Windows 裡面代表所有傳入參數的符號，
+只好就土法煉鋼一個一個輸入，所以最多只能輸入四個參數。&lt;/p&gt;
+&lt;p&gt;（如果有人有好得解決方式也請教我一下 m(_ _)m )&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/pelican-to-nikola.html"&gt;Read more…&lt;/a&gt; (1 min remaining to read)&lt;/p&gt;&lt;/div&gt;</description><category>Other</category><guid>http://swind.code-life.info/posts/pelican-to-nikola.html</guid><pubDate>Tue, 22 Jan 2013 01:11:00 GMT</pubDate></item></channel></rss>
