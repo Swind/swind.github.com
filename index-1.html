@@ -58,7 +58,8 @@ MathJax.Hub.Config({
 
             </div>
             <div class="body">
-                <p>這整篇的原因起於，洗澡的時候想到的，
+                <div>
+<p>這整篇的原因起於，洗澡的時候想到的，
 Akka 的 Future 到底有沒有存在的意義呢？</p>
 <p>因為當一個 Actor 用 reply 或者 sender 回傳結果的時候，其實可以再 receive 不同的型態的 Message 就好了。
 而且這樣還不會因為 Await 而需要 block thread，減少 dead lock 的發生。
@@ -71,6 +72,7 @@ Akka 的 Future 到底有沒有存在的意義呢？</p>
 那麼如果是用 receive 我要怎樣才能知道我所有的工作都已經完成了呢？</p>
 <p>簡單來說，我就是需要實做一個  <a class="reference external" href="http://www.eaipatterns.com/BroadcastAggregate.html">Scatter-Gather</a> ，才會莫名其妙的看到 Akka 的 Dataflow。</p>
 <p class="more"><a href="posts/akka-2_0-note-4.html">Read more…</a></p>
+</div>
             </div>
         </div>
         <div class="post">
@@ -97,9 +99,11 @@ Akka 的 Future 到底有沒有存在的意義呢？</p>
 
             </div>
             <div class="body">
-                <p>而是我實在是不擅長寫作，過去作文只有 20 分真的不是拿假的。
+                <div>
+<p>而是我實在是不擅長寫作，過去作文只有 20 分真的不是拿假的。
 前一篇的 <strong>開始使用 Future</strong> 只有介紹一些基本的使用方式而已，然後依照前面的程式碼是絕對跑不起來的 Orz ...</p>
 <p class="more"><a href="posts/akka-2_0-note-3.html">Read more…</a></p>
+</div>
             </div>
         </div>
         <div class="post">
@@ -126,12 +130,14 @@ Akka 的 Future 到底有沒有存在的意義呢？</p>
 
             </div>
             <div class="body">
-                <p>以前再使用 Java Thread 的時候最困擾我的就是 Thread 之間的溝通。
+                <div>
+<p>以前再使用 Java Thread 的時候最困擾我的就是 Thread 之間的溝通。
 要怎樣讓一個 Thread 去等待另外一個 Thread？要怎樣才能讓工作分配的平均？
 最後是靠 BlockingQueue 才讓實作變得簡單一點，
 不過想當然問題當然一大堆 ... Orz</p>
 <p>所以想來實驗看看 Akka 的 Future 與 Router 到底是如何使用，與可以做到什麼事情。</p>
 <p class="more"><a href="posts/akka-2_0-note-2.html">Read more…</a></p>
+</div>
             </div>
         </div>
         <div class="post">
@@ -158,13 +164,15 @@ Akka 的 Future 到底有沒有存在的意義呢？</p>
 
             </div>
             <div class="body">
-                <p>因為我的程式還沒有寫完，所以是筆記 (1)，寫的過程應該還會有 2 3 ... 出現 Orz。</p>
+                <div>
+<p>因為我的程式還沒有寫完，所以是筆記 (1)，寫的過程應該還會有 2 3 ... 出現 Orz。</p>
 <blockquote>
 Akka 2.0 - 要升級了
 你的時間的庫存量足夠嗎 ?</blockquote>
 <p>Akka 進入了 2.0 時代，恭喜你如果你是用 1.x 的話，請準備改寫吧 ...
 先從幾個方面來看 2.0 的新增事項。</p>
 <p class="more"><a href="posts/akka-2_0-note-1.html">Read more…</a></p>
+</div>
             </div>
         </div>
         <div class="post">
@@ -190,12 +198,14 @@ Akka 2.0 - 要升級了
 
             </div>
             <div class="body">
-                <p>好吧，我要開始筆記一下這次的實作心得了</p>
+                <div>
+<p>好吧，我要開始筆記一下這次的實作心得了</p>
 <p>其實在學 Scala 的這一段時間中，我最困擾的就是到底怎樣才是好的 Scala 寫作風格。
 因為 Scala 最吸引我的部份就是在於他的語法可以不斷的精鍊再精鍊，最後變成*魔法文字* Orz。
 所以要怎樣善用 Scala 的語言特性，卻又不失可讀性，我覺得真的很難。
 因此在這次的小工具實作中，我試著摸索 Curry 的用法。</p>
 <p class="more"><a href="posts/epubconverter-implement-note.html">Read more…</a></p>
+</div>
             </div>
         </div>
         <div class="post">
@@ -221,9 +231,11 @@ Akka 2.0 - 要升級了
 
             </div>
             <div class="body">
-                <p><a class="reference external" href="https://github.com/Swind/EPUBConverter/downloads">EPUBConverter 0.0.1</a></p>
+                <div>
+<p><a class="reference external" href="https://github.com/Swind/EPUBConverter/downloads">EPUBConverter 0.0.1</a></p>
 <p>這個版號我覺得也沒有機會到 0.0.2 了，不過還是讓我命名個版號滿足小小的虛榮心好了。</p>
 <p class="more"><a href="posts/epubconverter.html">Read more…</a></p>
+</div>
             </div>
         </div>
         <div class="post">
@@ -249,7 +261,8 @@ Akka 2.0 - 要升級了
 
             </div>
             <div class="body">
-                <div class="section" id="circumflex">
+                <div>
+<div class="section" id="circumflex">
 <h2>Circumflex</h2>
 <div class="section" id="prepare">
 <h3>Prepare</h3>
@@ -373,6 +386,7 @@ activejdbc會自動對應複數名詞的Table與單數名詞的Model。(不知�
 <p>他還有一個instrumentation的步驟，這個步驟我覺得影響太多了，不適合拿來跟Scala一起合用。</p>
 </div>
 </div>
+</div>
             </div>
         </div>
         <div class="post">
@@ -398,7 +412,8 @@ activejdbc會自動對應複數名詞的Table與單數名詞的Model。(不知�
 
             </div>
             <div class="body">
-                <p>之前偷懶都直接使用 println 來輸出訊息，但是最近在玩 <a class="reference external" href="http://akka.io/">Akka</a> ，我發現如果沒有使用 log tool 的話我根本不知道是哪個 Actor 印訊息的。
+                <div>
+<p>之前偷懶都直接使用 println 來輸出訊息，但是最近在玩 <a class="reference external" href="http://akka.io/">Akka</a> ，我發現如果沒有使用 log tool 的話我根本不知道是哪個 Actor 印訊息的。
 只好搜尋一下 Scala 上面有沒有什麼好用的 Log 工具。</p>
 <div class="section" id="slf4s-slf4j-logback">
 <h2>slf4s + slf4j + logback</h2>
@@ -406,6 +421,7 @@ activejdbc會自動對應複數名詞的Table與單數名詞的Model。(不知�
 於是就抱著這樣的心態跟 Google 大神詢問求籤。最後看到 logback 這個工具（雖然跟 Scala 完全沒有關係）但是人都是喜新厭舊 XD，所以
 我就從 slf4j + log4j 轉到 slf4j + logback，附帶一提 logback 是 slf4j 預設的 log 工具，因此使用這兩個的組合不需要另外抓 Adapter。（ex.slf4j-log4j12-1.6.4.jar之類的）</p>
 <p class="more"><a href="posts/scala-log-tool.html">Read more…</a></p>
+</div>
 </div>
             </div>
         </div>
@@ -432,13 +448,15 @@ activejdbc會自動對應複數名詞的Table與單數名詞的Model。(不知�
 
             </div>
             <div class="body">
-                <p>HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
+                <div>
+<p>HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
 為了要從網頁中可以取出內容,我曾經用過不少方式,包括直接硬幹用字串搜尋、修改Scala本身內部的XML Parser等。
 但是一直都找不到一個滿意又順手的解決方式,一直到後來在 <a class="reference external" href="http://www.oschina.net/">CSDN</a> 沒錯就是那個大陸網站 <a class="reference external" href="http://www.oschina.net/">CSDN</a>
 (雖然說CSDN訊息太多太雜亂,但是偶爾還是可以看到一些不錯的東西),才找到jsoup這個library。</p>
 <p><a class="reference external" href="http://jsoup.org/">jsoup的官方網站</a></p>
 <p><a class="reference external" href="http://jsoup.org/cookbook/">jsoup的教學文件</a></p>
 <p class="more"><a href="posts/jsoup.html">Read more…</a></p>
+</div>
             </div>
         </div>
         <div class="post">
@@ -464,7 +482,8 @@ activejdbc會自動對應複數名詞的Table與單數名詞的Model。(不知�
 
             </div>
             <div class="body">
-                <div class="section" id="nikola">
+                <div>
+<div class="section" id="nikola">
 <h2>2013.01.20 我又跳槽到 Nikola 了</h2>
 </div>
 <div class="section" id="pelican">
@@ -483,6 +502,7 @@ Liquid error: undefined method `Py_IsInitialized’ for RubyPython::Python:Modul
 真的這樣就讓 Codeblock 可以正常運作了 T_T
 真的是太讓人心酸了。</p>
 <p class="more"><a href="posts/octopress-note.html">Read more…</a></p>
+</div>
 </div>
             </div>
         </div>

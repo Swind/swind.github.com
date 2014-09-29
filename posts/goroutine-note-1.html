@@ -65,7 +65,8 @@ MathJax.Hub.Config({
 
         </div>
         <div class="body">
-            <p>會想到用這個是由於 EPUBConverter Go 的版本雖然運作上已經比 Scala 版本快上不少了。
+            <div>
+<p>會想到用這個是由於 EPUBConverter Go 的版本雖然運作上已經比 Scala 版本快上不少了。
 但我發現在執行的時候 CPU 使用率一直都只有 25 %，所以才想試試看使用 goroutine 看能不能讓他轉換更快一點。</p>
 <p>依照文件所說，在執行 IO 相關動作的時候，會將 CPU 讓給 goroutine 來使用，那麼對於 EPUBConverter 的效能應該會有顯著的提昇。</p>
 <p>雖然有人說 goroutine 跟 Scala 的 actor 有點像，但是 actor 的模型就很具體跟明確。
@@ -138,6 +139,7 @@ ok      epubconverter   10.282s
 BenchmarkConvertCore1          1        33146895900 ns/op
 ok      epubconverter   33.673s
 </pre>
+</div>
 </div>
         </div>
         

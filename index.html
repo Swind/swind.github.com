@@ -57,11 +57,13 @@ MathJax.Hub.Config({
 
             </div>
             <div class="body">
-                <h2>tail 遠端的檔案</h2>
+                <div class="section" id="tail">
+<h2>tail 遠端的檔案</h2>
 <p>最近的自動化測試需要去做類似 tail 的動作來確認在執行 TestCase 的過程中，
 server log 沒有吐出不該出現的錯誤。</p>
 <p>可是又不能透過 fabric 直接下 tail 指令，因此這次透過了 SFTP 來實現這個功能。</p>
 <p class="more"><a href="posts/read_remote_file_using_python_and_ssh.html">Read more…</a></p>
+</div>
             </div>
         </div>
         <div class="post">
@@ -88,7 +90,8 @@ server log 沒有吐出不該出現的錯誤。</p>
 
             </div>
             <div class="body">
-                <h2>又再做不同的東西了 Orz</h2>
+                <div class="section" id="orz">
+<h2>又再做不同的東西了 Orz</h2>
 <p>最近因為在修改新公司的 CLI 程式, 所以順便想了一下要怎麼測試比較好。
 這個 CLI 是透過 server 所提供的 REST API 來操作遠端的 Server,
 因此我剛接手的時候都是真的去連到一個 Server 進行開發。</p>
@@ -98,6 +101,7 @@ server log 沒有吐出不該出現的錯誤。</p>
 但我目前正在重構中, 要將 CLI 的架構重新設計, 並且在這過程之中要維持程式可以正常運作。
 所以我必須確保還未重構的功能還能正常運作, 因此我想建立假的 REST API Server 是個可以同時兼顧新舊架構的好方法。</p>
 <p class="more"><a href="posts/testing-your-rest-client.html">Read more…</a></p>
+</div>
             </div>
         </div>
         <div class="post">
@@ -124,7 +128,8 @@ server log 沒有吐出不該出現的錯誤。</p>
 
             </div>
             <div class="body">
-                <p>之前一直想要找 Server 可以結合 Jenkins 或者 Script 讓我不用每次都要重複安裝 Nikola 這件事情。
+                <div>
+<p>之前一直想要找 Server 可以結合 Jenkins 或者 Script 讓我不用每次都要重複安裝 Nikola 這件事情。
 可是一直都沒有找到合用的，後來發現 <a class="reference external" href="https://travis-ci.org">Travis</a> + <a class="reference external" href="https://github.com">GitHub</a> 這個很多人使用的組合。
 因此開始嘗試在將文章 commit 到 GitHub 上面之後， Travis 可以自動使用 nikola build 產生 HTML 檔案，
 並且 Commit 回去 GitHub。</p>
@@ -139,6 +144,7 @@ server log 沒有吐出不該出現的錯誤。</p>
 現在 GitHub 預設放網頁的 branch 好像可以改成  gh-pages。不過改設定又是浩大工程，我以我就繼續沿用之前的 branch 了。
 另外 Nikola 現在應該也有部屬到 GitHub 的功能，所以下面的流程說不定可以弄個更簡潔。</p>
 <p class="more"><a href="posts/auto-deploying-my-nikola-blog-to-github-by-travis-ci.html">Read more…</a></p>
+</div>
             </div>
         </div>
         <div class="post">
@@ -165,11 +171,13 @@ server log 沒有吐出不該出現的錯誤。</p>
 
             </div>
             <div class="body">
-                <p>這幾天要開始 Build FreeBSD Kernel 了，
+                <div>
+<p>這幾天要開始 Build FreeBSD Kernel 了，
 可是 buildworld 跟 buildkernel 都需要花費非常久的時間。</p>
 <p>因此想要研究一下是否能加速 FreeBSD Kernel 的編譯速度，
 加快開發測試的流程，以及減少 CI 所需要花費的時間。</p>
 <p class="more"><a href="posts/use_ccache_to_build_freebsd_kernel.html">Read more…</a></p>
+</div>
             </div>
         </div>
         <div class="post">
@@ -189,13 +197,15 @@ server log 沒有吐出不該出現的錯誤。</p>
 
             </div>
             <div class="body">
-                <p>學習用 Python 寫測試工具快兩個星期了，主要使用 clime + ucltip 跟 pyinstaller。
+                <div>
+<p>學習用 Python 寫測試工具快兩個星期了，主要使用 clime + ucltip 跟 pyinstaller。
 可是目前遇到一個問題，當我使用 pyinstaller 將測試工具打包之後，
 他會很貼心的幫你將所有 .py 檔包裝成一個可執行檔。
 所以當我要任何新增 command 都必須要重新部屬那個執行檔，這樣實在非常的麻煩。</p>
 <p>因此才會開始嘗試是否有可能執行檔只包裝 clime, ucltip 以及我自己所提供的 API，
 然後 command 的部份就利用 plugin 的方式來增加。</p>
 <p class="more"><a href="posts/simple-python-plugin-framework.html">Read more…</a></p>
+</div>
             </div>
         </div>
         <div class="post">
@@ -215,20 +225,22 @@ server log 沒有吐出不該出現的錯誤。</p>
         <div itemprop="keywords" class="tags">
         <ul>
         Tags : 
-           <li><a class="tag p-category" href="categories/cc.html" rel="tag">C/C++</a></li>
+           <li><a class="tag p-category" href="categories/cc++.html" rel="tag">C/C++</a></li>
            <li><a class="tag p-category" href="categories/python.html" rel="tag">Python</a></li>
         </ul>
 </div>
 
             </div>
             <div class="body">
-                <p>最近因為工作的需要，所以要撰寫很多 SCSI 相關的測試。
+                <div>
+<p>最近因為工作的需要，所以要撰寫很多 SCSI 相關的測試。
 目前可以用的測試工具有 fio, iometer 以及一個自行開發的 SCSI Command 驗證的工具。
 但是這些都是使用 C 撰寫的，所以要撰寫一些流程比較複雜的驗證時，就變得非常的麻煩。
 絕對不是因為我想試試看 Python 或者是因為自行開發的驗證工具程式碼已經無法閱讀的原因，才想要重造輪子。</p>
 <p>Orz 而且我受夠了手動測試的生活了 ...</p>
 <p>所以想將測試運行的邏輯搬移到 Python 的部份，加速測試案例的開發速度。</p>
 <p class="more"><a href="posts/send-scsi-command-from-python-on-linux.html">Read more…</a></p>
+</div>
             </div>
         </div>
         <div class="post">
@@ -248,14 +260,15 @@ server log 沒有吐出不該出現的錯誤。</p>
         <div itemprop="keywords" class="tags">
         <ul>
         Tags : 
-           <li><a class="tag p-category" href="categories/cc.html" rel="tag">C/C++</a></li>
+           <li><a class="tag p-category" href="categories/cc++.html" rel="tag">C/C++</a></li>
            <li><a class="tag p-category" href="categories/cmake.html" rel="tag">CMake</a></li>
         </ul>
 </div>
 
             </div>
             <div class="body">
-                <p>最近因為必須要示範如何將公司的 autoconf 與 automake 轉成 CMake，所以稍微研究了一下之前完全沒有用過得 <a class="reference external" href="http://www.cmake.org/cmake/help/cmake2.6docs.html#command:add_custom_command">add_custom_command</a> 跟 <a class="reference external" href="http://www.cmake.org/cmake/help/cmake2.6docs.html#command:add_custom_target">add_custom_target</a></p>
+                <div>
+<p>最近因為必須要示範如何將公司的 autoconf 與 automake 轉成 CMake，所以稍微研究了一下之前完全沒有用過得 <a class="reference external" href="http://www.cmake.org/cmake/help/cmake2.6docs.html#command:add_custom_command">add_custom_command</a> 跟 <a class="reference external" href="http://www.cmake.org/cmake/help/cmake2.6docs.html#command:add_custom_target">add_custom_target</a></p>
 <div class="section" id="symbolic-link">
 <h2>建立 symbolic link</h2>
 <p>目前有一個需求是要建立 symbolic link 在某些特定的資料夾裡面。
@@ -307,6 +320,7 @@ install-exec-hook:
 <p>汝の本降ちゆくを看取ること</p>
 </blockquote>
 </div>
+</div>
             </div>
         </div>
         <div class="post">
@@ -332,7 +346,8 @@ install-exec-hook:
 
             </div>
             <div class="body">
-                <p>最近被丟到 FreeBSD 跟 C 的世界裡面，沒有 Scala 的 Actor 可以用。
+                <div>
+<p>最近被丟到 FreeBSD 跟 C 的世界裡面，沒有 Scala 的 Actor 可以用。
 所以只好參考別人的 Thread Pool 來看一下，在 C 的世界裡面 Thread Pool 是怎麼實作的。</p>
 <p>首先先去 StackOverFlow 中尋找是否有人問過類似的問題</p>
 <p><a class="reference external" href="http://stackoverflow.com/questions/6297428/existing-threadpool-c-implementation">Existing threadpool C implementation</a></p>
@@ -465,6 +480,7 @@ threadpool_task_t 也是一樣的原理，真是出乎意料的簡單。</p>
 <cite title="Source Title">輪るピングドラム</cite>
 </blockquote>
 </div>
+</div>
             </div>
         </div>
         <div class="post">
@@ -490,7 +506,8 @@ threadpool_task_t 也是一樣的原理，真是出乎意料的簡單。</p>
 
             </div>
             <div class="body">
-                <p>會想要重拾 Scala 跟 Play 主要是因為看到了這篇文章</p>
+                <div>
+<p>會想要重拾 Scala 跟 Play 主要是因為看到了這篇文章</p>
 <p><a class="reference external" href="http://minipai.tumblr.com/post/41882685541/22k">怎麼設計22K?</a></p>
 <p>因為覺得這個設計理念真的是太正面了 XDDD</p>
 <blockquote>
@@ -504,6 +521,7 @@ threadpool_task_t 也是一樣的原理，真是出乎意料的簡單。</p>
 <p>整個實作過程是參考 <a class="reference external" href="http://www.playframework.org/documentation/2.1-RC4/ScalaTodoList">Your first Play application</a> 這篇文章的。</p>
 <p>P.S 這篇文章寫到一半的時候 Play 2.1 出了 Orz ...</p>
 <p class="more"><a href="posts/play-note-1.html">Read more…</a></p>
+</div>
             </div>
         </div>
         <div class="post">
@@ -529,7 +547,8 @@ threadpool_task_t 也是一樣的原理，真是出乎意料的簡單。</p>
 
             </div>
             <div class="body">
-                <p>之前雖然從 Octopress 跳到 Pelican 脫離了 Ruby 的環境，也花了一些時間在修改 Theme。
+                <div>
+<p>之前雖然從 Octopress 跳到 Pelican 脫離了 Ruby 的環境，也花了一些時間在修改 Theme。
 但是還是很難喜歡上 Pelican，最主要的就是他的手冊很難閱讀，而且資訊有點少 Orz。</p>
 <p>Nikola 的手冊就比較簡潔清楚，也比較好查詢。
 且查詢了一下 Nikola 的事蹟之後發現他太帥了！</p>
@@ -556,6 +575,7 @@ C:<span class="se">\P</span>ython27<span class="se">\p</span>ython.exe C:<span c
 只好就土法煉鋼一個一個輸入，所以最多只能輸入四個參數。</p>
 <p>（如果有人有好得解決方式也請教我一下 m(_ _)m )</p>
 <p class="more"><a href="posts/pelican-to-nikola.html">Read more…</a></p>
+</div>
 </div>
             </div>
         </div>

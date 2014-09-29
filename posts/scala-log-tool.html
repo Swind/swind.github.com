@@ -66,7 +66,8 @@ slf4s + slf4j + logback
 
         </div>
         <div class="body">
-            <p>之前偷懶都直接使用 println 來輸出訊息，但是最近在玩 <a class="reference external" href="http://akka.io/">Akka</a> ，我發現如果沒有使用 log tool 的話我根本不知道是哪個 Actor 印訊息的。
+            <div>
+<p>之前偷懶都直接使用 println 來輸出訊息，但是最近在玩 <a class="reference external" href="http://akka.io/">Akka</a> ，我發現如果沒有使用 log tool 的話我根本不知道是哪個 Actor 印訊息的。
 只好搜尋一下 Scala 上面有沒有什麼好用的 Log 工具。</p>
 <div class="section" id="slf4s-slf4j-logback">
 <h2>slf4s + slf4j + logback</h2>
@@ -106,6 +107,7 @@ slf4s + slf4j + logback
 <p>最後是額外找到的 <a class="reference external" href="http://www.ac.net.blog.163.com/blog/static/1364905620111023304126/">打一句log時間不到一納秒！完爆log4j、logback、slf4j</a> ，但是我沒有用因為還沒有效能上的需求，不過我有稍微看一下程式碼，加上下面留言者給的提示。
 在使用logger印出訊息之前，先進行 logger.isTraceEnabled、logger.isDebugEnable 等的判斷，就可以在編譯的時候進行最佳化。</p>
 <p>目前使用的 Log 工具大概就這樣了，logback 如果有玩到什麼好玩的會在上來報告。</p>
+</div>
 </div>
         </div>
         

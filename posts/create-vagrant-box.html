@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
-<title>epub格式簡轉繁小工具 | Corleonis</title>
+<title>自製 Vagrant Box | Corleonis</title>
 <link href="../assets/css/bitter.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/main.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/rst.css" rel="stylesheet" type="text/css">
 <link href="../assets/css/code.css" rel="stylesheet" type="text/css">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="../rss.xml">
-<link rel="canonical" href="http://swind.code-life.info/posts/epubconverter.html">
+<link rel="canonical" href="http://swind.code-life.info/posts/create-vagrant-box.html">
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
     tex2jax: {
@@ -22,19 +22,28 @@ MathJax.Hub.Config({
     }
 });
 </script><!--[if lt IE 9]><script src="/assets/js/html5.js"></script><![endif]--><meta name="author" content="Swind">
-<meta name="og:title" content="epub格式簡轉繁小工具">
-<meta name="og:url" content="http://swind.code-life.info/posts/epubconverter.html">
-<meta name="og:description" content="EPUBConverter 0.0.1
-這個版號我覺得也沒有機會到 0.0.2 了，不過還是讓我命名個版號滿足小小的虛榮心好了。
+<meta name="og:title" content="自製 Vagrant Box">
+<meta name="og:url" content="http://swind.code-life.info/posts/create-vagrant-box.html">
+<meta name="og:description" content="建立 vagrant 帳號
+
+useradd -m vagrant
+passwd vagrant
 
 
-不負責任的使用教學
-這只是一個非常簡單的小工具，用 Scala 撰寫而成，因此執行環境需要使用 JVM。
-我只有測試過 JDK 7 的環境，理論上 JDK 6 應該也沒有問題。
-如果有人有測試到有問題的話（默...）我也不知道有沒有時間改 Orz。
 
-轉換方式
-轉換">
+修改預設 editor 與 sudoers
+
+sudo update-alternatives --config editor
+sudo su -
+visudo
+
+增加
+
+vagrant ALL=(ALL) NOPASSWD:ALL
+
+
+
+移除已經存在的網路卡 ( 除了第一個 NAT 的 eth">
 <meta name="og:site_name" content="Corleonis">
 <meta name="og:type" content="article">
 </head>
@@ -50,81 +59,77 @@ MathJax.Hub.Config({
             
     <div class="post">
     
-    <h1 class="p-name entry-title" itemprop="headline name">epub格式簡轉繁小工具</h1>
+    <h1 class="p-name entry-title" itemprop="headline name">自製 Vagrant Box</h1>
 
         <div class="meta">
             <div class="authordate">
-                <time class="timeago" datetime="2012-05-11T16:56:00+08:00">2012-05-11 16:56</time>
+                <time class="timeago" datetime="2014-09-25T16:16:25+08:00">2014-09-25 16:16</time>
             
 
             
           |  
-        <a href="epubconverter.rst" id="sourcelink">Source</a>
+        <a href="create-vagrant-box.rst" id="sourcelink">Source</a>
 
             </div>
             
-        <div itemprop="keywords" class="tags">
-        <ul>
-        Tags : 
-           <li><a class="tag p-category" href="../categories/scala.html" rel="tag">Scala</a></li>
-        </ul>
-</div>
 
         </div>
         <div class="body">
             <div>
-<p><a class="reference external" href="https://github.com/Swind/EPUBConverter/downloads">EPUBConverter 0.0.1</a></p>
-<p>這個版號我覺得也沒有機會到 0.0.2 了，不過還是讓我命名個版號滿足小小的虛榮心好了。</p>
-<!-- TEASER_END -->
-<div class="section" id="id1">
-<h2>不負責任的使用教學</h2>
-<p>這只是一個非常簡單的小工具，用 Scala 撰寫而成，因此執行環境需要使用 JVM。
-我只有測試過 JDK 7 的環境，理論上 JDK 6 應該也沒有問題。
-如果有人有測試到有問題的話（默...）我也不知道有沒有時間改 Orz。</p>
-<div class="section" id="id2">
-<h3>轉換方式</h3>
-<p>轉換方式感謝 <a class="reference external" href="http://jeremy.ssinrc.org/?p=327">六度數位空間</a> 的分享。
-其實 epub 的格式是以 zip 格式壓縮，所以這個程式的執行流程是</p>
-<ol class="arabic simple">
-<li>將 epub 檔解壓縮到暫存資料夾</li>
-<li>將 暫存資料夾裡面的所有檔案從 UTF-8 簡體 轉成 UTF-8 繁體</li>
-<li>將資料夾壓縮，並且順便將檔名轉成繁體</li>
-</ol>
-<p>簡體轉繁體的程式碼是使用 <a class="reference external" href="http://www.mandarintools.com/zhcode.html">zhcode</a></p>
-<p>整個步驟就只有這樣而已。</p>
-</div>
-<div class="section" id="id4">
-<h3>使用方式</h3>
-<p>整個程式的資料夾結構如下</p>
-<pre class="literal-block">
-/EPUBConverter
-  |---Source
-  |---Result
-  |---Converter.bat
-  |---Converter.jar
-  |---hcutf8.txt
+<div class="section" id="vagrant">
+<h2>建立 vagrant 帳號</h2>
+<pre class="code bash literal-block">
+useradd -m vagrant
+passwd vagrant
 </pre>
-<p>hcutf8.txt 是個對應表，他列出了簡體字跟繁體字的對應。所以如果想自行更改轉換字的話，可以修改這個檔案（應該可以）。
-要使用只要執行 Converter.bat 就會自動將 Source 資料夾底下 <em>所有</em> 的檔案，轉換到 Result 資料夾底下，就這樣而已了。</p>
 </div>
+<div class="section" id="editor-sudoers">
+<h2>修改預設 editor 與 sudoers</h2>
+<pre class="code bash literal-block">
+sudo update-alternatives --config editor
+sudo su -
+visudo
+</pre>
+<p>增加</p>
+<pre class="code literal-block">
+vagrant ALL=(ALL) NOPASSWD:ALL
+</pre>
+</div>
+<div class="section" id="nat-eth0">
+<h2>移除已經存在的網路卡 ( 除了第一個 NAT 的 eth0 之外）</h2>
+<p>錯誤訊息</p>
+<pre class="code literal-block">
+The following SSH command responded with a non-zero exit status.
+Vagrant assumes that this means the command failed!
+
+/sbin/ip addr flush dev eth1 2&gt; /dev/null
+
+Stdout from the command:
+
+
+
+Stderr from the command:
+
+stdin: is not a tty
+</pre>
+<p>原因是有可能之前有增加過網路卡，所以 eth1 代表那個已經不存在的網路卡。
+導致 vagrant 沒有辦法初始化網路設定</p>
+<pre class="code literal-block">
+sudo vim /etc/udev/rules.d/70-persistent-net.rules
+</pre>
 </div>
 </div>
         </div>
         
-        <ul class="pager">
-<li class="previous">
-                <a href="scala-orm-note.html" rel="prev" title="Scala ORM 工具筆記-Circumflex與ActiveJDBC">Previous post</a>
-            </li>
-            <li class="next">
-                <a href="epubconverter-implement-note.html" rel="next" title="實作 EPUBConverter 的筆記">Next post</a>
-            </li>
-        </ul>
-<div id="disqus_thread"></div>
+
+            
+        
+        <div id="disqus_thread"></div>
         <script>
         var disqus_shortname ="swindgithub",
-            disqus_url="http://swind.code-life.info/posts/epubconverter.html",
-        disqus_title="epub\u683c\u5f0f\u7c21\u8f49\u7e41\u5c0f\u5de5\u5177",
-        disqus_identifier="cache/posts/2012-05-11-epubconverter.html",
+            disqus_url="http://swind.code-life.info/posts/create-vagrant-box.html",
+        disqus_title="\u81ea\u88fd Vagrant Box",
+        disqus_identifier="cache/posts/2014-09-25-create-vagrant-box.html",
         disqus_config = function () {
             this.language = "en";
         };

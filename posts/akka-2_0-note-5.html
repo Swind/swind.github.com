@@ -66,7 +66,8 @@ MathJax.Hub.Config({
 
         </div>
         <div class="body">
-            <p>繼上次完全看不懂的 Dataflow 之後，我還是想要一個 Akka 的 Scatter Gather 實作方式，因此想試著自己實做看看。</p>
+            <div>
+<p>繼上次完全看不懂的 Dataflow 之後，我還是想要一個 Akka 的 Scatter Gather 實作方式，因此想試著自己實做看看。</p>
 <p>下圖是 <a class="reference external" href="http://www.eaipatterns.com/">Enterprise Integration Patterns</a>  書中的 Scatter-Gather 概念圖。</p>
 <img alt="http://www.eaipatterns.com/img/BroadcastAggregate.gif" src="http://www.eaipatterns.com/img/BroadcastAggregate.gif"><p>從圖中可以發現，中間對於 Vendor A、B 與 C 進行 Broadcast 的行為跟 Akka 內的 <a class="reference external" href="http://doc.akka.io/docs/akka/2.0/scala/routing.html">Router</a> 很像，
 所以當我正在思考 Router 是否合適作為這種用途的時候，我想到了 <a class="reference external" href="http://letitcrash.com/">Let it Crash</a> 裡面 <a class="reference external" href="http://letitcrash.com/post/23532935686/watch-the-routees">Watch the Routees</a> 這篇文章。</p>
@@ -229,6 +230,7 @@ Main -&gt; Router -&gt; Worker Actor</blockquote>
 <div class="section" id="id2">
 <h2>下集預告 ?</h2>
 <img alt="https://dl.dropbox.com/u/15537823/Blog/Akka%202.0%20%E7%AD%86%E8%A8%98%285%29%20-%20Scatter%20Gather/Photo%2012-6-16%20%E4%B8%8B%E5%8D%8810%2042%2021.png" src="https://dl.dropbox.com/u/15537823/Blog/Akka%202.0%20%E7%AD%86%E8%A8%98%285%29%20-%20Scatter%20Gather/Photo%2012-6-16%20%E4%B8%8B%E5%8D%8810%2042%2021.png">
+</div>
 </div>
         </div>
         

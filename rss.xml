@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis</title><link>http://swind.code-life.info/</link><description>Corleonis</description><language>en</language><lastBuildDate>Tue, 22 Jul 2014 06:20:09 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>使用 Python 透過 SSH 讀取遠端的檔案</title><link>http://swind.code-life.info/posts/read_remote_file_using_python_and_ssh.html</link><dc:creator>Swind</dc:creator><description>&lt;h2&gt;tail 遠端的檔案&lt;/h2&gt;
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis</title><link>http://swind.code-life.info/</link><description>Corleonis</description><language>en</language><lastBuildDate>Mon, 29 Sep 2014 02:43:49 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>使用 Python 透過 SSH 讀取遠端的檔案</title><link>http://swind.code-life.info/posts/read_remote_file_using_python_and_ssh.html</link><dc:creator>Swind</dc:creator><description>&lt;div class="section" id="tail"&gt;
+&lt;h2&gt;tail 遠端的檔案&lt;/h2&gt;
 &lt;p&gt;最近的自動化測試需要去做類似 tail 的動作來確認在執行 TestCase 的過程中，
 server log 沒有吐出不該出現的錯誤。&lt;/p&gt;
 &lt;p&gt;可是又不能透過 fabric 直接下 tail 指令，因此這次透過了 SFTP 來實現這個功能。&lt;/p&gt;
-&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/read_remote_file_using_python_and_ssh.html"&gt;Read more…&lt;/a&gt; (1 min remaining to read)&lt;/p&gt;</description><category>Python</category><guid>http://swind.code-life.info/posts/read_remote_file_using_python_and_ssh.html</guid><pubDate>Sun, 06 Jul 2014 12:45:37 GMT</pubDate></item><item><title>用 Python 建立假的 REST API Server 進行測試</title><link>http://swind.code-life.info/posts/testing-your-rest-client.html</link><dc:creator>Swind</dc:creator><description>&lt;h2&gt;又再做不同的東西了 Orz&lt;/h2&gt;
+&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/read_remote_file_using_python_and_ssh.html"&gt;Read more…&lt;/a&gt; (1 min remaining to read)&lt;/p&gt;&lt;/div&gt;</description><category>Python</category><guid>http://swind.code-life.info/posts/read_remote_file_using_python_and_ssh.html</guid><pubDate>Sun, 06 Jul 2014 12:45:37 GMT</pubDate></item><item><title>用 Python 建立假的 REST API Server 進行測試</title><link>http://swind.code-life.info/posts/testing-your-rest-client.html</link><dc:creator>Swind</dc:creator><description>&lt;div class="section" id="orz"&gt;
+&lt;h2&gt;又再做不同的東西了 Orz&lt;/h2&gt;
 &lt;p&gt;最近因為在修改新公司的 CLI 程式, 所以順便想了一下要怎麼測試比較好。
 這個 CLI 是透過 server 所提供的 REST API 來操作遠端的 Server,
 因此我剛接手的時候都是真的去連到一個 Server 進行開發。&lt;/p&gt;
@@ -12,7 +14,7 @@ server log 沒有吐出不該出現的錯誤。&lt;/p&gt;
 &lt;p&gt;當然, 在程式架構設計的好的情況下, 其實不需要建立這種假的 Server。
 但我目前正在重構中, 要將 CLI 的架構重新設計, 並且在這過程之中要維持程式可以正常運作。
 所以我必須確保還未重構的功能還能正常運作, 因此我想建立假的 REST API Server 是個可以同時兼顧新舊架構的好方法。&lt;/p&gt;
-&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/testing-your-rest-client.html"&gt;Read more…&lt;/a&gt; (1 min remaining to read)&lt;/p&gt;</description><category>Python</category><category>Test</category><guid>http://swind.code-life.info/posts/testing-your-rest-client.html</guid><pubDate>Sat, 24 May 2014 03:18:00 GMT</pubDate></item><item><title>透過 Travis 自動佈署 Nikola 產生的網頁到 GitHub 上</title><link>http://swind.code-life.info/posts/auto-deploying-my-nikola-blog-to-github-by-travis-ci.html</link><dc:creator>Swind</dc:creator><description>&lt;p&gt;之前一直想要找 Server 可以結合 Jenkins 或者 Script 讓我不用每次都要重複安裝 Nikola 這件事情。
+&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/testing-your-rest-client.html"&gt;Read more…&lt;/a&gt; (1 min remaining to read)&lt;/p&gt;&lt;/div&gt;</description><category>Python</category><category>Test</category><guid>http://swind.code-life.info/posts/testing-your-rest-client.html</guid><pubDate>Sat, 24 May 2014 03:18:00 GMT</pubDate></item><item><title>透過 Travis 自動佈署 Nikola 產生的網頁到 GitHub 上</title><link>http://swind.code-life.info/posts/auto-deploying-my-nikola-blog-to-github-by-travis-ci.html</link><dc:creator>Swind</dc:creator><description>&lt;div&gt;&lt;p&gt;之前一直想要找 Server 可以結合 Jenkins 或者 Script 讓我不用每次都要重複安裝 Nikola 這件事情。
 可是一直都沒有找到合用的，後來發現 &lt;a class="reference external" href="https://travis-ci.org"&gt;Travis&lt;/a&gt; + &lt;a class="reference external" href="https://github.com"&gt;GitHub&lt;/a&gt; 這個很多人使用的組合。
 因此開始嘗試在將文章 commit 到 GitHub 上面之後， Travis 可以自動使用 nikola build 產生 HTML 檔案，
 並且 Commit 回去 GitHub。&lt;/p&gt;
@@ -26,23 +28,23 @@ server log 沒有吐出不該出現的錯誤。&lt;/p&gt;
 &lt;p&gt;master 就是 GitHub Pages 的部份，而 source 則是放 Nikola 的設定檔以及文章的原始檔。
 現在 GitHub 預設放網頁的 branch 好像可以改成  gh-pages。不過改設定又是浩大工程，我以我就繼續沿用之前的 branch 了。
 另外 Nikola 現在應該也有部屬到 GitHub 的功能，所以下面的流程說不定可以弄個更簡潔。&lt;/p&gt;
-&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/auto-deploying-my-nikola-blog-to-github-by-travis-ci.html"&gt;Read more…&lt;/a&gt; (2 min remaining to read)&lt;/p&gt;</description><category>Nikola</category><category>Python</category><guid>http://swind.code-life.info/posts/auto-deploying-my-nikola-blog-to-github-by-travis-ci.html</guid><pubDate>Tue, 04 Mar 2014 09:49:24 GMT</pubDate></item><item><title>加速 FreeBSD Kernel 的編譯</title><link>http://swind.code-life.info/posts/use_ccache_to_build_freebsd_kernel.html</link><dc:creator>Swind</dc:creator><description>&lt;p&gt;這幾天要開始 Build FreeBSD Kernel 了，
+&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/auto-deploying-my-nikola-blog-to-github-by-travis-ci.html"&gt;Read more…&lt;/a&gt; (2 min remaining to read)&lt;/p&gt;&lt;/div&gt;</description><category>Nikola</category><category>Python</category><guid>http://swind.code-life.info/posts/auto-deploying-my-nikola-blog-to-github-by-travis-ci.html</guid><pubDate>Tue, 04 Mar 2014 09:49:24 GMT</pubDate></item><item><title>加速 FreeBSD Kernel 的編譯</title><link>http://swind.code-life.info/posts/use_ccache_to_build_freebsd_kernel.html</link><dc:creator>Swind</dc:creator><description>&lt;div&gt;&lt;p&gt;這幾天要開始 Build FreeBSD Kernel 了，
 可是 buildworld 跟 buildkernel 都需要花費非常久的時間。&lt;/p&gt;
 &lt;p&gt;因此想要研究一下是否能加速 FreeBSD Kernel 的編譯速度，
 加快開發測試的流程，以及減少 CI 所需要花費的時間。&lt;/p&gt;
-&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/use_ccache_to_build_freebsd_kernel.html"&gt;Read more…&lt;/a&gt; (1 min remaining to read)&lt;/p&gt;</description><category>C</category><category>FreeBSD</category><guid>http://swind.code-life.info/posts/use_ccache_to_build_freebsd_kernel.html</guid><pubDate>Wed, 18 Sep 2013 06:00:09 GMT</pubDate></item><item><title>簡單易懂的 Python Plugin 架構 (大概 ...)</title><link>http://swind.code-life.info/posts/simple-python-plugin-framework.html</link><dc:creator>Swind</dc:creator><description>&lt;p&gt;學習用 Python 寫測試工具快兩個星期了，主要使用 clime + ucltip 跟 pyinstaller。
+&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/use_ccache_to_build_freebsd_kernel.html"&gt;Read more…&lt;/a&gt; (1 min remaining to read)&lt;/p&gt;&lt;/div&gt;</description><category>C</category><category>FreeBSD</category><guid>http://swind.code-life.info/posts/use_ccache_to_build_freebsd_kernel.html</guid><pubDate>Wed, 18 Sep 2013 06:00:09 GMT</pubDate></item><item><title>簡單易懂的 Python Plugin 架構 (大概 ...)</title><link>http://swind.code-life.info/posts/simple-python-plugin-framework.html</link><dc:creator>Swind</dc:creator><description>&lt;div&gt;&lt;p&gt;學習用 Python 寫測試工具快兩個星期了，主要使用 clime + ucltip 跟 pyinstaller。
 可是目前遇到一個問題，當我使用 pyinstaller 將測試工具打包之後，
 他會很貼心的幫你將所有 .py 檔包裝成一個可執行檔。
 所以當我要任何新增 command 都必須要重新部屬那個執行檔，這樣實在非常的麻煩。&lt;/p&gt;
 &lt;p&gt;因此才會開始嘗試是否有可能執行檔只包裝 clime, ucltip 以及我自己所提供的 API，
 然後 command 的部份就利用 plugin 的方式來增加。&lt;/p&gt;
-&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/simple-python-plugin-framework.html"&gt;Read more…&lt;/a&gt; (1 min remaining to read)&lt;/p&gt;</description><guid>http://swind.code-life.info/posts/simple-python-plugin-framework.html</guid><pubDate>Sun, 25 Aug 2013 07:26:12 GMT</pubDate></item><item><title>使用 Python 結合 C 在 Linux 發送 SCSI Command</title><link>http://swind.code-life.info/posts/send-scsi-command-from-python-on-linux.html</link><dc:creator>Swind</dc:creator><description>&lt;p&gt;最近因為工作的需要，所以要撰寫很多 SCSI 相關的測試。
+&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/simple-python-plugin-framework.html"&gt;Read more…&lt;/a&gt; (1 min remaining to read)&lt;/p&gt;&lt;/div&gt;</description><guid>http://swind.code-life.info/posts/simple-python-plugin-framework.html</guid><pubDate>Sun, 25 Aug 2013 07:26:12 GMT</pubDate></item><item><title>使用 Python 結合 C 在 Linux 發送 SCSI Command</title><link>http://swind.code-life.info/posts/send-scsi-command-from-python-on-linux.html</link><dc:creator>Swind</dc:creator><description>&lt;div&gt;&lt;p&gt;最近因為工作的需要，所以要撰寫很多 SCSI 相關的測試。
 目前可以用的測試工具有 fio, iometer 以及一個自行開發的 SCSI Command 驗證的工具。
 但是這些都是使用 C 撰寫的，所以要撰寫一些流程比較複雜的驗證時，就變得非常的麻煩。
 絕對不是因為我想試試看 Python 或者是因為自行開發的驗證工具程式碼已經無法閱讀的原因，才想要重造輪子。&lt;/p&gt;
 &lt;p&gt;Orz 而且我受夠了手動測試的生活了 ...&lt;/p&gt;
 &lt;p&gt;所以想將測試運行的邏輯搬移到 Python 的部份，加速測試案例的開發速度。&lt;/p&gt;
-&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/send-scsi-command-from-python-on-linux.html"&gt;Read more…&lt;/a&gt; (2 min remaining to read)&lt;/p&gt;</description><category>C/C++</category><category>Python</category><guid>http://swind.code-life.info/posts/send-scsi-command-from-python-on-linux.html</guid><pubDate>Sat, 03 Aug 2013 02:38:06 GMT</pubDate></item><item><title>CMake - add_custom_command</title><link>http://swind.code-life.info/posts/cmake-add_custom_command.html</link><dc:creator>Swind</dc:creator><description>&lt;p&gt;最近因為必須要示範如何將公司的 autoconf 與 automake 轉成 CMake，所以稍微研究了一下之前完全沒有用過得 &lt;a class="reference external" href="http://www.cmake.org/cmake/help/cmake2.6docs.html#command:add_custom_command"&gt;add_custom_command&lt;/a&gt; 跟 &lt;a class="reference external" href="http://www.cmake.org/cmake/help/cmake2.6docs.html#command:add_custom_target"&gt;add_custom_target&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/send-scsi-command-from-python-on-linux.html"&gt;Read more…&lt;/a&gt; (2 min remaining to read)&lt;/p&gt;&lt;/div&gt;</description><category>C/C++</category><category>Python</category><guid>http://swind.code-life.info/posts/send-scsi-command-from-python-on-linux.html</guid><pubDate>Sat, 03 Aug 2013 02:38:06 GMT</pubDate></item><item><title>CMake - add_custom_command</title><link>http://swind.code-life.info/posts/cmake-add_custom_command.html</link><dc:creator>Swind</dc:creator><description>&lt;div&gt;&lt;p&gt;最近因為必須要示範如何將公司的 autoconf 與 automake 轉成 CMake，所以稍微研究了一下之前完全沒有用過得 &lt;a class="reference external" href="http://www.cmake.org/cmake/help/cmake2.6docs.html#command:add_custom_command"&gt;add_custom_command&lt;/a&gt; 跟 &lt;a class="reference external" href="http://www.cmake.org/cmake/help/cmake2.6docs.html#command:add_custom_target"&gt;add_custom_target&lt;/a&gt;&lt;/p&gt;
 &lt;div class="section" id="symbolic-link"&gt;
 &lt;h2&gt;建立 symbolic link&lt;/h2&gt;
 &lt;p&gt;目前有一個需求是要建立 symbolic link 在某些特定的資料夾裡面。
@@ -91,7 +93,7 @@ install-exec-hook:
 &lt;p&gt;我らの望みヽ&lt;/p&gt;
 &lt;p&gt;それは&lt;/p&gt;
 &lt;p&gt;汝の本降ちゆくを看取ること&lt;/p&gt;
-&lt;/blockquote&gt;&lt;/div&gt;</description><category>C/C++</category><category>CMake</category><guid>http://swind.code-life.info/posts/cmake-add_custom_command.html</guid><pubDate>Tue, 25 Jun 2013 11:20:46 GMT</pubDate></item><item><title>C 的 Thread Pool 筆記</title><link>http://swind.code-life.info/posts/c-thread-pool.html</link><dc:creator>Swind</dc:creator><description>&lt;p&gt;最近被丟到 FreeBSD 跟 C 的世界裡面，沒有 Scala 的 Actor 可以用。
+&lt;/blockquote&gt;&lt;/div&gt;&lt;/div&gt;</description><category>C/C++</category><category>CMake</category><guid>http://swind.code-life.info/posts/cmake-add_custom_command.html</guid><pubDate>Tue, 25 Jun 2013 11:20:46 GMT</pubDate></item><item><title>C 的 Thread Pool 筆記</title><link>http://swind.code-life.info/posts/c-thread-pool.html</link><dc:creator>Swind</dc:creator><description>&lt;div&gt;&lt;p&gt;最近被丟到 FreeBSD 跟 C 的世界裡面，沒有 Scala 的 Actor 可以用。
 所以只好參考別人的 Thread Pool 來看一下，在 C 的世界裡面 Thread Pool 是怎麼實作的。&lt;/p&gt;
 &lt;p&gt;首先先去 StackOverFlow 中尋找是否有人問過類似的問題&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="http://stackoverflow.com/questions/6297428/existing-threadpool-c-implementation"&gt;Existing threadpool C implementation&lt;/a&gt;&lt;/p&gt;
@@ -217,7 +219,7 @@ threadpool_task_t 也是一樣的原理，真是出乎意料的簡單。&lt;/p&g
 &lt;blockquote&gt;
 &lt;p&gt;生存戦略！&lt;/p&gt;
 &lt;cite title="Source Title"&gt;輪るピングドラム&lt;/cite&gt;
-&lt;/blockquote&gt;&lt;/div&gt;</description><category>C</category><guid>http://swind.code-life.info/posts/c-thread-pool.html</guid><pubDate>Fri, 07 Jun 2013 13:43:28 GMT</pubDate></item><item><title>Scala 使用 Play 筆記 (1)</title><link>http://swind.code-life.info/posts/play-note-1.html</link><dc:creator>Swind</dc:creator><description>&lt;p&gt;會想要重拾 Scala 跟 Play 主要是因為看到了這篇文章&lt;/p&gt;
+&lt;/blockquote&gt;&lt;/div&gt;&lt;/div&gt;</description><category>C</category><guid>http://swind.code-life.info/posts/c-thread-pool.html</guid><pubDate>Fri, 07 Jun 2013 13:43:28 GMT</pubDate></item><item><title>Scala 使用 Play 筆記 (1)</title><link>http://swind.code-life.info/posts/play-note-1.html</link><dc:creator>Swind</dc:creator><description>&lt;div&gt;&lt;p&gt;會想要重拾 Scala 跟 Play 主要是因為看到了這篇文章&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="http://minipai.tumblr.com/post/41882685541/22k"&gt;怎麼設計22K?&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;因為覺得這個設計理念真的是太正面了 XDDD&lt;/p&gt;
 &lt;blockquote&gt;
@@ -230,7 +232,7 @@ threadpool_task_t 也是一樣的原理，真是出乎意料的簡單。&lt;/p&g
 所以我決定把使用 Play 實作的過程記錄一下，以方便我日後回憶。&lt;/p&gt;
 &lt;p&gt;整個實作過程是參考 &lt;a class="reference external" href="http://www.playframework.org/documentation/2.1-RC4/ScalaTodoList"&gt;Your first Play application&lt;/a&gt; 這篇文章的。&lt;/p&gt;
 &lt;p&gt;P.S 這篇文章寫到一半的時候 Play 2.1 出了 Orz ...&lt;/p&gt;
-&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/play-note-1.html"&gt;Read more…&lt;/a&gt; (5 min remaining to read)&lt;/p&gt;</description><category>Other</category><guid>http://swind.code-life.info/posts/play-note-1.html</guid><pubDate>Sat, 02 Feb 2013 01:11:00 GMT</pubDate></item><item><title>Pelican 轉移到 Nikola</title><link>http://swind.code-life.info/posts/pelican-to-nikola.html</link><dc:creator>Swind</dc:creator><description>&lt;p&gt;之前雖然從 Octopress 跳到 Pelican 脫離了 Ruby 的環境，也花了一些時間在修改 Theme。
+&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/play-note-1.html"&gt;Read more…&lt;/a&gt; (5 min remaining to read)&lt;/p&gt;&lt;/div&gt;</description><category>Other</category><guid>http://swind.code-life.info/posts/play-note-1.html</guid><pubDate>Sat, 02 Feb 2013 01:11:00 GMT</pubDate></item><item><title>Pelican 轉移到 Nikola</title><link>http://swind.code-life.info/posts/pelican-to-nikola.html</link><dc:creator>Swind</dc:creator><description>&lt;div&gt;&lt;p&gt;之前雖然從 Octopress 跳到 Pelican 脫離了 Ruby 的環境，也花了一些時間在修改 Theme。
 但是還是很難喜歡上 Pelican，最主要的就是他的手冊很難閱讀，而且資訊有點少 Orz。&lt;/p&gt;
 &lt;p&gt;Nikola 的手冊就比較簡潔清楚，也比較好查詢。
 且查詢了一下 Nikola 的事蹟之後發現他太帥了！&lt;/p&gt;
@@ -256,4 +258,4 @@ C:&lt;span class="se"&gt;\P&lt;/span&gt;ython27&lt;span class="se"&gt;\p&lt;/spa
 &lt;p&gt;上面的 Script 因為我找不到 Windows 裡面代表所有傳入參數的符號，
 只好就土法煉鋼一個一個輸入，所以最多只能輸入四個參數。&lt;/p&gt;
 &lt;p&gt;（如果有人有好得解決方式也請教我一下 m(_ _)m )&lt;/p&gt;
-&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/pelican-to-nikola.html"&gt;Read more…&lt;/a&gt; (1 min remaining to read)&lt;/p&gt;&lt;/div&gt;</description><category>Other</category><guid>http://swind.code-life.info/posts/pelican-to-nikola.html</guid><pubDate>Tue, 22 Jan 2013 01:11:00 GMT</pubDate></item></channel></rss>
+&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/pelican-to-nikola.html"&gt;Read more…&lt;/a&gt; (1 min remaining to read)&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;</description><category>Other</category><guid>http://swind.code-life.info/posts/pelican-to-nikola.html</guid><pubDate>Tue, 22 Jan 2013 01:11:00 GMT</pubDate></item></channel></rss>

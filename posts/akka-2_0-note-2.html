@@ -71,7 +71,8 @@ Future
 
         </div>
         <div class="body">
-            <p>以前再使用 Java Thread 的時候最困擾我的就是 Thread 之間的溝通。
+            <div>
+<p>以前再使用 Java Thread 的時候最困擾我的就是 Thread 之間的溝通。
 要怎樣讓一個 Thread 去等待另外一個 Thread？要怎樣才能讓工作分配的平均？
 最後是靠 BlockingQueue 才讓實作變得簡單一點，
 不過想當然問題當然一大堆 ... Orz</p>
@@ -152,6 +153,7 @@ In Akka, a Future is a data structure used to retrieve the result of some concur
 </pre>
 <p>用 traverse 的好處在於少產生了中間過程的 List[Future[Int]] (至少我們的程式碼看不到，背後實際上有沒有我就不確定了，不過文件是這樣說的)，而直接產生了 Future[List[Int]]。</p>
 <p>寫了這麼久，才寫這麼一點點 Orz ... 而且還完全沒有進入重點。</p>
+</div>
 </div>
 </div>
         </div>

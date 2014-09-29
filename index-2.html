@@ -51,7 +51,8 @@ MathJax.Hub.Config({
 
             </div>
             <div class="body">
-                <p>我常用的 Linux 環境一定會裝下面幾個工具</p>
+                <div>
+<p>我常用的 Linux 環境一定會裝下面幾個工具</p>
 <ol class="arabic simple">
 <li>zsh 與 oh-my-zsh</li>
 <li>vim 很多很多 vim plugin</li>
@@ -85,6 +86,7 @@ wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/maste
 將常用的工具與指令整理成一份文件，來協助管理與記憶。
 目前我是用 Nikola (對沒錯，所從 Octopress 跳到 Pelican 又跳到 Nikola 了 XD) stories 來作筆記。</p>
 <p class="more"><a href="posts/install-linux-config.html">Read more…</a></p>
+</div>
             </div>
         </div>
         <div class="post">
@@ -110,12 +112,14 @@ wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/maste
 
             </div>
             <div class="body">
-                <p>會想到用這個是由於 EPUBConverter Go 的版本雖然運作上已經比 Scala 版本快上不少了。
+                <div>
+<p>會想到用這個是由於 EPUBConverter Go 的版本雖然運作上已經比 Scala 版本快上不少了。
 但我發現在執行的時候 CPU 使用率一直都只有 25 %，所以才想試試看使用 goroutine 看能不能讓他轉換更快一點。</p>
 <p>依照文件所說，在執行 IO 相關動作的時候，會將 CPU 讓給 goroutine 來使用，那麼對於 EPUBConverter 的效能應該會有顯著的提昇。</p>
 <p>雖然有人說 goroutine 跟 Scala 的 actor 有點像，但是 actor 的模型就很具體跟明確。
 而 goroutine 則是提供一個方便快速的 thread 操作方式。</p>
 <p class="more"><a href="posts/goroutine-note-1.html">Read more…</a></p>
+</div>
             </div>
         </div>
         <div class="post">
@@ -141,7 +145,8 @@ wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/maste
 
             </div>
             <div class="body">
-                <p>一開始的 Scala 版本本來是自己寫來自己用的小工具，可是沒想到竟然有人有用還有回報問題。
+                <div>
+<p>一開始的 Scala 版本本來是自己寫來自己用的小工具，可是沒想到竟然有人有用還有回報問題。
 大受感動之餘（誤），而出現了這個全新感受的 EPUBConverter 0.0.2，絕對不是因為手癢想要試試看 Go。</p>
 <p>P.S 2012.12.09 更新 - 修正了鳥 Bug 所以到 0.0.3 了。</p>
 <p><a class="reference external" href="https://dl.dropbox.com/u/15537823/EPUBConverter_0.0.3.7z">EPUBConverter 0.0.3 下載</a></p>
@@ -154,6 +159,7 @@ wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/maste
 <p>不過有興趣的人，在原始碼的 <a class="reference external" href="https://github.com/Swind/EPUBConverter-Go/tree/master/tongwen_table">tongwen_table</a> 資料夾底下，我有放了一個簡單的轉換工具。
 可以利用那個重新產生 Go 的 map，但是最後還是得重新編譯整個 EPUBConverter 就是了。</p>
 <p class="more"><a href="posts/epubconverter-0_0_2.html">Read more…</a></p>
+</div>
             </div>
         </div>
         <div class="post">
@@ -180,7 +186,8 @@ wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/maste
 
             </div>
             <div class="body">
-                <p><a class="reference external" href="http://spray.cc/">Spray</a></p>
+                <div>
+<p><a class="reference external" href="http://spray.cc/">Spray</a></p>
 <p>最初是想要建立一個提供查詢服務的 RESTful API Server，可以讓 Client 的應用程式透過 RESTful API 查詢一些資料。
 但是看來看去，用 Play2、Jersey、RESTEasy 等都蠻麻煩的，而且還需要使用 Web container（像 Tomcat、Jetty 等）。
 所以才找到這個 Spray，而且又是用 Scala 開發的，實在沒有理由不試試看阿。 XD</p>
@@ -188,6 +195,7 @@ wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/maste
 因為 <a class="reference external" href="http://spray.cc/documentation/spray-can/">spray-can</a> 的範例看起來最簡單並且也符合我的需求，所以就直接用他了。</p>
 <p>想瞭解更詳細內容的可以參考 <a class="reference external" href="https://github.com/spray/spray/tree/release-1.0-M2/examples/spray-can/simple-http-server/">spray-can 範例文件</a> 與 <a class="reference external" href="http://blog.cloudfoundry.com/2012/05/11/running-standalone-web-applications-on-cloud-foundry/">Running Standalone Web Applications on Cloud Foundry</a></p>
 <p class="more"><a href="posts/build-restful-api-server-by-spray.html">Read more…</a></p>
+</div>
             </div>
         </div>
         <div class="post">
@@ -214,7 +222,8 @@ wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/maste
 
             </div>
             <div class="body">
-                <p>今天早上先簡單了依照昨天畫得架構圖做了一個雛型，整個跑起來功能是以了，但是流程整個悲劇 Orz ...
+                <div>
+<p>今天早上先簡單了依照昨天畫得架構圖做了一個雛型，整個跑起來功能是以了，但是流程整個悲劇 Orz ...
 先是 Exception Handling 做的不夠好，結果就真的是 "Let it Crash" 一直死一直死一直死，好像在玩 D3 的煉獄模式一樣。</p>
 <p>再來是我沒有去設定 Dispatcher 所以 Thread 用了十幾個。如果我沒有看錯的話，依照 Akka <a class="reference external" href="https://github.com/akka/akka/blob/master/akka-actor/src/main/resources/reference.conf">reference.conf</a> 的設定，
 Default Dispatcher 使用 fork-join-executor，他的預設設定如下</p>
@@ -236,6 +245,7 @@ Default Dispatcher 使用 fork-join-executor，他的預設設定如下</p>
 parallelism-factor * 你的處理器核心數</blockquote>
 <p>所以我的四核心桌機使用這個 Dispatcher 最多會開到 12 個 Thread Orz ...</p>
 <p class="more"><a href="posts/akka-2_0-note-6.html">Read more…</a></p>
+</div>
             </div>
         </div>
         <div class="post">
@@ -262,7 +272,8 @@ parallelism-factor * 你的處理器核心數</blockquote>
 
             </div>
             <div class="body">
-                <p>繼上次完全看不懂的 Dataflow 之後，我還是想要一個 Akka 的 Scatter Gather 實作方式，因此想試著自己實做看看。</p>
+                <div>
+<p>繼上次完全看不懂的 Dataflow 之後，我還是想要一個 Akka 的 Scatter Gather 實作方式，因此想試著自己實做看看。</p>
 <p>下圖是 <a class="reference external" href="http://www.eaipatterns.com/">Enterprise Integration Patterns</a>  書中的 Scatter-Gather 概念圖。</p>
 <img alt="http://www.eaipatterns.com/img/BroadcastAggregate.gif" src="http://www.eaipatterns.com/img/BroadcastAggregate.gif"><p>從圖中可以發現，中間對於 Vendor A、B 與 C 進行 Broadcast 的行為跟 Akka 內的 <a class="reference external" href="http://doc.akka.io/docs/akka/2.0/scala/routing.html">Router</a> 很像，
 所以當我正在思考 Router 是否合適作為這種用途的時候，我想到了 <a class="reference external" href="http://letitcrash.com/">Let it Crash</a> 裡面 <a class="reference external" href="http://letitcrash.com/post/23532935686/watch-the-routees">Watch the Routees</a> 這篇文章。</p>
@@ -274,6 +285,7 @@ parallelism-factor * 你的處理器核心數</blockquote>
 <li>除此之外， worker 在執行過程中發生錯誤時，應該要進行 retry，在進行幾次 retry 後依然有錯誤時，Worker 就會停止，並且中止整個 Job。</li>
 </ol>
 <p class="more"><a href="posts/akka-2_0-note-5.html">Read more…</a></p>
+</div>
             </div>
         </div>
     

@@ -67,7 +67,8 @@ Akka 的 Future 到底有沒有存在的意義呢？
 
         </div>
         <div class="body">
-            <p>這整篇的原因起於，洗澡的時候想到的，
+            <div>
+<p>這整篇的原因起於，洗澡的時候想到的，
 Akka 的 Future 到底有沒有存在的意義呢？</p>
 <p>因為當一個 Actor 用 reply 或者 sender 回傳結果的時候，其實可以再 receive 不同的型態的 Message 就好了。
 而且這樣還不會因為 Await 而需要 block thread，減少 dead lock 的發生。
@@ -210,6 +211,7 @@ autoCompilerPlugins := true
 libraryDependencies <+= scalaVersion { v => compilerPlugin("org.scala-lang.plugins" % "continuations" % "2.9.1") }
 
 scalacOptions += "-P:continuations:enable" -->
+</div>
 </div>
         </div>
         
