@@ -9,6 +9,12 @@
 在 VirtualBox 上安裝系統
 =====================================
 
+VirtualBox 安裝 Extension Pack
+
+.. code:: bash
+   wget http://download.virtualbox.org/virtualbox/4.3.16/Oracle_VM_VirtualBox_Extension_Pack-4.3.16-95972.vbox-extpack
+   VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-4.3.16-95972.vbox-extpack
+
 建立 vagrant 帳號
 ------------------------------------
 

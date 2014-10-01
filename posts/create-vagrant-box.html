@@ -24,26 +24,14 @@ MathJax.Hub.Config({
 </script><!--[if lt IE 9]><script src="/assets/js/html5.js"></script><![endif]--><meta name="author" content="Swind">
 <meta name="og:title" content="自製 Vagrant Box">
 <meta name="og:url" content="http://swind.code-life.info/posts/create-vagrant-box.html">
-<meta name="og:description" content="建立 vagrant 帳號
+<meta name="og:description" content='VirtualBox 安裝 Extension Pack
 
-useradd -m vagrant
-passwd vagrant
+System Message: ERROR/3 (&lt;string&gt;, line 6)
+Error in "code" directive:
+maximum 1 argument(s) allowed, 7 supplied.
 
-
-
-修改預設 editor 與 sudoers
-
-sudo update-alternatives --config editor
-sudo su -
-visudo
-
-增加
-
-vagrant ALL=(ALL) NOPASSWD:ALL
-
-
-
-移除已經存在的網路卡 ( 除了第一個 NAT 的 eth">
+.. code:: bash
+   wget http://download.virtualbox.org/vi'>
 <meta name="og:site_name" content="Corleonis">
 <meta name="og:type" content="article">
 </head>
@@ -76,6 +64,18 @@ vagrant ALL=(ALL) NOPASSWD:ALL
         </div>
         <div class="body">
             <div>
+<p>VirtualBox 安裝 Extension Pack</p>
+<div class="system-message">
+<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">&lt;string&gt;</tt>, line 6)</p>
+<p>Error in "code" directive:
+maximum 1 argument(s) allowed, 7 supplied.</p>
+<pre class="literal-block">
+.. code:: bash
+   wget http://download.virtualbox.org/virtualbox/4.3.16/Oracle_VM_VirtualBox_Extension_Pack-4.3.16-95972.vbox-extpack
+   VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-4.3.16-95972.vbox-extpack
+
+</pre>
+</div>
 <div class="section" id="vagrant">
 <h2>建立 vagrant 帳號</h2>
 <pre class="code bash literal-block">
