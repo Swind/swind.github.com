@@ -105,6 +105,14 @@ VirtualBox 安裝 Extension Pack
 
     vagrant package --base <vm-name>
 
+.. figure:: https://dl.dropboxusercontent.com/u/15537823/Blog/Lord_Marksman_and_Vanadis.jpg
+
+.. raw:: html
+   
+   <blockquote>
+   <p>これは英雄へと至る物語</p>
+   </blockquote>
+
 .. _Creating a Custom Vagrant Box: http://williamwalker.me/blog/creating-a-custom-vagrant-box.html
 .. _How to install VirtualBox Guest Additions for Linux: http://xmodulo.com/how-to-install-virtualbox-guest-additions-for-linux.html
 .. _C.C Agile: http://teddysoft.tw/category/ccagile/ 
