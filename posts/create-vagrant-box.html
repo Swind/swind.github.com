@@ -24,14 +24,12 @@ MathJax.Hub.Config({
 </script><!--[if lt IE 9]><script src="/assets/js/html5.js"></script><![endif]--><meta name="author" content="Swind">
 <meta name="og:title" content="自製 Vagrant Box">
 <meta name="og:url" content="http://swind.code-life.info/posts/create-vagrant-box.html">
-<meta name="og:description" content='VirtualBox 安裝 Extension Pack
+<meta name="og:description" content="最近都在使用 Vagrant 以及看在 C.C Agile 中 beelit94 所介紹的 Packer。
+目前是使用 Vagrant 來統一公司同事的測試環境，減少因為環境不同而導致的 bug。
+這邊主要是筆記自己建立 box 時所要設定的內容，主要都是參考 Creating a Custom Vagrant Box 的文章。
 
-System Message: ERROR/3 (&lt;string&gt;, line 6)
-Error in "code" directive:
-maximum 1 argument(s) allowed, 7 supplied.
-
-.. code:: bash
-   wget http://download.virtualbox.org/vi'>
+在 VirtualBox 上安裝系統
+VirtualBox 安裝 ">
 <meta name="og:site_name" content="Corleonis">
 <meta name="og:type" content="article">
 </head>
@@ -60,31 +58,35 @@ maximum 1 argument(s) allowed, 7 supplied.
 
             </div>
             
+        <div itemprop="keywords" class="tags">
+        <ul>
+        Tags : 
+           <li><a class="tag p-category" href="../categories/vagrant.html" rel="tag">vagrant</a></li>
+        </ul>
+</div>
 
         </div>
         <div class="body">
             <div>
+<p>最近都在使用 Vagrant 以及看在 <a class="reference external" href="http://teddysoft.tw/category/ccagile/">C.C Agile</a> 中 <a class="reference external" href="http://ithelp.ithome.com.tw/profile?id=20014061">beelit94</a> 所介紹的 Packer。</p>
+<p>目前是使用 Vagrant 來統一公司同事的測試環境，減少因為環境不同而導致的 bug。</p>
+<p>這邊主要是筆記自己建立 box 時所要設定的內容，主要都是參考 <a class="reference external" href="http://williamwalker.me/blog/creating-a-custom-vagrant-box.html">Creating a Custom Vagrant Box</a> 的文章。</p>
+<div class="section" id="virtualbox">
+<h2>在 VirtualBox 上安裝系統</h2>
 <p>VirtualBox 安裝 Extension Pack</p>
-<div class="system-message">
-<p class="system-message-title">System Message: ERROR/3 (<tt class="docutils">&lt;string&gt;</tt>, line 6)</p>
-<p>Error in "code" directive:
-maximum 1 argument(s) allowed, 7 supplied.</p>
-<pre class="literal-block">
-.. code:: bash
-   wget http://download.virtualbox.org/virtualbox/4.3.16/Oracle_VM_VirtualBox_Extension_Pack-4.3.16-95972.vbox-extpack
-   VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-4.3.16-95972.vbox-extpack
-
+<pre class="code bash literal-block">
+wget http://download.virtualbox.org/virtualbox/4.3.16/Oracle_VM_VirtualBox_Extension_Pack-4.3.16-95972.vbox-extpack
+VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-4.3.16-95972.vbox-extpack
 </pre>
-</div>
 <div class="section" id="vagrant">
-<h2>建立 vagrant 帳號</h2>
+<h3>建立 vagrant 帳號</h3>
 <pre class="code bash literal-block">
 useradd -m vagrant
 passwd vagrant
 </pre>
 </div>
 <div class="section" id="editor-sudoers">
-<h2>修改預設 editor 與 sudoers</h2>
+<h3>修改預設 editor 與 sudoers</h3>
 <pre class="code bash literal-block">
 sudo update-alternatives --config editor
 sudo su -
@@ -95,8 +97,18 @@ visudo
 vagrant ALL=(ALL) NOPASSWD:ALL
 </pre>
 </div>
+<div class="section" id="vagrant-ssh-key-authorized-keys">
+<h3>增加 Vagrant 的 ssh key 到 authorized_keys</h3>
+<pre class="code bash literal-block">
+mkdir -p /home/vagrant/.ssh
+wget --no-check-certificate https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub -O /home/vagrant/.ssh/authorized_keys
+chmod 0700 /home/vagrant/.ssh
+chmod 0600 /home/vagrant/.ssh/authorized_keys
+chown -R vagrant /home/vagrant/.ssh
+</pre>
+</div>
 <div class="section" id="nat-eth0">
-<h2>移除已經存在的網路卡 ( 除了第一個 NAT 的 eth0 之外）</h2>
+<h3>移除已經存在的網路卡 ( 除了第一個 NAT 的 eth0 之外）</h3>
 <p>錯誤訊息</p>
 <pre class="code literal-block">
 The following SSH command responded with a non-zero exit status.
@@ -119,12 +131,15 @@ sudo vim /etc/udev/rules.d/70-persistent-net.rules
 </pre>
 </div>
 </div>
+</div>
         </div>
         
-
-            
-        
-        <div id="disqus_thread"></div>
+        <ul class="pager">
+<li class="previous">
+                <a href="read_remote_file_using_python_and_ssh.html" rel="prev" title="使用 Python 透過 SSH 讀取遠端的檔案">Previous post</a>
+            </li>
+        </ul>
+<div id="disqus_thread"></div>
         <script>
         var disqus_shortname ="swindgithub",
             disqus_url="http://swind.code-life.info/posts/create-vagrant-box.html",

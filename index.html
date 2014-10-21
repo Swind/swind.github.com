@@ -35,6 +35,96 @@ MathJax.Hub.Config({
         </ul></section><section class="page-content"><div class="content" rel="main">
             
         <div class="post">
+            <h1 class="title"><a href="posts/create-vagrant-box.html">自製 Vagrant Box</a></h1>
+            <div class="meta">
+                <div class="authordate">
+                    <time class="timeago" datetime="2014-09-25T16:16:25+08:00">2014-09-25 16:16</time>
+</div>
+                <div class="stats">
+                    
+        
+    <a href="posts/create-vagrant-box.html#disqus_thread" data-disqus-identifier="cache/posts/2014-09-25-create-vagrant-box.html">Comments</a>
+
+
+                </div>
+            
+        <div itemprop="keywords" class="tags">
+        <ul>
+        Tags : 
+           <li><a class="tag p-category" href="categories/vagrant.html" rel="tag">vagrant</a></li>
+        </ul>
+</div>
+
+            </div>
+            <div class="body">
+                <div>
+<p>最近都在使用 Vagrant 以及看在 <a class="reference external" href="http://teddysoft.tw/category/ccagile/">C.C Agile</a> 中 <a class="reference external" href="http://ithelp.ithome.com.tw/profile?id=20014061">beelit94</a> 所介紹的 Packer。</p>
+<p>目前是使用 Vagrant 來統一公司同事的測試環境，減少因為環境不同而導致的 bug。</p>
+<p>這邊主要是筆記自己建立 box 時所要設定的內容，主要都是參考 <a class="reference external" href="http://williamwalker.me/blog/creating-a-custom-vagrant-box.html">Creating a Custom Vagrant Box</a> 的文章。</p>
+<div class="section" id="virtualbox">
+<h2>在 VirtualBox 上安裝系統</h2>
+<p>VirtualBox 安裝 Extension Pack</p>
+<pre class="code bash literal-block">
+wget http://download.virtualbox.org/virtualbox/4.3.16/Oracle_VM_VirtualBox_Extension_Pack-4.3.16-95972.vbox-extpack
+VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-4.3.16-95972.vbox-extpack
+</pre>
+<div class="section" id="vagrant">
+<h3>建立 vagrant 帳號</h3>
+<pre class="code bash literal-block">
+useradd -m vagrant
+passwd vagrant
+</pre>
+</div>
+<div class="section" id="editor-sudoers">
+<h3>修改預設 editor 與 sudoers</h3>
+<pre class="code bash literal-block">
+sudo update-alternatives --config editor
+sudo su -
+visudo
+</pre>
+<p>增加</p>
+<pre class="code literal-block">
+vagrant ALL=(ALL) NOPASSWD:ALL
+</pre>
+</div>
+<div class="section" id="vagrant-ssh-key-authorized-keys">
+<h3>增加 Vagrant 的 ssh key 到 authorized_keys</h3>
+<pre class="code bash literal-block">
+mkdir -p /home/vagrant/.ssh
+wget --no-check-certificate https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub -O /home/vagrant/.ssh/authorized_keys
+chmod 0700 /home/vagrant/.ssh
+chmod 0600 /home/vagrant/.ssh/authorized_keys
+chown -R vagrant /home/vagrant/.ssh
+</pre>
+</div>
+<div class="section" id="nat-eth0">
+<h3>移除已經存在的網路卡 ( 除了第一個 NAT 的 eth0 之外）</h3>
+<p>錯誤訊息</p>
+<pre class="code literal-block">
+The following SSH command responded with a non-zero exit status.
+Vagrant assumes that this means the command failed!
+
+/sbin/ip addr flush dev eth1 2&gt; /dev/null
+
+Stdout from the command:
+
+
+
+Stderr from the command:
+
+stdin: is not a tty
+</pre>
+<p>原因是有可能之前有增加過網路卡，所以 eth1 代表那個已經不存在的網路卡。
+導致 vagrant 沒有辦法初始化網路設定</p>
+<pre class="code literal-block">
+sudo vim /etc/udev/rules.d/70-persistent-net.rules
+</pre>
+</div>
+</div>
+</div>
+            </div>
+        </div>
+        <div class="post">
             <h1 class="title"><a href="posts/read_remote_file_using_python_and_ssh.html">使用 Python 透過 SSH 讀取遠端的檔案</a></h1>
             <div class="meta">
                 <div class="authordate">
@@ -521,61 +611,6 @@ threadpool_task_t 也是一樣的原理，真是出乎意料的簡單。</p>
 <p>整個實作過程是參考 <a class="reference external" href="http://www.playframework.org/documentation/2.1-RC4/ScalaTodoList">Your first Play application</a> 這篇文章的。</p>
 <p>P.S 這篇文章寫到一半的時候 Play 2.1 出了 Orz ...</p>
 <p class="more"><a href="posts/play-note-1.html">Read more…</a></p>
-</div>
-            </div>
-        </div>
-        <div class="post">
-            <h1 class="title"><a href="posts/pelican-to-nikola.html">Pelican 轉移到 Nikola</a></h1>
-            <div class="meta">
-                <div class="authordate">
-                    <time class="timeago" datetime="2013-01-22T09:11:00+08:00">2013-01-22 09:11</time>
-</div>
-                <div class="stats">
-                    
-        
-    <a href="posts/pelican-to-nikola.html#disqus_thread" data-disqus-identifier="cache/posts/2013-01-22-pelican-to-nikola.html">Comments</a>
-
-
-                </div>
-            
-        <div itemprop="keywords" class="tags">
-        <ul>
-        Tags : 
-           <li><a class="tag p-category" href="categories/other.html" rel="tag">Other</a></li>
-        </ul>
-</div>
-
-            </div>
-            <div class="body">
-                <div>
-<p>之前雖然從 Octopress 跳到 Pelican 脫離了 Ruby 的環境，也花了一些時間在修改 Theme。
-但是還是很難喜歡上 Pelican，最主要的就是他的手冊很難閱讀，而且資訊有點少 Orz。</p>
-<p>Nikola 的手冊就比較簡潔清楚，也比較好查詢。
-且查詢了一下 Nikola 的事蹟之後發現他太帥了！</p>
-<p><a class="reference external" href="http://zh.wikipedia.org/wiki/%E5%B0%BC%E5%8F%A4%E6%8B%89%C2%B7%E7%89%B9%E6%96%AF%E6%8B%89">Wiki 尼古拉 特斯拉</a></p>
-<p>所以後來就決定跳過來了～</p>
-<div class="section" id="windows-nikola">
-<h2>在 Windows 上安裝 Nikola</h2>
-<p>在 Windows 上面安裝 Nikola 實在是有點悲劇，因為他所使用的 Library 有一些會使用到 C 的程式碼。
-因此需要編譯，可是他又會連結到其他 C Library（例如 pillow or pil），所以就卡在安裝相依性套件這一關。</p>
-<p>雖然用 pip 安裝 pil 或者是 pillow 也可以，但是安裝完之後會因為缺少某些 library 而導致像 jpg 等圖片格式不被支援。</p>
-<p>最後是找到了 <a class="reference external" href="http://www.lfd.uci.edu/~gohlke/pythonlibs/">Unofficial Windows Binaries for Python Extension Packages</a> 下載了 pil 才解決了相依性安裝問題。
-這些相依性的 Library 安裝完畢之後，就可以使用 pip 安裝 Nikola 了。</p>
-<p><strong>But ! 就是這個 But !。</strong></p>
-<p>當你開心安裝完畢 Nikola 之後會發現無法使用 nikola 的指令。</p>
-<p>因為他放在 Python Scripts 資料夾底下的 Script 檔名是 <strong>nikola</strong>，Windows 不會覺得他是執行檔，所以沒有辦法執行指令。
-( 如果有人有知道其他執行方式的話請跟我說 m(_ _)m )</p>
-<p>一開始我很天真的覺得改成 nikola.py 就沒有問題了，但是在執行中 import 會出問題，因為 nikola 這個名字重複了 Orz。
-所以最後是多寫一個 nikola.bat</p>
-<pre class="code bash literal-block">
-C:<span class="se">\P</span>ython27<span class="se">\p</span>ython.exe C:<span class="se">\P</span>ython27<span class="se">\S</span>cripts<span class="se">\n</span>ikola %1 %2 %3 %4
-</pre>
-<p>放在 Scripts 資料夾底下，來解決這個問題。</p>
-<p>上面的 Script 因為我找不到 Windows 裡面代表所有傳入參數的符號，
-只好就土法煉鋼一個一個輸入，所以最多只能輸入四個參數。</p>
-<p>（如果有人有好得解決方式也請教我一下 m(_ _)m )</p>
-<p class="more"><a href="posts/pelican-to-nikola.html">Read more…</a></p>
-</div>
 </div>
             </div>
         </div>
