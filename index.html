@@ -116,9 +116,27 @@ stdin: is not a tty
 </pre>
 <p>原因是有可能之前有增加過網路卡，所以 eth1 代表那個已經不存在的網路卡。
 導致 vagrant 沒有辦法初始化網路設定</p>
-<pre class="code literal-block">
+<pre class="code bash literal-block">
 sudo vim /etc/udev/rules.d/70-persistent-net.rules
 </pre>
+</div>
+<div class="section" id="virtualbox-guest-additions">
+<h3>安裝 Virtualbox Guest Additions</h3>
+<p>直接到 <a class="reference external" href="http://download.virtualbox.org/virtualbox/">http://download.virtualbox.org/virtualbox/</a> 下載對應版本的 Guest Addition，例如 <cite>VBoxGuestAdditions_4.3.18.iso</cite></p>
+<pre class="code bash literal-block">
+wget http://download.virtualbox.org/virtualbox/4.3.18/VBoxGuestAdditions_4.3.18.iso
+apt-get install dkms gcc
+mount -o loop VBoxGuestAdditions_4.3.18.iso /mnt
+<span class="nb">cd</span> /mnt
+./VBoxLinuxAdditions.run
+</pre>
+</div>
+<div class="section" id="box">
+<h3>打包成 box</h3>
+<p>&lt;vm-name&gt; 的部份需要自己換成 VM 的名稱</p>
+<p>..code:: bash</p>
+<blockquote>
+vagrant package --base &lt;vm-name&gt;</blockquote>
 </div>
 </div>
 </div>
