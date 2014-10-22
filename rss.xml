@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis</title><link>http://swind.code-life.info/</link><description>Corleonis</description><language>en</language><lastBuildDate>Tue, 21 Oct 2014 17:01:04 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>自製 Vagrant Box</title><link>http://swind.code-life.info/posts/create-vagrant-box.html</link><dc:creator>Swind</dc:creator><description>&lt;div&gt;&lt;p&gt;最近都在使用 Vagrant 以及看在 &lt;a class="reference external" href="http://teddysoft.tw/category/ccagile/"&gt;C.C Agile&lt;/a&gt; 中 &lt;a class="reference external" href="http://ithelp.ithome.com.tw/profile?id=20014061"&gt;beelit94&lt;/a&gt; 所介紹的 Packer。&lt;/p&gt;
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis</title><link>http://swind.code-life.info/</link><description>Corleonis</description><language>en</language><lastBuildDate>Wed, 22 Oct 2014 07:44:08 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>自製 Vagrant Box</title><link>http://swind.code-life.info/posts/create-vagrant-box.html</link><dc:creator>Swind</dc:creator><description>&lt;div&gt;&lt;p&gt;最近都在使用 Vagrant 以及看在 &lt;a class="reference external" href="http://teddysoft.tw/category/ccagile/"&gt;C.C Agile&lt;/a&gt; 中 &lt;a class="reference external" href="http://ithelp.ithome.com.tw/profile?id=20014061"&gt;beelit94&lt;/a&gt; 所介紹的 Packer。&lt;/p&gt;
 &lt;p&gt;目前是使用 Vagrant 來統一公司同事的測試環境，減少因為環境不同而導致的 bug。&lt;/p&gt;
 &lt;p&gt;這邊主要是筆記自己建立 box 時所要設定的內容，主要都是參考 &lt;a class="reference external" href="http://williamwalker.me/blog/creating-a-custom-vagrant-box.html"&gt;Creating a Custom Vagrant Box&lt;/a&gt; 的文章。&lt;/p&gt;
 &lt;div class="section" id="virtualbox"&gt;
@@ -75,14 +75,15 @@ mount -o loop VBoxGuestAdditions_4.3.18.iso /mnt
 &lt;div class="section" id="box"&gt;
 &lt;h3&gt;打包成 box&lt;/h3&gt;
 &lt;p&gt;&amp;lt;vm-name&amp;gt; 的部份需要自己換成 VM 的名稱&lt;/p&gt;
-&lt;p&gt;..code:: bash&lt;/p&gt;
-&lt;blockquote&gt;
-vagrant package --base &amp;lt;vm-name&amp;gt;&lt;/blockquote&gt;
+&lt;pre class="code bash literal-block"&gt;
+vagrant package --base &amp;lt;vm-name&amp;gt;
+&lt;/pre&gt;
 &lt;div class="figure"&gt;
 &lt;img alt="https://dl.dropboxusercontent.com/u/15537823/Blog/Lord_Marksman_and_Vanadis.jpg" src="https://dl.dropboxusercontent.com/u/15537823/Blog/Lord_Marksman_and_Vanadis.jpg"&gt;&lt;/div&gt;
 &lt;blockquote&gt;
 &lt;p&gt;これは英雄へと至る物語&lt;/p&gt;
-&lt;/blockquote&gt;&lt;/div&gt;
+&lt;/blockquote&gt;&lt;p&gt;作畫品質蠻好的，而且鈴木このみ - 銀閃の風也非常的和我胃口～～&lt;/p&gt;
+&lt;iframe width="425" height="344" src="//www.youtube.com/embed/https://www.youtube.com/watch?v=dP9rUj_ENS0?rel=0&amp;amp;hd=1&amp;amp;wmode=transparent"&gt;&lt;/iframe&gt;&lt;/div&gt;
 &lt;/div&gt;&lt;/div&gt;</description><category>vagrant</category><guid>http://swind.code-life.info/posts/create-vagrant-box.html</guid><pubDate>Thu, 25 Sep 2014 08:16:25 GMT</pubDate></item><item><title>使用 Python 透過 SSH 讀取遠端的檔案</title><link>http://swind.code-life.info/posts/read_remote_file_using_python_and_ssh.html</link><dc:creator>Swind</dc:creator><description>&lt;div class="section" id="tail"&gt;
 &lt;h2&gt;tail 遠端的檔案&lt;/h2&gt;
 &lt;p&gt;最近的自動化測試需要去做類似 tail 的動作來確認在執行 TestCase 的過程中，

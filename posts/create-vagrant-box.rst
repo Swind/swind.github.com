@@ -101,7 +101,7 @@ VirtualBox 安裝 Extension Pack
 
 <vm-name> 的部份需要自己換成 VM 的名稱
 
-..code:: bash
+.. code:: bash
 
     vagrant package --base <vm-name>
 
@@ -112,6 +112,10 @@ VirtualBox 安裝 Extension Pack
    <blockquote>
    <p>これは英雄へと至る物語</p>
    </blockquote>
+
+作畫品質蠻好的，而且鈴木このみ - 銀閃の風也非常的和我胃口～～
+
+.. youtube:: https://www.youtube.com/watch?v=dP9rUj_ENS0
 
 .. _Creating a Custom Vagrant Box: http://williamwalker.me/blog/creating-a-custom-vagrant-box.html
 .. _How to install VirtualBox Guest Additions for Linux: http://xmodulo.com/how-to-install-virtualbox-guest-additions-for-linux.html
