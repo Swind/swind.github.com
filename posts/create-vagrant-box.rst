@@ -12,6 +12,8 @@
 
 這邊主要是筆記自己建立 box 時所要設定的內容，主要都是參考 `Creating a Custom Vagrant Box`_ 的文章。
 
+.. TEASER_END
+
 在 VirtualBox 上安裝系統
 =====================================
 
