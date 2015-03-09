@@ -89,29 +89,29 @@ Akka 2.0 - 要升級了
 <div class="section" id="actor">
 <h2>Actor</h2>
 <p>從官網範例來看，Actor 的架構還是跟之前一樣沒有什麼改變</p>
-<pre class="code scala"><a name="rest_code_840fbce0719f4825be3654512a554bf6-1"></a><span class="k">import</span> <span class="nn">akka.actor.Actor</span>
-<a name="rest_code_840fbce0719f4825be3654512a554bf6-2"></a><span class="k">import</span> <span class="nn">akka.actor.Props</span>
-<a name="rest_code_840fbce0719f4825be3654512a554bf6-3"></a><span class="k">import</span> <span class="nn">akka.event.Logging</span>
-<a name="rest_code_840fbce0719f4825be3654512a554bf6-4"></a>
-<a name="rest_code_840fbce0719f4825be3654512a554bf6-5"></a><span class="k">class</span> <span class="nc">MyActor</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
-<a name="rest_code_840fbce0719f4825be3654512a554bf6-6"></a>  <span class="k">val</span> <span class="n">log</span> <span class="k">=</span> <span class="nc">Logging</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="n">system</span><span class="o">,</span> <span class="k">this</span><span class="o">)</span>
-<a name="rest_code_840fbce0719f4825be3654512a554bf6-7"></a>  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
-<a name="rest_code_840fbce0719f4825be3654512a554bf6-8"></a>    <span class="k">case</span> <span class="s">"test"</span> <span class="k">=&gt;</span> <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="s">"received test"</span><span class="o">)</span>
-<a name="rest_code_840fbce0719f4825be3654512a554bf6-9"></a>    <span class="k">case</span> <span class="k">_</span>      <span class="k">=&gt;</span> <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="s">"received unknown message"</span><span class="o">)</span>
-<a name="rest_code_840fbce0719f4825be3654512a554bf6-10"></a>  <span class="o">}</span>
-<a name="rest_code_840fbce0719f4825be3654512a554bf6-11"></a><span class="o">}</span>
+<pre class="code scala"><a name="rest_code_cb1c7d4dd4d04549adb76dacead7f926-1"></a><span class="k">import</span> <span class="nn">akka.actor.Actor</span>
+<a name="rest_code_cb1c7d4dd4d04549adb76dacead7f926-2"></a><span class="k">import</span> <span class="nn">akka.actor.Props</span>
+<a name="rest_code_cb1c7d4dd4d04549adb76dacead7f926-3"></a><span class="k">import</span> <span class="nn">akka.event.Logging</span>
+<a name="rest_code_cb1c7d4dd4d04549adb76dacead7f926-4"></a>
+<a name="rest_code_cb1c7d4dd4d04549adb76dacead7f926-5"></a><span class="k">class</span> <span class="nc">MyActor</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+<a name="rest_code_cb1c7d4dd4d04549adb76dacead7f926-6"></a>  <span class="k">val</span> <span class="n">log</span> <span class="k">=</span> <span class="nc">Logging</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="n">system</span><span class="o">,</span> <span class="k">this</span><span class="o">)</span>
+<a name="rest_code_cb1c7d4dd4d04549adb76dacead7f926-7"></a>  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+<a name="rest_code_cb1c7d4dd4d04549adb76dacead7f926-8"></a>    <span class="k">case</span> <span class="s">"test"</span> <span class="k">=&gt;</span> <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="s">"received test"</span><span class="o">)</span>
+<a name="rest_code_cb1c7d4dd4d04549adb76dacead7f926-9"></a>    <span class="k">case</span> <span class="k">_</span>      <span class="k">=&gt;</span> <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="s">"received unknown message"</span><span class="o">)</span>
+<a name="rest_code_cb1c7d4dd4d04549adb76dacead7f926-10"></a>  <span class="o">}</span>
+<a name="rest_code_cb1c7d4dd4d04549adb76dacead7f926-11"></a><span class="o">}</span>
 </pre>
 <p>但是上面的程式碼你會看到一個有點陌生的東西 <em>context.system</em>。
 2.0 建立 Actor 的方式已經有了改變，現在的 Actor 可以有階層關係（就像老鼠會一樣 Orz）。
 從 Actor 的 context 中可以取得很多該 Actor 的資訊與操作方式。而 ActorSystem 建立出來的 Actor 就會位於最上層。</p>
-<pre class="code scala"><a name="rest_code_b554bbd2dca14ae997da52d5eff6541b-1"></a><span class="k">object</span> <span class="nc">Main</span> <span class="k">extends</span> <span class="nc">App</span>
-<a name="rest_code_b554bbd2dca14ae997da52d5eff6541b-2"></a><span class="o">{</span>
-<a name="rest_code_b554bbd2dca14ae997da52d5eff6541b-3"></a>  <span class="k">val</span> <span class="n">system</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">(</span><span class="s">"MySystem"</span><span class="o">)</span>
-<a name="rest_code_b554bbd2dca14ae997da52d5eff6541b-4"></a>  <span class="k">val</span> <span class="n">myActor</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">MyActor</span><span class="o">],</span> <span class="n">name</span> <span class="k">=</span> <span class="s">"myactor"</span><span class="o">)</span>
-<a name="rest_code_b554bbd2dca14ae997da52d5eff6541b-5"></a><span class="o">}</span>
+<pre class="code scala"><a name="rest_code_a1e405c0c63940028f18148b74cee20e-1"></a><span class="k">object</span> <span class="nc">Main</span> <span class="k">extends</span> <span class="nc">App</span>
+<a name="rest_code_a1e405c0c63940028f18148b74cee20e-2"></a><span class="o">{</span>
+<a name="rest_code_a1e405c0c63940028f18148b74cee20e-3"></a>  <span class="k">val</span> <span class="n">system</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">(</span><span class="s">"MySystem"</span><span class="o">)</span>
+<a name="rest_code_a1e405c0c63940028f18148b74cee20e-4"></a>  <span class="k">val</span> <span class="n">myActor</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">MyActor</span><span class="o">],</span> <span class="n">name</span> <span class="k">=</span> <span class="s">"myactor"</span><span class="o">)</span>
+<a name="rest_code_a1e405c0c63940028f18148b74cee20e-5"></a><span class="o">}</span>
 </pre>
 <p>延續上面的例子，如果MyActor內需要建立其他Actor</p>
-<pre class="code scala"><a name="rest_code_73e7fb4cda8c450eae979b324142ad6c-1"></a><span class="n">context</span><span class="o">.</span><span class="n">actorof</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">children</span><span class="o">],</span> <span class="n">name</span> <span class="k">=</span> <span class="s">"children"</span><span class="o">)</span>
+<pre class="code scala"><a name="rest_code_684c383aab6b446fb227ac02daaa5173-1"></a><span class="n">context</span><span class="o">.</span><span class="n">actorof</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">children</span><span class="o">],</span> <span class="n">name</span> <span class="k">=</span> <span class="s">"children"</span><span class="o">)</span>
 </pre>
 <p>利用這種階層關係有什麼好處呢？</p>
 <p>在之前 Akka1.3 的時代，我就經歷過非常痛苦的過程，那時候還沒有像 2.0 這樣的階層關係。
@@ -121,7 +121,7 @@ Akka 2.0 - 要升級了
 然後拼命的發 message 叫 Actor 去死去死去死去死 Orz。</p>
 <p>但是這些煩惱在2.0就通通不見啦！！！！！
 現在要停止只要用</p>
-<pre class="code scala"><a name="rest_code_9e6de70f03a3445dbbfe92ff4379dc2d-1"></a><span class="n">context</span><span class="o">.</span><span class="n">stop</span><span class="o">(</span><span class="n">self</span><span class="o">)</span>
+<pre class="code scala"><a name="rest_code_0cab05c8718f423dbcf0374138e4758a-1"></a><span class="n">context</span><span class="o">.</span><span class="n">stop</span><span class="o">(</span><span class="n">self</span><span class="o">)</span>
 </pre>
 <p>就會幹掉底下的部屬之後再做掉自己，真是讓人清爽又愉快（煙）</p>
 </div>
@@ -130,14 +130,14 @@ Akka 2.0 - 要升級了
 <p>最早知道 EventStream 或 EventBus 這種架構是在 GWT 的時後，那時候一用實在驚為天人。
 真是太方便了，雖然整體架構跟 Observer Pattern 一樣，但是人家就是用得很漂亮。</p>
 <p>EventStream 只存在於 ActorSystem 底下，要使用 EventStream 的第一步就是先註冊 Actor 與他要接收的物件類型。</p>
-<pre class="code scala"><a name="rest_code_b9e1b15fd5ba4b6b9b7e302dd50b0c37-1"></a><span class="k">import</span> <span class="nn">akka.actor.</span><span class="o">{</span> <span class="nc">Actor</span><span class="o">,</span> <span class="nc">DeadLetter</span><span class="o">,</span> <span class="nc">Props</span> <span class="o">}</span>
-<a name="rest_code_b9e1b15fd5ba4b6b9b7e302dd50b0c37-2"></a>
-<a name="rest_code_b9e1b15fd5ba4b6b9b7e302dd50b0c37-3"></a><span class="k">val</span> <span class="n">listener</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">Actor</span> <span class="o">{</span>
-<a name="rest_code_b9e1b15fd5ba4b6b9b7e302dd50b0c37-4"></a>  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
-<a name="rest_code_b9e1b15fd5ba4b6b9b7e302dd50b0c37-5"></a>    <span class="k">case</span> <span class="n">d</span><span class="k">:</span> <span class="kt">DeadLetter</span> <span class="o">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="n">d</span><span class="o">)</span>
-<a name="rest_code_b9e1b15fd5ba4b6b9b7e302dd50b0c37-6"></a>  <span class="o">}</span>
-<a name="rest_code_b9e1b15fd5ba4b6b9b7e302dd50b0c37-7"></a><span class="o">}))</span>
-<a name="rest_code_b9e1b15fd5ba4b6b9b7e302dd50b0c37-8"></a><span class="n">system</span><span class="o">.</span><span class="n">eventStream</span><span class="o">.</span><span class="n">subscribe</span><span class="o">(</span><span class="n">listener</span><span class="o">,</span> <span class="n">classOf</span><span class="o">[</span><span class="kt">DeadLetter</span><span class="o">])</span>
+<pre class="code scala"><a name="rest_code_e9da7f85702b45e98be0fc859fb922ad-1"></a><span class="k">import</span> <span class="nn">akka.actor.</span><span class="o">{</span> <span class="nc">Actor</span><span class="o">,</span> <span class="nc">DeadLetter</span><span class="o">,</span> <span class="nc">Props</span> <span class="o">}</span>
+<a name="rest_code_e9da7f85702b45e98be0fc859fb922ad-2"></a>
+<a name="rest_code_e9da7f85702b45e98be0fc859fb922ad-3"></a><span class="k">val</span> <span class="n">listener</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">Actor</span> <span class="o">{</span>
+<a name="rest_code_e9da7f85702b45e98be0fc859fb922ad-4"></a>  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+<a name="rest_code_e9da7f85702b45e98be0fc859fb922ad-5"></a>    <span class="k">case</span> <span class="n">d</span><span class="k">:</span> <span class="kt">DeadLetter</span> <span class="o">=&gt;</span> <span class="n">println</span><span class="o">(</span><span class="n">d</span><span class="o">)</span>
+<a name="rest_code_e9da7f85702b45e98be0fc859fb922ad-6"></a>  <span class="o">}</span>
+<a name="rest_code_e9da7f85702b45e98be0fc859fb922ad-7"></a><span class="o">}))</span>
+<a name="rest_code_e9da7f85702b45e98be0fc859fb922ad-8"></a><span class="n">system</span><span class="o">.</span><span class="n">eventStream</span><span class="o">.</span><span class="n">subscribe</span><span class="o">(</span><span class="n">listener</span><span class="o">,</span> <span class="n">classOf</span><span class="o">[</span><span class="kt">DeadLetter</span><span class="o">])</span>
 </pre>
 <p>上面的程式碼產生了一個 listener 的 Actor 並且註冊說如果有 DeadLeatter 類型的物件送到 EventStream 內，就會傳送給他。
 雖然文件說主要是拿來作 Log 或者是監聽事件，但我拿來當其他的用途，例如發給所有的 Actor 讓他們自己認領工作之類的。</p>
@@ -155,43 +155,43 @@ Akka 2.0 - 要升級了
 <p>看起來似乎可以拿來作為例外處理或者作一個事件重發的工具。</p>
 <div class="section" id="eventlistener">
 <h3>實作EventListener</h3>
-<pre class="code scala"><a name="rest_code_1dea0de5b5634f3cb2459053ef9f6665-1"></a><span class="k">val</span> <span class="n">errorHandlerEventListener</span> <span class="k">=</span> <span class="nc">Actor</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="k">new</span> <span class="nc">Actor</span> <span class="o">{</span>
-<a name="rest_code_1dea0de5b5634f3cb2459053ef9f6665-2"></a>  <span class="n">self</span><span class="o">.</span><span class="n">dispatcher</span> <span class="k">=</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">EventHandlerDispatcher</span>
-<a name="rest_code_1dea0de5b5634f3cb2459053ef9f6665-3"></a>
-<a name="rest_code_1dea0de5b5634f3cb2459053ef9f6665-4"></a>  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
-<a name="rest_code_1dea0de5b5634f3cb2459053ef9f6665-5"></a>    <span class="k">case</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">Error</span><span class="o">(</span><span class="n">cause</span><span class="o">,</span> <span class="n">instance</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">...</span>
-<a name="rest_code_1dea0de5b5634f3cb2459053ef9f6665-6"></a>    <span class="k">case</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">Warning</span><span class="o">(</span><span class="n">instance</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">...</span>
-<a name="rest_code_1dea0de5b5634f3cb2459053ef9f6665-7"></a>    <span class="k">case</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">Info</span><span class="o">(</span><span class="n">instance</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">...</span>
-<a name="rest_code_1dea0de5b5634f3cb2459053ef9f6665-8"></a>    <span class="k">case</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">Debug</span><span class="o">(</span><span class="n">instance</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">...</span>
-<a name="rest_code_1dea0de5b5634f3cb2459053ef9f6665-9"></a>    <span class="k">case</span> <span class="n">genericEvent</span> <span class="k">=&gt;</span> <span class="o">...</span>
-<a name="rest_code_1dea0de5b5634f3cb2459053ef9f6665-10"></a>  <span class="o">}</span>
-<a name="rest_code_1dea0de5b5634f3cb2459053ef9f6665-11"></a><span class="o">})</span>
+<pre class="code scala"><a name="rest_code_86f271a6a11a4452834e319e1a9070f2-1"></a><span class="k">val</span> <span class="n">errorHandlerEventListener</span> <span class="k">=</span> <span class="nc">Actor</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="k">new</span> <span class="nc">Actor</span> <span class="o">{</span>
+<a name="rest_code_86f271a6a11a4452834e319e1a9070f2-2"></a>  <span class="n">self</span><span class="o">.</span><span class="n">dispatcher</span> <span class="k">=</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">EventHandlerDispatcher</span>
+<a name="rest_code_86f271a6a11a4452834e319e1a9070f2-3"></a>
+<a name="rest_code_86f271a6a11a4452834e319e1a9070f2-4"></a>  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+<a name="rest_code_86f271a6a11a4452834e319e1a9070f2-5"></a>    <span class="k">case</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">Error</span><span class="o">(</span><span class="n">cause</span><span class="o">,</span> <span class="n">instance</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">...</span>
+<a name="rest_code_86f271a6a11a4452834e319e1a9070f2-6"></a>    <span class="k">case</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">Warning</span><span class="o">(</span><span class="n">instance</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">...</span>
+<a name="rest_code_86f271a6a11a4452834e319e1a9070f2-7"></a>    <span class="k">case</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">Info</span><span class="o">(</span><span class="n">instance</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">...</span>
+<a name="rest_code_86f271a6a11a4452834e319e1a9070f2-8"></a>    <span class="k">case</span> <span class="nc">EventHandler</span><span class="o">.</span><span class="nc">Debug</span><span class="o">(</span><span class="n">instance</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">...</span>
+<a name="rest_code_86f271a6a11a4452834e319e1a9070f2-9"></a>    <span class="k">case</span> <span class="n">genericEvent</span> <span class="k">=&gt;</span> <span class="o">...</span>
+<a name="rest_code_86f271a6a11a4452834e319e1a9070f2-10"></a>  <span class="o">}</span>
+<a name="rest_code_86f271a6a11a4452834e319e1a9070f2-11"></a><span class="o">})</span>
 </pre>
 <p>加入EventListener</p>
-<pre class="code scala"><a name="rest_code_b38c3aaea3d543ae9ee09b26a90a6f44-1"></a><span class="nc">EventHandler</span><span class="o">.</span><span class="n">addListener</span><span class="o">(</span><span class="n">errorHandlerEventListener</span><span class="o">)</span>
+<pre class="code scala"><a name="rest_code_8ed7aa8e9350403eb28c9984d8163ba3-1"></a><span class="nc">EventHandler</span><span class="o">.</span><span class="n">addListener</span><span class="o">(</span><span class="n">errorHandlerEventListener</span><span class="o">)</span>
 </pre>
 <p>移除EventListener</p>
-<pre class="code scala"><a name="rest_code_aa70273befbb42faa25e85def8f8d62b-1"></a><span class="nc">EventHandler</span><span class="o">.</span><span class="n">removeListener</span><span class="o">(</span><span class="n">errorHandlerEventListener</span><span class="o">)</span>
+<pre class="code scala"><a name="rest_code_219d8211dc72422f83d386bc383e7530-1"></a><span class="nc">EventHandler</span><span class="o">.</span><span class="n">removeListener</span><span class="o">(</span><span class="n">errorHandlerEventListener</span><span class="o">)</span>
 </pre>
 <p>Log 訊息</p>
-<pre class="code scala"><a name="rest_code_ee0473bd1f0a4bb4a1bdc70755df5b22-1"></a><span class="nc">EventHandler</span><span class="o">.</span><span class="n">error</span><span class="o">(</span><span class="n">exception</span><span class="o">,</span> <span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
-<a name="rest_code_ee0473bd1f0a4bb4a1bdc70755df5b22-2"></a><span class="nc">EventHandler</span><span class="o">.</span><span class="n">error</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
-<a name="rest_code_ee0473bd1f0a4bb4a1bdc70755df5b22-3"></a><span class="nc">EventHandler</span><span class="o">.</span><span class="n">warning</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
-<a name="rest_code_ee0473bd1f0a4bb4a1bdc70755df5b22-4"></a><span class="nc">EventHandler</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
-<a name="rest_code_ee0473bd1f0a4bb4a1bdc70755df5b22-5"></a><span class="nc">EventHandler</span><span class="o">.</span><span class="n">debug</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
+<pre class="code scala"><a name="rest_code_3a71d53ff19a46348bd7549d386509ff-1"></a><span class="nc">EventHandler</span><span class="o">.</span><span class="n">error</span><span class="o">(</span><span class="n">exception</span><span class="o">,</span> <span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
+<a name="rest_code_3a71d53ff19a46348bd7549d386509ff-2"></a><span class="nc">EventHandler</span><span class="o">.</span><span class="n">error</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
+<a name="rest_code_3a71d53ff19a46348bd7549d386509ff-3"></a><span class="nc">EventHandler</span><span class="o">.</span><span class="n">warning</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
+<a name="rest_code_3a71d53ff19a46348bd7549d386509ff-4"></a><span class="nc">EventHandler</span><span class="o">.</span><span class="n">info</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
+<a name="rest_code_3a71d53ff19a46348bd7549d386509ff-5"></a><span class="nc">EventHandler</span><span class="o">.</span><span class="n">debug</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">message</span><span class="o">)</span>
 </pre>
 </div>
 </div>
 <div class="section" id="scheduler">
 <h2>Scheduler</h2>
 <p>Akka 內有附一個簡單的 Scheduler，他可以讓你排程什麼時候要發訊息給 Actor</p>
-<pre class="code scala"><a name="rest_code_e7a3bca4debb4acb8bd088cb5f12f7bd-1"></a><span class="k">import</span> <span class="nn">akka.actor.Scheduler</span>
-<a name="rest_code_e7a3bca4debb4acb8bd088cb5f12f7bd-2"></a>
-<a name="rest_code_e7a3bca4debb4acb8bd088cb5f12f7bd-3"></a><span class="c1">//Sends messageToBeSent to receiverActor after initialDelayBeforeSending and then after each delayBetweenMessages</span>
-<a name="rest_code_e7a3bca4debb4acb8bd088cb5f12f7bd-4"></a><span class="nc">Scheduler</span><span class="o">.</span><span class="n">schedule</span><span class="o">(</span><span class="n">receiverActor</span><span class="o">,</span> <span class="n">messageToBeSent</span><span class="o">,</span> <span class="n">initialDelayBeforeSending</span><span class="o">,</span> <span class="n">delayBetweenMessages</span><span class="o">,</span> <span class="n">timeUnit</span><span class="o">)</span>
-<a name="rest_code_e7a3bca4debb4acb8bd088cb5f12f7bd-5"></a>
-<a name="rest_code_e7a3bca4debb4acb8bd088cb5f12f7bd-6"></a><span class="c1">//Sends messageToBeSent to receiverActor after delayUntilSend</span>
-<a name="rest_code_e7a3bca4debb4acb8bd088cb5f12f7bd-7"></a><span class="nc">Scheduler</span><span class="o">.</span><span class="n">scheduleOnce</span><span class="o">(</span><span class="n">receiverActor</span><span class="o">,</span> <span class="n">messageToBeSent</span><span class="o">,</span> <span class="n">delayUntilSend</span><span class="o">,</span> <span class="n">timeUnit</span><span class="o">)</span>
+<pre class="code scala"><a name="rest_code_20ad9a62aa4240afacf846320f527b1b-1"></a><span class="k">import</span> <span class="nn">akka.actor.Scheduler</span>
+<a name="rest_code_20ad9a62aa4240afacf846320f527b1b-2"></a>
+<a name="rest_code_20ad9a62aa4240afacf846320f527b1b-3"></a><span class="c1">//Sends messageToBeSent to receiverActor after initialDelayBeforeSending and then after each delayBetweenMessages</span>
+<a name="rest_code_20ad9a62aa4240afacf846320f527b1b-4"></a><span class="nc">Scheduler</span><span class="o">.</span><span class="n">schedule</span><span class="o">(</span><span class="n">receiverActor</span><span class="o">,</span> <span class="n">messageToBeSent</span><span class="o">,</span> <span class="n">initialDelayBeforeSending</span><span class="o">,</span> <span class="n">delayBetweenMessages</span><span class="o">,</span> <span class="n">timeUnit</span><span class="o">)</span>
+<a name="rest_code_20ad9a62aa4240afacf846320f527b1b-5"></a>
+<a name="rest_code_20ad9a62aa4240afacf846320f527b1b-6"></a><span class="c1">//Sends messageToBeSent to receiverActor after delayUntilSend</span>
+<a name="rest_code_20ad9a62aa4240afacf846320f527b1b-7"></a><span class="nc">Scheduler</span><span class="o">.</span><span class="n">scheduleOnce</span><span class="o">(</span><span class="n">receiverActor</span><span class="o">,</span> <span class="n">messageToBeSent</span><span class="o">,</span> <span class="n">delayUntilSend</span><span class="o">,</span> <span class="n">timeUnit</span><span class="o">)</span>
 </pre>
 </div>
 <div class="section" id="event-driven">

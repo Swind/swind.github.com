@@ -75,8 +75,8 @@ MathJax.Hub.Config({
 <p>由於我的 GitHub 上面的網頁換了很多次系統 Octopress -&gt; Pelican -&gt; Nikola，在加上那時候對於 GitHub Pages 的設定不是很了解。
 所以 git 上的 branch 有點奇怪。</p>
 <p>我目前的 branch 有兩個</p>
-<pre class="code text"><a name="rest_code_65de63fd1d1044099f16e5f2443d0d54-1"></a>- master
-<a name="rest_code_65de63fd1d1044099f16e5f2443d0d54-2"></a>- source
+<pre class="code text"><a name="rest_code_46e86f907865493488dc1d239bbc16d2-1"></a>- master
+<a name="rest_code_46e86f907865493488dc1d239bbc16d2-2"></a>- source
 </pre>
 <p>master 就是 GitHub Pages 的部份，而 source 則是放 Nikola 的設定檔以及文章的原始檔。
 現在 GitHub 預設放網頁的 branch 好像可以改成  gh-pages。不過改設定又是浩大工程，我以我就繼續沿用之前的 branch 了。
@@ -99,48 +99,48 @@ MathJax.Hub.Config({
 <p>毫無難度的使用 pip 安裝就結束了 Orz
 這邊你會看到我想設定 cache 讓 Nikola 不用每次都重新下載安裝。
 但是似乎是失敗的，我從 log 上都還是看得到 Nikola 的安裝過程。</p>
-<pre class="code yaml"><a name="rest_code_af98a7e01fa846b9b250a444138a8c25-1"></a><span class="l-Scalar-Plain">language</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">python</span>
-<a name="rest_code_af98a7e01fa846b9b250a444138a8c25-2"></a>
-<a name="rest_code_af98a7e01fa846b9b250a444138a8c25-3"></a><span class="l-Scalar-Plain">cache</span><span class="p-Indicator">:</span>
-<a name="rest_code_af98a7e01fa846b9b250a444138a8c25-4"></a>  <span class="l-Scalar-Plain">directories</span><span class="p-Indicator">:</span>
-<a name="rest_code_af98a7e01fa846b9b250a444138a8c25-5"></a>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">/home/travis/virtualenv/python2.7/lib/python2.7/site-packages</span>
-<a name="rest_code_af98a7e01fa846b9b250a444138a8c25-6"></a>
-<a name="rest_code_af98a7e01fa846b9b250a444138a8c25-7"></a><span class="l-Scalar-Plain">python</span><span class="p-Indicator">:</span>
-<a name="rest_code_af98a7e01fa846b9b250a444138a8c25-8"></a><span class="p-Indicator">-</span> <span class="s">'2.7'</span>
-<a name="rest_code_af98a7e01fa846b9b250a444138a8c25-9"></a>
-<a name="rest_code_af98a7e01fa846b9b250a444138a8c25-10"></a><span class="l-Scalar-Plain">install</span><span class="p-Indicator">:</span>
-<a name="rest_code_af98a7e01fa846b9b250a444138a8c25-11"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">pip install nikola</span>
+<pre class="code yaml"><a name="rest_code_0ce4e18ee23c4681839ec03c8d52074a-1"></a><span class="l-Scalar-Plain">language</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">python</span>
+<a name="rest_code_0ce4e18ee23c4681839ec03c8d52074a-2"></a>
+<a name="rest_code_0ce4e18ee23c4681839ec03c8d52074a-3"></a><span class="l-Scalar-Plain">cache</span><span class="p-Indicator">:</span>
+<a name="rest_code_0ce4e18ee23c4681839ec03c8d52074a-4"></a>  <span class="l-Scalar-Plain">directories</span><span class="p-Indicator">:</span>
+<a name="rest_code_0ce4e18ee23c4681839ec03c8d52074a-5"></a>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">/home/travis/virtualenv/python2.7/lib/python2.7/site-packages</span>
+<a name="rest_code_0ce4e18ee23c4681839ec03c8d52074a-6"></a>
+<a name="rest_code_0ce4e18ee23c4681839ec03c8d52074a-7"></a><span class="l-Scalar-Plain">python</span><span class="p-Indicator">:</span>
+<a name="rest_code_0ce4e18ee23c4681839ec03c8d52074a-8"></a><span class="p-Indicator">-</span> <span class="s">'2.7'</span>
+<a name="rest_code_0ce4e18ee23c4681839ec03c8d52074a-9"></a>
+<a name="rest_code_0ce4e18ee23c4681839ec03c8d52074a-10"></a><span class="l-Scalar-Plain">install</span><span class="p-Indicator">:</span>
+<a name="rest_code_0ce4e18ee23c4681839ec03c8d52074a-11"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">pip install nikola</span>
 </pre>
 </div>
 <div class="section" id="nikola-build">
 <h3>設定 nikola build 的流程</h3>
 <p>nikola build 會將檔案產生在 output 的資料夾裡面，
 因此我先 clone master 到 output，這樣在 nikola build 之後就可以直接在 output 裡面 commit 跟 push 了。</p>
-<pre class="code yaml"><a name="rest_code_d77a6f498d7143f0aeef8810ee3eefd0-1"></a><span class="l-Scalar-Plain">before_script</span><span class="p-Indicator">:</span>
-<a name="rest_code_d77a6f498d7143f0aeef8810ee3eefd0-2"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">git config --global user.name &lt;Name&gt;</span>
-<a name="rest_code_d77a6f498d7143f0aeef8810ee3eefd0-3"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">git config --global user.email &lt;Email&gt;</span>
-<a name="rest_code_d77a6f498d7143f0aeef8810ee3eefd0-4"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">git clone --quiet https://${GH_TOKEN}@github.com/&lt;Repository Path&gt; -b master output &gt; /dev/null</span>
+<pre class="code yaml"><a name="rest_code_cf9b723b20c945a9aaf37d8791a32120-1"></a><span class="l-Scalar-Plain">before_script</span><span class="p-Indicator">:</span>
+<a name="rest_code_cf9b723b20c945a9aaf37d8791a32120-2"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">git config --global user.name &lt;Name&gt;</span>
+<a name="rest_code_cf9b723b20c945a9aaf37d8791a32120-3"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">git config --global user.email &lt;Email&gt;</span>
+<a name="rest_code_cf9b723b20c945a9aaf37d8791a32120-4"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">git clone --quiet https://${GH_TOKEN}@github.com/&lt;Repository Path&gt; -b master output &gt; /dev/null</span>
 </pre>
 <p>另外為了避免在透過 SSH 連到 github.com 的時候需要確認
 所以還需要在 before_script 增加</p>
-<pre class="code yaml"><a name="rest_code_50ca9e604e7c4231bda69e54edf18599-1"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">echo -e "Host github.com\n\tStrictHostKeyChecking no\n" &gt;&gt; ~/.ssh/config</span>
+<pre class="code yaml"><a name="rest_code_a4e7db24150348f1bf686528dd35737d-1"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">echo -e "Host github.com\n\tStrictHostKeyChecking no\n" &gt;&gt; ~/.ssh/config</span>
 </pre>
 <p>當環境都設定完畢之後，就可以直接呼叫 nikola build 了</p>
-<pre class="code yaml"><a name="rest_code_c34b850b63c1460dab733f9e45fd5f22-1"></a><span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
-<a name="rest_code_c34b850b63c1460dab733f9e45fd5f22-2"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">nikola build</span>
+<pre class="code yaml"><a name="rest_code_19cf91dec3e94b82be7446b2bad5f8e0-1"></a><span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
+<a name="rest_code_19cf91dec3e94b82be7446b2bad5f8e0-2"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">nikola build</span>
 </pre>
 <p>最後就是將 output 的內容上傳到 GitHub, <em>[ci skip]</em> 的部份是要跟 Travis 說這個 Commit 不要觸發 CI 流程，否則就會無窮迴圈了。</p>
-<pre class="code text"><a name="rest_code_8ec1fe6f2b3043e3a4571819fd63ab92-1"></a>after_success:
-<a name="rest_code_8ec1fe6f2b3043e3a4571819fd63ab92-2"></a>- cd output
-<a name="rest_code_8ec1fe6f2b3043e3a4571819fd63ab92-3"></a>- git add .
-<a name="rest_code_8ec1fe6f2b3043e3a4571819fd63ab92-4"></a>- git commit -m "[ci skip] Update output from Travis CI"
-<a name="rest_code_8ec1fe6f2b3043e3a4571819fd63ab92-5"></a>- git push origin master
+<pre class="code text"><a name="rest_code_346e3105265646a18754281949c1efc4-1"></a>after_success:
+<a name="rest_code_346e3105265646a18754281949c1efc4-2"></a>- cd output
+<a name="rest_code_346e3105265646a18754281949c1efc4-3"></a>- git add .
+<a name="rest_code_346e3105265646a18754281949c1efc4-4"></a>- git commit -m "[ci skip] Update output from Travis CI"
+<a name="rest_code_346e3105265646a18754281949c1efc4-5"></a>- git push origin master
 </pre>
 <p>或者是加上 branch blacklist 略過所有 master 上的 commit 應該也可以。</p>
-<pre class="code yaml"><a name="rest_code_34616e9d0549424fa1970a6f833a2e2b-1"></a><span class="c1"># blacklist</span>
-<a name="rest_code_34616e9d0549424fa1970a6f833a2e2b-2"></a><span class="l-Scalar-Plain">branches</span><span class="p-Indicator">:</span>
-<a name="rest_code_34616e9d0549424fa1970a6f833a2e2b-3"></a>  <span class="l-Scalar-Plain">except</span><span class="p-Indicator">:</span>
-<a name="rest_code_34616e9d0549424fa1970a6f833a2e2b-4"></a>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">master</span>
+<pre class="code yaml"><a name="rest_code_aa875e779a8649a2ad492f9aefb06850-1"></a><span class="c1"># blacklist</span>
+<a name="rest_code_aa875e779a8649a2ad492f9aefb06850-2"></a><span class="l-Scalar-Plain">branches</span><span class="p-Indicator">:</span>
+<a name="rest_code_aa875e779a8649a2ad492f9aefb06850-3"></a>  <span class="l-Scalar-Plain">except</span><span class="p-Indicator">:</span>
+<a name="rest_code_aa875e779a8649a2ad492f9aefb06850-4"></a>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">master</span>
 </pre>
 </div>
 <div class="section" id="github-token">
@@ -153,21 +153,21 @@ MathJax.Hub.Config({
 有了 Token 就跟有了密碼一樣，可以直接去存取 Repository。</p>
 <p>產生 Token 的步驟可以參考 GitHub 上的 <a class="reference external" href="https://help.github.com/articles/creating-an-access-token-for-command-line-use">Creating an access token for command-line use</a> 。</p>
 <p>在取得 Token 之後我們就可以使用</p>
-<pre class="code bash"><a name="rest_code_1c85ec404dce4d1e827e81fc37e47470-1"></a>git clone https://&lt;Token&gt;@github.com/&lt;Repository Path&gt;
+<pre class="code bash"><a name="rest_code_6d9739edd4ed42f3a7ac945b6e104540-1"></a>git clone https://&lt;Token&gt;@github.com/&lt;Repository Path&gt;
 </pre>
 <p>的方式來 clone 跟 push。</p>
 <p>但是 GitHub 上面的 Repository 是所有人都看得到的，所以如果你直接把 Token 放在 .travis.yml 上面，那麼就所有人都可以存取你這個 Repository 了 Orz。
 所以我們需要透過 Travis 的工具將這段 Token 加密。詳細流程可以參考 <a class="reference external" href="http://docs.travis-ci.com/user/encryption-keys/">Travis - Encryption keys</a></p>
-<pre class="code bash"><a name="rest_code_b904f592aa47468faf35ae11ec3e5fe7-1"></a>gem install travis
-<a name="rest_code_b904f592aa47468faf35ae11ec3e5fe7-2"></a>travis encrypt <span class="nv">GH_TOKEN</span><span class="o">=</span>&lt;GitHub Token&gt;
+<pre class="code bash"><a name="rest_code_ecfcd5fa7eb449d3b9ef60fdd1c2f03a-1"></a>gem install travis
+<a name="rest_code_ecfcd5fa7eb449d3b9ef60fdd1c2f03a-2"></a>travis encrypt <span class="nv">GH_TOKEN</span><span class="o">=</span>&lt;GitHub Token&gt;
 </pre>
 <p>這樣我們就可以將產生出來的</p>
-<pre class="code text"><a name="rest_code_ce3489391adf4cf588b3c916f855ce46-1"></a>secure: .... encrypted data ....
+<pre class="code text"><a name="rest_code_2b0a927fec5748a68c36fc8a301767b2-1"></a>secure: .... encrypted data ....
 </pre>
 <p>部份放到 .travis.yml 內</p>
-<pre class="code yaml"><a name="rest_code_084a01d66be54e4590a3c856eb0676ab-1"></a><span class="l-Scalar-Plain">env</span><span class="p-Indicator">:</span>
-<a name="rest_code_084a01d66be54e4590a3c856eb0676ab-2"></a>  <span class="l-Scalar-Plain">global</span><span class="p-Indicator">:</span>
-<a name="rest_code_084a01d66be54e4590a3c856eb0676ab-3"></a>    <span class="l-Scalar-Plain">secure</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">.... encrypted data ....</span>
+<pre class="code yaml"><a name="rest_code_e99f1ab0a83249eb976213002a7f6c94-1"></a><span class="l-Scalar-Plain">env</span><span class="p-Indicator">:</span>
+<a name="rest_code_e99f1ab0a83249eb976213002a7f6c94-2"></a>  <span class="l-Scalar-Plain">global</span><span class="p-Indicator">:</span>
+<a name="rest_code_e99f1ab0a83249eb976213002a7f6c94-3"></a>    <span class="l-Scalar-Plain">secure</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">.... encrypted data ....</span>
 </pre>
 <p>之後就可以在裡面使用 ${GH_TOKEN} 存取了。</p>
 <p>P.S 文章中使用 &lt;...&gt; 包起來的部份記得要自己替換掉</p>
@@ -179,41 +179,41 @@ MathJax.Hub.Config({
 像 GitHub 上直接編輯的功能，StackEdit 等線上編輯軟體都可以。</p>
 <p>但是 Commit 上去之後需要等 Travis 排程，所以不會立刻更新。
 最後附上我目前的完整 .travis.yml</p>
-<pre class="code yaml"><a name="rest_code_9fc273b426da4cdcb79596413de9aff4-1"></a><span class="l-Scalar-Plain">language</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">python</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-2"></a>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-3"></a><span class="c1"># blacklist</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-4"></a><span class="l-Scalar-Plain">branches</span><span class="p-Indicator">:</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-5"></a>  <span class="l-Scalar-Plain">except</span><span class="p-Indicator">:</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-6"></a>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">master</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-7"></a>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-8"></a><span class="l-Scalar-Plain">cache</span><span class="p-Indicator">:</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-9"></a>  <span class="l-Scalar-Plain">directories</span><span class="p-Indicator">:</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-10"></a>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">/home/travis/virtualenv/python2.7/</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-11"></a>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-12"></a><span class="l-Scalar-Plain">python</span><span class="p-Indicator">:</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-13"></a><span class="p-Indicator">-</span> <span class="s">'2.7'</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-14"></a>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-15"></a><span class="l-Scalar-Plain">install</span><span class="p-Indicator">:</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-16"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">pip install nikola</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-17"></a>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-18"></a><span class="l-Scalar-Plain">before_script</span><span class="p-Indicator">:</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-19"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">echo -e "Host github.com\n\tStrictHostKeyChecking no\n" &gt;&gt; ~/.ssh/config</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-20"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">git config --global user.name "Swind (via Travis-CI)"</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-21"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">git config --global user.email "swind@code-life.info"</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-22"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">git clone --quiet https://${GH_TOKEN}@github.com/Swind/swind.github.com -b master output &gt; /dev/null</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-23"></a>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-24"></a><span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-25"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">nikola build</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-26"></a>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-27"></a><span class="l-Scalar-Plain">after_success</span><span class="p-Indicator">:</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-28"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">cd output</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-29"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">git add .</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-30"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">git commit -m "[ci skip] Update output from Travis CI"</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-31"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">git push origin master</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-32"></a>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-33"></a><span class="l-Scalar-Plain">env</span><span class="p-Indicator">:</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-34"></a>  <span class="l-Scalar-Plain">global</span><span class="p-Indicator">:</span>
-<a name="rest_code_9fc273b426da4cdcb79596413de9aff4-35"></a>    <span class="l-Scalar-Plain">secure</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">bgD+Q7LIpym+pEmrL2+Ro3VfCLhSOGddRDcDXQoA6wAoL7ZIlXeVSgh2Q/iLy1SlEwIVhA+M9wPCDXbhRgWT54/qgDofwutLTmGZCU2ACN3XH4ZVfrqP13FdQ/+qiSRyOBnlmqPlxnDt6gHI7aRpC0fsBLIFiwWYpLDuqhWK2LU=</span>
+<pre class="code yaml"><a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-1"></a><span class="l-Scalar-Plain">language</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">python</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-2"></a>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-3"></a><span class="c1"># blacklist</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-4"></a><span class="l-Scalar-Plain">branches</span><span class="p-Indicator">:</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-5"></a>  <span class="l-Scalar-Plain">except</span><span class="p-Indicator">:</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-6"></a>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">master</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-7"></a>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-8"></a><span class="l-Scalar-Plain">cache</span><span class="p-Indicator">:</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-9"></a>  <span class="l-Scalar-Plain">directories</span><span class="p-Indicator">:</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-10"></a>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">/home/travis/virtualenv/python2.7/</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-11"></a>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-12"></a><span class="l-Scalar-Plain">python</span><span class="p-Indicator">:</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-13"></a><span class="p-Indicator">-</span> <span class="s">'2.7'</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-14"></a>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-15"></a><span class="l-Scalar-Plain">install</span><span class="p-Indicator">:</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-16"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">pip install nikola</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-17"></a>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-18"></a><span class="l-Scalar-Plain">before_script</span><span class="p-Indicator">:</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-19"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">echo -e "Host github.com\n\tStrictHostKeyChecking no\n" &gt;&gt; ~/.ssh/config</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-20"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">git config --global user.name "Swind (via Travis-CI)"</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-21"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">git config --global user.email "swind@code-life.info"</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-22"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">git clone --quiet https://${GH_TOKEN}@github.com/Swind/swind.github.com -b master output &gt; /dev/null</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-23"></a>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-24"></a><span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-25"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">nikola build</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-26"></a>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-27"></a><span class="l-Scalar-Plain">after_success</span><span class="p-Indicator">:</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-28"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">cd output</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-29"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">git add .</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-30"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">git commit -m "[ci skip] Update output from Travis CI"</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-31"></a><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">git push origin master</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-32"></a>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-33"></a><span class="l-Scalar-Plain">env</span><span class="p-Indicator">:</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-34"></a>  <span class="l-Scalar-Plain">global</span><span class="p-Indicator">:</span>
+<a name="rest_code_f60f03852fb64ddc8302c59ee955ac80-35"></a>    <span class="l-Scalar-Plain">secure</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">bgD+Q7LIpym+pEmrL2+Ro3VfCLhSOGddRDcDXQoA6wAoL7ZIlXeVSgh2Q/iLy1SlEwIVhA+M9wPCDXbhRgWT54/qgDofwutLTmGZCU2ACN3XH4ZVfrqP13FdQ/+qiSRyOBnlmqPlxnDt6gHI7aRpC0fsBLIFiwWYpLDuqhWK2LU=</span>
 </pre>
 <div class="figure">
 <img alt="https://dl.dropboxusercontent.com/u/15537823/Blog/Valkyrie_Profile.jpg" src="https://dl.dropboxusercontent.com/u/15537823/Blog/Valkyrie_Profile.jpg">

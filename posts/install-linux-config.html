@@ -80,7 +80,7 @@ tmux 與他的快樂設定檔
 我最後也從 pathogen.vim 叛逃，使用 github + shell script + vundle 來完成我 zsh、tmux 與 vim 的設定。</p>
 <p>關於 vundle 的使用方式與設定我是參考 <a class="reference external" href="http://yishanhe.net/using-vim-vundle-for-better-plugin-management/">使用Vundle更好的管理你的Vim插件</a> 雖然是簡體的。不過設定與使用方式都寫得非常詳細。</p>
 <p>經過一個早上的努力，我也終於可以使用</p>
-<pre class="code bash"><a name="rest_code_ebe8b7b0a68441149bbe0049291b8d40-1"></a>wget -O - https://raw.github.com/Swind/linux-config/master/install.sh <span class="p">|</span> sh
+<pre class="code bash"><a name="rest_code_7c50dffc6cb84383850bc3ec3fb8a9a3-1"></a>wget -O - https://raw.github.com/Swind/linux-config/master/install.sh <span class="p">|</span> sh
 </pre>
 <p>把 Linux 給設定完畢了～</p>
 <p><strong>2013.02.08 update</strong></p>
@@ -91,45 +91,45 @@ To connect to raw.github.com insecurely, use ‘--no-check-certificate’.
 </pre>
 <p>的錯誤訊息，目前我還沒有很仔細的去找原因。</p>
 <p>不過如他所敘述的，加入 --no-check-certificate 就沒有問題了。</p>
-<pre class="code bash"><a name="rest_code_03b7abfb9aec427584558bf027b981c3-1"></a>wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/master/install.sh <span class="p">|</span> sh
+<pre class="code bash"><a name="rest_code_e289082a794745d19f694d2a9cfa0cda-1"></a>wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/master/install.sh <span class="p">|</span> sh
 </pre>
 <p>除此之外 JosephJ 所給的建議也非常的實用，
 將常用的工具與指令整理成一份文件，來協助管理與記憶。
 目前我是用 Nikola (對沒錯，所從 Octopress 跳到 Pelican 又跳到 Nikola 了 XD) stories 來作筆記。</p>
 <!-- TEASER_END -->
 <p>目前安裝的 script 是參考 JosephJ 的內容修改成這樣</p>
-<pre class="code bash"><a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-1"></a><span class="c">#!/bin/bash</span>
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-2"></a><span class="nv">CONFIG_HOME</span><span class="o">=</span>.myconfig
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-3"></a>
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-4"></a>warn<span class="o">(){</span>
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-5"></a>        <span class="nb">echo</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> &gt;<span class="p">&amp;</span>2
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-6"></a><span class="o">}</span>
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-7"></a>
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-8"></a>die<span class="o">(){</span>
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-9"></a>        warn <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span>
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-10"></a>        <span class="nb">exit </span>1
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-11"></a><span class="o">}</span>
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-12"></a>
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-13"></a><span class="o">[</span> -e <span class="s2">"~/.config"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> die <span class="s2">"~/config already exists."</span>
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-14"></a>
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-15"></a><span class="nb">cd</span> ~
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-16"></a>
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-17"></a><span class="c">#Checkout my config</span>
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-18"></a>git clone git://github.com/Swind/linux-config.git <span class="s2">"</span><span class="nv">$CONFIG_HOME</span><span class="s2">"</span>
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-19"></a>
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-20"></a>ln -s <span class="nv">$CONFIG_HOME</span>/.vim .vim
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-21"></a>ln -s .vim/.vimrc .vimrc
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-22"></a>ln -s <span class="nv">$CONFIG_HOME</span>/.zshrc .zshrc
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-23"></a>ln -s <span class="nv">$CONFIG_HOME</span>/.tmux.conf .tmux.conf
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-24"></a>
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-25"></a><span class="c">#install vundle</span>
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-26"></a>git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-27"></a>
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-28"></a><span class="c">#install oh-my-zsh</span>
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-29"></a>curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh <span class="p">|</span> sh
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-30"></a>
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-31"></a><span class="nb">echo</span> <span class="s2">"Configuration files has been installed."</span>
-<a name="rest_code_254e08c5a48042a2897f4a4cff0fc7de-32"></a><span class="nb">cd</span> <span class="s2">"</span><span class="nv">$CONFIG_HOME</span><span class="s2">"</span>
+<pre class="code bash"><a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-1"></a><span class="c">#!/bin/bash</span>
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-2"></a><span class="nv">CONFIG_HOME</span><span class="o">=</span>.myconfig
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-3"></a>
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-4"></a>warn<span class="o">(){</span>
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-5"></a>        <span class="nb">echo</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> &gt;<span class="p">&amp;</span>2
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-6"></a><span class="o">}</span>
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-7"></a>
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-8"></a>die<span class="o">(){</span>
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-9"></a>        warn <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span>
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-10"></a>        <span class="nb">exit </span>1
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-11"></a><span class="o">}</span>
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-12"></a>
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-13"></a><span class="o">[</span> -e <span class="s2">"~/.config"</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> die <span class="s2">"~/config already exists."</span>
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-14"></a>
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-15"></a><span class="nb">cd</span> ~
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-16"></a>
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-17"></a><span class="c">#Checkout my config</span>
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-18"></a>git clone git://github.com/Swind/linux-config.git <span class="s2">"</span><span class="nv">$CONFIG_HOME</span><span class="s2">"</span>
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-19"></a>
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-20"></a>ln -s <span class="nv">$CONFIG_HOME</span>/.vim .vim
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-21"></a>ln -s .vim/.vimrc .vimrc
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-22"></a>ln -s <span class="nv">$CONFIG_HOME</span>/.zshrc .zshrc
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-23"></a>ln -s <span class="nv">$CONFIG_HOME</span>/.tmux.conf .tmux.conf
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-24"></a>
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-25"></a><span class="c">#install vundle</span>
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-26"></a>git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-27"></a>
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-28"></a><span class="c">#install oh-my-zsh</span>
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-29"></a>curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh <span class="p">|</span> sh
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-30"></a>
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-31"></a><span class="nb">echo</span> <span class="s2">"Configuration files has been installed."</span>
+<a name="rest_code_c02bc03b03d147cd9b69c1d55cd44c86-32"></a><span class="nb">cd</span> <span class="s2">"</span><span class="nv">$CONFIG_HOME</span><span class="s2">"</span>
 </pre>
 <hr class="docutils">
 <div class="figure">

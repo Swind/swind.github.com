@@ -78,69 +78,69 @@ VirtualBox 安裝">
 <div class="section" id="virtualbox">
 <h2>在 VirtualBox 上安裝系統</h2>
 <p>VirtualBox 安裝 Extension Pack</p>
-<pre class="code bash"><a name="rest_code_3c0ac01cada349a09575177a6fc4fbcd-1"></a>wget http://download.virtualbox.org/virtualbox/4.3.16/Oracle_VM_VirtualBox_Extension_Pack-4.3.16-95972.vbox-extpack
-<a name="rest_code_3c0ac01cada349a09575177a6fc4fbcd-2"></a>VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-4.3.16-95972.vbox-extpack
+<pre class="code bash"><a name="rest_code_df1a06f35abb4f76abc70830c7866969-1"></a>wget http://download.virtualbox.org/virtualbox/4.3.16/Oracle_VM_VirtualBox_Extension_Pack-4.3.16-95972.vbox-extpack
+<a name="rest_code_df1a06f35abb4f76abc70830c7866969-2"></a>VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-4.3.16-95972.vbox-extpack
 </pre>
 <div class="section" id="vagrant">
 <h3>建立 vagrant 帳號</h3>
-<pre class="code bash"><a name="rest_code_f4bb8f419e5a4377a22ed5d642d8e762-1"></a>useradd -m vagrant
-<a name="rest_code_f4bb8f419e5a4377a22ed5d642d8e762-2"></a>passwd vagrant
+<pre class="code bash"><a name="rest_code_6020ba43970b40bcaf54ae67ec871bba-1"></a>useradd -m vagrant
+<a name="rest_code_6020ba43970b40bcaf54ae67ec871bba-2"></a>passwd vagrant
 </pre>
 </div>
 <div class="section" id="editor-sudoers">
 <h3>修改預設 editor 與 sudoers</h3>
-<pre class="code bash"><a name="rest_code_34106ff5b4eb494b83842a858392d636-1"></a>sudo update-alternatives --config editor
-<a name="rest_code_34106ff5b4eb494b83842a858392d636-2"></a>sudo su -
-<a name="rest_code_34106ff5b4eb494b83842a858392d636-3"></a>visudo
+<pre class="code bash"><a name="rest_code_0813cb8551e740ada73df5f570457720-1"></a>sudo update-alternatives --config editor
+<a name="rest_code_0813cb8551e740ada73df5f570457720-2"></a>sudo su -
+<a name="rest_code_0813cb8551e740ada73df5f570457720-3"></a>visudo
 </pre>
 <p>增加</p>
-<pre class="code text"><a name="rest_code_3ff850f9ff414473ae1532ed1894566a-1"></a>vagrant ALL=(ALL) NOPASSWD:ALL
+<pre class="code text"><a name="rest_code_296373f3bec3458389a5dde8bd3ddb1e-1"></a>vagrant ALL=(ALL) NOPASSWD:ALL
 </pre>
 </div>
 <div class="section" id="vagrant-ssh-key-authorized-keys">
 <h3>增加 Vagrant 的 ssh key 到 authorized_keys</h3>
-<pre class="code bash"><a name="rest_code_d68c06d5e03649a192f83603301bd3f5-1"></a>mkdir -p /home/vagrant/.ssh
-<a name="rest_code_d68c06d5e03649a192f83603301bd3f5-2"></a>wget --no-check-certificate https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub -O /home/vagrant/.ssh/authorized_keys
-<a name="rest_code_d68c06d5e03649a192f83603301bd3f5-3"></a>chmod <span class="m">0700</span> /home/vagrant/.ssh
-<a name="rest_code_d68c06d5e03649a192f83603301bd3f5-4"></a>chmod <span class="m">0600</span> /home/vagrant/.ssh/authorized_keys
-<a name="rest_code_d68c06d5e03649a192f83603301bd3f5-5"></a>chown -R vagrant /home/vagrant/.ssh
+<pre class="code bash"><a name="rest_code_73a90db11a3743e9a711289234c4d04e-1"></a>mkdir -p /home/vagrant/.ssh
+<a name="rest_code_73a90db11a3743e9a711289234c4d04e-2"></a>wget --no-check-certificate https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub -O /home/vagrant/.ssh/authorized_keys
+<a name="rest_code_73a90db11a3743e9a711289234c4d04e-3"></a>chmod <span class="m">0700</span> /home/vagrant/.ssh
+<a name="rest_code_73a90db11a3743e9a711289234c4d04e-4"></a>chmod <span class="m">0600</span> /home/vagrant/.ssh/authorized_keys
+<a name="rest_code_73a90db11a3743e9a711289234c4d04e-5"></a>chown -R vagrant /home/vagrant/.ssh
 </pre>
 </div>
 <div class="section" id="nat-eth0">
 <h3>移除已經存在的網路卡 ( 除了第一個 NAT 的 eth0 之外）</h3>
 <p>錯誤訊息</p>
-<pre class="code text"><a name="rest_code_8df5d7ed34914151a88314eccc2fb9d1-1"></a>The following SSH command responded with a non-zero exit status.
-<a name="rest_code_8df5d7ed34914151a88314eccc2fb9d1-2"></a>Vagrant assumes that this means the command failed!
-<a name="rest_code_8df5d7ed34914151a88314eccc2fb9d1-3"></a>
-<a name="rest_code_8df5d7ed34914151a88314eccc2fb9d1-4"></a>/sbin/ip addr flush dev eth1 2&gt; /dev/null
-<a name="rest_code_8df5d7ed34914151a88314eccc2fb9d1-5"></a>
-<a name="rest_code_8df5d7ed34914151a88314eccc2fb9d1-6"></a>Stdout from the command:
-<a name="rest_code_8df5d7ed34914151a88314eccc2fb9d1-7"></a>
-<a name="rest_code_8df5d7ed34914151a88314eccc2fb9d1-8"></a>
-<a name="rest_code_8df5d7ed34914151a88314eccc2fb9d1-9"></a>
-<a name="rest_code_8df5d7ed34914151a88314eccc2fb9d1-10"></a>Stderr from the command:
-<a name="rest_code_8df5d7ed34914151a88314eccc2fb9d1-11"></a>
-<a name="rest_code_8df5d7ed34914151a88314eccc2fb9d1-12"></a>stdin: is not a tty
+<pre class="code text"><a name="rest_code_ef4eea4f416948d69f1fadca6d3af13b-1"></a>The following SSH command responded with a non-zero exit status.
+<a name="rest_code_ef4eea4f416948d69f1fadca6d3af13b-2"></a>Vagrant assumes that this means the command failed!
+<a name="rest_code_ef4eea4f416948d69f1fadca6d3af13b-3"></a>
+<a name="rest_code_ef4eea4f416948d69f1fadca6d3af13b-4"></a>/sbin/ip addr flush dev eth1 2&gt; /dev/null
+<a name="rest_code_ef4eea4f416948d69f1fadca6d3af13b-5"></a>
+<a name="rest_code_ef4eea4f416948d69f1fadca6d3af13b-6"></a>Stdout from the command:
+<a name="rest_code_ef4eea4f416948d69f1fadca6d3af13b-7"></a>
+<a name="rest_code_ef4eea4f416948d69f1fadca6d3af13b-8"></a>
+<a name="rest_code_ef4eea4f416948d69f1fadca6d3af13b-9"></a>
+<a name="rest_code_ef4eea4f416948d69f1fadca6d3af13b-10"></a>Stderr from the command:
+<a name="rest_code_ef4eea4f416948d69f1fadca6d3af13b-11"></a>
+<a name="rest_code_ef4eea4f416948d69f1fadca6d3af13b-12"></a>stdin: is not a tty
 </pre>
 <p>原因是有可能之前有增加過網路卡，所以 eth1 代表那個已經不存在的網路卡。
 導致 vagrant 沒有辦法初始化網路設定</p>
-<pre class="code bash"><a name="rest_code_86d428ebeb89454b8f7cc8ea3ef65e15-1"></a>sudo vim /etc/udev/rules.d/70-persistent-net.rules
+<pre class="code bash"><a name="rest_code_1a15f04c7d474935a67c054efe7ab99a-1"></a>sudo vim /etc/udev/rules.d/70-persistent-net.rules
 </pre>
 </div>
 <div class="section" id="virtualbox-guest-additions">
 <h3>安裝 Virtualbox Guest Additions</h3>
 <p>直接到 <a class="reference external" href="http://download.virtualbox.org/virtualbox/">http://download.virtualbox.org/virtualbox/</a> 下載對應版本的 Guest Addition，例如 <cite>VBoxGuestAdditions_4.3.18.iso</cite></p>
-<pre class="code bash"><a name="rest_code_720d51bdc10d46ee9f0fab85ec5109a1-1"></a>wget http://download.virtualbox.org/virtualbox/4.3.18/VBoxGuestAdditions_4.3.18.iso
-<a name="rest_code_720d51bdc10d46ee9f0fab85ec5109a1-2"></a>apt-get install dkms gcc
-<a name="rest_code_720d51bdc10d46ee9f0fab85ec5109a1-3"></a>mount -o loop VBoxGuestAdditions_4.3.18.iso /mnt
-<a name="rest_code_720d51bdc10d46ee9f0fab85ec5109a1-4"></a><span class="nb">cd</span> /mnt
-<a name="rest_code_720d51bdc10d46ee9f0fab85ec5109a1-5"></a>./VBoxLinuxAdditions.run
+<pre class="code bash"><a name="rest_code_52d3c59be84d4e888ad49c7efa4c9f05-1"></a>wget http://download.virtualbox.org/virtualbox/4.3.18/VBoxGuestAdditions_4.3.18.iso
+<a name="rest_code_52d3c59be84d4e888ad49c7efa4c9f05-2"></a>apt-get install dkms gcc
+<a name="rest_code_52d3c59be84d4e888ad49c7efa4c9f05-3"></a>mount -o loop VBoxGuestAdditions_4.3.18.iso /mnt
+<a name="rest_code_52d3c59be84d4e888ad49c7efa4c9f05-4"></a><span class="nb">cd</span> /mnt
+<a name="rest_code_52d3c59be84d4e888ad49c7efa4c9f05-5"></a>./VBoxLinuxAdditions.run
 </pre>
 </div>
 <div class="section" id="box">
 <h3>打包成 box</h3>
 <p>&lt;vm-name&gt; 的部份需要自己換成 VM 的名稱</p>
-<pre class="code bash"><a name="rest_code_7b40248bdf65417db3d217f029f461a7-1"></a>vagrant package --base &lt;vm-name&gt;
+<pre class="code bash"><a name="rest_code_98888cfbe5a4439dba914731dadc8ba2-1"></a>vagrant package --base &lt;vm-name&gt;
 </pre>
 <div class="figure">
 <img alt="https://dl.dropboxusercontent.com/u/15537823/Blog/Lord_Marksman_and_Vanadis.jpg" src="https://dl.dropboxusercontent.com/u/15537823/Blog/Lord_Marksman_and_Vanadis.jpg">

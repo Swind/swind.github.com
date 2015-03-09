@@ -95,28 +95,28 @@ ccache
 <div class="section" id="id1">
 <h3>安裝 ccache</h3>
 <p>FreeBSD 可以使用 pkg_add 無腦安裝，也可以到 /usr/ports/devel/ccache 手動編譯安裝。</p>
-<pre class="code bash"><a name="rest_code_b8d4fe63495c40b29649fa00beb63adb-1"></a>pkg_add -r ccache
+<pre class="code bash"><a name="rest_code_3a0dd5ba50d447698aa22f7fb1cc64c1-1"></a>pkg_add -r ccache
 </pre>
 </div>
 <div class="section" id="etc-make-conf">
 <h3>修改 /etc/make.conf</h3>
-<pre class="code bash"><a name="rest_code_27268308995947bbb29952caf66ac950-1"></a><span class="c">#CCACHE</span>
-<a name="rest_code_27268308995947bbb29952caf66ac950-2"></a>.if !defined<span class="o">(</span>NO_CCACHE<span class="o">)</span>
-<a name="rest_code_27268308995947bbb29952caf66ac950-3"></a><span class="nv">CC</span><span class="o">=</span> /usr/local/libexec/ccache/world/cc
-<a name="rest_code_27268308995947bbb29952caf66ac950-4"></a><span class="nv">CCX</span><span class="o">=</span> /usr/local/libexec/ccache/world/c++
-<a name="rest_code_27268308995947bbb29952caf66ac950-5"></a>.endif
-<a name="rest_code_27268308995947bbb29952caf66ac950-6"></a>
-<a name="rest_code_27268308995947bbb29952caf66ac950-7"></a>.if <span class="si">${</span><span class="p">.CURDIR:</span><span class="nv">M</span><span class="p">*/ports/devel/ccache</span><span class="si">}</span>
-<a name="rest_code_27268308995947bbb29952caf66ac950-8"></a><span class="nv">NO_CCACHE</span><span class="o">=</span>yes
-<a name="rest_code_27268308995947bbb29952caf66ac950-9"></a>.endif
+<pre class="code bash"><a name="rest_code_38fc8486705c46b2943e8868a0a6cf98-1"></a><span class="c">#CCACHE</span>
+<a name="rest_code_38fc8486705c46b2943e8868a0a6cf98-2"></a>.if !defined<span class="o">(</span>NO_CCACHE<span class="o">)</span>
+<a name="rest_code_38fc8486705c46b2943e8868a0a6cf98-3"></a><span class="nv">CC</span><span class="o">=</span> /usr/local/libexec/ccache/world/cc
+<a name="rest_code_38fc8486705c46b2943e8868a0a6cf98-4"></a><span class="nv">CCX</span><span class="o">=</span> /usr/local/libexec/ccache/world/c++
+<a name="rest_code_38fc8486705c46b2943e8868a0a6cf98-5"></a>.endif
+<a name="rest_code_38fc8486705c46b2943e8868a0a6cf98-6"></a>
+<a name="rest_code_38fc8486705c46b2943e8868a0a6cf98-7"></a>.if <span class="si">${</span><span class="p">.CURDIR:</span><span class="nv">M</span><span class="p">*/ports/devel/ccache</span><span class="si">}</span>
+<a name="rest_code_38fc8486705c46b2943e8868a0a6cf98-8"></a><span class="nv">NO_CCACHE</span><span class="o">=</span>yes
+<a name="rest_code_38fc8486705c46b2943e8868a0a6cf98-9"></a>.endif
 </pre>
 </div>
 <div class="section" id="zshrc-profile">
 <h3>修改 .zshrc 或者是 .profile</h3>
-<pre class="code bash"><a name="rest_code_5cbefd3478a6431b93d0902da78490fd-1"></a><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span>/usr/local/libexec/ccache:<span class="nv">$PATH</span>
-<a name="rest_code_5cbefd3478a6431b93d0902da78490fd-2"></a><span class="nb">export </span><span class="nv">CCACHE_PATH</span><span class="o">=</span>/usr/bin:/usr/local/bin
-<a name="rest_code_5cbefd3478a6431b93d0902da78490fd-3"></a><span class="nb">export </span><span class="nv">CCACHE_DIR</span><span class="o">=</span>/var/tmp/ccache
-<a name="rest_code_5cbefd3478a6431b93d0902da78490fd-4"></a><span class="nb">export </span><span class="nv">CCACHE_LOGFILE</span><span class="o">=</span>/var/log/ccache.log
+<pre class="code bash"><a name="rest_code_a46989a6975842eabd42432da81e92aa-1"></a><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span>/usr/local/libexec/ccache:<span class="nv">$PATH</span>
+<a name="rest_code_a46989a6975842eabd42432da81e92aa-2"></a><span class="nb">export </span><span class="nv">CCACHE_PATH</span><span class="o">=</span>/usr/bin:/usr/local/bin
+<a name="rest_code_a46989a6975842eabd42432da81e92aa-3"></a><span class="nb">export </span><span class="nv">CCACHE_DIR</span><span class="o">=</span>/var/tmp/ccache
+<a name="rest_code_a46989a6975842eabd42432da81e92aa-4"></a><span class="nb">export </span><span class="nv">CCACHE_LOGFILE</span><span class="o">=</span>/var/log/ccache.log
 </pre>
 </div>
 </div>

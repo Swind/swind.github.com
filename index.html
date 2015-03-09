@@ -167,8 +167,8 @@ server log 沒有吐出不該出現的錯誤。</p>
 <p>由於我的 GitHub 上面的網頁換了很多次系統 Octopress -&gt; Pelican -&gt; Nikola，在加上那時候對於 GitHub Pages 的設定不是很了解。
 所以 git 上的 branch 有點奇怪。</p>
 <p>我目前的 branch 有兩個</p>
-<pre class="code text"><a name="rest_code_65de63fd1d1044099f16e5f2443d0d54-1"></a>- master
-<a name="rest_code_65de63fd1d1044099f16e5f2443d0d54-2"></a>- source
+<pre class="code text"><a name="rest_code_46e86f907865493488dc1d239bbc16d2-1"></a>- master
+<a name="rest_code_46e86f907865493488dc1d239bbc16d2-2"></a>- source
 </pre>
 <p>master 就是 GitHub Pages 的部份，而 source 則是放 Nikola 的設定檔以及文章的原始檔。
 現在 GitHub 預設放網頁的 branch 好像可以改成  gh-pages。不過改設定又是浩大工程，我以我就繼續沿用之前的 branch 了。
@@ -303,35 +303,35 @@ server log 沒有吐出不該出現的錯誤。</p>
 <h2>建立 symbolic link</h2>
 <p>目前有一個需求是要建立 symbolic link 在某些特定的資料夾裡面。
 由於 autotools 是可以直接使用 script 的語法，所以建立起來非常簡單。</p>
-<pre class="code bash"><a name="rest_code_a292467a60fd48a88c3579527e56db99-1"></a>install-exec-hook:
-<a name="rest_code_a292467a60fd48a88c3579527e56db99-2"></a>     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path1
-<a name="rest_code_a292467a60fd48a88c3579527e56db99-3"></a>     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path2
-<a name="rest_code_a292467a60fd48a88c3579527e56db99-4"></a>     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path3
-<a name="rest_code_a292467a60fd48a88c3579527e56db99-5"></a>     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path4
-<a name="rest_code_a292467a60fd48a88c3579527e56db99-6"></a>     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path5
+<pre class="code bash"><a name="rest_code_f3b94a6248d3421cbc5f7f6ba64f2fb1-1"></a>install-exec-hook:
+<a name="rest_code_f3b94a6248d3421cbc5f7f6ba64f2fb1-2"></a>     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path1
+<a name="rest_code_f3b94a6248d3421cbc5f7f6ba64f2fb1-3"></a>     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path2
+<a name="rest_code_f3b94a6248d3421cbc5f7f6ba64f2fb1-4"></a>     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path3
+<a name="rest_code_f3b94a6248d3421cbc5f7f6ba64f2fb1-5"></a>     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path4
+<a name="rest_code_f3b94a6248d3421cbc5f7f6ba64f2fb1-6"></a>     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path5
 </pre>
 <p>這樣只要直接呼叫 make install-exec-hook 就可以建立 symbolic link 了。
 但是如果要在 CMake 裡面作到一樣的事情要怎麼處理呢？</p>
-<pre class="code cmake"><a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-1"></a><span class="nb">Set</span><span class="p">(</span><span class="s">targets</span>
-<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-2"></a>    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path1</span>
-<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-3"></a>    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path2</span>
-<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-4"></a>    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path3</span>
-<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-5"></a>    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path4</span>
-<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-6"></a>    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path5</span>
-<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-7"></a><span class="p">)</span>
-<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-8"></a>
-<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-9"></a><span class="nb">Function</span><span class="p">(</span><span class="s">Create_symbolic_link</span> <span class="s">source</span> <span class="s">target</span><span class="p">)</span>
-<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-10"></a>    <span class="nb">Add_custom_command</span><span class="p">(</span>
-<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-11"></a>        <span class="s">OUTPUT</span> <span class="o">${</span><span class="nv">target</span><span class="o">}</span>
-<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-12"></a>        <span class="s">COMMAND</span> <span class="s">ln</span> <span class="s">-fs</span> <span class="o">${</span><span class="nv">source</span><span class="o">}</span> <span class="o">${</span><span class="nv">target</span><span class="o">}</span>
-<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-13"></a>    <span class="p">)</span>
-<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-14"></a><span class="nb">Endfunction</span><span class="p">()</span>
-<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-15"></a>
-<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-16"></a><span class="nb">Foreach</span><span class="p">(</span><span class="s">target</span> <span class="s">targets</span><span class="p">)</span>
-<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-17"></a>   <span class="nb">Create_symbolic_link</span><span class="p">(</span><span class="o">${</span><span class="nv">source_prefix</span><span class="o">}</span><span class="s">/a</span> <span class="o">${</span><span class="nv">target</span><span class="o">}</span><span class="p">)</span>
-<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-18"></a><span class="nb">Endforeach</span><span class="p">()</span>
-<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-19"></a>
-<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-20"></a><span class="nb">Add_custom_target</span><span class="p">(</span><span class="s">install-exec-hook</span> <span class="s">DEPENDS</span> <span class="o">${</span><span class="nv">targets</span><span class="o">}</span><span class="p">)</span>
+<pre class="code cmake"><a name="rest_code_a69eecefc6b9466aa69b13805f5f54a9-1"></a><span class="nb">Set</span><span class="p">(</span><span class="s">targets</span>
+<a name="rest_code_a69eecefc6b9466aa69b13805f5f54a9-2"></a>    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path1</span>
+<a name="rest_code_a69eecefc6b9466aa69b13805f5f54a9-3"></a>    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path2</span>
+<a name="rest_code_a69eecefc6b9466aa69b13805f5f54a9-4"></a>    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path3</span>
+<a name="rest_code_a69eecefc6b9466aa69b13805f5f54a9-5"></a>    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path4</span>
+<a name="rest_code_a69eecefc6b9466aa69b13805f5f54a9-6"></a>    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path5</span>
+<a name="rest_code_a69eecefc6b9466aa69b13805f5f54a9-7"></a><span class="p">)</span>
+<a name="rest_code_a69eecefc6b9466aa69b13805f5f54a9-8"></a>
+<a name="rest_code_a69eecefc6b9466aa69b13805f5f54a9-9"></a><span class="nb">Function</span><span class="p">(</span><span class="s">Create_symbolic_link</span> <span class="s">source</span> <span class="s">target</span><span class="p">)</span>
+<a name="rest_code_a69eecefc6b9466aa69b13805f5f54a9-10"></a>    <span class="nb">Add_custom_command</span><span class="p">(</span>
+<a name="rest_code_a69eecefc6b9466aa69b13805f5f54a9-11"></a>        <span class="s">OUTPUT</span> <span class="o">${</span><span class="nv">target</span><span class="o">}</span>
+<a name="rest_code_a69eecefc6b9466aa69b13805f5f54a9-12"></a>        <span class="s">COMMAND</span> <span class="s">ln</span> <span class="s">-fs</span> <span class="o">${</span><span class="nv">source</span><span class="o">}</span> <span class="o">${</span><span class="nv">target</span><span class="o">}</span>
+<a name="rest_code_a69eecefc6b9466aa69b13805f5f54a9-13"></a>    <span class="p">)</span>
+<a name="rest_code_a69eecefc6b9466aa69b13805f5f54a9-14"></a><span class="nb">Endfunction</span><span class="p">()</span>
+<a name="rest_code_a69eecefc6b9466aa69b13805f5f54a9-15"></a>
+<a name="rest_code_a69eecefc6b9466aa69b13805f5f54a9-16"></a><span class="nb">Foreach</span><span class="p">(</span><span class="s">target</span> <span class="s">targets</span><span class="p">)</span>
+<a name="rest_code_a69eecefc6b9466aa69b13805f5f54a9-17"></a>   <span class="nb">Create_symbolic_link</span><span class="p">(</span><span class="o">${</span><span class="nv">source_prefix</span><span class="o">}</span><span class="s">/a</span> <span class="o">${</span><span class="nv">target</span><span class="o">}</span><span class="p">)</span>
+<a name="rest_code_a69eecefc6b9466aa69b13805f5f54a9-18"></a><span class="nb">Endforeach</span><span class="p">()</span>
+<a name="rest_code_a69eecefc6b9466aa69b13805f5f54a9-19"></a>
+<a name="rest_code_a69eecefc6b9466aa69b13805f5f54a9-20"></a><span class="nb">Add_custom_target</span><span class="p">(</span><span class="s">install-exec-hook</span> <span class="s">DEPENDS</span> <span class="o">${</span><span class="nv">targets</span><span class="o">}</span><span class="p">)</span>
 </pre>
 <p>因為 CMake 裡面沒有辦法像 shell script 一樣直接下指令，必須透過 Add_custom_command 或者是 Execute_process 等方式執行。
 但是若又要跟 Target 建立相依性的話，似乎就一定得靠 Add_custom_command，因為他會設定一個 output file。
@@ -408,26 +408,26 @@ http://upload.wikimedia.org/wikipedia/commons/0/0c/Thread_pool.svg</object>
 <div class="section" id="thread-pool">
 <h2>Thread Pool 的資料結構</h2>
 <p>首先 Thread Pool 要有的東西就是 job 或者是 task 讓 Thread 知道他們要做什麼事情。</p>
-<pre class="code c"><a name="rest_code_eb55c5380e114f919e3613d003b153b3-1"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
-<a name="rest_code_eb55c5380e114f919e3613d003b153b3-2"></a>    <span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">function</span><span class="p">)(</span><span class="kt">void</span> <span class="o">*</span><span class="p">);</span>
-<a name="rest_code_eb55c5380e114f919e3613d003b153b3-3"></a>    <span class="kt">void</span> <span class="o">*</span><span class="n">argument</span><span class="p">;</span>
-<a name="rest_code_eb55c5380e114f919e3613d003b153b3-4"></a><span class="p">}</span> <span class="kt">threadpool_task_t</span><span class="p">;</span>
+<pre class="code c"><a name="rest_code_29ee80a9db5c424abc95c008f6c0bdeb-1"></a><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+<a name="rest_code_29ee80a9db5c424abc95c008f6c0bdeb-2"></a>    <span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">function</span><span class="p">)(</span><span class="kt">void</span> <span class="o">*</span><span class="p">);</span>
+<a name="rest_code_29ee80a9db5c424abc95c008f6c0bdeb-3"></a>    <span class="kt">void</span> <span class="o">*</span><span class="n">argument</span><span class="p">;</span>
+<a name="rest_code_29ee80a9db5c424abc95c008f6c0bdeb-4"></a><span class="p">}</span> <span class="kt">threadpool_task_t</span><span class="p">;</span>
 </pre>
 <p>所以只要有一個資料結構紀錄要執行的 function pointer 與要傳遞的參數即可。
 接下來就是 Thread Pool 本身，他必須存放所有的 Thread 與 Job Queue</p>
-<pre class="code c"><a name="rest_code_e5f67064fdef4e68b4b282e5eaa21ead-1"></a><span class="k">struct</span> <span class="kt">threadpool_t</span> <span class="p">{</span>
-<a name="rest_code_e5f67064fdef4e68b4b282e5eaa21ead-2"></a>    <span class="kt">pthread_mutex_t</span> <span class="n">lock</span><span class="p">;</span>
-<a name="rest_code_e5f67064fdef4e68b4b282e5eaa21ead-3"></a>    <span class="kt">pthread_cond_t</span> <span class="n">notify</span><span class="p">;</span>
-<a name="rest_code_e5f67064fdef4e68b4b282e5eaa21ead-4"></a>    <span class="kt">pthread_t</span> <span class="o">*</span><span class="n">threads</span><span class="p">;</span>
-<a name="rest_code_e5f67064fdef4e68b4b282e5eaa21ead-5"></a>    <span class="kt">threadpool_task_t</span> <span class="o">*</span><span class="n">queue</span><span class="p">;</span>
-<a name="rest_code_e5f67064fdef4e68b4b282e5eaa21ead-6"></a>    <span class="kt">int</span> <span class="n">thread_count</span><span class="p">;</span>
-<a name="rest_code_e5f67064fdef4e68b4b282e5eaa21ead-7"></a>    <span class="kt">int</span> <span class="n">queue_size</span><span class="p">;</span>
-<a name="rest_code_e5f67064fdef4e68b4b282e5eaa21ead-8"></a>    <span class="kt">int</span> <span class="n">head</span><span class="p">;</span>
-<a name="rest_code_e5f67064fdef4e68b4b282e5eaa21ead-9"></a>    <span class="kt">int</span> <span class="n">tail</span><span class="p">;</span>
-<a name="rest_code_e5f67064fdef4e68b4b282e5eaa21ead-10"></a>    <span class="kt">int</span> <span class="n">count</span><span class="p">;</span>
-<a name="rest_code_e5f67064fdef4e68b4b282e5eaa21ead-11"></a>    <span class="kt">int</span> <span class="n">shutdown</span><span class="p">;</span>
-<a name="rest_code_e5f67064fdef4e68b4b282e5eaa21ead-12"></a>    <span class="kt">int</span> <span class="n">started</span><span class="p">;</span>
-<a name="rest_code_e5f67064fdef4e68b4b282e5eaa21ead-13"></a><span class="p">};</span>
+<pre class="code c"><a name="rest_code_72752ac1edb44f09a9c112bb7f712053-1"></a><span class="k">struct</span> <span class="kt">threadpool_t</span> <span class="p">{</span>
+<a name="rest_code_72752ac1edb44f09a9c112bb7f712053-2"></a>    <span class="kt">pthread_mutex_t</span> <span class="n">lock</span><span class="p">;</span>
+<a name="rest_code_72752ac1edb44f09a9c112bb7f712053-3"></a>    <span class="kt">pthread_cond_t</span> <span class="n">notify</span><span class="p">;</span>
+<a name="rest_code_72752ac1edb44f09a9c112bb7f712053-4"></a>    <span class="kt">pthread_t</span> <span class="o">*</span><span class="n">threads</span><span class="p">;</span>
+<a name="rest_code_72752ac1edb44f09a9c112bb7f712053-5"></a>    <span class="kt">threadpool_task_t</span> <span class="o">*</span><span class="n">queue</span><span class="p">;</span>
+<a name="rest_code_72752ac1edb44f09a9c112bb7f712053-6"></a>    <span class="kt">int</span> <span class="n">thread_count</span><span class="p">;</span>
+<a name="rest_code_72752ac1edb44f09a9c112bb7f712053-7"></a>    <span class="kt">int</span> <span class="n">queue_size</span><span class="p">;</span>
+<a name="rest_code_72752ac1edb44f09a9c112bb7f712053-8"></a>    <span class="kt">int</span> <span class="n">head</span><span class="p">;</span>
+<a name="rest_code_72752ac1edb44f09a9c112bb7f712053-9"></a>    <span class="kt">int</span> <span class="n">tail</span><span class="p">;</span>
+<a name="rest_code_72752ac1edb44f09a9c112bb7f712053-10"></a>    <span class="kt">int</span> <span class="n">count</span><span class="p">;</span>
+<a name="rest_code_72752ac1edb44f09a9c112bb7f712053-11"></a>    <span class="kt">int</span> <span class="n">shutdown</span><span class="p">;</span>
+<a name="rest_code_72752ac1edb44f09a9c112bb7f712053-12"></a>    <span class="kt">int</span> <span class="n">started</span><span class="p">;</span>
+<a name="rest_code_72752ac1edb44f09a9c112bb7f712053-13"></a><span class="p">};</span>
 </pre>
 <p>這邊他使用了一個 pthread_t 的 pointer 來紀錄所有的 Thread，簡單來說就是一個 pthread_t 的 array，而 head, tail 就是紀錄 array 的 offset。
 threadpool_task_t 也是一樣的原理，真是出乎意料的簡單。</p>
@@ -436,52 +436,52 @@ threadpool_task_t 也是一樣的原理，真是出乎意料的簡單。</p>
 <h2>ThreadPool 的建立與工作的執行</h2>
 <p>再來就是 Thread Pool 的建立，由於剛剛提到的他其實是使用一個 pthread array 與一個 job array 來存放所有的 thread 與 jobs。
 因此需要在一開始的時候就決定 Thread Pool 與 Jobs 的最大數量。</p>
-<pre class="code c"><a name="rest_code_0ee6cc20e342417d9f0502693d6b4196-1"></a><span class="cm">/* Allocate thread and task queue */</span>
-<a name="rest_code_0ee6cc20e342417d9f0502693d6b4196-2"></a><span class="n">pool</span><span class="o">-&gt;</span><span class="n">threads</span> <span class="o">=</span> <span class="p">(</span><span class="kt">pthread_t</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">pthread_t</span><span class="p">)</span> <span class="o">*</span> <span class="n">thread_count</span><span class="p">);</span>
-<a name="rest_code_0ee6cc20e342417d9f0502693d6b4196-3"></a><span class="n">pool</span><span class="o">-&gt;</span><span class="n">queue</span> <span class="o">=</span> <span class="p">(</span><span class="kt">threadpool_task_t</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">threadpool_task_t</span><span class="p">)</span> <span class="o">*</span> <span class="n">queue_size</span><span class="p">);</span>
+<pre class="code c"><a name="rest_code_f7c549c9ca1a4a3e92e912822aad6340-1"></a><span class="cm">/* Allocate thread and task queue */</span>
+<a name="rest_code_f7c549c9ca1a4a3e92e912822aad6340-2"></a><span class="n">pool</span><span class="o">-&gt;</span><span class="n">threads</span> <span class="o">=</span> <span class="p">(</span><span class="kt">pthread_t</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">pthread_t</span><span class="p">)</span> <span class="o">*</span> <span class="n">thread_count</span><span class="p">);</span>
+<a name="rest_code_f7c549c9ca1a4a3e92e912822aad6340-3"></a><span class="n">pool</span><span class="o">-&gt;</span><span class="n">queue</span> <span class="o">=</span> <span class="p">(</span><span class="kt">threadpool_task_t</span> <span class="o">*</span><span class="p">)</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">threadpool_task_t</span><span class="p">)</span> <span class="o">*</span> <span class="n">queue_size</span><span class="p">);</span>
 </pre>
 <p>而每個 Thread 要執行的 Function 是</p>
-<pre class="code c"><a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-1"></a><span class="k">static</span> <span class="kt">void</span> <span class="o">*</span><span class="nf">threadpool_thread</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">threadpool</span><span class="p">)</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-2"></a> <span class="p">{</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-3"></a>     <span class="kt">threadpool_t</span> <span class="o">*</span><span class="n">pool</span> <span class="o">=</span> <span class="p">(</span><span class="kt">threadpool_t</span> <span class="o">*</span><span class="p">)</span><span class="n">threadpool</span><span class="p">;</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-4"></a>     <span class="kt">threadpool_task_t</span> <span class="n">task</span><span class="p">;</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-5"></a>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-6"></a>     <span class="k">for</span><span class="p">(;;)</span> <span class="p">{</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-7"></a>         <span class="cm">/* Lock must be taken to wait on conditional variable */</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-8"></a>         <span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="p">(</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">));</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-9"></a>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-10"></a>         <span class="cm">/* Wait on condition variable, check for spurious wakeups.</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-11"></a><span class="cm">            When returning from pthread_cond_wait(), we own the lock. */</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-12"></a>         <span class="k">while</span><span class="p">((</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">shutdown</span><span class="p">))</span> <span class="p">{</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-13"></a>             <span class="n">pthread_cond_wait</span><span class="p">(</span><span class="o">&amp;</span><span class="p">(</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">notify</span><span class="p">),</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">));</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-14"></a>         <span class="p">}</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-15"></a>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-16"></a>         <span class="k">if</span><span class="p">((</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">shutdown</span> <span class="o">==</span> <span class="n">immediate_shutdown</span><span class="p">)</span> <span class="o">||</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-17"></a>            <span class="p">((</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">shutdown</span> <span class="o">==</span> <span class="n">graceful_shutdown</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-18"></a>             <span class="p">(</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)))</span> <span class="p">{</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-19"></a>             <span class="k">break</span><span class="p">;</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-20"></a>         <span class="p">}</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-21"></a>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-22"></a>         <span class="cm">/* Grab our task */</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-23"></a>         <span class="n">task</span><span class="p">.</span><span class="n">function</span> <span class="o">=</span> <span class="n">pool</span><span class="o">-&gt;</span><span class="n">queue</span><span class="p">[</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">head</span><span class="p">].</span><span class="n">function</span><span class="p">;</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-24"></a>         <span class="n">task</span><span class="p">.</span><span class="n">argument</span> <span class="o">=</span> <span class="n">pool</span><span class="o">-&gt;</span><span class="n">queue</span><span class="p">[</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">head</span><span class="p">].</span><span class="n">argument</span><span class="p">;</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-25"></a>         <span class="n">pool</span><span class="o">-&gt;</span><span class="n">head</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-26"></a>         <span class="n">pool</span><span class="o">-&gt;</span><span class="n">head</span> <span class="o">=</span> <span class="p">(</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">head</span> <span class="o">==</span> <span class="n">pool</span><span class="o">-&gt;</span><span class="n">queue_size</span><span class="p">)</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">pool</span><span class="o">-&gt;</span><span class="n">head</span><span class="p">;</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-27"></a>         <span class="n">pool</span><span class="o">-&gt;</span><span class="n">count</span> <span class="o">-=</span> <span class="mi">1</span><span class="p">;</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-28"></a>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-29"></a>         <span class="cm">/* Unlock */</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-30"></a>         <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="p">(</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">));</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-31"></a>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-32"></a>         <span class="cm">/* Get to work */</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-33"></a>         <span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">task</span><span class="p">.</span><span class="n">function</span><span class="p">))(</span><span class="n">task</span><span class="p">.</span><span class="n">argument</span><span class="p">);</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-34"></a>     <span class="p">}</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-35"></a>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-36"></a>     <span class="n">pool</span><span class="o">-&gt;</span><span class="n">started</span><span class="o">--</span><span class="p">;</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-37"></a>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-38"></a>     <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="p">(</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">));</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-39"></a>     <span class="n">pthread_exit</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-40"></a>     <span class="k">return</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
-<a name="rest_code_c8f5fd76a9df43088b97b4c69e2f1d08-41"></a> <span class="p">}</span>
+<pre class="code c"><a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-1"></a><span class="k">static</span> <span class="kt">void</span> <span class="o">*</span><span class="nf">threadpool_thread</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">threadpool</span><span class="p">)</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-2"></a> <span class="p">{</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-3"></a>     <span class="kt">threadpool_t</span> <span class="o">*</span><span class="n">pool</span> <span class="o">=</span> <span class="p">(</span><span class="kt">threadpool_t</span> <span class="o">*</span><span class="p">)</span><span class="n">threadpool</span><span class="p">;</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-4"></a>     <span class="kt">threadpool_task_t</span> <span class="n">task</span><span class="p">;</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-5"></a>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-6"></a>     <span class="k">for</span><span class="p">(;;)</span> <span class="p">{</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-7"></a>         <span class="cm">/* Lock must be taken to wait on conditional variable */</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-8"></a>         <span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="p">(</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">));</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-9"></a>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-10"></a>         <span class="cm">/* Wait on condition variable, check for spurious wakeups.</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-11"></a><span class="cm">            When returning from pthread_cond_wait(), we own the lock. */</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-12"></a>         <span class="k">while</span><span class="p">((</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">shutdown</span><span class="p">))</span> <span class="p">{</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-13"></a>             <span class="n">pthread_cond_wait</span><span class="p">(</span><span class="o">&amp;</span><span class="p">(</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">notify</span><span class="p">),</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">));</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-14"></a>         <span class="p">}</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-15"></a>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-16"></a>         <span class="k">if</span><span class="p">((</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">shutdown</span> <span class="o">==</span> <span class="n">immediate_shutdown</span><span class="p">)</span> <span class="o">||</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-17"></a>            <span class="p">((</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">shutdown</span> <span class="o">==</span> <span class="n">graceful_shutdown</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-18"></a>             <span class="p">(</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)))</span> <span class="p">{</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-19"></a>             <span class="k">break</span><span class="p">;</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-20"></a>         <span class="p">}</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-21"></a>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-22"></a>         <span class="cm">/* Grab our task */</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-23"></a>         <span class="n">task</span><span class="p">.</span><span class="n">function</span> <span class="o">=</span> <span class="n">pool</span><span class="o">-&gt;</span><span class="n">queue</span><span class="p">[</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">head</span><span class="p">].</span><span class="n">function</span><span class="p">;</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-24"></a>         <span class="n">task</span><span class="p">.</span><span class="n">argument</span> <span class="o">=</span> <span class="n">pool</span><span class="o">-&gt;</span><span class="n">queue</span><span class="p">[</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">head</span><span class="p">].</span><span class="n">argument</span><span class="p">;</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-25"></a>         <span class="n">pool</span><span class="o">-&gt;</span><span class="n">head</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-26"></a>         <span class="n">pool</span><span class="o">-&gt;</span><span class="n">head</span> <span class="o">=</span> <span class="p">(</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">head</span> <span class="o">==</span> <span class="n">pool</span><span class="o">-&gt;</span><span class="n">queue_size</span><span class="p">)</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">pool</span><span class="o">-&gt;</span><span class="n">head</span><span class="p">;</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-27"></a>         <span class="n">pool</span><span class="o">-&gt;</span><span class="n">count</span> <span class="o">-=</span> <span class="mi">1</span><span class="p">;</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-28"></a>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-29"></a>         <span class="cm">/* Unlock */</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-30"></a>         <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="p">(</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">));</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-31"></a>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-32"></a>         <span class="cm">/* Get to work */</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-33"></a>         <span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">task</span><span class="p">.</span><span class="n">function</span><span class="p">))(</span><span class="n">task</span><span class="p">.</span><span class="n">argument</span><span class="p">);</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-34"></a>     <span class="p">}</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-35"></a>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-36"></a>     <span class="n">pool</span><span class="o">-&gt;</span><span class="n">started</span><span class="o">--</span><span class="p">;</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-37"></a>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-38"></a>     <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="p">(</span><span class="n">pool</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">));</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-39"></a>     <span class="n">pthread_exit</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-40"></a>     <span class="k">return</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+<a name="rest_code_9bb77aff7d0b4ff39ac3e379413fc8c5-41"></a> <span class="p">}</span>
 </pre>
 <p>在 <strong>for(;;)</strong> 裡面，Thread 第一件要做的事情就是去搶奪 pool 的 lock，當搶到 lock 的 Thread 發現沒有工作可以做的時候，
 就會執行 pthread_cond_wait 來等待通知。這時候 pool-&gt;lock 會被 Unlock，因此這時候其他 Thread 也可以進來這個區域。

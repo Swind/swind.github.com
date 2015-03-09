@@ -73,16 +73,16 @@ MathJax.Hub.Config({
 先是 Exception Handling 做的不夠好，結果就真的是 "Let it Crash" 一直死一直死一直死，好像在玩 D3 的煉獄模式一樣。</p>
 <p>再來是我沒有去設定 Dispatcher 所以 Thread 用了十幾個。如果我沒有看錯的話，依照 Akka <a class="reference external" href="https://github.com/akka/akka/blob/master/akka-actor/src/main/resources/reference.conf">reference.conf</a> 的設定，
 Default Dispatcher 使用 fork-join-executor，他的預設設定如下</p>
-<pre class="code scala"><a name="rest_code_660720e66c75433e8c653e31d3c309fe-1"></a><span class="n">fork</span><span class="o">-</span><span class="n">join</span><span class="o">-</span><span class="n">executor</span> <span class="o">{</span>
-<a name="rest_code_660720e66c75433e8c653e31d3c309fe-2"></a>  <span class="k">#</span> <span class="nc">Min</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span> <span class="n">to</span> <span class="n">cap</span> <span class="n">factor</span><span class="o">-</span><span class="n">based</span> <span class="n">parallelism</span> <span class="n">number</span> <span class="n">to</span>
-<a name="rest_code_660720e66c75433e8c653e31d3c309fe-3"></a>  <span class="n">parallelism</span><span class="o">-</span><span class="n">min</span> <span class="k">=</span> <span class="mi">8</span>
-<a name="rest_code_660720e66c75433e8c653e31d3c309fe-4"></a>
-<a name="rest_code_660720e66c75433e8c653e31d3c309fe-5"></a>  <span class="k">#</span> <span class="nc">Parallelism</span> <span class="o">(</span><span class="n">threads</span><span class="o">)</span> <span class="o">...</span> <span class="n">ceil</span><span class="o">(</span><span class="n">available</span> <span class="n">processors</span> <span class="o">*</span> <span class="n">factor</span><span class="o">)</span>
-<a name="rest_code_660720e66c75433e8c653e31d3c309fe-6"></a>  <span class="n">parallelism</span><span class="o">-</span><span class="n">factor</span> <span class="k">=</span> <span class="mf">3.0</span>
-<a name="rest_code_660720e66c75433e8c653e31d3c309fe-7"></a>
-<a name="rest_code_660720e66c75433e8c653e31d3c309fe-8"></a>  <span class="k">#</span> <span class="nc">Max</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span> <span class="n">to</span> <span class="n">cap</span> <span class="n">factor</span><span class="o">-</span><span class="n">based</span> <span class="n">parallelism</span> <span class="n">number</span> <span class="n">to</span>
-<a name="rest_code_660720e66c75433e8c653e31d3c309fe-9"></a>  <span class="n">parallelism</span><span class="o">-</span><span class="n">max</span> <span class="k">=</span> <span class="mi">64</span>
-<a name="rest_code_660720e66c75433e8c653e31d3c309fe-10"></a><span class="o">}</span>
+<pre class="code scala"><a name="rest_code_60af2174372c446b98cdc3f99eb0ac09-1"></a><span class="n">fork</span><span class="o">-</span><span class="n">join</span><span class="o">-</span><span class="n">executor</span> <span class="o">{</span>
+<a name="rest_code_60af2174372c446b98cdc3f99eb0ac09-2"></a>  <span class="k">#</span> <span class="nc">Min</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span> <span class="n">to</span> <span class="n">cap</span> <span class="n">factor</span><span class="o">-</span><span class="n">based</span> <span class="n">parallelism</span> <span class="n">number</span> <span class="n">to</span>
+<a name="rest_code_60af2174372c446b98cdc3f99eb0ac09-3"></a>  <span class="n">parallelism</span><span class="o">-</span><span class="n">min</span> <span class="k">=</span> <span class="mi">8</span>
+<a name="rest_code_60af2174372c446b98cdc3f99eb0ac09-4"></a>
+<a name="rest_code_60af2174372c446b98cdc3f99eb0ac09-5"></a>  <span class="k">#</span> <span class="nc">Parallelism</span> <span class="o">(</span><span class="n">threads</span><span class="o">)</span> <span class="o">...</span> <span class="n">ceil</span><span class="o">(</span><span class="n">available</span> <span class="n">processors</span> <span class="o">*</span> <span class="n">factor</span><span class="o">)</span>
+<a name="rest_code_60af2174372c446b98cdc3f99eb0ac09-6"></a>  <span class="n">parallelism</span><span class="o">-</span><span class="n">factor</span> <span class="k">=</span> <span class="mf">3.0</span>
+<a name="rest_code_60af2174372c446b98cdc3f99eb0ac09-7"></a>
+<a name="rest_code_60af2174372c446b98cdc3f99eb0ac09-8"></a>  <span class="k">#</span> <span class="nc">Max</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span> <span class="n">to</span> <span class="n">cap</span> <span class="n">factor</span><span class="o">-</span><span class="n">based</span> <span class="n">parallelism</span> <span class="n">number</span> <span class="n">to</span>
+<a name="rest_code_60af2174372c446b98cdc3f99eb0ac09-9"></a>  <span class="n">parallelism</span><span class="o">-</span><span class="n">max</span> <span class="k">=</span> <span class="mi">64</span>
+<a name="rest_code_60af2174372c446b98cdc3f99eb0ac09-10"></a><span class="o">}</span>
 </pre>
 <p>很簡單的 parallelism-min 與 parallelism-max 的值代表著 Thread 的上下限，那麼 parallelism_factor 呢？</p>
 <p>他同樣也是限制 Thread 的上限，上限的計算方式為</p>
@@ -94,28 +94,28 @@ parallelism-factor * 你的處理器核心數</blockquote>
 <p>這邊我要先搞定我之前一直逃避的 Akka 設定檔，之前會逃避是因為我用 Eclipse 的 ScalaIDE 加上 sbt 來開發。
 不知道為什麼之前設定檔在 build 的時候一直不會自動放到編譯完成的目錄下面，所以就整個怒完全不想搞設定檔這種東西。
 那時候是偷懶直接寫在程式碼裡面。</p>
-<pre class="code scala"><a name="rest_code_2b1521658883463fa2384a3c0a013a92-1"></a><span class="k">val</span> <span class="n">config</span> <span class="k">=</span> <span class="s">"""</span>
-<a name="rest_code_2b1521658883463fa2384a3c0a013a92-2"></a><span class="s">   my-dispatcher {</span>
-<a name="rest_code_2b1521658883463fa2384a3c0a013a92-3"></a><span class="s">     # Dispatcher is the name of the event-based dispatcher</span>
-<a name="rest_code_2b1521658883463fa2384a3c0a013a92-4"></a><span class="s">     type = Dispatcher</span>
-<a name="rest_code_2b1521658883463fa2384a3c0a013a92-5"></a><span class="s">     # What kind of ExecutionService to use</span>
-<a name="rest_code_2b1521658883463fa2384a3c0a013a92-6"></a><span class="s">     executor = "fork-join-executor"</span>
-<a name="rest_code_2b1521658883463fa2384a3c0a013a92-7"></a><span class="s">     # Configuration for the fork join pool</span>
-<a name="rest_code_2b1521658883463fa2384a3c0a013a92-8"></a><span class="s">     fork-join-executor {</span>
-<a name="rest_code_2b1521658883463fa2384a3c0a013a92-9"></a><span class="s">       # Min number of threads to cap factor-based parallelism number to</span>
-<a name="rest_code_2b1521658883463fa2384a3c0a013a92-10"></a><span class="s">       parallelism-min = 2</span>
-<a name="rest_code_2b1521658883463fa2384a3c0a013a92-11"></a><span class="s">       # Parallelism (threads) ... ceil(available processors * factor)</span>
-<a name="rest_code_2b1521658883463fa2384a3c0a013a92-12"></a><span class="s">       parallelism-factor = 2.0</span>
-<a name="rest_code_2b1521658883463fa2384a3c0a013a92-13"></a><span class="s">       # Max number of threads to cap factor-based parallelism number to</span>
-<a name="rest_code_2b1521658883463fa2384a3c0a013a92-14"></a><span class="s">       parallelism-max = 10</span>
-<a name="rest_code_2b1521658883463fa2384a3c0a013a92-15"></a><span class="s">     }</span>
-<a name="rest_code_2b1521658883463fa2384a3c0a013a92-16"></a><span class="s">     # Throughput defines the maximum number of messages to be</span>
-<a name="rest_code_2b1521658883463fa2384a3c0a013a92-17"></a><span class="s">     # processed per actor before the thread jumps to the next actor.</span>
-<a name="rest_code_2b1521658883463fa2384a3c0a013a92-18"></a><span class="s">     # Set to 1 for as fair as possible.</span>
-<a name="rest_code_2b1521658883463fa2384a3c0a013a92-19"></a><span class="s">     throughput = 1</span>
-<a name="rest_code_2b1521658883463fa2384a3c0a013a92-20"></a><span class="s">   }</span>
-<a name="rest_code_2b1521658883463fa2384a3c0a013a92-21"></a><span class="s">   """</span>
-<a name="rest_code_2b1521658883463fa2384a3c0a013a92-22"></a><span class="k">val</span> <span class="n">system</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">(</span><span class="s">"MySystem"</span><span class="o">,</span><span class="nc">ConfigFactory</span><span class="o">.</span><span class="n">load</span><span class="o">(</span><span class="n">customConf</span><span class="o">))</span>
+<pre class="code scala"><a name="rest_code_f2336687df324b8a9e40cb675d8dc8fb-1"></a><span class="k">val</span> <span class="n">config</span> <span class="k">=</span> <span class="s">"""</span>
+<a name="rest_code_f2336687df324b8a9e40cb675d8dc8fb-2"></a><span class="s">   my-dispatcher {</span>
+<a name="rest_code_f2336687df324b8a9e40cb675d8dc8fb-3"></a><span class="s">     # Dispatcher is the name of the event-based dispatcher</span>
+<a name="rest_code_f2336687df324b8a9e40cb675d8dc8fb-4"></a><span class="s">     type = Dispatcher</span>
+<a name="rest_code_f2336687df324b8a9e40cb675d8dc8fb-5"></a><span class="s">     # What kind of ExecutionService to use</span>
+<a name="rest_code_f2336687df324b8a9e40cb675d8dc8fb-6"></a><span class="s">     executor = "fork-join-executor"</span>
+<a name="rest_code_f2336687df324b8a9e40cb675d8dc8fb-7"></a><span class="s">     # Configuration for the fork join pool</span>
+<a name="rest_code_f2336687df324b8a9e40cb675d8dc8fb-8"></a><span class="s">     fork-join-executor {</span>
+<a name="rest_code_f2336687df324b8a9e40cb675d8dc8fb-9"></a><span class="s">       # Min number of threads to cap factor-based parallelism number to</span>
+<a name="rest_code_f2336687df324b8a9e40cb675d8dc8fb-10"></a><span class="s">       parallelism-min = 2</span>
+<a name="rest_code_f2336687df324b8a9e40cb675d8dc8fb-11"></a><span class="s">       # Parallelism (threads) ... ceil(available processors * factor)</span>
+<a name="rest_code_f2336687df324b8a9e40cb675d8dc8fb-12"></a><span class="s">       parallelism-factor = 2.0</span>
+<a name="rest_code_f2336687df324b8a9e40cb675d8dc8fb-13"></a><span class="s">       # Max number of threads to cap factor-based parallelism number to</span>
+<a name="rest_code_f2336687df324b8a9e40cb675d8dc8fb-14"></a><span class="s">       parallelism-max = 10</span>
+<a name="rest_code_f2336687df324b8a9e40cb675d8dc8fb-15"></a><span class="s">     }</span>
+<a name="rest_code_f2336687df324b8a9e40cb675d8dc8fb-16"></a><span class="s">     # Throughput defines the maximum number of messages to be</span>
+<a name="rest_code_f2336687df324b8a9e40cb675d8dc8fb-17"></a><span class="s">     # processed per actor before the thread jumps to the next actor.</span>
+<a name="rest_code_f2336687df324b8a9e40cb675d8dc8fb-18"></a><span class="s">     # Set to 1 for as fair as possible.</span>
+<a name="rest_code_f2336687df324b8a9e40cb675d8dc8fb-19"></a><span class="s">     throughput = 1</span>
+<a name="rest_code_f2336687df324b8a9e40cb675d8dc8fb-20"></a><span class="s">   }</span>
+<a name="rest_code_f2336687df324b8a9e40cb675d8dc8fb-21"></a><span class="s">   """</span>
+<a name="rest_code_f2336687df324b8a9e40cb675d8dc8fb-22"></a><span class="k">val</span> <span class="n">system</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">(</span><span class="s">"MySystem"</span><span class="o">,</span><span class="nc">ConfigFactory</span><span class="o">.</span><span class="n">load</span><span class="o">(</span><span class="n">customConf</span><span class="o">))</span>
 </pre>
 <p>上面把設定檔內容直接儲存成字串，然後用 ConfigFactory.load 就可以產生設定檔了，不過一直放在程式碼裡面也不是一件健康的事情。
 所以還是花了一點時間處理之前在 Eclipse 上面遇到的問題。</p>

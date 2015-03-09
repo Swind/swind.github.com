@@ -88,58 +88,75 @@ MathJax.Hub.Config({
 <div class="section" id="plugin">
 <h2>載入 Plugin</h2>
 <p>首先要讓 Python 可以正確的載入 site-packages 所以需要</p>
-<pre class="code python"><a name="rest_code_5fd367d8d6e5439db4378bcae6106f10-1"></a><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">"./site-packages"</span><span class="p">)</span>
+<pre class="code python"><a name="rest_code_4a5ab966bc2145348f5b43dcec34d831-1"></a><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">"./site-packages"</span><span class="p">)</span>
 </pre>
 <p>這樣 import 的時候才會去我們的資料夾底下找 packages。</p>
 <p>接著設定全域的環境變數</p>
-<pre class="code python"><a name="rest_code_5796869d54a14137950421fdec1745e5-1"></a><span class="n">plugins_root</span>       <span class="o">=</span> <span class="s">"plugins"</span>
-<a name="rest_code_5796869d54a14137950421fdec1745e5-2"></a><span class="n">cmd_obj</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s">'__main__'</span><span class="p">]</span>
+<pre class="code python"><a name="rest_code_1413c6534ab3487eaba69ace2fb9bf50-1"></a><span class="n">plugins_root</span>       <span class="o">=</span> <span class="s">"plugins"</span>
+<a name="rest_code_1413c6534ab3487eaba69ace2fb9bf50-2"></a><span class="n">cmd_obj</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s">'__main__'</span><span class="p">]</span>
 </pre>
 <p>因為 clime 預設是去 main 這個 modules 搜尋需要轉換成 command 的 function，
 所以我需要將從 plugins 載入的 module 的 command function 加入 main object，
 當然 clime 有一個 obj 的參數，所以更好的作法應該是建立一個 command obj。</p>
 <p>接著我們就可以載入 hello.py 裡面的 command function。</p>
-<pre class="code python"><a name="rest_code_7d3ef4f25513462987b992b4905f03d5-1"></a><span class="k">def</span> <span class="nf">__import_plugin_cmd</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">plugin_name</span><span class="p">):</span>
-<a name="rest_code_7d3ef4f25513462987b992b4905f03d5-2"></a>
-<a name="rest_code_7d3ef4f25513462987b992b4905f03d5-3"></a>    <span class="n">module_path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">plugins_root</span><span class="p">,</span> <span class="n">module_name</span><span class="p">)</span>
-<a name="rest_code_7d3ef4f25513462987b992b4905f03d5-4"></a>    <span class="n">plugin_path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">plugins_root</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">plugin_name</span> <span class="o">+</span> <span class="s">'.py'</span><span class="p">)</span>
-<a name="rest_code_7d3ef4f25513462987b992b4905f03d5-5"></a>
-<a name="rest_code_7d3ef4f25513462987b992b4905f03d5-6"></a>    <span class="c">#Load plugin module</span>
-<a name="rest_code_7d3ef4f25513462987b992b4905f03d5-7"></a>    <span class="n">cli_print</span><span class="p">(</span><span class="s">"Loading plugin </span><span class="si">%s</span><span class="s">"</span><span class="p">,</span> <span class="n">plugin_path</span><span class="p">)</span>
-<a name="rest_code_7d3ef4f25513462987b992b4905f03d5-8"></a>    <span class="n">plugin_module</span> <span class="o">=</span> <span class="n">load_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="o">*</span><span class="n">find_module</span><span class="p">(</span><span class="n">plugin_name</span><span class="p">,</span> <span class="p">[</span><span class="n">module_path</span><span class="p">]))</span>
-<a name="rest_code_7d3ef4f25513462987b992b4905f03d5-9"></a>
-<a name="rest_code_7d3ef4f25513462987b992b4905f03d5-10"></a>    <span class="c">#Get the command method and set it to command object</span>
-<a name="rest_code_7d3ef4f25513462987b992b4905f03d5-11"></a>    <span class="n">methods</span> <span class="o">=</span> <span class="nb">dir</span><span class="p">(</span><span class="n">plugin_module</span><span class="p">)</span>
-<a name="rest_code_7d3ef4f25513462987b992b4905f03d5-12"></a>    <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">:</span>
-<a name="rest_code_7d3ef4f25513462987b992b4905f03d5-13"></a>        <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">"cmd"</span><span class="p">):</span>
-<a name="rest_code_7d3ef4f25513462987b992b4905f03d5-14"></a>            <span class="n">cli_print</span><span class="p">(</span><span class="s">"Set command </span><span class="si">%s</span><span class="s">"</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
-<a name="rest_code_7d3ef4f25513462987b992b4905f03d5-15"></a>            <span class="n">method_obj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">plugin_module</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
-<a name="rest_code_7d3ef4f25513462987b992b4905f03d5-16"></a>            <span class="nb">setattr</span><span class="p">(</span><span class="n">cmd_obj</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">method_obj</span><span class="p">)</span>
-<a name="rest_code_7d3ef4f25513462987b992b4905f03d5-17"></a>
-<a name="rest_code_7d3ef4f25513462987b992b4905f03d5-18"></a>    <span class="k">return</span> <span class="n">plugin_module</span>
+<pre class="code python"><a name="rest_code_d195c25635ac49168d3f62bac6483a54-1"></a><span class="k">def</span> <span class="nf">__import_plugin_cmd</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">plugin_name</span><span class="p">):</span>
+<a name="rest_code_d195c25635ac49168d3f62bac6483a54-2"></a>
+<a name="rest_code_d195c25635ac49168d3f62bac6483a54-3"></a>    <span class="n">module_path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">plugins_root</span><span class="p">,</span> <span class="n">module_name</span><span class="p">)</span>
+<a name="rest_code_d195c25635ac49168d3f62bac6483a54-4"></a>    <span class="n">plugin_path</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">plugins_root</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">plugin_name</span> <span class="o">+</span> <span class="s">'.py'</span><span class="p">)</span>
+<a name="rest_code_d195c25635ac49168d3f62bac6483a54-5"></a>
+<a name="rest_code_d195c25635ac49168d3f62bac6483a54-6"></a>    <span class="c">#Load plugin module</span>
+<a name="rest_code_d195c25635ac49168d3f62bac6483a54-7"></a>    <span class="n">cli_print</span><span class="p">(</span><span class="s">"Loading plugin </span><span class="si">%s</span><span class="s">"</span><span class="p">,</span> <span class="n">plugin_path</span><span class="p">)</span>
+<a name="rest_code_d195c25635ac49168d3f62bac6483a54-8"></a>    <span class="n">plugin_module</span> <span class="o">=</span> <span class="n">load_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="o">*</span><span class="n">find_module</span><span class="p">(</span><span class="n">plugin_name</span><span class="p">,</span> <span class="p">[</span><span class="n">module_path</span><span class="p">]))</span>
+<a name="rest_code_d195c25635ac49168d3f62bac6483a54-9"></a>
+<a name="rest_code_d195c25635ac49168d3f62bac6483a54-10"></a>    <span class="c">#Get the command method and set it to command object</span>
+<a name="rest_code_d195c25635ac49168d3f62bac6483a54-11"></a>    <span class="n">methods</span> <span class="o">=</span> <span class="nb">dir</span><span class="p">(</span><span class="n">plugin_module</span><span class="p">)</span>
+<a name="rest_code_d195c25635ac49168d3f62bac6483a54-12"></a>    <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">:</span>
+<a name="rest_code_d195c25635ac49168d3f62bac6483a54-13"></a>        <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">"cmd"</span><span class="p">):</span>
+<a name="rest_code_d195c25635ac49168d3f62bac6483a54-14"></a>            <span class="n">cli_print</span><span class="p">(</span><span class="s">"Set command </span><span class="si">%s</span><span class="s">"</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+<a name="rest_code_d195c25635ac49168d3f62bac6483a54-15"></a>            <span class="n">method_obj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">plugin_module</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+<a name="rest_code_d195c25635ac49168d3f62bac6483a54-16"></a>            <span class="nb">setattr</span><span class="p">(</span><span class="n">cmd_obj</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">method_obj</span><span class="p">)</span>
+<a name="rest_code_d195c25635ac49168d3f62bac6483a54-17"></a>
+<a name="rest_code_d195c25635ac49168d3f62bac6483a54-18"></a>    <span class="k">return</span> <span class="n">plugin_module</span>
 </pre>
 <p>首先 module_name 就是 plugin 底下的資料夾名稱，在這邊我會輸入 "cli"。
 plugin_name 是要載入的 python 檔案名稱，在這裡為 "hello"。</p>
 <p>之後就透過 find_module 找到 module 的資訊，可以參考 Python 的 <a class="reference external" href="http://docs.python.org/2/library/imp.html#examples">imp</a> 文件的範例，
 再透過 load_module 載入。</p>
-<pre class="code python"><a name="rest_code_9b55f74e958c46a0b2c9b7e04fa3f494-1"></a><span class="n">plugin_module</span> <span class="o">=</span> <span class="n">load_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="o">*</span><span class="n">find_module</span><span class="p">(</span><span class="n">plugin_name</span><span class="p">,</span> <span class="p">[</span><span class="n">module_path</span><span class="p">]))</span>
+<pre class="code python"><a name="rest_code_30691945d7e4443e98bf08331cbe3db1-1"></a><span class="n">plugin_module</span> <span class="o">=</span> <span class="n">load_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="o">*</span><span class="n">find_module</span><span class="p">(</span><span class="n">plugin_name</span><span class="p">,</span> <span class="p">[</span><span class="n">module_path</span><span class="p">]))</span>
 </pre>
 <p>最後找尋所有 cmd 結尾的 function，透過 setattr 加入 cmd_obj</p>
-<pre class="code python"><a name="rest_code_a7653b66804948b19cd12d5e78818afd-1"></a><span class="c">#Get the command method and set it to command object</span>
-<a name="rest_code_a7653b66804948b19cd12d5e78818afd-2"></a><span class="n">methods</span> <span class="o">=</span> <span class="nb">dir</span><span class="p">(</span><span class="n">plugin_module</span><span class="p">)</span>
-<a name="rest_code_a7653b66804948b19cd12d5e78818afd-3"></a><span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">:</span>
-<a name="rest_code_a7653b66804948b19cd12d5e78818afd-4"></a>    <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">"cmd"</span><span class="p">):</span>
-<a name="rest_code_a7653b66804948b19cd12d5e78818afd-5"></a>        <span class="n">cli_print</span><span class="p">(</span><span class="s">"Set command </span><span class="si">%s</span><span class="s">"</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
-<a name="rest_code_a7653b66804948b19cd12d5e78818afd-6"></a>        <span class="n">method_obj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">plugin_module</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
-<a name="rest_code_a7653b66804948b19cd12d5e78818afd-7"></a>        <span class="nb">setattr</span><span class="p">(</span><span class="n">cmd_obj</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">method_obj</span><span class="p">)</span>
+<pre class="code python"><a name="rest_code_7e50ae37984f410591c148540097c3e9-1"></a><span class="c">#Get the command method and set it to command object</span>
+<a name="rest_code_7e50ae37984f410591c148540097c3e9-2"></a><span class="n">methods</span> <span class="o">=</span> <span class="nb">dir</span><span class="p">(</span><span class="n">plugin_module</span><span class="p">)</span>
+<a name="rest_code_7e50ae37984f410591c148540097c3e9-3"></a><span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">:</span>
+<a name="rest_code_7e50ae37984f410591c148540097c3e9-4"></a>    <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">"cmd"</span><span class="p">):</span>
+<a name="rest_code_7e50ae37984f410591c148540097c3e9-5"></a>        <span class="n">cli_print</span><span class="p">(</span><span class="s">"Set command </span><span class="si">%s</span><span class="s">"</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+<a name="rest_code_7e50ae37984f410591c148540097c3e9-6"></a>        <span class="n">method_obj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">plugin_module</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+<a name="rest_code_7e50ae37984f410591c148540097c3e9-7"></a>        <span class="nb">setattr</span><span class="p">(</span><span class="n">cmd_obj</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">method_obj</span><span class="p">)</span>
 </pre>
 <p>之後使用 clime 的</p>
-<pre class="code python"><a name="rest_code_2af6e21209d94c009118d668d5b26e38-1"></a><span class="kn">import</span> <span class="nn">clime</span>
-<a name="rest_code_2af6e21209d94c009118d668d5b26e38-2"></a><span class="n">clime</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">white_pattern</span><span class="o">=</span><span class="n">clime</span><span class="o">.</span><span class="n">CMD_SUFFIX</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<pre class="code python"><a name="rest_code_6bc57ecf7a1645c19543178ac833cd18-1"></a><span class="kn">import</span> <span class="nn">clime</span>
+<a name="rest_code_6bc57ecf7a1645c19543178ac833cd18-2"></a><span class="n">clime</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">white_pattern</span><span class="o">=</span><span class="n">clime</span><span class="o">.</span><span class="n">CMD_SUFFIX</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </pre>
 <p>就可以將 cmd_obj 以 cmd 結尾的 function 轉成 command 了。</p>
 <p>下面附上完整的程式碼</p>
-<script src="https://gist.github.com/6332885.js"></script><noscript>In order to have inline gist source, you must install the "requests" Python package.</noscript>
+<script src="https://gist.github.com/6332885.js"></script><noscript>
+<pre class="literal-block">
+from random import randint
+import ucltip
+
+def hello_world_cmd(name):
+    """Execute remote performance test.
+
+    -n=&lt;str&gt; --name=&lt;str&gt;       Hello Name
+    """
+    print "hello world cmd %s" % name
+    print "Test import random %d" % randint(0, 51)
+
+def test_site_packages_cmd():
+    echo = ucltip.Cmd("echo")
+    print echo("Hello World ucltip")
+</pre>
+</noscript>
 </div>
 </div>
         </div>
