@@ -22,14 +22,16 @@ MathJax.Hub.Config({
     }
 });
 </script><!--[if lt IE 9]><script src="/assets/js/html5.js"></script><![endif]--><meta name="author" content="Swind">
-<meta name="og:title" content="好用的 HTML Parser - jsoup">
-<meta name="og:url" content="http://swind.code-life.info/posts/jsoup.html">
-<meta name="og:description" content="HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
+<meta property="og:site_name" content="Corleonis">
+<meta property="og:title" content="好用的 HTML Parser - jsoup">
+<meta property="og:url" content="http://swind.code-life.info/posts/jsoup.html">
+<meta property="og:description" content="HTML Parser出門在外,居家旅遊必備良品。無論是要自動下載漫畫、種子或者是做個自動天氣噗浪機全都需要他。
 為了要從網頁中可以取出內容,我曾經用過不少方式,包括直接硬幹用字串搜尋、修改Scala本身內部的XML Parser等。
 但是一直都找不到一個滿意又順手的解決方式,一直到後來在 CSDN 沒錯就是那個大陸網站 CSDN
 (雖然說CSDN訊息太多太雜亂,但是偶爾還是可以看到一些不錯的東西">
-<meta name="og:site_name" content="Corleonis">
-<meta name="og:type" content="article">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2011-10-27T08:47:00+08:00">
+<meta property="article:tag" content="Scala">
 </head>
 <body>
     <section class="social"><ul>
@@ -76,16 +78,15 @@ MathJax.Hub.Config({
 <p>但是其實最重要的是這一 <a class="reference external" href="http://jsoup.org/cookbook/extracting-data/selector-syntax">教學文件</a> ,介紹了他與別人最不一樣的的地方。
 一般的html parser還是比較傾向於跟xml parser的作法一樣,把html分析完之後建成樹
 然後操作node將資料取出,但是除了這種操作方式之外josue還有一種是類似jquery的selector的操作方式。</p>
-<pre class="code scala literal-block">
-<span class="n">file</span> <span class="n">input</span> <span class="k">=</span> <span class="k">new</span> <span class="n">file</span><span class="o">(</span><span class="s">"/tmp/input.html"</span><span class="o">);</span>
-<span class="n">document</span> <span class="n">doc</span> <span class="k">=</span> <span class="n">jsoup</span><span class="o">.</span><span class="n">parse</span><span class="o">(</span><span class="n">input</span><span class="o">,</span> <span class="s">"utf-8"</span><span class="o">,</span> <span class="s">"http://example.com/"</span><span class="o">);</span>
-
-<span class="c1">//document doc = jsoup.connect("http://example.com/");
-</span>
-<span class="c1">//取出擁有herf屬性的&lt;a&gt;
-</span><span class="n">elements</span> <span class="n">links</span> <span class="k">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="s">"a[href]"</span><span class="o">);</span>
-<span class="c1">//取出擁有src屬性且值是以png結尾的&lt;img&gt;
-</span><span class="n">elements</span> <span class="n">pngs</span> <span class="k">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="s">"img[src$=.png]"</span><span class="o">);</span>
+<pre class="code scala"><a name="rest_code_c50e59b0035c4427840f880828d7c62a-1"></a><span class="n">file</span> <span class="n">input</span> <span class="k">=</span> <span class="k">new</span> <span class="n">file</span><span class="o">(</span><span class="s">"/tmp/input.html"</span><span class="o">);</span>
+<a name="rest_code_c50e59b0035c4427840f880828d7c62a-2"></a><span class="n">document</span> <span class="n">doc</span> <span class="k">=</span> <span class="n">jsoup</span><span class="o">.</span><span class="n">parse</span><span class="o">(</span><span class="n">input</span><span class="o">,</span> <span class="s">"utf-8"</span><span class="o">,</span> <span class="s">"http://example.com/"</span><span class="o">);</span>
+<a name="rest_code_c50e59b0035c4427840f880828d7c62a-3"></a>
+<a name="rest_code_c50e59b0035c4427840f880828d7c62a-4"></a><span class="c1">//document doc = jsoup.connect("http://example.com/");</span>
+<a name="rest_code_c50e59b0035c4427840f880828d7c62a-5"></a>
+<a name="rest_code_c50e59b0035c4427840f880828d7c62a-6"></a><span class="c1">//取出擁有herf屬性的&lt;a&gt;</span>
+<a name="rest_code_c50e59b0035c4427840f880828d7c62a-7"></a><span class="n">elements</span> <span class="n">links</span> <span class="k">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="s">"a[href]"</span><span class="o">);</span>
+<a name="rest_code_c50e59b0035c4427840f880828d7c62a-8"></a><span class="c1">//取出擁有src屬性且值是以png結尾的&lt;img&gt;</span>
+<a name="rest_code_c50e59b0035c4427840f880828d7c62a-9"></a><span class="n">elements</span> <span class="n">pngs</span> <span class="k">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="s">"img[src$=.png]"</span><span class="o">);</span>
 </pre>
 <p>上面是官網的範例,從這邊就可以看到 jsoup 不同於一般html parser的地方。
 jsoup除了有支援讀取檔案之外,也可以直接輸入網址讓他自己去連線與parser,
@@ -126,35 +127,34 @@ jsoup除了有支援讀取檔案之外,也可以直接輸入網址讓他自己�
 <div class="section" id="id5">
 <h2>要分析擷取的網頁內容</h2>
 <p>這邊是網頁的部份內容，我在做測試資料的時候是將整份的網頁原始碼都儲存起來，下面的內容是為了後面的說明需要。</p>
-<pre class="code html literal-block">
-<span class="nt">&lt;tbody</span> <span class="na">id=</span><span class="s">"normalthread_6961970"</span><span class="nt">&gt;</span>
- <span class="nt">&lt;tr</span> <span class="na">onmouseover=</span><span class="s">"l_pic_6961970.style.display='block'"</span> <span class="na">onmouseout=</span><span class="s">"l_pic_6961970.style.display='none'"</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">"folder"</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"viewthread.php?tid=6961970&amp;amp;extra=page%3d1%26amp%3borderby%3ddateline"</span> <span class="na">title=</span><span class="s">"新窗口打開"</span> <span class="na">target=</span><span class="s">"_blank"</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"images/default/folder_new.gif"</span> <span class="nt">/&gt;</span>
-    <span class="nt">&lt;/a&gt;</span>
- <span class="nt">&lt;/td&gt;</span>
-  <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">"icon"</span><span class="nt">&gt;&lt;img</span> <span class="na">src=</span><span class="s">"http://a18.file-static.com/attachments/lib_picture/19/70/6961970.jpg"</span> <span class="na">width=</span><span class="s">"50"</span> <span class="na">height=</span><span class="s">"40"</span> <span class="na">class=</span><span class="s">"l_bpic"</span> <span class="nt">/&gt;</span>
-   <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"l_spic"</span> <span class="na">id=</span><span class="s">"l_pic_6961970"</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"http://a18.file-static.com/attachments/lib_picture/19/70/6961970.jpg"</span> <span class="na">width=</span><span class="s">"100"</span> <span class="na">height=</span><span class="s">"80"</span> <span class="na">class=</span><span class="s">"l_bpic"</span> <span class="nt">/&gt;</span>
-   <span class="nt">&lt;/div&gt;&lt;/td&gt;</span>
-  <span class="nt">&lt;th</span> <span class="na">class=</span><span class="s">"subject new"</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;label&gt;</span><span class="ni">&amp;nbsp;</span><span class="nt">&lt;/label&gt;</span>
-    <span class="nt">&lt;em&gt;</span>[<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"forumdisplay.php?fid=22&amp;amp;filter=type&amp;amp;typeid=2"</span><span class="nt">&gt;</span>分享<span class="nt">&lt;/a&gt;</span>]<span class="nt">&lt;/em&gt;</span>
-    <span class="nt">&lt;span</span> <span class="na">id=</span><span class="s">"thread_6961970"</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"viewthread.php?tid=6961970&amp;amp;extra=page%3d1%26amp%3borderby%3ddateline"</span><span class="nt">&gt;</span>
-        (mu@繁體@rmvb)onepiece海賊王 第521話 (1p)<span class="nt">&lt;/a&gt;</span>
-    <span class="nt">&lt;/span&gt;</span>
-  <span class="nt">&lt;/th&gt;</span>
-  <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">"author"</span><span class="nt">&gt;&lt;cite&gt;&lt;a</span> <span class="na">href=</span><span class="s">"space.php?uid=933315"</span><span class="nt">&gt;</span>likesea<span class="nt">&lt;/a&gt;&lt;/cite&gt;&lt;em&gt;</span>2011-10-30<span class="nt">&lt;/em&gt;&lt;/td&gt;</span>
-  <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">"nums"</span><span class="nt">&gt;&lt;strong&gt;</span>0<span class="nt">&lt;/strong&gt;</span>/<span class="nt">&lt;em&gt;</span>2<span class="nt">&lt;/em&gt;&lt;/td&gt;</span>
-  <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">"lastpost"</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;cite&gt;</span>
-    <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"space.php?username=likesea"</span><span class="nt">&gt;</span>likesea<span class="nt">&lt;/a&gt;</span>
-  <span class="nt">&lt;/cite&gt;</span>
-  <span class="nt">&lt;em&gt;&lt;a</span> <span class="na">href=</span><span class="s">"redirect.php?tid=6961970&amp;amp;goto=lastpost#lastpost"</span><span class="nt">&gt;&lt;span</span> <span class="na">title=</span><span class="s">"2011-10-30 03:13 pm"</span><span class="nt">&gt;</span>1<span class="ni">&amp;nbsp;</span>分鐘前<span class="nt">&lt;/span&gt;&lt;/a&gt;&lt;/em&gt;&lt;/td&gt;</span>
- <span class="nt">&lt;/tr&gt;</span>
-<span class="nt">&lt;/tbody&gt;</span>
+<pre class="code html"><a name="rest_code_34143954710447cbb797e9b62728ccc7-1"></a><span class="nt">&lt;tbody</span> <span class="na">id=</span><span class="s">"normalthread_6961970"</span><span class="nt">&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-2"></a> <span class="nt">&lt;tr</span> <span class="na">onmouseover=</span><span class="s">"l_pic_6961970.style.display='block'"</span> <span class="na">onmouseout=</span><span class="s">"l_pic_6961970.style.display='none'"</span><span class="nt">&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-3"></a>  <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">"folder"</span><span class="nt">&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-4"></a>    <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"viewthread.php?tid=6961970&amp;amp;extra=page%3d1%26amp%3borderby%3ddateline"</span> <span class="na">title=</span><span class="s">"新窗口打開"</span> <span class="na">target=</span><span class="s">"_blank"</span><span class="nt">&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-5"></a>        <span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"images/default/folder_new.gif"</span> <span class="nt">/&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-6"></a>    <span class="nt">&lt;/a&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-7"></a> <span class="nt">&lt;/td&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-8"></a>  <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">"icon"</span><span class="nt">&gt;&lt;img</span> <span class="na">src=</span><span class="s">"http://a18.file-static.com/attachments/lib_picture/19/70/6961970.jpg"</span> <span class="na">width=</span><span class="s">"50"</span> <span class="na">height=</span><span class="s">"40"</span> <span class="na">class=</span><span class="s">"l_bpic"</span> <span class="nt">/&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-9"></a>   <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"l_spic"</span> <span class="na">id=</span><span class="s">"l_pic_6961970"</span><span class="nt">&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-10"></a>    <span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"http://a18.file-static.com/attachments/lib_picture/19/70/6961970.jpg"</span> <span class="na">width=</span><span class="s">"100"</span> <span class="na">height=</span><span class="s">"80"</span> <span class="na">class=</span><span class="s">"l_bpic"</span> <span class="nt">/&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-11"></a>   <span class="nt">&lt;/div&gt;&lt;/td&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-12"></a>  <span class="nt">&lt;th</span> <span class="na">class=</span><span class="s">"subject new"</span><span class="nt">&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-13"></a>    <span class="nt">&lt;label&gt;</span><span class="ni">&amp;nbsp;</span><span class="nt">&lt;/label&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-14"></a>    <span class="nt">&lt;em&gt;</span>[<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"forumdisplay.php?fid=22&amp;amp;filter=type&amp;amp;typeid=2"</span><span class="nt">&gt;</span>分享<span class="nt">&lt;/a&gt;</span>]<span class="nt">&lt;/em&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-15"></a>    <span class="nt">&lt;span</span> <span class="na">id=</span><span class="s">"thread_6961970"</span><span class="nt">&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-16"></a>        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"viewthread.php?tid=6961970&amp;amp;extra=page%3d1%26amp%3borderby%3ddateline"</span><span class="nt">&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-17"></a>        (mu@繁體@rmvb)onepiece海賊王 第521話 (1p)<span class="nt">&lt;/a&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-18"></a>    <span class="nt">&lt;/span&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-19"></a>  <span class="nt">&lt;/th&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-20"></a>  <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">"author"</span><span class="nt">&gt;&lt;cite&gt;&lt;a</span> <span class="na">href=</span><span class="s">"space.php?uid=933315"</span><span class="nt">&gt;</span>likesea<span class="nt">&lt;/a&gt;&lt;/cite&gt;&lt;em&gt;</span>2011-10-30<span class="nt">&lt;/em&gt;&lt;/td&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-21"></a>  <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">"nums"</span><span class="nt">&gt;&lt;strong&gt;</span>0<span class="nt">&lt;/strong&gt;</span>/<span class="nt">&lt;em&gt;</span>2<span class="nt">&lt;/em&gt;&lt;/td&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-22"></a>  <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">"lastpost"</span><span class="nt">&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-23"></a>  <span class="nt">&lt;cite&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-24"></a>    <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"space.php?username=likesea"</span><span class="nt">&gt;</span>likesea<span class="nt">&lt;/a&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-25"></a>  <span class="nt">&lt;/cite&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-26"></a>  <span class="nt">&lt;em&gt;&lt;a</span> <span class="na">href=</span><span class="s">"redirect.php?tid=6961970&amp;amp;goto=lastpost#lastpost"</span><span class="nt">&gt;&lt;span</span> <span class="na">title=</span><span class="s">"2011-10-30 03:13 pm"</span><span class="nt">&gt;</span>1<span class="ni">&amp;nbsp;</span>分鐘前<span class="nt">&lt;/span&gt;&lt;/a&gt;&lt;/em&gt;&lt;/td&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-27"></a> <span class="nt">&lt;/tr&gt;</span>
+<a name="rest_code_34143954710447cbb797e9b62728ccc7-28"></a><span class="nt">&lt;/tbody&gt;</span>
 </pre>
 <p>想要的輸出結果</p>
 <pre class="literal-block">
@@ -168,15 +168,14 @@ link      : http://.............
 <p>雖然jsoup可以直接接收網址去取得網頁內容，但測試程式有讀取檔案的需求所以這邊會提供兩種介面。
 一種允許使用者直接傳入string型態的參數，也就是網址。另外一種則是讓使用者傳入file型態的參數。
 而回傳值的形態則是存放data object的list，這邊data object的名稱就先定義為envypost好了。</p>
-<pre class="code scala literal-block">
-<span class="k">class</span> <span class="nc">envypost</span><span class="o">{</span>
-    <span class="k">val</span> <span class="n">uid</span><span class="k">:</span><span class="kt">integer</span>
-    <span class="k">val</span> <span class="n">title</span><span class="k">:</span><span class="kt">string</span>
-    <span class="k">val</span> <span class="n">lastposttime</span><span class="k">:</span><span class="kt">date</span>
-<span class="o">}</span>
-
-<span class="k">def</span> <span class="n">parse</span><span class="o">(</span><span class="n">url</span><span class="k">:</span><span class="kt">string</span><span class="o">)</span><span class="k">:</span><span class="kt">list</span><span class="o">[</span><span class="kt">envypost</span><span class="o">]={}</span>
-<span class="k">def</span> <span class="n">parse</span><span class="o">(</span><span class="n">file</span><span class="k">:</span><span class="kt">file</span><span class="o">)</span><span class="k">:</span><span class="kt">list</span><span class="o">[</span><span class="kt">envypost</span><span class="o">]={}</span>
+<pre class="code scala"><a name="rest_code_24427e1eef40448c813decfde0d5756a-1"></a><span class="k">class</span> <span class="nc">envypost</span><span class="o">{</span>
+<a name="rest_code_24427e1eef40448c813decfde0d5756a-2"></a>    <span class="k">val</span> <span class="n">uid</span><span class="k">:</span><span class="kt">integer</span>
+<a name="rest_code_24427e1eef40448c813decfde0d5756a-3"></a>    <span class="k">val</span> <span class="n">title</span><span class="k">:</span><span class="kt">string</span>
+<a name="rest_code_24427e1eef40448c813decfde0d5756a-4"></a>    <span class="k">val</span> <span class="n">lastposttime</span><span class="k">:</span><span class="kt">date</span>
+<a name="rest_code_24427e1eef40448c813decfde0d5756a-5"></a><span class="o">}</span>
+<a name="rest_code_24427e1eef40448c813decfde0d5756a-6"></a>
+<a name="rest_code_24427e1eef40448c813decfde0d5756a-7"></a><span class="k">def</span> <span class="n">parse</span><span class="o">(</span><span class="n">url</span><span class="k">:</span><span class="kt">string</span><span class="o">)</span><span class="k">:</span><span class="kt">list</span><span class="o">[</span><span class="kt">envypost</span><span class="o">]={}</span>
+<a name="rest_code_24427e1eef40448c813decfde0d5756a-8"></a><span class="k">def</span> <span class="n">parse</span><span class="o">(</span><span class="n">file</span><span class="k">:</span><span class="kt">file</span><span class="o">)</span><span class="k">:</span><span class="kt">list</span><span class="o">[</span><span class="kt">envypost</span><span class="o">]={}</span>
 </pre>
 </div>
 <div class="section" id="id7">
@@ -187,16 +186,15 @@ link      : http://.............
 <h2>找出所有文章</h2>
 <p>雖然jsoup有提供很多種分析的方式，但是我最喜歡用的還是 <a class="reference external" href="http://jsoup.org/cookbook/extracting-data/selector-syntax">selector</a> 的語法。因為簡單明瞭又好閱讀！！
 執行效率我則完全不在意，反正我的需求也不是一秒幾十萬上下的東西。能夠讓我愉快又快速的寫好才是重要的。</p>
-<pre class="code scala literal-block">
-<span class="k">object</span> <span class="nc">envyexample</span> <span class="o">{</span>
-  <span class="k">def</span> <span class="n">parse</span><span class="o">(</span><span class="n">file</span><span class="k">:</span><span class="kt">file</span><span class="o">,</span><span class="n">encode</span><span class="k">:</span><span class="kt">string</span><span class="o">=</span><span class="s">"big5"</span><span class="o">)</span><span class="k">:</span><span class="kt">list</span><span class="o">[</span><span class="kt">envypost</span><span class="o">]={</span>
-    <span class="k">val</span> <span class="n">doc</span> <span class="k">=</span> <span class="n">jsoup</span><span class="o">.</span><span class="n">parse</span><span class="o">(</span><span class="n">file</span><span class="o">,</span><span class="n">encode</span><span class="o">,</span><span class="n">envyurl</span><span class="o">)</span>
-    <span class="k">val</span> <span class="n">posts</span> <span class="k">=</span> <span class="n">parsepage</span><span class="o">(</span><span class="n">doc</span><span class="o">)</span>
-  <span class="o">}</span>
-  <span class="k">def</span> <span class="n">parsepage</span><span class="o">(</span><span class="n">page</span><span class="k">:</span><span class="kt">document</span><span class="o">)={</span>
-    <span class="n">doc</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="s">"tbody[id^=normalthread]"</span><span class="o">)</span>
-  <span class="o">}</span>
-<span class="o">}</span>
+<pre class="code scala"><a name="rest_code_ba06e33c85024b6b9509beec10dec4be-1"></a><span class="k">object</span> <span class="nc">envyexample</span> <span class="o">{</span>
+<a name="rest_code_ba06e33c85024b6b9509beec10dec4be-2"></a>  <span class="k">def</span> <span class="n">parse</span><span class="o">(</span><span class="n">file</span><span class="k">:</span><span class="kt">file</span><span class="o">,</span><span class="n">encode</span><span class="k">:</span><span class="kt">string</span><span class="o">=</span><span class="s">"big5"</span><span class="o">)</span><span class="k">:</span><span class="kt">list</span><span class="o">[</span><span class="kt">envypost</span><span class="o">]={</span>
+<a name="rest_code_ba06e33c85024b6b9509beec10dec4be-3"></a>    <span class="k">val</span> <span class="n">doc</span> <span class="k">=</span> <span class="n">jsoup</span><span class="o">.</span><span class="n">parse</span><span class="o">(</span><span class="n">file</span><span class="o">,</span><span class="n">encode</span><span class="o">,</span><span class="n">envyurl</span><span class="o">)</span>
+<a name="rest_code_ba06e33c85024b6b9509beec10dec4be-4"></a>    <span class="k">val</span> <span class="n">posts</span> <span class="k">=</span> <span class="n">parsepage</span><span class="o">(</span><span class="n">doc</span><span class="o">)</span>
+<a name="rest_code_ba06e33c85024b6b9509beec10dec4be-5"></a>  <span class="o">}</span>
+<a name="rest_code_ba06e33c85024b6b9509beec10dec4be-6"></a>  <span class="k">def</span> <span class="n">parsepage</span><span class="o">(</span><span class="n">page</span><span class="k">:</span><span class="kt">document</span><span class="o">)={</span>
+<a name="rest_code_ba06e33c85024b6b9509beec10dec4be-7"></a>    <span class="n">doc</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="s">"tbody[id^=normalthread]"</span><span class="o">)</span>
+<a name="rest_code_ba06e33c85024b6b9509beec10dec4be-8"></a>  <span class="o">}</span>
+<a name="rest_code_ba06e33c85024b6b9509beec10dec4be-9"></a><span class="o">}</span>
 </pre>
 <p>由於該論壇的每一篇文章都被一個tbody的tag包圍，且此tbody的id開頭為normalthread。因此我的第一步就是先找出此頁中每一篇文章的element。</p>
 <p>雖然說jsoup跟jquery一樣對於tag的id與class屬性都有特殊的語法例如 tag#id 或 tag.class 但是由於我需要使用正規表示是來找出id為normalthread開頭的tbody。
@@ -206,14 +204,13 @@ tbody[id^=normalthread]</blockquote>
 <p>因為若使用 # 的語法就沒有辦法使用正規表示式（至少我目前在官網的說明文件還沒有找到 orz）
 有沒有覺得這個語法真的超級方便的，如果是用其他工具的話，我現在應該還在處理把id屬性取出來，然後用string的startwith來判斷是不是normalthread開頭。</p>
 <p>另外，我喜歡把每一個步驟分解成很多小函式，因為這樣方便我進行測試。例如上面這一段程式碼，我相對應的測試程式碼會長這樣。</p>
-<pre class="code scala literal-block">
-<span class="k">class</span> <span class="nc">testenvyexample</span> <span class="k">extends</span> <span class="n">funsuite</span> <span class="k">with</span> <span class="n">shouldmatchers</span><span class="o">{</span>
-  <span class="n">test</span><span class="o">(</span><span class="s">"there should be 10 post in the test file"</span><span class="o">){</span>
-    <span class="k">val</span> <span class="n">doc</span> <span class="k">=</span> <span class="n">jsoup</span><span class="o">.</span><span class="n">parse</span><span class="o">(</span><span class="k">new</span> <span class="n">file</span><span class="o">(</span><span class="s">"./testdata/envy.html"</span><span class="o">),</span><span class="s">"big5"</span><span class="o">,</span><span class="n">envyexample</span><span class="o">.</span><span class="n">envyurl</span><span class="o">)</span>
-    <span class="k">val</span> <span class="n">posts</span> <span class="k">=</span> <span class="n">envyexample</span><span class="o">.</span><span class="n">parsepage</span><span class="o">(</span><span class="n">doc</span><span class="o">)</span>
-    <span class="n">posts</span><span class="o">.</span><span class="n">size</span> <span class="n">should</span> <span class="n">be</span> <span class="o">(</span><span class="mi">18</span><span class="o">)</span>
-  <span class="o">}</span>
-<span class="o">}</span>
+<pre class="code scala"><a name="rest_code_af97606f1fe24639b2ee6e875c709c44-1"></a><span class="k">class</span> <span class="nc">testenvyexample</span> <span class="k">extends</span> <span class="n">funsuite</span> <span class="k">with</span> <span class="n">shouldmatchers</span><span class="o">{</span>
+<a name="rest_code_af97606f1fe24639b2ee6e875c709c44-2"></a>  <span class="n">test</span><span class="o">(</span><span class="s">"there should be 10 post in the test file"</span><span class="o">){</span>
+<a name="rest_code_af97606f1fe24639b2ee6e875c709c44-3"></a>    <span class="k">val</span> <span class="n">doc</span> <span class="k">=</span> <span class="n">jsoup</span><span class="o">.</span><span class="n">parse</span><span class="o">(</span><span class="k">new</span> <span class="n">file</span><span class="o">(</span><span class="s">"./testdata/envy.html"</span><span class="o">),</span><span class="s">"big5"</span><span class="o">,</span><span class="n">envyexample</span><span class="o">.</span><span class="n">envyurl</span><span class="o">)</span>
+<a name="rest_code_af97606f1fe24639b2ee6e875c709c44-4"></a>    <span class="k">val</span> <span class="n">posts</span> <span class="k">=</span> <span class="n">envyexample</span><span class="o">.</span><span class="n">parsepage</span><span class="o">(</span><span class="n">doc</span><span class="o">)</span>
+<a name="rest_code_af97606f1fe24639b2ee6e875c709c44-5"></a>    <span class="n">posts</span><span class="o">.</span><span class="n">size</span> <span class="n">should</span> <span class="n">be</span> <span class="o">(</span><span class="mi">18</span><span class="o">)</span>
+<a name="rest_code_af97606f1fe24639b2ee6e875c709c44-6"></a>  <span class="o">}</span>
+<a name="rest_code_af97606f1fe24639b2ee6e875c709c44-7"></a><span class="o">}</span>
 </pre>
 <p>順便說明一下語法，我所使用的測試framework是 <a class="reference external" href="http://www.scalatest.org/">scalatest</a> ，這邊使用java的junit也是可以。
 testenvyexample繼承funsuite跟shouldmatchers兩個class，這兩個class主要讓測試程式可以使用**test**跟**should be**兩種語法。</p>
@@ -222,35 +219,31 @@ testenvyexample繼承funsuite跟shouldmatchers兩個class，這兩個class主要
 <div class="section" id="idtitleauthorlink">
 <h2>分析文章的內容-取得id、title、author與link</h2>
 <p>取得post的功能再另外獨立一個parsepost的function，傳入的參數則為包含所有文章內容的element，並且希望這個function可以回傳一個envypost物件。</p>
-<pre class="code scala literal-block">
-<span class="k">def</span> <span class="n">parsepost</span><span class="o">(</span><span class="n">post</span><span class="k">:</span><span class="kt">element</span><span class="o">)</span><span class="k">:</span><span class="kt">envypost</span><span class="o">={</span>
-<span class="o">}</span>
+<pre class="code scala"><a name="rest_code_d3affb29069148f89e1d363bb6e18a1a-1"></a><span class="k">def</span> <span class="n">parsepost</span><span class="o">(</span><span class="n">post</span><span class="k">:</span><span class="kt">element</span><span class="o">)</span><span class="k">:</span><span class="kt">envypost</span><span class="o">={</span>
+<a name="rest_code_d3affb29069148f89e1d363bb6e18a1a-2"></a><span class="o">}</span>
 </pre>
 <p>文章id的取得是透過tbody本身的id屬性，他的格式是normalthread_xxxxxx，後面的xxxxxx就是此篇文章的id，</p>
-<pre class="code scala literal-block">
-<span class="k">def</span> <span class="n">parsepost</span><span class="o">(</span><span class="n">post</span><span class="k">:</span><span class="kt">element</span><span class="o">)={</span>
-    <span class="k">val</span> <span class="n">id</span> <span class="k">=</span> <span class="n">post</span><span class="o">.</span><span class="n">attr</span><span class="o">(</span><span class="s">"id"</span><span class="o">).</span><span class="n">replace</span><span class="o">(</span><span class="s">"normalthread_"</span><span class="o">,</span><span class="s">""</span><span class="o">)</span>
-    <span class="k">val</span> <span class="o">(</span><span class="n">title</span><span class="o">,</span><span class="n">link</span><span class="o">)</span> <span class="k">=</span> <span class="n">parserpost_titleandlink</span><span class="o">(</span><span class="n">id</span><span class="o">,</span><span class="n">post</span><span class="o">)</span>
-    <span class="k">val</span> <span class="n">author</span> <span class="k">=</span> <span class="n">parserpost_author</span><span class="o">(</span><span class="n">post</span><span class="o">)</span>
-
-    <span class="k">new</span> <span class="n">envypost</span><span class="o">(</span><span class="n">id</span><span class="o">,</span><span class="n">title</span><span class="o">,</span><span class="n">author</span><span class="o">,</span><span class="n">link</span><span class="o">)</span>
-<span class="o">}</span>
+<pre class="code scala"><a name="rest_code_5129edae1aef4d6ea7d3a401c96a7285-1"></a><span class="k">def</span> <span class="n">parsepost</span><span class="o">(</span><span class="n">post</span><span class="k">:</span><span class="kt">element</span><span class="o">)={</span>
+<a name="rest_code_5129edae1aef4d6ea7d3a401c96a7285-2"></a>    <span class="k">val</span> <span class="n">id</span> <span class="k">=</span> <span class="n">post</span><span class="o">.</span><span class="n">attr</span><span class="o">(</span><span class="s">"id"</span><span class="o">).</span><span class="n">replace</span><span class="o">(</span><span class="s">"normalthread_"</span><span class="o">,</span><span class="s">""</span><span class="o">)</span>
+<a name="rest_code_5129edae1aef4d6ea7d3a401c96a7285-3"></a>    <span class="k">val</span> <span class="o">(</span><span class="n">title</span><span class="o">,</span><span class="n">link</span><span class="o">)</span> <span class="k">=</span> <span class="n">parserpost_titleandlink</span><span class="o">(</span><span class="n">id</span><span class="o">,</span><span class="n">post</span><span class="o">)</span>
+<a name="rest_code_5129edae1aef4d6ea7d3a401c96a7285-4"></a>    <span class="k">val</span> <span class="n">author</span> <span class="k">=</span> <span class="n">parserpost_author</span><span class="o">(</span><span class="n">post</span><span class="o">)</span>
+<a name="rest_code_5129edae1aef4d6ea7d3a401c96a7285-5"></a>
+<a name="rest_code_5129edae1aef4d6ea7d3a401c96a7285-6"></a>    <span class="k">new</span> <span class="n">envypost</span><span class="o">(</span><span class="n">id</span><span class="o">,</span><span class="n">title</span><span class="o">,</span><span class="n">author</span><span class="o">,</span><span class="n">link</span><span class="o">)</span>
+<a name="rest_code_5129edae1aef4d6ea7d3a401c96a7285-7"></a><span class="o">}</span>
 </pre>
 <p>link跟title其實是一起取得的，它們可以從id為thread_xxxxxx的span tag中取得。</p>
-<pre class="code scala literal-block">
-<span class="k">def</span> <span class="n">parserpost_titleandlink</span><span class="o">(</span><span class="n">id</span><span class="k">:</span><span class="kt">string</span><span class="o">,</span><span class="n">post</span><span class="k">:</span><span class="kt">element</span><span class="o">)={</span>
-    <span class="k">val</span> <span class="n">element</span> <span class="k">=</span> <span class="n">post</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="s">"span#thread_"</span><span class="o">+</span><span class="n">id</span><span class="o">).</span><span class="n">first</span>
-    <span class="o">(</span><span class="n">element</span><span class="o">.</span><span class="n">text</span><span class="o">,</span><span class="n">element</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="s">"a"</span><span class="o">).</span><span class="n">first</span><span class="o">.</span><span class="n">attr</span><span class="o">(</span><span class="s">"href"</span><span class="o">))</span>
-<span class="o">}</span>
+<pre class="code scala"><a name="rest_code_8383687abf5e4c78a063b17b1f6c5b93-1"></a><span class="k">def</span> <span class="n">parserpost_titleandlink</span><span class="o">(</span><span class="n">id</span><span class="k">:</span><span class="kt">string</span><span class="o">,</span><span class="n">post</span><span class="k">:</span><span class="kt">element</span><span class="o">)={</span>
+<a name="rest_code_8383687abf5e4c78a063b17b1f6c5b93-2"></a>    <span class="k">val</span> <span class="n">element</span> <span class="k">=</span> <span class="n">post</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="s">"span#thread_"</span><span class="o">+</span><span class="n">id</span><span class="o">).</span><span class="n">first</span>
+<a name="rest_code_8383687abf5e4c78a063b17b1f6c5b93-3"></a>    <span class="o">(</span><span class="n">element</span><span class="o">.</span><span class="n">text</span><span class="o">,</span><span class="n">element</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="s">"a"</span><span class="o">).</span><span class="n">first</span><span class="o">.</span><span class="n">attr</span><span class="o">(</span><span class="s">"href"</span><span class="o">))</span>
+<a name="rest_code_8383687abf5e4c78a063b17b1f6c5b93-4"></a><span class="o">}</span>
 </pre>
 <p>author的名字則在class為author的td tag內cite中因此取的時候使用</p>
 <blockquote>
 tag1 tag2</blockquote>
 <p>的語法，這代表搜尋tag1底下所有的tag2</p>
-<pre class="code scala literal-block">
-<span class="k">def</span> <span class="n">parserpost_author</span><span class="o">(</span><span class="n">post</span><span class="k">:</span><span class="kt">element</span><span class="o">)={</span>
-    <span class="n">post</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="s">"td.author cite"</span><span class="o">).</span><span class="n">first</span><span class="o">.</span><span class="n">text</span>
-<span class="o">}</span>
+<pre class="code scala"><a name="rest_code_e91e546f2aef45c9afbd41c375eee262-1"></a><span class="k">def</span> <span class="n">parserpost_author</span><span class="o">(</span><span class="n">post</span><span class="k">:</span><span class="kt">element</span><span class="o">)={</span>
+<a name="rest_code_e91e546f2aef45c9afbd41c375eee262-2"></a>    <span class="n">post</span><span class="o">.</span><span class="n">select</span><span class="o">(</span><span class="s">"td.author cite"</span><span class="o">).</span><span class="n">first</span><span class="o">.</span><span class="n">text</span>
+<a name="rest_code_e91e546f2aef45c9afbd41c375eee262-3"></a><span class="o">}</span>
 </pre>
 <p>打完收工，這樣的短短的程式碼就把一個網站都分析完了，真的太棒了 qq
 以前要分析一個網站超血淚的，真的感謝open source的眾多好心人，願意分享他們的成果與程式碼。
@@ -292,7 +285,7 @@ tag1 tag2</blockquote>
     </div>
 
         
-       <script>var disqus_shortname="swindgithub";(function(){var a=document.createElement("script");a.async=true;a.src="//"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><footer id="footer" role="contentinfo"><p>Contents © 2014 <a href="mailto:">Swind</a> - 
+       <script>var disqus_shortname="swindgithub";(function(){var a=document.createElement("script");a.async=true;a.src="//"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><footer id="footer" role="contentinfo"><p>Contents © 2015 <a href="mailto:">Swind</a> - 
 Powered by <a href="http://getnikola.com">Nikola</a> - 
 Zen theme based in <a href="https://github.com/arusahni/website-template">Arusahni's website-template</a><br><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/ar/">
 <img alt="Creative Commons License BY-NC-SA" style="border-width:0; margin-bottom:12px;" src="http://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a></p>

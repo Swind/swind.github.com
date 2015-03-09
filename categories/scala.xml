@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis (Scala)</title><link>http://swind.code-life.info/</link><description></description><language>en</language><lastBuildDate>Thu, 30 Oct 2014 08:25:52 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>用 Spray 建立一個簡單的 RESTful API Server</title><link>http://swind.code-life.info/posts/build-restful-api-server-by-spray.html</link><dc:creator>Swind</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;a class="reference external" href="http://spray.cc/"&gt;Spray&lt;/a&gt;&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis (Scala)</title><link>http://swind.code-life.info/</link><description></description><atom:link href="http://swind.code-life.info/categories/scala.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Mon, 09 Mar 2015 04:18:15 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>用 Spray 建立一個簡單的 RESTful API Server</title><link>http://swind.code-life.info/posts/build-restful-api-server-by-spray.html</link><dc:creator>Swind</dc:creator><description>&lt;div&gt;&lt;p&gt;&lt;a class="reference external" href="http://spray.cc/"&gt;Spray&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;最初是想要建立一個提供查詢服務的 RESTful API Server，可以讓 Client 的應用程式透過 RESTful API 查詢一些資料。
 但是看來看去，用 Play2、Jersey、RESTEasy 等都蠻麻煩的，而且還需要使用 Web container（像 Tomcat、Jetty 等）。
 所以才找到這個 Spray，而且又是用 Scala 開發的，實在沒有理由不試試看阿。 XD&lt;/p&gt;
@@ -10,19 +10,17 @@
 先是 Exception Handling 做的不夠好，結果就真的是 "Let it Crash" 一直死一直死一直死，好像在玩 D3 的煉獄模式一樣。&lt;/p&gt;
 &lt;p&gt;再來是我沒有去設定 Dispatcher 所以 Thread 用了十幾個。如果我沒有看錯的話，依照 Akka &lt;a class="reference external" href="https://github.com/akka/akka/blob/master/akka-actor/src/main/resources/reference.conf"&gt;reference.conf&lt;/a&gt; 的設定，
 Default Dispatcher 使用 fork-join-executor，他的預設設定如下&lt;/p&gt;
-&lt;pre class="code scala literal-block"&gt;
-&lt;span class="n"&gt;fork&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;executor&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
-  &lt;span class="k"&gt;#&lt;/span&gt; &lt;span class="nc"&gt;Min&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="n"&gt;threads&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;cap&lt;/span&gt; &lt;span class="n"&gt;factor&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;based&lt;/span&gt; &lt;span class="n"&gt;parallelism&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt;
-  &lt;span class="n"&gt;parallelism&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;min&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt;
-
-  &lt;span class="k"&gt;#&lt;/span&gt; &lt;span class="nc"&gt;Parallelism&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;threads&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;...&lt;/span&gt; &lt;span class="n"&gt;ceil&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;available&lt;/span&gt; &lt;span class="n"&gt;processors&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;factor&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-  &lt;span class="n"&gt;parallelism&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;factor&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;3.0&lt;/span&gt;
-
-  &lt;span class="k"&gt;#&lt;/span&gt; &lt;span class="nc"&gt;Max&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="n"&gt;threads&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;cap&lt;/span&gt; &lt;span class="n"&gt;factor&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;based&lt;/span&gt; &lt;span class="n"&gt;parallelism&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt;
-  &lt;span class="n"&gt;parallelism&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;max&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;64&lt;/span&gt;
-&lt;span class="o"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
-&lt;p&gt;很簡單的 parallelism-min 與 parallelism-max 的值代表著 Thread 的上下限，那麼 parallelism_factor 呢？&lt;/p&gt;
+&lt;pre class="code scala"&gt;&lt;a name="rest_code_e311a8e2d18f40929f8c315df9732748-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;fork&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;executor&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_e311a8e2d18f40929f8c315df9732748-2"&gt;&lt;/a&gt;  &lt;span class="k"&gt;#&lt;/span&gt; &lt;span class="nc"&gt;Min&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="n"&gt;threads&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;cap&lt;/span&gt; &lt;span class="n"&gt;factor&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;based&lt;/span&gt; &lt;span class="n"&gt;parallelism&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt;
+&lt;a name="rest_code_e311a8e2d18f40929f8c315df9732748-3"&gt;&lt;/a&gt;  &lt;span class="n"&gt;parallelism&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;min&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt;
+&lt;a name="rest_code_e311a8e2d18f40929f8c315df9732748-4"&gt;&lt;/a&gt;
+&lt;a name="rest_code_e311a8e2d18f40929f8c315df9732748-5"&gt;&lt;/a&gt;  &lt;span class="k"&gt;#&lt;/span&gt; &lt;span class="nc"&gt;Parallelism&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;threads&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;...&lt;/span&gt; &lt;span class="n"&gt;ceil&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;available&lt;/span&gt; &lt;span class="n"&gt;processors&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;factor&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_e311a8e2d18f40929f8c315df9732748-6"&gt;&lt;/a&gt;  &lt;span class="n"&gt;parallelism&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;factor&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;3.0&lt;/span&gt;
+&lt;a name="rest_code_e311a8e2d18f40929f8c315df9732748-7"&gt;&lt;/a&gt;
+&lt;a name="rest_code_e311a8e2d18f40929f8c315df9732748-8"&gt;&lt;/a&gt;  &lt;span class="k"&gt;#&lt;/span&gt; &lt;span class="nc"&gt;Max&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt; &lt;span class="n"&gt;of&lt;/span&gt; &lt;span class="n"&gt;threads&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;cap&lt;/span&gt; &lt;span class="n"&gt;factor&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;based&lt;/span&gt; &lt;span class="n"&gt;parallelism&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt;
+&lt;a name="rest_code_e311a8e2d18f40929f8c315df9732748-9"&gt;&lt;/a&gt;  &lt;span class="n"&gt;parallelism&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;max&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;64&lt;/span&gt;
+&lt;a name="rest_code_e311a8e2d18f40929f8c315df9732748-10"&gt;&lt;/a&gt;&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;很簡單的 parallelism-min 與 parallelism-max 的值代表著 Thread 的上下限，那麼 parallelism_factor 呢？&lt;/p&gt;
 &lt;p&gt;他同樣也是限制 Thread 的上限，上限的計算方式為&lt;/p&gt;
 &lt;blockquote&gt;
 parallelism-factor * 你的處理器核心數&lt;/blockquote&gt;
@@ -88,43 +86,37 @@ Akka 2.0 - 要升級了
 &lt;div class="section" id="create-table"&gt;
 &lt;h3&gt;Create Table&lt;/h3&gt;
 &lt;p&gt;Circumflex的設計，主要是在是產生一個對應的資料物件，例如&lt;/p&gt;
-&lt;pre class="code scala literal-block"&gt;
-&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Country&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="nc"&gt;Record&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;String&lt;/span&gt;, &lt;span class="kt"&gt;Country&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
-  &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;code&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"code"&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;VARCHAR&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="nc"&gt;NOT_NULL&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;DEFAULT&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"'ch'"&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-  &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"name"&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;TEXT&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;NOT_NULL&lt;/span&gt;
-
-  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;cities&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;inverseMany&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;City&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;country&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;relation&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Country&lt;/span&gt;
-  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nc"&gt;PRIMARY_KEY&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;code&lt;/span&gt;
-&lt;span class="o"&gt;}&lt;/span&gt;
-
-&lt;span class="k"&gt;object&lt;/span&gt; &lt;span class="nc"&gt;Country&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="nc"&gt;Country&lt;/span&gt; &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="nc"&gt;Table&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;String&lt;/span&gt;, &lt;span class="kt"&gt;Country&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
-&lt;/pre&gt;
-&lt;p&gt;其中class與object兩者皆為必要的，但是在object Country的繼承型態宣告，連續繼承了Country與Table。
+&lt;pre class="code scala"&gt;&lt;a name="rest_code_133fe713d561479da185e70c184593f5-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Country&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="nc"&gt;Record&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;String&lt;/span&gt;, &lt;span class="kt"&gt;Country&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_133fe713d561479da185e70c184593f5-2"&gt;&lt;/a&gt;  &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;code&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"code"&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;VARCHAR&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="nc"&gt;NOT_NULL&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;DEFAULT&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"'ch'"&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_133fe713d561479da185e70c184593f5-3"&gt;&lt;/a&gt;  &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"name"&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;TEXT&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;NOT_NULL&lt;/span&gt;
+&lt;a name="rest_code_133fe713d561479da185e70c184593f5-4"&gt;&lt;/a&gt;
+&lt;a name="rest_code_133fe713d561479da185e70c184593f5-5"&gt;&lt;/a&gt;  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;cities&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;inverseMany&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;City&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;country&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_133fe713d561479da185e70c184593f5-6"&gt;&lt;/a&gt;  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;relation&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="nc"&gt;Country&lt;/span&gt;
+&lt;a name="rest_code_133fe713d561479da185e70c184593f5-7"&gt;&lt;/a&gt;  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nc"&gt;PRIMARY_KEY&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;code&lt;/span&gt;
+&lt;a name="rest_code_133fe713d561479da185e70c184593f5-8"&gt;&lt;/a&gt;&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_133fe713d561479da185e70c184593f5-9"&gt;&lt;/a&gt;
+&lt;a name="rest_code_133fe713d561479da185e70c184593f5-10"&gt;&lt;/a&gt;&lt;span class="k"&gt;object&lt;/span&gt; &lt;span class="nc"&gt;Country&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="nc"&gt;Country&lt;/span&gt; &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="nc"&gt;Table&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;String&lt;/span&gt;, &lt;span class="kt"&gt;Country&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;其中class與object兩者皆為必要的，但是在object Country的繼承型態宣告，連續繼承了Country與Table。
 我覺得這部分會讓人有點困惑為何需要如此處理，但是這還是其次的。&lt;/p&gt;
 &lt;p&gt;在建立好資料物件之後，就可以利用此資料物件Create Table。&lt;/p&gt;
-&lt;pre class="code scala literal-block"&gt;
-&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;ddl&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nc"&gt;DDLUnit&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;Country&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;ddl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;CREATE&lt;/span&gt;
-&lt;span class="n"&gt;ddl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;DROP&lt;/span&gt;
-&lt;span class="n"&gt;ddl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;DROP_CREATE&lt;/span&gt;
-&lt;/pre&gt;
-&lt;p&gt;建立Table的部分非常方便。&lt;/p&gt;
+&lt;pre class="code scala"&gt;&lt;a name="rest_code_a3b734b0569b471dbff0549ad52dea7f-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;ddl&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nc"&gt;DDLUnit&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;Country&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_a3b734b0569b471dbff0549ad52dea7f-2"&gt;&lt;/a&gt;&lt;span class="n"&gt;ddl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;CREATE&lt;/span&gt;
+&lt;a name="rest_code_a3b734b0569b471dbff0549ad52dea7f-3"&gt;&lt;/a&gt;&lt;span class="n"&gt;ddl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;DROP&lt;/span&gt;
+&lt;a name="rest_code_a3b734b0569b471dbff0549ad52dea7f-4"&gt;&lt;/a&gt;&lt;span class="n"&gt;ddl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;DROP_CREATE&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;建立Table的部分非常方便。&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="association"&gt;
 &lt;h3&gt;讓我不會用的Association&lt;/h3&gt;
 &lt;p&gt;關聯式資料庫的架構非常常見，不管是One-to-One、One-to-Many等結構，我的小程式也很需要這方面功能的支持。
 Circumflex的設定方式是將變數宣告成inverseMany或inverseOne的型態，他目前沒有支援Many-to-Many。&lt;/p&gt;
-&lt;pre class="code scala literal-block"&gt;
-&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;City&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="nc"&gt;Record&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Long&lt;/span&gt;, &lt;span class="kt"&gt;City&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
-  &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;country&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"country_code"&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;TEXT&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;REFERENCES&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;Country&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="nc"&gt;ON_DELETE&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;CASCADE&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="nc"&gt;ON_UPDATE&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;NO_ACTION&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;span class="o"&gt;}&lt;/span&gt;
-
-&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Country&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="nc"&gt;Record&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;String&lt;/span&gt;, &lt;span class="kt"&gt;Country&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
-  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;cities&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;inverseMany&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;City&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;country&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;span class="o"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
-&lt;p&gt;inverseMany會回傳一個inverseMany的物件，呼叫inverseMany.get之後可以得到一個seq的物件。這個物件是immutable的
+&lt;pre class="code scala"&gt;&lt;a name="rest_code_ea8f7fef245341d69f610377fc9c896b-1"&gt;&lt;/a&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;City&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="nc"&gt;Record&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;Long&lt;/span&gt;, &lt;span class="kt"&gt;City&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_ea8f7fef245341d69f610377fc9c896b-2"&gt;&lt;/a&gt;  &lt;span class="k"&gt;val&lt;/span&gt; &lt;span class="n"&gt;country&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="s"&gt;"country_code"&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;TEXT&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="nc"&gt;REFERENCES&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;Country&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="nc"&gt;ON_DELETE&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;CASCADE&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="nc"&gt;ON_UPDATE&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;NO_ACTION&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_ea8f7fef245341d69f610377fc9c896b-3"&gt;&lt;/a&gt;&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;a name="rest_code_ea8f7fef245341d69f610377fc9c896b-4"&gt;&lt;/a&gt;
+&lt;a name="rest_code_ea8f7fef245341d69f610377fc9c896b-5"&gt;&lt;/a&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Country&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="nc"&gt;Record&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;String&lt;/span&gt;, &lt;span class="kt"&gt;Country&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+&lt;a name="rest_code_ea8f7fef245341d69f610377fc9c896b-6"&gt;&lt;/a&gt;  &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="n"&gt;cities&lt;/span&gt; &lt;span class="k"&gt;=&lt;/span&gt; &lt;span class="n"&gt;inverseMany&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;City&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;country&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_ea8f7fef245341d69f610377fc9c896b-7"&gt;&lt;/a&gt;&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;inverseMany會回傳一個inverseMany的物件，呼叫inverseMany.get之後可以得到一個seq的物件。這個物件是immutable的
 ，因此你沒有辦法插入資料。所以我想像中的使用方式是Country與City兩個都是各自去儲存的，
 然後可以透過Country.cities()取得所有有關的City，相對的City.country()則可以查詢取得對應的Country。
 但是這比較不符合我想要的方式，我還是希望那個Collection是可以讓我CRUD的，並且在儲存Country的時候可以一併更新City。&lt;/p&gt;
@@ -154,33 +146,23 @@ Circumflex的設定方式是將變數宣告成inverseMany或inverseOne的型態�
 &lt;p&gt;寫Model的時候最主要要注意物件的名稱，如果你的Table名稱是"employees"這種複數名詞，那麼你的Model名稱就應該為"employee"。
 activejdbc會自動對應複數名詞的Table與單數名詞的Model。(不知道對於es之類的這種變化他是不是也可以處理)。
 當然如果有需要的話，也可以使用**@Table**來指定Table名稱。&lt;/p&gt;
-&lt;pre class="code scala literal-block"&gt;
-&lt;span class="nd"&gt;@Table&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"TABLE_NAME"&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;employe&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="nc"&gt;Model&lt;/span&gt;&lt;span class="o"&gt;{}&lt;/span&gt;
-&lt;/pre&gt;
-&lt;p&gt;P.S 幹悲劇了，由於activejdbc裡面的Model的set有三種傳值方式。&lt;/p&gt;
-&lt;pre class="code scala literal-block"&gt;
-&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;Object&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt; &lt;span class="n"&gt;namesAndValues&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;String&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;attributeNames&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="nc"&gt;Object&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;String&lt;/span&gt; &lt;span class="n"&gt;attribute&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="nc"&gt;Object&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;/pre&gt;
-&lt;p&gt;這種寫法Scala在使用的時候會認為是**ambiguous reference to overloaded definition**
+&lt;pre class="code scala"&gt;&lt;a name="rest_code_5f6a50a41b1148c1abdd7c856ed11b19-1"&gt;&lt;/a&gt;&lt;span class="nd"&gt;@Table&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"TABLE_NAME"&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_5f6a50a41b1148c1abdd7c856ed11b19-2"&gt;&lt;/a&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;employe&lt;/span&gt; &lt;span class="k"&gt;extends&lt;/span&gt; &lt;span class="nc"&gt;Model&lt;/span&gt;&lt;span class="o"&gt;{}&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;P.S 幹悲劇了，由於activejdbc裡面的Model的set有三種傳值方式。&lt;/p&gt;
+&lt;pre class="code scala"&gt;&lt;a name="rest_code_416b9b6934e94aed97935f761bc9887a-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;Object&lt;/span&gt;&lt;span class="o"&gt;...&lt;/span&gt; &lt;span class="n"&gt;namesAndValues&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_416b9b6934e94aed97935f761bc9887a-2"&gt;&lt;/a&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;String&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;attributeNames&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="nc"&gt;Object&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;a name="rest_code_416b9b6934e94aed97935f761bc9887a-3"&gt;&lt;/a&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;String&lt;/span&gt; &lt;span class="n"&gt;attribute&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="nc"&gt;Object&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;這種寫法Scala在使用的時候會認為是**ambiguous reference to overloaded definition**
 因為當我們使用&lt;/p&gt;
-&lt;pre class="code scala literal-block"&gt;
-&lt;span class="n"&gt;employe&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"name"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;"John"&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;/pre&gt;
-&lt;p&gt;的時候，Scala會覺得符合set(Object... namesAndValues)與set(String attribute,Object Value)。
+&lt;pre class="code scala"&gt;&lt;a name="rest_code_28f347d2cc194a08a362e62dc46d1d64-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;employe&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"name"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;"John"&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;的時候，Scala會覺得符合set(Object... namesAndValues)與set(String attribute,Object Value)。
 不過我覺得這方面Scala蠻合理的，去查了一下似乎也傾向不會去修改這個。(抱頭 Orz)
 如果修改成使用&lt;/p&gt;
-&lt;pre class="code scala literal-block"&gt;
-&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;String&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;attributeNames&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="nc"&gt;Object&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;/pre&gt;
-&lt;p&gt;就不會有問題了 WTF
+&lt;pre class="code scala"&gt;&lt;a name="rest_code_6e30c065bb2b49d9b79e2c0542852811-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="nc"&gt;String&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;attributeNames&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="nc"&gt;Object&lt;/span&gt;&lt;span class="o"&gt;[]&lt;/span&gt; &lt;span class="n"&gt;values&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;p&gt;就不會有問題了 WTF
 另外一個解決方式就是使用setString等指定型態的設定方式，我想這應該是個不錯的解法&lt;/p&gt;
-&lt;pre class="code scala literal-block"&gt;
-&lt;span class="n"&gt;employe&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setString&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"name"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;"John"&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
-&lt;/pre&gt;
-&lt;/div&gt;
+&lt;pre class="code scala"&gt;&lt;a name="rest_code_e720af84d0b8484280a283f737360fd5-1"&gt;&lt;/a&gt;&lt;span class="n"&gt;employe&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setString&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"name"&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;&lt;span class="s"&gt;"John"&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;div class="section" id="id4"&gt;
 &lt;h3&gt;放棄activejdbc&lt;/h3&gt;
 &lt;p&gt;他還有一個instrumentation的步驟，這個步驟我覺得影響太多了，不適合拿來跟Scala一起合用。&lt;/p&gt;

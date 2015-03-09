@@ -22,14 +22,16 @@ MathJax.Hub.Config({
     }
 });
 </script><!--[if lt IE 9]><script src="/assets/js/html5.js"></script><![endif]--><meta name="author" content="Swind">
-<meta name="og:title" content="Golang - Goroutine 筆記 (1)">
-<meta name="og:url" content="http://swind.code-life.info/posts/goroutine-note-1.html">
-<meta name="og:description" content="會想到用這個是由於 EPUBConverter Go 的版本雖然運作上已經比 Scala 版本快上不少了。
+<meta property="og:site_name" content="Corleonis">
+<meta property="og:title" content="Golang - Goroutine 筆記 (1)">
+<meta property="og:url" content="http://swind.code-life.info/posts/goroutine-note-1.html">
+<meta property="og:description" content="會想到用這個是由於 EPUBConverter Go 的版本雖然運作上已經比 Scala 版本快上不少了。
 但我發現在執行的時候 CPU 使用率一直都只有 25 %，所以才想試試看使用 goroutine 看能不能讓他轉換更快一點。
 依照文件所說，在執行 IO 相關動作的時候，會將 CPU 讓給 goroutine 來使用，那麼對於 EPUBConverter 的效能應該會有顯著的提昇。
 雖然有人">
-<meta name="og:site_name" content="Corleonis">
-<meta name="og:type" content="article">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2012-12-09T18:00:00+08:00">
+<meta property="article:tag" content="Go">
 </head>
 <body>
     <section class="social"><ul>
@@ -80,19 +82,16 @@ go func()</blockquote>
 <p>至於要跟 goroutine 的溝通則是使用 channel。</p>
 <p>channel 目前我使用的感覺很像是 java 中的 blocking queue。
 他的宣告方式只要在一般宣告的時候加個 <strong>chan</strong> 的關鍵字就可以了。</p>
-<pre class="code go literal-block">
-<span class="kd">var</span> <span class="nx">count</span> <span class="kd">chan</span> <span class="kt">int</span>
+<pre class="code go"><a name="rest_code_a3bbd64f0d6842389ac34c18c06a533c-1"></a><span class="kd">var</span> <span class="nx">count</span> <span class="kd">chan</span> <span class="kt">int</span>
 </pre>
 <p>這樣就可以透過 &lt;- 賦值與取值</p>
-<pre class="code go literal-block">
-<span class="c1">//將 i assign 給 count
-</span><span class="nx">count</span> <span class="o">&lt;-</span> <span class="nx">i</span>
-<span class="c1">//從 count 取出值
-</span><span class="nx">value</span> <span class="o">:=</span> <span class="o">&lt;-</span> <span class="nx">count</span>
+<pre class="code go"><a name="rest_code_350fffe3f4cf47cfb5de3b03dd0f0bb7-1"></a><span class="c1">//將 i assign 給 count</span>
+<a name="rest_code_350fffe3f4cf47cfb5de3b03dd0f0bb7-2"></a><span class="nx">count</span> <span class="o">&lt;-</span> <span class="nx">i</span>
+<a name="rest_code_350fffe3f4cf47cfb5de3b03dd0f0bb7-3"></a><span class="c1">//從 count 取出值</span>
+<a name="rest_code_350fffe3f4cf47cfb5de3b03dd0f0bb7-4"></a><span class="nx">value</span> <span class="o">:=</span> <span class="o">&lt;-</span> <span class="nx">count</span>
 </pre>
 <p>而要決定 channel 可以放的數量則是可以透過</p>
-<pre class="code go literal-block">
-<span class="nx">count</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<pre class="code go"><a name="rest_code_a51c8edd3f7b42f7b62275a5c6c254ed-1"></a><span class="nx">count</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 </pre>
 <p>的方式來決定。</p>
 <p>以上面的程式碼為例子，當 count 裡面沒有東西時，使用 &lt;- count 會 block 住直到有值寫入。
@@ -103,9 +102,8 @@ go func()</blockquote>
 <p>雖然後來使用了 goroutine 讓每一個 EPUB 電子書的轉換都可以平行處理，
 但是我發現 CPU 使用率卻依然只有 25 %。</p>
 <p>後來才發現是還要再設定 GOMAXPROCS 來讓 Go 知道要用幾個核心。</p>
-<pre class="code go literal-block">
-<span class="c1">//透過 runtime.NumCPU() 取得 CPU 核心數
-</span><span class="nx">runtime</span><span class="p">.</span><span class="nx">GOMAXPROCS</span><span class="p">(</span><span class="nx">runtime</span><span class="p">.</span><span class="nx">NumCPU</span><span class="p">())</span>
+<pre class="code go"><a name="rest_code_866c18c03dec4423977f0afcc133ea9f-1"></a><span class="c1">//透過 runtime.NumCPU() 取得 CPU 核心數</span>
+<a name="rest_code_866c18c03dec4423977f0afcc133ea9f-2"></a><span class="nx">runtime</span><span class="p">.</span><span class="nx">GOMAXPROCS</span><span class="p">(</span><span class="nx">runtime</span><span class="p">.</span><span class="nx">NumCPU</span><span class="p">())</span>
 </pre>
 <p>這樣就終於看得到 CPU 使用率到 100% 了 ...</p>
 </div>
@@ -115,18 +113,17 @@ go func()</blockquote>
 <p>Go 另外一點讓我還蠻喜歡的就是，他的設計非常的實用。
 雖然還沒有很完整，但是一般開發常用的東西他都會幫你想到。
 例如寫在 test case 內的 benchmark。</p>
-<pre class="code go literal-block">
-<span class="kn">package</span> <span class="nx">main</span>
-
-<span class="kn">import</span> <span class="p">(</span>
-        <span class="s">"runtime"</span>
-        <span class="s">"testing"</span>
-<span class="p">)</span>
-
-<span class="kd">func</span> <span class="nx">BenchmarkConvertCore4</span><span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">B</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// 4 代表使用的核心數
-</span>        <span class="nx">executeConvert</span><span class="p">(</span><span class="s">"./testdata"</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-<span class="p">}</span>
+<pre class="code go"><a name="rest_code_83e97c1be3f94b04968b8b0413270fc7-1"></a><span class="kn">package</span> <span class="nx">main</span>
+<a name="rest_code_83e97c1be3f94b04968b8b0413270fc7-2"></a>
+<a name="rest_code_83e97c1be3f94b04968b8b0413270fc7-3"></a><span class="kn">import</span> <span class="p">(</span>
+<a name="rest_code_83e97c1be3f94b04968b8b0413270fc7-4"></a>        <span class="s">"runtime"</span>
+<a name="rest_code_83e97c1be3f94b04968b8b0413270fc7-5"></a>        <span class="s">"testing"</span>
+<a name="rest_code_83e97c1be3f94b04968b8b0413270fc7-6"></a><span class="p">)</span>
+<a name="rest_code_83e97c1be3f94b04968b8b0413270fc7-7"></a>
+<a name="rest_code_83e97c1be3f94b04968b8b0413270fc7-8"></a><span class="kd">func</span> <span class="nx">BenchmarkConvertCore4</span><span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">B</span><span class="p">)</span> <span class="p">{</span>
+<a name="rest_code_83e97c1be3f94b04968b8b0413270fc7-9"></a>        <span class="c1">// 4 代表使用的核心數</span>
+<a name="rest_code_83e97c1be3f94b04968b8b0413270fc7-10"></a>        <span class="nx">executeConvert</span><span class="p">(</span><span class="s">"./testdata"</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<a name="rest_code_83e97c1be3f94b04968b8b0413270fc7-11"></a><span class="p">}</span>
 </pre>
 <p>測試結果</p>
 <p>使用四核心:</p>
@@ -175,7 +172,7 @@ ok      epubconverter   33.673s
     </div>
 
         
-       <script>var disqus_shortname="swindgithub";(function(){var a=document.createElement("script");a.async=true;a.src="//"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><footer id="footer" role="contentinfo"><p>Contents © 2014 <a href="mailto:">Swind</a> - 
+       <script>var disqus_shortname="swindgithub";(function(){var a=document.createElement("script");a.async=true;a.src="//"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><footer id="footer" role="contentinfo"><p>Contents © 2015 <a href="mailto:">Swind</a> - 
 Powered by <a href="http://getnikola.com">Nikola</a> - 
 Zen theme based in <a href="https://github.com/arusahni/website-template">Arusahni's website-template</a><br><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/ar/">
 <img alt="Creative Commons License BY-NC-SA" style="border-width:0; margin-bottom:12px;" src="http://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a></p>

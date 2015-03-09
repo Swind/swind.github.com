@@ -22,17 +22,19 @@ MathJax.Hub.Config({
     }
 });
 </script><!--[if lt IE 9]><script src="/assets/js/html5.js"></script><![endif]--><meta name="author" content="Swind">
-<meta name="og:title" content="自製 Vagrant Box">
-<meta name="og:url" content="http://swind.code-life.info/posts/create-vagrant-box.html">
-<meta name="og:description" content="最近都在使用 Vagrant 以及看在 C.C Agile 中 beelit94 所介紹的 Packer。
+<meta property="og:site_name" content="Corleonis">
+<meta property="og:title" content="自製 Vagrant Box">
+<meta property="og:url" content="http://swind.code-life.info/posts/create-vagrant-box.html">
+<meta property="og:description" content="最近都在使用 Vagrant 以及看在 C.C Agile 中 beelit94 所介紹的 Packer。
 目前是使用 Vagrant 來統一公司同事的測試環境，減少因為環境不同而導致的 bug。
 這邊主要是筆記自己建立 box 時所要設定的內容，主要都是參考 Creating a Custom Vagrant Box 的文章。
 
 
 在 VirtualBox 上安裝系統
 VirtualBox 安裝">
-<meta name="og:site_name" content="Corleonis">
-<meta name="og:type" content="article">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2014-09-25T16:16:25+08:00">
+<meta property="article:tag" content="vagrant">
 </head>
 <body>
     <section class="social"><ul>
@@ -76,78 +78,69 @@ VirtualBox 安裝">
 <div class="section" id="virtualbox">
 <h2>在 VirtualBox 上安裝系統</h2>
 <p>VirtualBox 安裝 Extension Pack</p>
-<pre class="code bash literal-block">
-wget http://download.virtualbox.org/virtualbox/4.3.16/Oracle_VM_VirtualBox_Extension_Pack-4.3.16-95972.vbox-extpack
-VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-4.3.16-95972.vbox-extpack
+<pre class="code bash"><a name="rest_code_fb380f2883c0444bbe57fea6f680f0c7-1"></a>wget http://download.virtualbox.org/virtualbox/4.3.16/Oracle_VM_VirtualBox_Extension_Pack-4.3.16-95972.vbox-extpack
+<a name="rest_code_fb380f2883c0444bbe57fea6f680f0c7-2"></a>VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-4.3.16-95972.vbox-extpack
 </pre>
 <div class="section" id="vagrant">
 <h3>建立 vagrant 帳號</h3>
-<pre class="code bash literal-block">
-useradd -m vagrant
-passwd vagrant
+<pre class="code bash"><a name="rest_code_a5e5b0491c7a4815b099653d8f5c2596-1"></a>useradd -m vagrant
+<a name="rest_code_a5e5b0491c7a4815b099653d8f5c2596-2"></a>passwd vagrant
 </pre>
 </div>
 <div class="section" id="editor-sudoers">
 <h3>修改預設 editor 與 sudoers</h3>
-<pre class="code bash literal-block">
-sudo update-alternatives --config editor
-sudo su -
-visudo
+<pre class="code bash"><a name="rest_code_e9ba109a29c14cb0848619dd0a3e117d-1"></a>sudo update-alternatives --config editor
+<a name="rest_code_e9ba109a29c14cb0848619dd0a3e117d-2"></a>sudo su -
+<a name="rest_code_e9ba109a29c14cb0848619dd0a3e117d-3"></a>visudo
 </pre>
 <p>增加</p>
-<pre class="code literal-block">
-vagrant ALL=(ALL) NOPASSWD:ALL
+<pre class="code text"><a name="rest_code_fae01b651f1d4c1e8cfea3735c452b06-1"></a>vagrant ALL=(ALL) NOPASSWD:ALL
 </pre>
 </div>
 <div class="section" id="vagrant-ssh-key-authorized-keys">
 <h3>增加 Vagrant 的 ssh key 到 authorized_keys</h3>
-<pre class="code bash literal-block">
-mkdir -p /home/vagrant/.ssh
-wget --no-check-certificate https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub -O /home/vagrant/.ssh/authorized_keys
-chmod 0700 /home/vagrant/.ssh
-chmod 0600 /home/vagrant/.ssh/authorized_keys
-chown -R vagrant /home/vagrant/.ssh
+<pre class="code bash"><a name="rest_code_136740bca14145f0920bd0e7c57ed613-1"></a>mkdir -p /home/vagrant/.ssh
+<a name="rest_code_136740bca14145f0920bd0e7c57ed613-2"></a>wget --no-check-certificate https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub -O /home/vagrant/.ssh/authorized_keys
+<a name="rest_code_136740bca14145f0920bd0e7c57ed613-3"></a>chmod <span class="m">0700</span> /home/vagrant/.ssh
+<a name="rest_code_136740bca14145f0920bd0e7c57ed613-4"></a>chmod <span class="m">0600</span> /home/vagrant/.ssh/authorized_keys
+<a name="rest_code_136740bca14145f0920bd0e7c57ed613-5"></a>chown -R vagrant /home/vagrant/.ssh
 </pre>
 </div>
 <div class="section" id="nat-eth0">
 <h3>移除已經存在的網路卡 ( 除了第一個 NAT 的 eth0 之外）</h3>
 <p>錯誤訊息</p>
-<pre class="code literal-block">
-The following SSH command responded with a non-zero exit status.
-Vagrant assumes that this means the command failed!
-
-/sbin/ip addr flush dev eth1 2&gt; /dev/null
-
-Stdout from the command:
-
-
-
-Stderr from the command:
-
-stdin: is not a tty
+<pre class="code text"><a name="rest_code_4ec1859a296f4905a8eaa354c3305ed6-1"></a>The following SSH command responded with a non-zero exit status.
+<a name="rest_code_4ec1859a296f4905a8eaa354c3305ed6-2"></a>Vagrant assumes that this means the command failed!
+<a name="rest_code_4ec1859a296f4905a8eaa354c3305ed6-3"></a>
+<a name="rest_code_4ec1859a296f4905a8eaa354c3305ed6-4"></a>/sbin/ip addr flush dev eth1 2&gt; /dev/null
+<a name="rest_code_4ec1859a296f4905a8eaa354c3305ed6-5"></a>
+<a name="rest_code_4ec1859a296f4905a8eaa354c3305ed6-6"></a>Stdout from the command:
+<a name="rest_code_4ec1859a296f4905a8eaa354c3305ed6-7"></a>
+<a name="rest_code_4ec1859a296f4905a8eaa354c3305ed6-8"></a>
+<a name="rest_code_4ec1859a296f4905a8eaa354c3305ed6-9"></a>
+<a name="rest_code_4ec1859a296f4905a8eaa354c3305ed6-10"></a>Stderr from the command:
+<a name="rest_code_4ec1859a296f4905a8eaa354c3305ed6-11"></a>
+<a name="rest_code_4ec1859a296f4905a8eaa354c3305ed6-12"></a>stdin: is not a tty
 </pre>
 <p>原因是有可能之前有增加過網路卡，所以 eth1 代表那個已經不存在的網路卡。
 導致 vagrant 沒有辦法初始化網路設定</p>
-<pre class="code bash literal-block">
-sudo vim /etc/udev/rules.d/70-persistent-net.rules
+<pre class="code bash"><a name="rest_code_691c52617ea5497186d7c633e98aa4c6-1"></a>sudo vim /etc/udev/rules.d/70-persistent-net.rules
 </pre>
 </div>
 <div class="section" id="virtualbox-guest-additions">
 <h3>安裝 Virtualbox Guest Additions</h3>
 <p>直接到 <a class="reference external" href="http://download.virtualbox.org/virtualbox/">http://download.virtualbox.org/virtualbox/</a> 下載對應版本的 Guest Addition，例如 <cite>VBoxGuestAdditions_4.3.18.iso</cite></p>
-<pre class="code bash literal-block">
-wget http://download.virtualbox.org/virtualbox/4.3.18/VBoxGuestAdditions_4.3.18.iso
-apt-get install dkms gcc
-mount -o loop VBoxGuestAdditions_4.3.18.iso /mnt
-<span class="nb">cd</span> /mnt
-./VBoxLinuxAdditions.run
+<pre class="code bash"><a name="rest_code_cafc0924f0c64eef8248a7904952197b-1"></a>wget http://download.virtualbox.org/virtualbox/4.3.18/VBoxGuestAdditions_4.3.18.iso
+<a name="rest_code_cafc0924f0c64eef8248a7904952197b-2"></a>apt-get install dkms gcc
+<a name="rest_code_cafc0924f0c64eef8248a7904952197b-3"></a>mount -o loop VBoxGuestAdditions_4.3.18.iso /mnt
+<a name="rest_code_cafc0924f0c64eef8248a7904952197b-4"></a><span class="nb">cd</span> /mnt
+<a name="rest_code_cafc0924f0c64eef8248a7904952197b-5"></a>./VBoxLinuxAdditions.run
 </pre>
 </div>
 <div class="section" id="box">
 <h3>打包成 box</h3>
 <p>&lt;vm-name&gt; 的部份需要自己換成 VM 的名稱</p>
-<pre class="code bash literal-block">
-vagrant package --base &lt;vm-name&gt;
+<pre class="code bash"><a name="rest_code_78d45d87e315473b9fa807eeac4d70e1-1"></a>vagrant package --base &lt;vm-name&gt;
 </pre>
 <div class="figure">
 <img alt="https://dl.dropboxusercontent.com/u/15537823/Blog/Lord_Marksman_and_Vanadis.jpg" src="https://dl.dropboxusercontent.com/u/15537823/Blog/Lord_Marksman_and_Vanadis.jpg">
@@ -191,7 +184,7 @@ vagrant package --base &lt;vm-name&gt;
     </div>
 
         
-       <script>var disqus_shortname="swindgithub";(function(){var a=document.createElement("script");a.async=true;a.src="//"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><footer id="footer" role="contentinfo"><p>Contents © 2014 <a href="mailto:">Swind</a> - 
+       <script>var disqus_shortname="swindgithub";(function(){var a=document.createElement("script");a.async=true;a.src="//"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><footer id="footer" role="contentinfo"><p>Contents © 2015 <a href="mailto:">Swind</a> - 
 Powered by <a href="http://getnikola.com">Nikola</a> - 
 Zen theme based in <a href="https://github.com/arusahni/website-template">Arusahni's website-template</a><br><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/ar/">
 <img alt="Creative Commons License BY-NC-SA" style="border-width:0; margin-bottom:12px;" src="http://i.creativecommons.org/l/by-nc-sa/2.5/ar/88x31.png"></a></p>
