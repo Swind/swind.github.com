@@ -5,9 +5,7 @@ branches:
   except:
     - master
 
-cache:
-  directories:
-    - /home/travis/virtualenv/python2.7/
+cache: pip
 
 python:
 - '2.7'
