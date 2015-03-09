@@ -13,6 +13,7 @@ python:
 install:
 - pip install nikola
 - pip install markdown
+- pip install requests 
 
 before_script:
 - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
