@@ -98,24 +98,24 @@ ehcache-core-2.4">
 <div class="section" id="create-table">
 <h3>Create Table</h3>
 <p>Circumflex的設計，主要是在是產生一個對應的資料物件，例如</p>
-<pre class="code scala"><a name="rest_code_133fe713d561479da185e70c184593f5-1"></a><span class="k">class</span> <span class="nc">Country</span> <span class="k">extends</span> <span class="nc">Record</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Country</span><span class="o">]</span> <span class="o">{</span>
-<a name="rest_code_133fe713d561479da185e70c184593f5-2"></a>  <span class="k">val</span> <span class="n">code</span> <span class="k">=</span> <span class="s">"code"</span><span class="o">.</span><span class="nc">VARCHAR</span><span class="o">(</span><span class="mi">2</span><span class="o">).</span><span class="nc">NOT_NULL</span><span class="o">.</span><span class="nc">DEFAULT</span><span class="o">(</span><span class="s">"'ch'"</span><span class="o">)</span>
-<a name="rest_code_133fe713d561479da185e70c184593f5-3"></a>  <span class="k">val</span> <span class="n">name</span> <span class="k">=</span> <span class="s">"name"</span><span class="o">.</span><span class="nc">TEXT</span><span class="o">.</span><span class="nc">NOT_NULL</span>
-<a name="rest_code_133fe713d561479da185e70c184593f5-4"></a>
-<a name="rest_code_133fe713d561479da185e70c184593f5-5"></a>  <span class="k">def</span> <span class="n">cities</span> <span class="k">=</span> <span class="n">inverseMany</span><span class="o">(</span><span class="nc">City</span><span class="o">.</span><span class="n">country</span><span class="o">)</span>
-<a name="rest_code_133fe713d561479da185e70c184593f5-6"></a>  <span class="k">def</span> <span class="n">relation</span> <span class="k">=</span> <span class="nc">Country</span>
-<a name="rest_code_133fe713d561479da185e70c184593f5-7"></a>  <span class="k">def</span> <span class="nc">PRIMARY_KEY</span> <span class="k">=</span> <span class="n">code</span>
-<a name="rest_code_133fe713d561479da185e70c184593f5-8"></a><span class="o">}</span>
-<a name="rest_code_133fe713d561479da185e70c184593f5-9"></a>
-<a name="rest_code_133fe713d561479da185e70c184593f5-10"></a><span class="k">object</span> <span class="nc">Country</span> <span class="k">extends</span> <span class="nc">Country</span> <span class="k">with</span> <span class="nc">Table</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Country</span><span class="o">]</span>
+<pre class="code scala"><a name="rest_code_0bb36d30acb6410784b0bf2624b3aa97-1"></a><span class="k">class</span> <span class="nc">Country</span> <span class="k">extends</span> <span class="nc">Record</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Country</span><span class="o">]</span> <span class="o">{</span>
+<a name="rest_code_0bb36d30acb6410784b0bf2624b3aa97-2"></a>  <span class="k">val</span> <span class="n">code</span> <span class="k">=</span> <span class="s">"code"</span><span class="o">.</span><span class="nc">VARCHAR</span><span class="o">(</span><span class="mi">2</span><span class="o">).</span><span class="nc">NOT_NULL</span><span class="o">.</span><span class="nc">DEFAULT</span><span class="o">(</span><span class="s">"'ch'"</span><span class="o">)</span>
+<a name="rest_code_0bb36d30acb6410784b0bf2624b3aa97-3"></a>  <span class="k">val</span> <span class="n">name</span> <span class="k">=</span> <span class="s">"name"</span><span class="o">.</span><span class="nc">TEXT</span><span class="o">.</span><span class="nc">NOT_NULL</span>
+<a name="rest_code_0bb36d30acb6410784b0bf2624b3aa97-4"></a>
+<a name="rest_code_0bb36d30acb6410784b0bf2624b3aa97-5"></a>  <span class="k">def</span> <span class="n">cities</span> <span class="k">=</span> <span class="n">inverseMany</span><span class="o">(</span><span class="nc">City</span><span class="o">.</span><span class="n">country</span><span class="o">)</span>
+<a name="rest_code_0bb36d30acb6410784b0bf2624b3aa97-6"></a>  <span class="k">def</span> <span class="n">relation</span> <span class="k">=</span> <span class="nc">Country</span>
+<a name="rest_code_0bb36d30acb6410784b0bf2624b3aa97-7"></a>  <span class="k">def</span> <span class="nc">PRIMARY_KEY</span> <span class="k">=</span> <span class="n">code</span>
+<a name="rest_code_0bb36d30acb6410784b0bf2624b3aa97-8"></a><span class="o">}</span>
+<a name="rest_code_0bb36d30acb6410784b0bf2624b3aa97-9"></a>
+<a name="rest_code_0bb36d30acb6410784b0bf2624b3aa97-10"></a><span class="k">object</span> <span class="nc">Country</span> <span class="k">extends</span> <span class="nc">Country</span> <span class="k">with</span> <span class="nc">Table</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Country</span><span class="o">]</span>
 </pre>
 <p>其中class與object兩者皆為必要的，但是在object Country的繼承型態宣告，連續繼承了Country與Table。
 我覺得這部分會讓人有點困惑為何需要如此處理，但是這還是其次的。</p>
 <p>在建立好資料物件之後，就可以利用此資料物件Create Table。</p>
-<pre class="code scala"><a name="rest_code_a3b734b0569b471dbff0549ad52dea7f-1"></a><span class="k">val</span> <span class="n">ddl</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">DDLUnit</span><span class="o">(</span><span class="nc">Country</span><span class="o">)</span>
-<a name="rest_code_a3b734b0569b471dbff0549ad52dea7f-2"></a><span class="n">ddl</span><span class="o">.</span><span class="nc">CREATE</span>
-<a name="rest_code_a3b734b0569b471dbff0549ad52dea7f-3"></a><span class="n">ddl</span><span class="o">.</span><span class="nc">DROP</span>
-<a name="rest_code_a3b734b0569b471dbff0549ad52dea7f-4"></a><span class="n">ddl</span><span class="o">.</span><span class="nc">DROP_CREATE</span>
+<pre class="code scala"><a name="rest_code_4da5589b7ead4e31bc06759e1fea60b4-1"></a><span class="k">val</span> <span class="n">ddl</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">DDLUnit</span><span class="o">(</span><span class="nc">Country</span><span class="o">)</span>
+<a name="rest_code_4da5589b7ead4e31bc06759e1fea60b4-2"></a><span class="n">ddl</span><span class="o">.</span><span class="nc">CREATE</span>
+<a name="rest_code_4da5589b7ead4e31bc06759e1fea60b4-3"></a><span class="n">ddl</span><span class="o">.</span><span class="nc">DROP</span>
+<a name="rest_code_4da5589b7ead4e31bc06759e1fea60b4-4"></a><span class="n">ddl</span><span class="o">.</span><span class="nc">DROP_CREATE</span>
 </pre>
 <p>建立Table的部分非常方便。</p>
 </div>
@@ -123,13 +123,13 @@ ehcache-core-2.4">
 <h3>讓我不會用的Association</h3>
 <p>關聯式資料庫的架構非常常見，不管是One-to-One、One-to-Many等結構，我的小程式也很需要這方面功能的支持。
 Circumflex的設定方式是將變數宣告成inverseMany或inverseOne的型態，他目前沒有支援Many-to-Many。</p>
-<pre class="code scala"><a name="rest_code_ea8f7fef245341d69f610377fc9c896b-1"></a><span class="k">class</span> <span class="nc">City</span> <span class="k">extends</span> <span class="nc">Record</span><span class="o">[</span><span class="kt">Long</span>, <span class="kt">City</span><span class="o">]</span> <span class="o">{</span>
-<a name="rest_code_ea8f7fef245341d69f610377fc9c896b-2"></a>  <span class="k">val</span> <span class="n">country</span> <span class="k">=</span> <span class="s">"country_code"</span><span class="o">.</span><span class="nc">TEXT</span><span class="o">.</span><span class="nc">REFERENCES</span><span class="o">(</span><span class="nc">Country</span><span class="o">).</span><span class="nc">ON_DELETE</span><span class="o">(</span><span class="nc">CASCADE</span><span class="o">).</span><span class="nc">ON_UPDATE</span><span class="o">(</span><span class="nc">NO_ACTION</span><span class="o">)</span>
-<a name="rest_code_ea8f7fef245341d69f610377fc9c896b-3"></a><span class="o">}</span>
-<a name="rest_code_ea8f7fef245341d69f610377fc9c896b-4"></a>
-<a name="rest_code_ea8f7fef245341d69f610377fc9c896b-5"></a><span class="k">class</span> <span class="nc">Country</span> <span class="k">extends</span> <span class="nc">Record</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Country</span><span class="o">]</span> <span class="o">{</span>
-<a name="rest_code_ea8f7fef245341d69f610377fc9c896b-6"></a>  <span class="k">def</span> <span class="n">cities</span> <span class="k">=</span> <span class="n">inverseMany</span><span class="o">(</span><span class="nc">City</span><span class="o">.</span><span class="n">country</span><span class="o">)</span>
-<a name="rest_code_ea8f7fef245341d69f610377fc9c896b-7"></a><span class="o">}</span>
+<pre class="code scala"><a name="rest_code_3201c54491214a6faedd5961d134196d-1"></a><span class="k">class</span> <span class="nc">City</span> <span class="k">extends</span> <span class="nc">Record</span><span class="o">[</span><span class="kt">Long</span>, <span class="kt">City</span><span class="o">]</span> <span class="o">{</span>
+<a name="rest_code_3201c54491214a6faedd5961d134196d-2"></a>  <span class="k">val</span> <span class="n">country</span> <span class="k">=</span> <span class="s">"country_code"</span><span class="o">.</span><span class="nc">TEXT</span><span class="o">.</span><span class="nc">REFERENCES</span><span class="o">(</span><span class="nc">Country</span><span class="o">).</span><span class="nc">ON_DELETE</span><span class="o">(</span><span class="nc">CASCADE</span><span class="o">).</span><span class="nc">ON_UPDATE</span><span class="o">(</span><span class="nc">NO_ACTION</span><span class="o">)</span>
+<a name="rest_code_3201c54491214a6faedd5961d134196d-3"></a><span class="o">}</span>
+<a name="rest_code_3201c54491214a6faedd5961d134196d-4"></a>
+<a name="rest_code_3201c54491214a6faedd5961d134196d-5"></a><span class="k">class</span> <span class="nc">Country</span> <span class="k">extends</span> <span class="nc">Record</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Country</span><span class="o">]</span> <span class="o">{</span>
+<a name="rest_code_3201c54491214a6faedd5961d134196d-6"></a>  <span class="k">def</span> <span class="n">cities</span> <span class="k">=</span> <span class="n">inverseMany</span><span class="o">(</span><span class="nc">City</span><span class="o">.</span><span class="n">country</span><span class="o">)</span>
+<a name="rest_code_3201c54491214a6faedd5961d134196d-7"></a><span class="o">}</span>
 </pre>
 <p>inverseMany會回傳一個inverseMany的物件，呼叫inverseMany.get之後可以得到一個seq的物件。這個物件是immutable的
 ，因此你沒有辦法插入資料。所以我想像中的使用方式是Country與City兩個都是各自去儲存的，
@@ -164,26 +164,26 @@ Circumflex的設定方式是將變數宣告成inverseMany或inverseOne的型態�
 <p>寫Model的時候最主要要注意物件的名稱，如果你的Table名稱是"employees"這種複數名詞，那麼你的Model名稱就應該為"employee"。
 activejdbc會自動對應複數名詞的Table與單數名詞的Model。(不知道對於es之類的這種變化他是不是也可以處理)。
 當然如果有需要的話，也可以使用**@Table**來指定Table名稱。</p>
-<pre class="code scala"><a name="rest_code_5f6a50a41b1148c1abdd7c856ed11b19-1"></a><span class="nd">@Table</span><span class="o">(</span><span class="s">"TABLE_NAME"</span><span class="o">)</span>
-<a name="rest_code_5f6a50a41b1148c1abdd7c856ed11b19-2"></a><span class="k">class</span> <span class="nc">employe</span> <span class="k">extends</span> <span class="nc">Model</span><span class="o">{}</span>
+<pre class="code scala"><a name="rest_code_9cde9a12836142d99f51461fe9d6e9b6-1"></a><span class="nd">@Table</span><span class="o">(</span><span class="s">"TABLE_NAME"</span><span class="o">)</span>
+<a name="rest_code_9cde9a12836142d99f51461fe9d6e9b6-2"></a><span class="k">class</span> <span class="nc">employe</span> <span class="k">extends</span> <span class="nc">Model</span><span class="o">{}</span>
 </pre>
 <p>P.S 幹悲劇了，由於activejdbc裡面的Model的set有三種傳值方式。</p>
-<pre class="code scala"><a name="rest_code_416b9b6934e94aed97935f761bc9887a-1"></a><span class="n">set</span><span class="o">(</span><span class="nc">Object</span><span class="o">...</span> <span class="n">namesAndValues</span><span class="o">)</span>
-<a name="rest_code_416b9b6934e94aed97935f761bc9887a-2"></a><span class="n">set</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">attributeNames</span><span class="o">,</span><span class="nc">Object</span><span class="o">[]</span> <span class="n">values</span><span class="o">)</span>
-<a name="rest_code_416b9b6934e94aed97935f761bc9887a-3"></a><span class="n">set</span><span class="o">(</span><span class="nc">String</span> <span class="n">attribute</span><span class="o">,</span><span class="nc">Object</span> <span class="n">value</span><span class="o">)</span>
+<pre class="code scala"><a name="rest_code_d2534968ba5a41b7822967a315ba0b43-1"></a><span class="n">set</span><span class="o">(</span><span class="nc">Object</span><span class="o">...</span> <span class="n">namesAndValues</span><span class="o">)</span>
+<a name="rest_code_d2534968ba5a41b7822967a315ba0b43-2"></a><span class="n">set</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">attributeNames</span><span class="o">,</span><span class="nc">Object</span><span class="o">[]</span> <span class="n">values</span><span class="o">)</span>
+<a name="rest_code_d2534968ba5a41b7822967a315ba0b43-3"></a><span class="n">set</span><span class="o">(</span><span class="nc">String</span> <span class="n">attribute</span><span class="o">,</span><span class="nc">Object</span> <span class="n">value</span><span class="o">)</span>
 </pre>
 <p>這種寫法Scala在使用的時候會認為是**ambiguous reference to overloaded definition**
 因為當我們使用</p>
-<pre class="code scala"><a name="rest_code_28f347d2cc194a08a362e62dc46d1d64-1"></a><span class="n">employe</span><span class="o">.</span><span class="n">set</span><span class="o">(</span><span class="s">"name"</span><span class="o">,</span><span class="s">"John"</span><span class="o">)</span>
+<pre class="code scala"><a name="rest_code_0d7ae01fd904412982c49d388d576981-1"></a><span class="n">employe</span><span class="o">.</span><span class="n">set</span><span class="o">(</span><span class="s">"name"</span><span class="o">,</span><span class="s">"John"</span><span class="o">)</span>
 </pre>
 <p>的時候，Scala會覺得符合set(Object... namesAndValues)與set(String attribute,Object Value)。
 不過我覺得這方面Scala蠻合理的，去查了一下似乎也傾向不會去修改這個。(抱頭 Orz)
 如果修改成使用</p>
-<pre class="code scala"><a name="rest_code_6e30c065bb2b49d9b79e2c0542852811-1"></a><span class="n">set</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">attributeNames</span><span class="o">,</span><span class="nc">Object</span><span class="o">[]</span> <span class="n">values</span><span class="o">)</span>
+<pre class="code scala"><a name="rest_code_baeb921cf5e248efb8f857634f4acd00-1"></a><span class="n">set</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">attributeNames</span><span class="o">,</span><span class="nc">Object</span><span class="o">[]</span> <span class="n">values</span><span class="o">)</span>
 </pre>
 <p>就不會有問題了 WTF
 另外一個解決方式就是使用setString等指定型態的設定方式，我想這應該是個不錯的解法</p>
-<pre class="code scala"><a name="rest_code_e720af84d0b8484280a283f737360fd5-1"></a><span class="n">employe</span><span class="o">.</span><span class="n">setString</span><span class="o">(</span><span class="s">"name"</span><span class="o">,</span><span class="s">"John"</span><span class="o">)</span>
+<pre class="code scala"><a name="rest_code_e1fb7e0714a5496cbe4392b9c4ce6e62-1"></a><span class="n">employe</span><span class="o">.</span><span class="n">setString</span><span class="o">(</span><span class="s">"name"</span><span class="o">,</span><span class="s">"John"</span><span class="o">)</span>
 </pre>
 </div>
 <div class="section" id="id4">

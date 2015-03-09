@@ -76,35 +76,35 @@ MathJax.Hub.Config({
 <h2>建立 symbolic link</h2>
 <p>目前有一個需求是要建立 symbolic link 在某些特定的資料夾裡面。
 由於 autotools 是可以直接使用 script 的語法，所以建立起來非常簡單。</p>
-<pre class="code bash"><a name="rest_code_31a09d98588b4e2bb5b22bc98714d9d0-1"></a>install-exec-hook:
-<a name="rest_code_31a09d98588b4e2bb5b22bc98714d9d0-2"></a>     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path1
-<a name="rest_code_31a09d98588b4e2bb5b22bc98714d9d0-3"></a>     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path2
-<a name="rest_code_31a09d98588b4e2bb5b22bc98714d9d0-4"></a>     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path3
-<a name="rest_code_31a09d98588b4e2bb5b22bc98714d9d0-5"></a>     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path4
-<a name="rest_code_31a09d98588b4e2bb5b22bc98714d9d0-6"></a>     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path5
+<pre class="code bash"><a name="rest_code_a292467a60fd48a88c3579527e56db99-1"></a>install-exec-hook:
+<a name="rest_code_a292467a60fd48a88c3579527e56db99-2"></a>     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path1
+<a name="rest_code_a292467a60fd48a88c3579527e56db99-3"></a>     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path2
+<a name="rest_code_a292467a60fd48a88c3579527e56db99-4"></a>     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path3
+<a name="rest_code_a292467a60fd48a88c3579527e56db99-5"></a>     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path4
+<a name="rest_code_a292467a60fd48a88c3579527e56db99-6"></a>     ln -fs <span class="k">$(</span>source_prefix<span class="k">)</span>/a <span class="k">$(</span>target_prefix<span class="k">)</span>/path5
 </pre>
 <p>這樣只要直接呼叫 make install-exec-hook 就可以建立 symbolic link 了。
 但是如果要在 CMake 裡面作到一樣的事情要怎麼處理呢？</p>
-<pre class="code cmake"><a name="rest_code_d5d9eb342ecf46a398a50808a10a65c0-1"></a><span class="nb">Set</span><span class="p">(</span><span class="s">targets</span>
-<a name="rest_code_d5d9eb342ecf46a398a50808a10a65c0-2"></a>    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path1</span>
-<a name="rest_code_d5d9eb342ecf46a398a50808a10a65c0-3"></a>    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path2</span>
-<a name="rest_code_d5d9eb342ecf46a398a50808a10a65c0-4"></a>    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path3</span>
-<a name="rest_code_d5d9eb342ecf46a398a50808a10a65c0-5"></a>    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path4</span>
-<a name="rest_code_d5d9eb342ecf46a398a50808a10a65c0-6"></a>    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path5</span>
-<a name="rest_code_d5d9eb342ecf46a398a50808a10a65c0-7"></a><span class="p">)</span>
-<a name="rest_code_d5d9eb342ecf46a398a50808a10a65c0-8"></a>
-<a name="rest_code_d5d9eb342ecf46a398a50808a10a65c0-9"></a><span class="nb">Function</span><span class="p">(</span><span class="s">Create_symbolic_link</span> <span class="s">source</span> <span class="s">target</span><span class="p">)</span>
-<a name="rest_code_d5d9eb342ecf46a398a50808a10a65c0-10"></a>    <span class="nb">Add_custom_command</span><span class="p">(</span>
-<a name="rest_code_d5d9eb342ecf46a398a50808a10a65c0-11"></a>        <span class="s">OUTPUT</span> <span class="o">${</span><span class="nv">target</span><span class="o">}</span>
-<a name="rest_code_d5d9eb342ecf46a398a50808a10a65c0-12"></a>        <span class="s">COMMAND</span> <span class="s">ln</span> <span class="s">-fs</span> <span class="o">${</span><span class="nv">source</span><span class="o">}</span> <span class="o">${</span><span class="nv">target</span><span class="o">}</span>
-<a name="rest_code_d5d9eb342ecf46a398a50808a10a65c0-13"></a>    <span class="p">)</span>
-<a name="rest_code_d5d9eb342ecf46a398a50808a10a65c0-14"></a><span class="nb">Endfunction</span><span class="p">()</span>
-<a name="rest_code_d5d9eb342ecf46a398a50808a10a65c0-15"></a>
-<a name="rest_code_d5d9eb342ecf46a398a50808a10a65c0-16"></a><span class="nb">Foreach</span><span class="p">(</span><span class="s">target</span> <span class="s">targets</span><span class="p">)</span>
-<a name="rest_code_d5d9eb342ecf46a398a50808a10a65c0-17"></a>   <span class="nb">Create_symbolic_link</span><span class="p">(</span><span class="o">${</span><span class="nv">source_prefix</span><span class="o">}</span><span class="s">/a</span> <span class="o">${</span><span class="nv">target</span><span class="o">}</span><span class="p">)</span>
-<a name="rest_code_d5d9eb342ecf46a398a50808a10a65c0-18"></a><span class="nb">Endforeach</span><span class="p">()</span>
-<a name="rest_code_d5d9eb342ecf46a398a50808a10a65c0-19"></a>
-<a name="rest_code_d5d9eb342ecf46a398a50808a10a65c0-20"></a><span class="nb">Add_custom_target</span><span class="p">(</span><span class="s">install-exec-hook</span> <span class="s">DEPENDS</span> <span class="o">${</span><span class="nv">targets</span><span class="o">}</span><span class="p">)</span>
+<pre class="code cmake"><a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-1"></a><span class="nb">Set</span><span class="p">(</span><span class="s">targets</span>
+<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-2"></a>    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path1</span>
+<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-3"></a>    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path2</span>
+<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-4"></a>    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path3</span>
+<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-5"></a>    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path4</span>
+<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-6"></a>    <span class="o">${</span><span class="nv">target_prefix</span><span class="o">}</span><span class="s">/path5</span>
+<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-7"></a><span class="p">)</span>
+<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-8"></a>
+<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-9"></a><span class="nb">Function</span><span class="p">(</span><span class="s">Create_symbolic_link</span> <span class="s">source</span> <span class="s">target</span><span class="p">)</span>
+<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-10"></a>    <span class="nb">Add_custom_command</span><span class="p">(</span>
+<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-11"></a>        <span class="s">OUTPUT</span> <span class="o">${</span><span class="nv">target</span><span class="o">}</span>
+<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-12"></a>        <span class="s">COMMAND</span> <span class="s">ln</span> <span class="s">-fs</span> <span class="o">${</span><span class="nv">source</span><span class="o">}</span> <span class="o">${</span><span class="nv">target</span><span class="o">}</span>
+<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-13"></a>    <span class="p">)</span>
+<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-14"></a><span class="nb">Endfunction</span><span class="p">()</span>
+<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-15"></a>
+<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-16"></a><span class="nb">Foreach</span><span class="p">(</span><span class="s">target</span> <span class="s">targets</span><span class="p">)</span>
+<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-17"></a>   <span class="nb">Create_symbolic_link</span><span class="p">(</span><span class="o">${</span><span class="nv">source_prefix</span><span class="o">}</span><span class="s">/a</span> <span class="o">${</span><span class="nv">target</span><span class="o">}</span><span class="p">)</span>
+<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-18"></a><span class="nb">Endforeach</span><span class="p">()</span>
+<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-19"></a>
+<a name="rest_code_754eba315c2a4cdea3523fa7ee5335b7-20"></a><span class="nb">Add_custom_target</span><span class="p">(</span><span class="s">install-exec-hook</span> <span class="s">DEPENDS</span> <span class="o">${</span><span class="nv">targets</span><span class="o">}</span><span class="p">)</span>
 </pre>
 <p>因為 CMake 裡面沒有辦法像 shell script 一樣直接下指令，必須透過 Add_custom_command 或者是 Execute_process 等方式執行。
 但是若又要跟 Target 建立相依性的話，似乎就一定得靠 Add_custom_command，因為他會設定一個 output file。

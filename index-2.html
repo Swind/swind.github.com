@@ -77,7 +77,7 @@ MathJax.Hub.Config({
 ( 如果有人有知道其他執行方式的話請跟我說 m(_ _)m )</p>
 <p>一開始我很天真的覺得改成 nikola.py 就沒有問題了，但是在執行中 import 會出問題，因為 nikola 這個名字重複了 Orz。
 所以最後是多寫一個 nikola.bat</p>
-<pre class="code bash"><a name="rest_code_5d5e108111d4418cbf0359dbd5ac6323-1"></a>C:<span class="se">\P</span>ython27<span class="se">\p</span>ython.exe C:<span class="se">\P</span>ython27<span class="se">\S</span>cripts<span class="se">\n</span>ikola %1 %2 %3 %4
+<pre class="code bash"><a name="rest_code_d66f295fbb2e48abb12c7e22c83fdd2d-1"></a>C:<span class="se">\P</span>ython27<span class="se">\p</span>ython.exe C:<span class="se">\P</span>ython27<span class="se">\S</span>cripts<span class="se">\n</span>ikola %1 %2 %3 %4
 </pre>
 <p>放在 Scripts 資料夾底下，來解決這個問題。</p>
 <p>上面的 Script 因為我找不到 Windows 裡面代表所有傳入參數的符號，
@@ -121,7 +121,7 @@ MathJax.Hub.Config({
 我最後也從 pathogen.vim 叛逃，使用 github + shell script + vundle 來完成我 zsh、tmux 與 vim 的設定。</p>
 <p>關於 vundle 的使用方式與設定我是參考 <a class="reference external" href="http://yishanhe.net/using-vim-vundle-for-better-plugin-management/">使用Vundle更好的管理你的Vim插件</a> 雖然是簡體的。不過設定與使用方式都寫得非常詳細。</p>
 <p>經過一個早上的努力，我也終於可以使用</p>
-<pre class="code bash"><a name="rest_code_0429346a650b4c4ca67a709dc6150c39-1"></a>wget -O - https://raw.github.com/Swind/linux-config/master/install.sh <span class="p">|</span> sh
+<pre class="code bash"><a name="rest_code_ebe8b7b0a68441149bbe0049291b8d40-1"></a>wget -O - https://raw.github.com/Swind/linux-config/master/install.sh <span class="p">|</span> sh
 </pre>
 <p>把 Linux 給設定完畢了～</p>
 <p><strong>2013.02.08 update</strong></p>
@@ -132,7 +132,7 @@ To connect to raw.github.com insecurely, use ‘--no-check-certificate’.
 </pre>
 <p>的錯誤訊息，目前我還沒有很仔細的去找原因。</p>
 <p>不過如他所敘述的，加入 --no-check-certificate 就沒有問題了。</p>
-<pre class="code bash"><a name="rest_code_88a20dc100b54f658ccb109d6496ba50-1"></a>wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/master/install.sh <span class="p">|</span> sh
+<pre class="code bash"><a name="rest_code_03b7abfb9aec427584558bf027b981c3-1"></a>wget --no-check-certificate -O - https://raw.github.com/Swind/linux-config/master/install.sh <span class="p">|</span> sh
 </pre>
 <p>除此之外 JosephJ 所給的建議也非常的實用，
 將常用的工具與指令整理成一份文件，來協助管理與記憶。
@@ -279,16 +279,16 @@ To connect to raw.github.com insecurely, use ‘--no-check-certificate’.
 先是 Exception Handling 做的不夠好，結果就真的是 "Let it Crash" 一直死一直死一直死，好像在玩 D3 的煉獄模式一樣。</p>
 <p>再來是我沒有去設定 Dispatcher 所以 Thread 用了十幾個。如果我沒有看錯的話，依照 Akka <a class="reference external" href="https://github.com/akka/akka/blob/master/akka-actor/src/main/resources/reference.conf">reference.conf</a> 的設定，
 Default Dispatcher 使用 fork-join-executor，他的預設設定如下</p>
-<pre class="code scala"><a name="rest_code_e311a8e2d18f40929f8c315df9732748-1"></a><span class="n">fork</span><span class="o">-</span><span class="n">join</span><span class="o">-</span><span class="n">executor</span> <span class="o">{</span>
-<a name="rest_code_e311a8e2d18f40929f8c315df9732748-2"></a>  <span class="k">#</span> <span class="nc">Min</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span> <span class="n">to</span> <span class="n">cap</span> <span class="n">factor</span><span class="o">-</span><span class="n">based</span> <span class="n">parallelism</span> <span class="n">number</span> <span class="n">to</span>
-<a name="rest_code_e311a8e2d18f40929f8c315df9732748-3"></a>  <span class="n">parallelism</span><span class="o">-</span><span class="n">min</span> <span class="k">=</span> <span class="mi">8</span>
-<a name="rest_code_e311a8e2d18f40929f8c315df9732748-4"></a>
-<a name="rest_code_e311a8e2d18f40929f8c315df9732748-5"></a>  <span class="k">#</span> <span class="nc">Parallelism</span> <span class="o">(</span><span class="n">threads</span><span class="o">)</span> <span class="o">...</span> <span class="n">ceil</span><span class="o">(</span><span class="n">available</span> <span class="n">processors</span> <span class="o">*</span> <span class="n">factor</span><span class="o">)</span>
-<a name="rest_code_e311a8e2d18f40929f8c315df9732748-6"></a>  <span class="n">parallelism</span><span class="o">-</span><span class="n">factor</span> <span class="k">=</span> <span class="mf">3.0</span>
-<a name="rest_code_e311a8e2d18f40929f8c315df9732748-7"></a>
-<a name="rest_code_e311a8e2d18f40929f8c315df9732748-8"></a>  <span class="k">#</span> <span class="nc">Max</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span> <span class="n">to</span> <span class="n">cap</span> <span class="n">factor</span><span class="o">-</span><span class="n">based</span> <span class="n">parallelism</span> <span class="n">number</span> <span class="n">to</span>
-<a name="rest_code_e311a8e2d18f40929f8c315df9732748-9"></a>  <span class="n">parallelism</span><span class="o">-</span><span class="n">max</span> <span class="k">=</span> <span class="mi">64</span>
-<a name="rest_code_e311a8e2d18f40929f8c315df9732748-10"></a><span class="o">}</span>
+<pre class="code scala"><a name="rest_code_660720e66c75433e8c653e31d3c309fe-1"></a><span class="n">fork</span><span class="o">-</span><span class="n">join</span><span class="o">-</span><span class="n">executor</span> <span class="o">{</span>
+<a name="rest_code_660720e66c75433e8c653e31d3c309fe-2"></a>  <span class="k">#</span> <span class="nc">Min</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span> <span class="n">to</span> <span class="n">cap</span> <span class="n">factor</span><span class="o">-</span><span class="n">based</span> <span class="n">parallelism</span> <span class="n">number</span> <span class="n">to</span>
+<a name="rest_code_660720e66c75433e8c653e31d3c309fe-3"></a>  <span class="n">parallelism</span><span class="o">-</span><span class="n">min</span> <span class="k">=</span> <span class="mi">8</span>
+<a name="rest_code_660720e66c75433e8c653e31d3c309fe-4"></a>
+<a name="rest_code_660720e66c75433e8c653e31d3c309fe-5"></a>  <span class="k">#</span> <span class="nc">Parallelism</span> <span class="o">(</span><span class="n">threads</span><span class="o">)</span> <span class="o">...</span> <span class="n">ceil</span><span class="o">(</span><span class="n">available</span> <span class="n">processors</span> <span class="o">*</span> <span class="n">factor</span><span class="o">)</span>
+<a name="rest_code_660720e66c75433e8c653e31d3c309fe-6"></a>  <span class="n">parallelism</span><span class="o">-</span><span class="n">factor</span> <span class="k">=</span> <span class="mf">3.0</span>
+<a name="rest_code_660720e66c75433e8c653e31d3c309fe-7"></a>
+<a name="rest_code_660720e66c75433e8c653e31d3c309fe-8"></a>  <span class="k">#</span> <span class="nc">Max</span> <span class="n">number</span> <span class="n">of</span> <span class="n">threads</span> <span class="n">to</span> <span class="n">cap</span> <span class="n">factor</span><span class="o">-</span><span class="n">based</span> <span class="n">parallelism</span> <span class="n">number</span> <span class="n">to</span>
+<a name="rest_code_660720e66c75433e8c653e31d3c309fe-9"></a>  <span class="n">parallelism</span><span class="o">-</span><span class="n">max</span> <span class="k">=</span> <span class="mi">64</span>
+<a name="rest_code_660720e66c75433e8c653e31d3c309fe-10"></a><span class="o">}</span>
 </pre>
 <p>很簡單的 parallelism-min 與 parallelism-max 的值代表著 Thread 的上下限，那麼 parallelism_factor 呢？</p>
 <p>他同樣也是限制 Thread 的上限，上限的計算方式為</p>

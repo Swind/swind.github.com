@@ -84,69 +84,69 @@ Orz 而且我受夠了手動測試的生活">
 一般都是透過 ioctl 在進行，最早也有想過使用 Python 的 ioctl 來作。
 但是 ioctl 的資料結構全部都定義在 .h 檔裡面，如果使用 Python 我就勢必要將這些資料結構作轉換。
 所以我最後選擇第二條路，讓 Python 呼叫 C function。</p>
-<pre class="code c"><a name="rest_code_dee792ee63a2492b9cb179658a157d42-1"></a><span class="cp">#include &lt;inttypes.h&gt;</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-2"></a><span class="cp">#include &lt;unistd.h&gt;</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-3"></a><span class="cp">#include &lt;fcntl.h&gt;</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-4"></a><span class="cp">#include &lt;stdio.h&gt;</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-5"></a><span class="cp">#include &lt;string.h&gt;</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-6"></a><span class="cp">#include &lt;errno.h&gt;</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-7"></a><span class="cp">#include &lt;sys/ioctl.h&gt;</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-8"></a><span class="cp">#include &lt;scsi/sg.h&gt; </span><span class="cm">/* take care: fetches glibc's /usr/include/scsi/sg.h */</span><span class="cp"></span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-9"></a>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-10"></a>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-11"></a><span class="kt">int</span> <span class="nf">execute_scsi_command</span><span class="p">(</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-12"></a>        <span class="kt">int</span> <span class="n">fd</span><span class="p">,</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-13"></a>        <span class="kt">int</span> <span class="n">cmd_size</span><span class="p">,</span>   <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">cmd_buffer</span><span class="p">,</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-14"></a>        <span class="kt">int</span> <span class="n">out_size</span><span class="p">,</span>   <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">out_buffer</span><span class="p">,</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-15"></a>        <span class="kt">int</span> <span class="n">sense_size</span><span class="p">,</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">sense_buffer</span><span class="p">)</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-16"></a><span class="p">{</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-17"></a>    <span class="kt">sg_io_hdr_t</span> <span class="n">io_hdr</span><span class="p">;</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-18"></a>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-19"></a>    <span class="c1">//Prepare SCSI Command</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-20"></a>    <span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">io_hdr</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">sg_io_hdr_t</span><span class="p">));</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-21"></a>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-22"></a>    <span class="n">io_hdr</span><span class="p">.</span><span class="n">interface_id</span> <span class="o">=</span> <span class="sc">'S'</span><span class="p">;</span> <span class="c1">//required</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-23"></a>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-24"></a>    <span class="n">io_hdr</span><span class="p">.</span><span class="n">cmd_len</span> <span class="o">=</span> <span class="n">cmd_size</span><span class="p">;</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-25"></a>    <span class="n">io_hdr</span><span class="p">.</span><span class="n">mx_sb_len</span> <span class="o">=</span> <span class="n">sense_size</span><span class="p">;</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-26"></a>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-27"></a>    <span class="cm">/*</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-28"></a><span class="cm">     *  SG_DXFER_NONE   -   SCSI Test Unit Ready command</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-29"></a><span class="cm">     *  SG_DXFER_TO_DEV -   SCSI WRITE command</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-30"></a><span class="cm">     *  SG_DXFER_FROM_DEV - SCSI READ command</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-31"></a><span class="cm">     */</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-32"></a>    <span class="n">io_hdr</span><span class="p">.</span><span class="n">dxfer_direction</span> <span class="o">=</span> <span class="n">SG_DXFER_FROM_DEV</span><span class="p">;</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-33"></a>    <span class="n">io_hdr</span><span class="p">.</span><span class="n">dxfer_len</span>       <span class="o">=</span> <span class="n">out_size</span><span class="p">;</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-34"></a>    <span class="n">io_hdr</span><span class="p">.</span><span class="n">dxferp</span>          <span class="o">=</span> <span class="n">out_buffer</span><span class="p">;</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-35"></a>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-36"></a>    <span class="n">io_hdr</span><span class="p">.</span><span class="n">cmdp</span> <span class="o">=</span> <span class="n">cmd_buffer</span><span class="p">;</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-37"></a>    <span class="n">io_hdr</span><span class="p">.</span><span class="n">sbp</span>  <span class="o">=</span> <span class="n">sense_buffer</span><span class="p">;</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-38"></a>    <span class="n">io_hdr</span><span class="p">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="mi">20000</span><span class="p">;</span> <span class="c1">// 20000 millisecs = 20 seconds</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-39"></a>    <span class="cm">/* io_hdr.flags = 0; */</span>     <span class="cm">/* take defaults: indirect IO, etc */</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-40"></a>    <span class="cm">/* io_hdr.pack_id = 0; */</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-41"></a>    <span class="cm">/* io_hdr.usr_ptr = NULL; */</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-42"></a>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-43"></a>    <span class="k">if</span> <span class="p">(</span><span class="n">ioctl</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">SG_IO</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">io_hdr</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-44"></a>        <span class="n">perror</span><span class="p">(</span><span class="s">"sg_simple0: Inquiry SG_IO ioctl error"</span><span class="p">);</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-45"></a>        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-46"></a>    <span class="p">}</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-47"></a>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-48"></a>    <span class="k">return</span> <span class="n">io_hdr</span><span class="p">.</span><span class="n">resid</span><span class="p">;</span>
-<a name="rest_code_dee792ee63a2492b9cb179658a157d42-49"></a><span class="p">}</span>
+<pre class="code c"><a name="rest_code_e8c4a11834c54b48898256fc1a14911d-1"></a><span class="cp">#include &lt;inttypes.h&gt;</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-2"></a><span class="cp">#include &lt;unistd.h&gt;</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-3"></a><span class="cp">#include &lt;fcntl.h&gt;</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-4"></a><span class="cp">#include &lt;stdio.h&gt;</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-5"></a><span class="cp">#include &lt;string.h&gt;</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-6"></a><span class="cp">#include &lt;errno.h&gt;</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-7"></a><span class="cp">#include &lt;sys/ioctl.h&gt;</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-8"></a><span class="cp">#include &lt;scsi/sg.h&gt; </span><span class="cm">/* take care: fetches glibc's /usr/include/scsi/sg.h */</span><span class="cp"></span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-9"></a>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-10"></a>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-11"></a><span class="kt">int</span> <span class="nf">execute_scsi_command</span><span class="p">(</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-12"></a>        <span class="kt">int</span> <span class="n">fd</span><span class="p">,</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-13"></a>        <span class="kt">int</span> <span class="n">cmd_size</span><span class="p">,</span>   <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">cmd_buffer</span><span class="p">,</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-14"></a>        <span class="kt">int</span> <span class="n">out_size</span><span class="p">,</span>   <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">out_buffer</span><span class="p">,</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-15"></a>        <span class="kt">int</span> <span class="n">sense_size</span><span class="p">,</span> <span class="kt">uint8_t</span><span class="o">*</span> <span class="n">sense_buffer</span><span class="p">)</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-16"></a><span class="p">{</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-17"></a>    <span class="kt">sg_io_hdr_t</span> <span class="n">io_hdr</span><span class="p">;</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-18"></a>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-19"></a>    <span class="c1">//Prepare SCSI Command</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-20"></a>    <span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">io_hdr</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">sg_io_hdr_t</span><span class="p">));</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-21"></a>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-22"></a>    <span class="n">io_hdr</span><span class="p">.</span><span class="n">interface_id</span> <span class="o">=</span> <span class="sc">'S'</span><span class="p">;</span> <span class="c1">//required</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-23"></a>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-24"></a>    <span class="n">io_hdr</span><span class="p">.</span><span class="n">cmd_len</span> <span class="o">=</span> <span class="n">cmd_size</span><span class="p">;</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-25"></a>    <span class="n">io_hdr</span><span class="p">.</span><span class="n">mx_sb_len</span> <span class="o">=</span> <span class="n">sense_size</span><span class="p">;</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-26"></a>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-27"></a>    <span class="cm">/*</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-28"></a><span class="cm">     *  SG_DXFER_NONE   -   SCSI Test Unit Ready command</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-29"></a><span class="cm">     *  SG_DXFER_TO_DEV -   SCSI WRITE command</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-30"></a><span class="cm">     *  SG_DXFER_FROM_DEV - SCSI READ command</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-31"></a><span class="cm">     */</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-32"></a>    <span class="n">io_hdr</span><span class="p">.</span><span class="n">dxfer_direction</span> <span class="o">=</span> <span class="n">SG_DXFER_FROM_DEV</span><span class="p">;</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-33"></a>    <span class="n">io_hdr</span><span class="p">.</span><span class="n">dxfer_len</span>       <span class="o">=</span> <span class="n">out_size</span><span class="p">;</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-34"></a>    <span class="n">io_hdr</span><span class="p">.</span><span class="n">dxferp</span>          <span class="o">=</span> <span class="n">out_buffer</span><span class="p">;</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-35"></a>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-36"></a>    <span class="n">io_hdr</span><span class="p">.</span><span class="n">cmdp</span> <span class="o">=</span> <span class="n">cmd_buffer</span><span class="p">;</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-37"></a>    <span class="n">io_hdr</span><span class="p">.</span><span class="n">sbp</span>  <span class="o">=</span> <span class="n">sense_buffer</span><span class="p">;</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-38"></a>    <span class="n">io_hdr</span><span class="p">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="mi">20000</span><span class="p">;</span> <span class="c1">// 20000 millisecs = 20 seconds</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-39"></a>    <span class="cm">/* io_hdr.flags = 0; */</span>     <span class="cm">/* take defaults: indirect IO, etc */</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-40"></a>    <span class="cm">/* io_hdr.pack_id = 0; */</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-41"></a>    <span class="cm">/* io_hdr.usr_ptr = NULL; */</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-42"></a>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-43"></a>    <span class="k">if</span> <span class="p">(</span><span class="n">ioctl</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">SG_IO</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">io_hdr</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-44"></a>        <span class="n">perror</span><span class="p">(</span><span class="s">"sg_simple0: Inquiry SG_IO ioctl error"</span><span class="p">);</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-45"></a>        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-46"></a>    <span class="p">}</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-47"></a>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-48"></a>    <span class="k">return</span> <span class="n">io_hdr</span><span class="p">.</span><span class="n">resid</span><span class="p">;</span>
+<a name="rest_code_e8c4a11834c54b48898256fc1a14911d-49"></a><span class="p">}</span>
 </pre>
 <p>這份程式碼是從 <a class="reference external" href="http://www.tldp.org/HOWTO/SCSI-Generic-HOWTO/pexample.html">The Linux SCSI Generic (sg) HOWTO</a> 的 Program Example 改過來的，
 透過 SG_IO 這個 ioctl 將 CDB、Data Buffer 與 Sense Buffer 傳入，等執行完畢之後我們就可以從這些 Buffer 取得 SCSI Command 結果。</p>
 <p>接著就是編譯一個 shared library</p>
-<pre class="code makefile"><a name="rest_code_e3ca561f566a45b4836e63b632787142-1"></a><span class="nv">CFLAG</span> <span class="o">=</span> -shared -fPIC -Wall
-<a name="rest_code_e3ca561f566a45b4836e63b632787142-2"></a><span class="nv">LIB_NAME</span> <span class="o">=</span> linux_ioctl.so
-<a name="rest_code_e3ca561f566a45b4836e63b632787142-3"></a>
-<a name="rest_code_e3ca561f566a45b4836e63b632787142-4"></a><span class="nf">all</span><span class="o">:</span><span class="n">make_lib</span>
-<a name="rest_code_e3ca561f566a45b4836e63b632787142-5"></a>
-<a name="rest_code_e3ca561f566a45b4836e63b632787142-6"></a><span class="nf">make_lib</span><span class="o">:</span><span class="n">linux_ioctl</span>.<span class="n">c</span>
-<a name="rest_code_e3ca561f566a45b4836e63b632787142-7"></a>        <span class="k">$(</span>CC<span class="k">)</span> -o <span class="k">$(</span>LIB_NAME<span class="k">)</span> <span class="k">$(</span>CFLAG<span class="k">)</span> linux_ioctl.c
-<a name="rest_code_e3ca561f566a45b4836e63b632787142-8"></a>
-<a name="rest_code_e3ca561f566a45b4836e63b632787142-9"></a><span class="nf">clean</span><span class="o">:</span>
-<a name="rest_code_e3ca561f566a45b4836e63b632787142-10"></a>        rm -f *.so
+<pre class="code makefile"><a name="rest_code_833475aa6fdb49ceb152f8255c0a88d8-1"></a><span class="nv">CFLAG</span> <span class="o">=</span> -shared -fPIC -Wall
+<a name="rest_code_833475aa6fdb49ceb152f8255c0a88d8-2"></a><span class="nv">LIB_NAME</span> <span class="o">=</span> linux_ioctl.so
+<a name="rest_code_833475aa6fdb49ceb152f8255c0a88d8-3"></a>
+<a name="rest_code_833475aa6fdb49ceb152f8255c0a88d8-4"></a><span class="nf">all</span><span class="o">:</span><span class="n">make_lib</span>
+<a name="rest_code_833475aa6fdb49ceb152f8255c0a88d8-5"></a>
+<a name="rest_code_833475aa6fdb49ceb152f8255c0a88d8-6"></a><span class="nf">make_lib</span><span class="o">:</span><span class="n">linux_ioctl</span>.<span class="n">c</span>
+<a name="rest_code_833475aa6fdb49ceb152f8255c0a88d8-7"></a>        <span class="k">$(</span>CC<span class="k">)</span> -o <span class="k">$(</span>LIB_NAME<span class="k">)</span> <span class="k">$(</span>CFLAG<span class="k">)</span> linux_ioctl.c
+<a name="rest_code_833475aa6fdb49ceb152f8255c0a88d8-8"></a>
+<a name="rest_code_833475aa6fdb49ceb152f8255c0a88d8-9"></a><span class="nf">clean</span><span class="o">:</span>
+<a name="rest_code_833475aa6fdb49ceb152f8255c0a88d8-10"></a>        rm -f *.so
 </pre>
 <p>然後就只要輸入</p>
 <blockquote>
@@ -158,49 +158,49 @@ make</blockquote>
 <p>這部份就是我完全不熟的地方了，因為 Python 我也很少用，
 所以 Python 語法非常生澀。</p>
 <p>不過主要是透過 ctypes 來傳送 CDB、buffer pointer 到 C function 中。</p>
-<pre class="code python"><a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-1"></a><span class="kn">from</span> <span class="nn">ctypes</span> <span class="kn">import</span> <span class="o">*</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-2"></a>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-3"></a><span class="k">def</span> <span class="nf">hexdump</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">column_length</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-4"></a>    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-5"></a>    <span class="n">digits</span> <span class="o">=</span> <span class="mi">4</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">)</span> <span class="k">else</span> <span class="mi">2</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-6"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">column_length</span><span class="p">):</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-7"></a>       <span class="n">s</span> <span class="o">=</span> <span class="n">src</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">column_length</span><span class="p">]</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-8"></a>       <span class="n">hexa</span> <span class="o">=</span> <span class="n">b</span><span class="s">' '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">"</span><span class="si">%0*X</span><span class="s">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">digits</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>  <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">s</span><span class="p">])</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-9"></a>       <span class="n">text</span> <span class="o">=</span> <span class="n">b</span><span class="s">''</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="mh">0x20</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mh">0x7F</span> <span class="k">else</span> <span class="n">b</span><span class="s">'.'</span>  <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">s</span><span class="p">])</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-10"></a>       <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">b</span><span class="s">"</span><span class="si">%04X</span><span class="s">   </span><span class="si">%-*s</span><span class="s">   </span><span class="si">%s</span><span class="s">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">column_length</span><span class="o">*</span><span class="p">(</span><span class="n">digits</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">hexa</span> <span class="p">,</span> <span class="n">text</span><span class="p">)</span> <span class="p">)</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-11"></a>    <span class="k">return</span> <span class="n">b</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-12"></a>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-13"></a><span class="n">dyn</span> <span class="o">=</span> <span class="n">CDLL</span><span class="p">(</span><span class="s">"./linux_ioctl.so"</span><span class="p">)</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-14"></a>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-15"></a><span class="n">fo</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">"/dev/sda"</span><span class="p">,</span> <span class="s">"r"</span><span class="p">)</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-16"></a><span class="n">fid</span> <span class="o">=</span> <span class="n">fo</span><span class="o">.</span><span class="n">fileno</span><span class="p">()</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-17"></a>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-18"></a><span class="n">CDB</span> <span class="o">=</span> <span class="n">c_byte</span> <span class="o">*</span> <span class="mi">6</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-19"></a><span class="n">CDB_array</span> <span class="o">=</span> <span class="n">CDB</span><span class="p">()</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-20"></a>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-21"></a><span class="n">CDB_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x12</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-22"></a><span class="n">CDB_array</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-23"></a><span class="n">CDB_array</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-24"></a><span class="n">CDB_array</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-25"></a><span class="n">CDB_array</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">96</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-26"></a><span class="n">CDB_array</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-27"></a>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-28"></a><span class="n">CDB_p</span> <span class="o">=</span> <span class="n">pointer</span><span class="p">(</span><span class="n">CDB_array</span><span class="p">)</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-29"></a>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-30"></a><span class="n">SENSE</span> <span class="o">=</span> <span class="n">c_byte</span> <span class="o">*</span> <span class="mi">36</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-31"></a><span class="n">SENSE_array</span> <span class="o">=</span> <span class="n">SENSE</span><span class="p">()</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-32"></a>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-33"></a><span class="n">DATA</span> <span class="o">=</span> <span class="n">c_byte</span> <span class="o">*</span> <span class="mi">96</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-34"></a><span class="n">DATA_array</span> <span class="o">=</span> <span class="n">DATA</span><span class="p">()</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-35"></a><span class="n">DATA_p</span> <span class="o">=</span> <span class="n">pointer</span><span class="p">(</span><span class="n">DATA_array</span><span class="p">)</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-36"></a>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-37"></a><span class="n">SENSE_p</span> <span class="o">=</span> <span class="n">pointer</span><span class="p">(</span><span class="n">SENSE_array</span><span class="p">)</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-38"></a>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-39"></a><span class="n">resid</span> <span class="o">=</span> <span class="n">dyn</span><span class="o">.</span><span class="n">execute_scsi_command</span><span class="p">(</span><span class="n">fid</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">CDB_p</span><span class="p">,</span> <span class="mi">96</span><span class="p">,</span> <span class="n">DATA_p</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">SENSE_p</span><span class="p">)</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-40"></a>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-41"></a><span class="k">print</span> <span class="n">hexdump</span><span class="p">(</span><span class="n">DATA_array</span><span class="p">,</span> <span class="mi">96</span> <span class="o">-</span> <span class="n">resid</span><span class="p">)</span>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-42"></a>
-<a name="rest_code_2b1e20111abc4710a60c71a9386be2e9-43"></a><span class="n">fo</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<pre class="code python"><a name="rest_code_f3370e2da62e442b998179d0d2cbf861-1"></a><span class="kn">from</span> <span class="nn">ctypes</span> <span class="kn">import</span> <span class="o">*</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-2"></a>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-3"></a><span class="k">def</span> <span class="nf">hexdump</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">column_length</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-4"></a>    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-5"></a>    <span class="n">digits</span> <span class="o">=</span> <span class="mi">4</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">)</span> <span class="k">else</span> <span class="mi">2</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-6"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">column_length</span><span class="p">):</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-7"></a>       <span class="n">s</span> <span class="o">=</span> <span class="n">src</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">column_length</span><span class="p">]</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-8"></a>       <span class="n">hexa</span> <span class="o">=</span> <span class="n">b</span><span class="s">' '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">"</span><span class="si">%0*X</span><span class="s">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">digits</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>  <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">s</span><span class="p">])</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-9"></a>       <span class="n">text</span> <span class="o">=</span> <span class="n">b</span><span class="s">''</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="mh">0x20</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mh">0x7F</span> <span class="k">else</span> <span class="n">b</span><span class="s">'.'</span>  <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">s</span><span class="p">])</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-10"></a>       <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">b</span><span class="s">"</span><span class="si">%04X</span><span class="s">   </span><span class="si">%-*s</span><span class="s">   </span><span class="si">%s</span><span class="s">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">column_length</span><span class="o">*</span><span class="p">(</span><span class="n">digits</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">hexa</span> <span class="p">,</span> <span class="n">text</span><span class="p">)</span> <span class="p">)</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-11"></a>    <span class="k">return</span> <span class="n">b</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-12"></a>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-13"></a><span class="n">dyn</span> <span class="o">=</span> <span class="n">CDLL</span><span class="p">(</span><span class="s">"./linux_ioctl.so"</span><span class="p">)</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-14"></a>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-15"></a><span class="n">fo</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">"/dev/sda"</span><span class="p">,</span> <span class="s">"r"</span><span class="p">)</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-16"></a><span class="n">fid</span> <span class="o">=</span> <span class="n">fo</span><span class="o">.</span><span class="n">fileno</span><span class="p">()</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-17"></a>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-18"></a><span class="n">CDB</span> <span class="o">=</span> <span class="n">c_byte</span> <span class="o">*</span> <span class="mi">6</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-19"></a><span class="n">CDB_array</span> <span class="o">=</span> <span class="n">CDB</span><span class="p">()</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-20"></a>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-21"></a><span class="n">CDB_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x12</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-22"></a><span class="n">CDB_array</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-23"></a><span class="n">CDB_array</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-24"></a><span class="n">CDB_array</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-25"></a><span class="n">CDB_array</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">96</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-26"></a><span class="n">CDB_array</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-27"></a>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-28"></a><span class="n">CDB_p</span> <span class="o">=</span> <span class="n">pointer</span><span class="p">(</span><span class="n">CDB_array</span><span class="p">)</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-29"></a>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-30"></a><span class="n">SENSE</span> <span class="o">=</span> <span class="n">c_byte</span> <span class="o">*</span> <span class="mi">36</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-31"></a><span class="n">SENSE_array</span> <span class="o">=</span> <span class="n">SENSE</span><span class="p">()</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-32"></a>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-33"></a><span class="n">DATA</span> <span class="o">=</span> <span class="n">c_byte</span> <span class="o">*</span> <span class="mi">96</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-34"></a><span class="n">DATA_array</span> <span class="o">=</span> <span class="n">DATA</span><span class="p">()</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-35"></a><span class="n">DATA_p</span> <span class="o">=</span> <span class="n">pointer</span><span class="p">(</span><span class="n">DATA_array</span><span class="p">)</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-36"></a>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-37"></a><span class="n">SENSE_p</span> <span class="o">=</span> <span class="n">pointer</span><span class="p">(</span><span class="n">SENSE_array</span><span class="p">)</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-38"></a>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-39"></a><span class="n">resid</span> <span class="o">=</span> <span class="n">dyn</span><span class="o">.</span><span class="n">execute_scsi_command</span><span class="p">(</span><span class="n">fid</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">CDB_p</span><span class="p">,</span> <span class="mi">96</span><span class="p">,</span> <span class="n">DATA_p</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="n">SENSE_p</span><span class="p">)</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-40"></a>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-41"></a><span class="k">print</span> <span class="n">hexdump</span><span class="p">(</span><span class="n">DATA_array</span><span class="p">,</span> <span class="mi">96</span> <span class="o">-</span> <span class="n">resid</span><span class="p">)</span>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-42"></a>
+<a name="rest_code_f3370e2da62e442b998179d0d2cbf861-43"></a><span class="n">fo</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre>
 <p>透過 CDLL 將剛剛編譯好的 shared library 載入, c_byte 的型態建立 binary array ( 這部份我覺得應該有更好的方式可以處理 )，
 否則每次要建立 binary array 就都得透過 c_bytes * length 宣告 array 型態，然後在用這個型態去建立 binary array，
@@ -208,12 +208,12 @@ make</blockquote>
 我在這部份的理解一定是有問題的，不然這樣的作法實在很奇怪。</p>
 <p>但是無論如何，他可以動 ............</p>
 <p>後面的</p>
-<pre class="code python"><a name="rest_code_a5b1dbde66ce4695b044a9261a6f7f54-1"></a><span class="n">CDB_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x12</span>
-<a name="rest_code_a5b1dbde66ce4695b044a9261a6f7f54-2"></a><span class="n">CDB_array</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span>
-<a name="rest_code_a5b1dbde66ce4695b044a9261a6f7f54-3"></a><span class="n">CDB_array</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span>
-<a name="rest_code_a5b1dbde66ce4695b044a9261a6f7f54-4"></a><span class="n">CDB_array</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span>
-<a name="rest_code_a5b1dbde66ce4695b044a9261a6f7f54-5"></a><span class="n">CDB_array</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">96</span>
-<a name="rest_code_a5b1dbde66ce4695b044a9261a6f7f54-6"></a><span class="n">CDB_array</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span>
+<pre class="code python"><a name="rest_code_163b614971034a2dba5ecb5cdc77c270-1"></a><span class="n">CDB_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x12</span>
+<a name="rest_code_163b614971034a2dba5ecb5cdc77c270-2"></a><span class="n">CDB_array</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span>
+<a name="rest_code_163b614971034a2dba5ecb5cdc77c270-3"></a><span class="n">CDB_array</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span>
+<a name="rest_code_163b614971034a2dba5ecb5cdc77c270-4"></a><span class="n">CDB_array</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span>
+<a name="rest_code_163b614971034a2dba5ecb5cdc77c270-5"></a><span class="n">CDB_array</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">96</span>
+<a name="rest_code_163b614971034a2dba5ecb5cdc77c270-6"></a><span class="n">CDB_array</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x00</span>
 </pre>
 <p>就是一個標準的 INQUIRY Command 然後希望的長度是 96 bytes，
 所以這個程式你可以安心測試，基本上應該是不會把硬碟弄炸掉。</p>

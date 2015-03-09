@@ -94,87 +94,87 @@ Akka 的 Future 到底有沒有存在的意義呢？</p>
 <p>下面這個版本改自上面所提到的 <a class="reference external" href="http://blog.vasilrem.com/scatter-gather-with-akka-dataflow">Scatter-Gather with Akka Dataflow</a></p>
 <p>因為那個 Blog 的範例我估計來自於 Akka 1.3.1 之前的版本，所以我做了一些更動才能在 Akka 2.0 上面跑。</p>
 <p>很幸運或者是很不幸的是 Dataflow 的部份則是從 Akka 1.x 就沒有變動過了，所以基本邏輯都沒有改變。</p>
-<pre class="code scala"><a name="rest_code_e77d872222674bd1873ab529ae07bbca-1"></a><span class="k">import</span> <span class="nn">scala.util.continuations._</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-2"></a>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-3"></a><span class="k">import</span> <span class="nn">akka.actor.Actor</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-4"></a><span class="k">import</span> <span class="nn">akka.actor.ActorRef</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-5"></a><span class="k">import</span> <span class="nn">akka.actor.ActorSystem</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-6"></a><span class="k">import</span> <span class="nn">akka.actor.Props</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-7"></a><span class="k">import</span> <span class="nn">akka.dispatch.Future.flow</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-8"></a><span class="k">import</span> <span class="nn">akka.dispatch._</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-9"></a><span class="k">import</span> <span class="nn">akka.pattern.ask</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-10"></a><span class="k">import</span> <span class="nn">akka.util.duration._</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-11"></a><span class="k">import</span> <span class="nn">akka.util.Timeout</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-12"></a>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-13"></a><span class="k">object</span> <span class="nc">ScatterGatherDataFlow</span> <span class="o">{</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-14"></a>  <span class="k">def</span> <span class="n">main</span><span class="o">(</span><span class="n">args</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span> <span class="o">{</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-15"></a>    <span class="k">implicit</span> <span class="k">val</span> <span class="n">timeout</span> <span class="k">=</span> <span class="nc">Timeout</span><span class="o">(</span><span class="mi">10</span> <span class="n">seconds</span><span class="o">)</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-16"></a>    <span class="k">val</span> <span class="n">system</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">()</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-17"></a>    <span class="k">val</span> <span class="n">recipients</span> <span class="k">=</span> <span class="o">(</span><span class="mi">1</span> <span class="n">to</span> <span class="mi">5</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="n">i</span> <span class="k">=&gt;</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">Recipient</span><span class="o">(</span><span class="n">i</span><span class="o">))))</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-18"></a>    <span class="k">val</span> <span class="n">aggregator</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">Aggregator</span><span class="o">(</span><span class="n">recipients</span><span class="o">)))</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-19"></a>    <span class="k">val</span> <span class="n">results1</span> <span class="k">=</span> <span class="nc">Await</span><span class="o">.</span><span class="n">result</span><span class="o">(</span><span class="n">aggregator</span> <span class="o">?</span> <span class="nc">Message</span><span class="o">(</span><span class="s">"Hello"</span><span class="o">),</span> <span class="n">timeout</span><span class="o">.</span><span class="n">duration</span><span class="o">)</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-20"></a>    <span class="k">val</span> <span class="n">results2</span> <span class="k">=</span> <span class="nc">Await</span><span class="o">.</span><span class="n">result</span><span class="o">(</span><span class="n">aggregator</span> <span class="o">?</span> <span class="nc">Message</span><span class="o">(</span><span class="s">"World"</span><span class="o">),</span> <span class="n">timeout</span><span class="o">.</span><span class="n">duration</span><span class="o">)</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-21"></a>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-22"></a>    <span class="n">results1</span><span class="o">.</span><span class="n">asInstanceOf</span><span class="o">[</span><span class="kt">Future</span><span class="o">[</span><span class="kt">String</span><span class="o">]]</span> <span class="n">map</span> <span class="o">{</span> <span class="n">res</span> <span class="k">=&gt;</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-23"></a>      <span class="n">println</span><span class="o">(</span><span class="s">"Result: %s"</span> <span class="n">format</span> <span class="o">(</span><span class="n">res</span><span class="o">))</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-24"></a>    <span class="o">}</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-25"></a>    <span class="n">results2</span><span class="o">.</span><span class="n">asInstanceOf</span><span class="o">[</span><span class="kt">Future</span><span class="o">[</span><span class="kt">String</span><span class="o">]]</span> <span class="n">map</span> <span class="o">{</span> <span class="n">res</span> <span class="k">=&gt;</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-26"></a>      <span class="n">println</span><span class="o">(</span><span class="s">"Result: %s"</span> <span class="n">format</span> <span class="o">(</span><span class="n">res</span><span class="o">))</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-27"></a>    <span class="o">}</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-28"></a>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-29"></a>    <span class="n">system</span><span class="o">.</span><span class="n">awaitTermination</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-30"></a>  <span class="o">}</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-31"></a><span class="o">}</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-32"></a>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-33"></a><span class="k">class</span> <span class="nc">Aggregator</span><span class="o">(</span><span class="n">recipients</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">ActorRef</span><span class="o">])</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-34"></a>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-35"></a>  <span class="k">implicit</span> <span class="k">val</span> <span class="n">defaultDispatcher</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">dispatcher</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-36"></a>  <span class="k">implicit</span> <span class="k">val</span> <span class="n">timeout</span> <span class="k">=</span> <span class="nc">Timeout</span><span class="o">(</span><span class="mi">10</span> <span class="n">seconds</span><span class="o">)</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-37"></a>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-38"></a>  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-39"></a>    <span class="k">case</span> <span class="n">msg</span> <span class="k">@</span> <span class="nc">Message</span><span class="o">(</span><span class="n">text</span><span class="o">)</span> <span class="k">=&gt;</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-40"></a>      <span class="n">println</span><span class="o">(</span><span class="s">"Started processing message `%s`"</span> <span class="n">format</span> <span class="o">(</span><span class="n">text</span><span class="o">))</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-41"></a>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-42"></a>      <span class="k">val</span> <span class="n">result</span> <span class="k">=</span> <span class="nc">Promise</span><span class="o">[</span><span class="kt">String</span><span class="o">]()</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-43"></a>      <span class="k">val</span> <span class="n">promises</span> <span class="k">=</span> <span class="nc">List</span><span class="o">.</span><span class="n">fill</span><span class="o">(</span><span class="n">recipients</span><span class="o">.</span><span class="n">size</span><span class="o">)(</span><span class="nc">Promise</span><span class="o">[</span><span class="kt">String</span><span class="o">]())</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-44"></a>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-45"></a>      <span class="n">recipients</span><span class="o">.</span><span class="n">zip</span><span class="o">(</span><span class="n">promises</span><span class="o">).</span><span class="n">map</span> <span class="o">{</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-46"></a>        <span class="k">case</span> <span class="o">(</span><span class="n">recipient</span><span class="o">,</span> <span class="n">promise</span><span class="o">)</span> <span class="k">=&gt;</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-47"></a>          <span class="o">(</span><span class="n">recipient</span> <span class="o">?</span> <span class="n">msg</span><span class="o">).</span><span class="n">mapTo</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="n">map</span> <span class="o">{</span> <span class="n">result</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=&gt;</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-48"></a>            <span class="n">println</span><span class="o">(</span><span class="s">"Binding recipient's response: %s"</span> <span class="n">format</span> <span class="o">(</span><span class="n">result</span><span class="o">))</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-49"></a>            <span class="n">flow</span> <span class="o">{</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-50"></a>              <span class="n">promise</span> <span class="o">&lt;&lt;</span> <span class="n">result</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-51"></a>            <span class="o">}</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-52"></a>          <span class="o">}</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-53"></a>      <span class="o">}</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-54"></a>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-55"></a>      <span class="n">flow</span> <span class="o">{</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-56"></a>          <span class="k">def</span> <span class="n">gather</span><span class="o">(</span><span class="n">promises</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Future</span><span class="o">[</span><span class="kt">String</span><span class="o">]],</span> <span class="n">result</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">""</span><span class="o">)</span><span class="k">:</span> <span class="kt">String</span> <span class="kt">@cps</span><span class="o">[</span><span class="kt">Future</span><span class="o">[</span><span class="kt">Any</span><span class="o">]]</span> <span class="k">=</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-57"></a>            <span class="n">promises</span> <span class="k">match</span> <span class="o">{</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-58"></a>              <span class="k">case</span> <span class="n">head</span> <span class="o">::</span> <span class="n">tail</span> <span class="k">=&gt;</span> <span class="n">gather</span><span class="o">(</span><span class="n">tail</span><span class="o">,</span> <span class="n">head</span><span class="o">()</span> <span class="o">+</span> <span class="n">result</span><span class="o">)</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-59"></a>              <span class="k">case</span> <span class="nc">Nil</span>          <span class="k">=&gt;</span> <span class="n">result</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-60"></a>            <span class="o">}</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-61"></a>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-62"></a>        <span class="n">println</span><span class="o">(</span><span class="s">"Binding result..."</span><span class="o">)</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-63"></a>        <span class="n">result</span> <span class="o">&lt;&lt;</span> <span class="n">gather</span><span class="o">(</span><span class="n">promises</span><span class="o">)</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-64"></a>      <span class="o">}</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-65"></a>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-66"></a>      <span class="n">sender</span> <span class="o">!</span> <span class="n">result</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-67"></a>  <span class="o">}</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-68"></a>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-69"></a><span class="o">}</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-70"></a>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-71"></a><span class="k">class</span> <span class="nc">Recipient</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-72"></a>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-73"></a>  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-74"></a>    <span class="k">case</span> <span class="nc">Message</span><span class="o">(</span><span class="n">msg</span><span class="o">)</span> <span class="k">=&gt;</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-75"></a>      <span class="nc">Thread</span><span class="o">.</span><span class="n">sleep</span><span class="o">(</span><span class="mi">1000</span><span class="o">)</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-76"></a>      <span class="n">sender</span> <span class="o">!</span> <span class="o">(</span><span class="s">"%s, [%s]! "</span><span class="o">.</span><span class="n">format</span><span class="o">(</span><span class="n">msg</span><span class="o">,</span> <span class="n">id</span><span class="o">))</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-77"></a>  <span class="o">}</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-78"></a>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-79"></a><span class="o">}</span>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-80"></a>
-<a name="rest_code_e77d872222674bd1873ab529ae07bbca-81"></a><span class="k">case</span> <span class="k">class</span> <span class="nc">Message</span><span class="o">(</span><span class="n">text</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+<pre class="code scala"><a name="rest_code_2a19cebdf6c64a569ea4715268582986-1"></a><span class="k">import</span> <span class="nn">scala.util.continuations._</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-2"></a>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-3"></a><span class="k">import</span> <span class="nn">akka.actor.Actor</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-4"></a><span class="k">import</span> <span class="nn">akka.actor.ActorRef</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-5"></a><span class="k">import</span> <span class="nn">akka.actor.ActorSystem</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-6"></a><span class="k">import</span> <span class="nn">akka.actor.Props</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-7"></a><span class="k">import</span> <span class="nn">akka.dispatch.Future.flow</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-8"></a><span class="k">import</span> <span class="nn">akka.dispatch._</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-9"></a><span class="k">import</span> <span class="nn">akka.pattern.ask</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-10"></a><span class="k">import</span> <span class="nn">akka.util.duration._</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-11"></a><span class="k">import</span> <span class="nn">akka.util.Timeout</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-12"></a>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-13"></a><span class="k">object</span> <span class="nc">ScatterGatherDataFlow</span> <span class="o">{</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-14"></a>  <span class="k">def</span> <span class="n">main</span><span class="o">(</span><span class="n">args</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span> <span class="o">{</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-15"></a>    <span class="k">implicit</span> <span class="k">val</span> <span class="n">timeout</span> <span class="k">=</span> <span class="nc">Timeout</span><span class="o">(</span><span class="mi">10</span> <span class="n">seconds</span><span class="o">)</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-16"></a>    <span class="k">val</span> <span class="n">system</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">()</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-17"></a>    <span class="k">val</span> <span class="n">recipients</span> <span class="k">=</span> <span class="o">(</span><span class="mi">1</span> <span class="n">to</span> <span class="mi">5</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="n">i</span> <span class="k">=&gt;</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">Recipient</span><span class="o">(</span><span class="n">i</span><span class="o">))))</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-18"></a>    <span class="k">val</span> <span class="n">aggregator</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">Aggregator</span><span class="o">(</span><span class="n">recipients</span><span class="o">)))</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-19"></a>    <span class="k">val</span> <span class="n">results1</span> <span class="k">=</span> <span class="nc">Await</span><span class="o">.</span><span class="n">result</span><span class="o">(</span><span class="n">aggregator</span> <span class="o">?</span> <span class="nc">Message</span><span class="o">(</span><span class="s">"Hello"</span><span class="o">),</span> <span class="n">timeout</span><span class="o">.</span><span class="n">duration</span><span class="o">)</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-20"></a>    <span class="k">val</span> <span class="n">results2</span> <span class="k">=</span> <span class="nc">Await</span><span class="o">.</span><span class="n">result</span><span class="o">(</span><span class="n">aggregator</span> <span class="o">?</span> <span class="nc">Message</span><span class="o">(</span><span class="s">"World"</span><span class="o">),</span> <span class="n">timeout</span><span class="o">.</span><span class="n">duration</span><span class="o">)</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-21"></a>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-22"></a>    <span class="n">results1</span><span class="o">.</span><span class="n">asInstanceOf</span><span class="o">[</span><span class="kt">Future</span><span class="o">[</span><span class="kt">String</span><span class="o">]]</span> <span class="n">map</span> <span class="o">{</span> <span class="n">res</span> <span class="k">=&gt;</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-23"></a>      <span class="n">println</span><span class="o">(</span><span class="s">"Result: %s"</span> <span class="n">format</span> <span class="o">(</span><span class="n">res</span><span class="o">))</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-24"></a>    <span class="o">}</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-25"></a>    <span class="n">results2</span><span class="o">.</span><span class="n">asInstanceOf</span><span class="o">[</span><span class="kt">Future</span><span class="o">[</span><span class="kt">String</span><span class="o">]]</span> <span class="n">map</span> <span class="o">{</span> <span class="n">res</span> <span class="k">=&gt;</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-26"></a>      <span class="n">println</span><span class="o">(</span><span class="s">"Result: %s"</span> <span class="n">format</span> <span class="o">(</span><span class="n">res</span><span class="o">))</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-27"></a>    <span class="o">}</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-28"></a>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-29"></a>    <span class="n">system</span><span class="o">.</span><span class="n">awaitTermination</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-30"></a>  <span class="o">}</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-31"></a><span class="o">}</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-32"></a>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-33"></a><span class="k">class</span> <span class="nc">Aggregator</span><span class="o">(</span><span class="n">recipients</span><span class="k">:</span> <span class="kt">Iterable</span><span class="o">[</span><span class="kt">ActorRef</span><span class="o">])</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-34"></a>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-35"></a>  <span class="k">implicit</span> <span class="k">val</span> <span class="n">defaultDispatcher</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">dispatcher</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-36"></a>  <span class="k">implicit</span> <span class="k">val</span> <span class="n">timeout</span> <span class="k">=</span> <span class="nc">Timeout</span><span class="o">(</span><span class="mi">10</span> <span class="n">seconds</span><span class="o">)</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-37"></a>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-38"></a>  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-39"></a>    <span class="k">case</span> <span class="n">msg</span> <span class="k">@</span> <span class="nc">Message</span><span class="o">(</span><span class="n">text</span><span class="o">)</span> <span class="k">=&gt;</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-40"></a>      <span class="n">println</span><span class="o">(</span><span class="s">"Started processing message `%s`"</span> <span class="n">format</span> <span class="o">(</span><span class="n">text</span><span class="o">))</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-41"></a>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-42"></a>      <span class="k">val</span> <span class="n">result</span> <span class="k">=</span> <span class="nc">Promise</span><span class="o">[</span><span class="kt">String</span><span class="o">]()</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-43"></a>      <span class="k">val</span> <span class="n">promises</span> <span class="k">=</span> <span class="nc">List</span><span class="o">.</span><span class="n">fill</span><span class="o">(</span><span class="n">recipients</span><span class="o">.</span><span class="n">size</span><span class="o">)(</span><span class="nc">Promise</span><span class="o">[</span><span class="kt">String</span><span class="o">]())</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-44"></a>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-45"></a>      <span class="n">recipients</span><span class="o">.</span><span class="n">zip</span><span class="o">(</span><span class="n">promises</span><span class="o">).</span><span class="n">map</span> <span class="o">{</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-46"></a>        <span class="k">case</span> <span class="o">(</span><span class="n">recipient</span><span class="o">,</span> <span class="n">promise</span><span class="o">)</span> <span class="k">=&gt;</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-47"></a>          <span class="o">(</span><span class="n">recipient</span> <span class="o">?</span> <span class="n">msg</span><span class="o">).</span><span class="n">mapTo</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="n">map</span> <span class="o">{</span> <span class="n">result</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=&gt;</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-48"></a>            <span class="n">println</span><span class="o">(</span><span class="s">"Binding recipient's response: %s"</span> <span class="n">format</span> <span class="o">(</span><span class="n">result</span><span class="o">))</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-49"></a>            <span class="n">flow</span> <span class="o">{</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-50"></a>              <span class="n">promise</span> <span class="o">&lt;&lt;</span> <span class="n">result</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-51"></a>            <span class="o">}</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-52"></a>          <span class="o">}</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-53"></a>      <span class="o">}</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-54"></a>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-55"></a>      <span class="n">flow</span> <span class="o">{</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-56"></a>          <span class="k">def</span> <span class="n">gather</span><span class="o">(</span><span class="n">promises</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Future</span><span class="o">[</span><span class="kt">String</span><span class="o">]],</span> <span class="n">result</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">""</span><span class="o">)</span><span class="k">:</span> <span class="kt">String</span> <span class="kt">@cps</span><span class="o">[</span><span class="kt">Future</span><span class="o">[</span><span class="kt">Any</span><span class="o">]]</span> <span class="k">=</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-57"></a>            <span class="n">promises</span> <span class="k">match</span> <span class="o">{</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-58"></a>              <span class="k">case</span> <span class="n">head</span> <span class="o">::</span> <span class="n">tail</span> <span class="k">=&gt;</span> <span class="n">gather</span><span class="o">(</span><span class="n">tail</span><span class="o">,</span> <span class="n">head</span><span class="o">()</span> <span class="o">+</span> <span class="n">result</span><span class="o">)</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-59"></a>              <span class="k">case</span> <span class="nc">Nil</span>          <span class="k">=&gt;</span> <span class="n">result</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-60"></a>            <span class="o">}</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-61"></a>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-62"></a>        <span class="n">println</span><span class="o">(</span><span class="s">"Binding result..."</span><span class="o">)</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-63"></a>        <span class="n">result</span> <span class="o">&lt;&lt;</span> <span class="n">gather</span><span class="o">(</span><span class="n">promises</span><span class="o">)</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-64"></a>      <span class="o">}</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-65"></a>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-66"></a>      <span class="n">sender</span> <span class="o">!</span> <span class="n">result</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-67"></a>  <span class="o">}</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-68"></a>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-69"></a><span class="o">}</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-70"></a>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-71"></a><span class="k">class</span> <span class="nc">Recipient</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-72"></a>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-73"></a>  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-74"></a>    <span class="k">case</span> <span class="nc">Message</span><span class="o">(</span><span class="n">msg</span><span class="o">)</span> <span class="k">=&gt;</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-75"></a>      <span class="nc">Thread</span><span class="o">.</span><span class="n">sleep</span><span class="o">(</span><span class="mi">1000</span><span class="o">)</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-76"></a>      <span class="n">sender</span> <span class="o">!</span> <span class="o">(</span><span class="s">"%s, [%s]! "</span><span class="o">.</span><span class="n">format</span><span class="o">(</span><span class="n">msg</span><span class="o">,</span> <span class="n">id</span><span class="o">))</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-77"></a>  <span class="o">}</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-78"></a>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-79"></a><span class="o">}</span>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-80"></a>
+<a name="rest_code_2a19cebdf6c64a569ea4715268582986-81"></a><span class="k">case</span> <span class="k">class</span> <span class="nc">Message</span><span class="o">(</span><span class="n">text</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
 </pre>
 <p>附上執行結果</p>
 <!-- code-block

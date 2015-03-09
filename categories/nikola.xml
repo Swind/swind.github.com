@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis (Nikola)</title><link>http://swind.code-life.info/</link><description></description><atom:link href="http://swind.code-life.info/categories/nikola.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Mon, 09 Mar 2015 04:18:15 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>透過 Travis 自動佈署 Nikola 產生的網頁到 GitHub 上</title><link>http://swind.code-life.info/posts/auto-deploying-my-nikola-blog-to-github-by-travis-ci.html</link><dc:creator>Swind</dc:creator><description>&lt;div&gt;&lt;p&gt;之前一直想要找 Server 可以結合 Jenkins 或者 Script 讓我不用每次都要重複安裝 Nikola 這件事情。
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis (Nikola)</title><link>http://swind.code-life.info/</link><description></description><atom:link href="http://swind.code-life.info/categories/nikola.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Mon, 09 Mar 2015 04:45:42 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>透過 Travis 自動佈署 Nikola 產生的網頁到 GitHub 上</title><link>http://swind.code-life.info/posts/auto-deploying-my-nikola-blog-to-github-by-travis-ci.html</link><dc:creator>Swind</dc:creator><description>&lt;div&gt;&lt;p&gt;之前一直想要找 Server 可以結合 Jenkins 或者 Script 讓我不用每次都要重複安裝 Nikola 這件事情。
 可是一直都沒有找到合用的，後來發現 &lt;a class="reference external" href="https://travis-ci.org"&gt;Travis&lt;/a&gt; + &lt;a class="reference external" href="https://github.com"&gt;GitHub&lt;/a&gt; 這個很多人使用的組合。
 因此開始嘗試在將文章 commit 到 GitHub 上面之後， Travis 可以自動使用 nikola build 產生 HTML 檔案，
 並且 Commit 回去 GitHub。&lt;/p&gt;
 &lt;p&gt;由於我的 GitHub 上面的網頁換了很多次系統 Octopress -&amp;gt; Pelican -&amp;gt; Nikola，在加上那時候對於 GitHub Pages 的設定不是很了解。
 所以 git 上的 branch 有點奇怪。&lt;/p&gt;
 &lt;p&gt;我目前的 branch 有兩個&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_61d8ecb4978d494ab7d2b96f6800304c-1"&gt;&lt;/a&gt;- master
-&lt;a name="rest_code_61d8ecb4978d494ab7d2b96f6800304c-2"&gt;&lt;/a&gt;- source
+&lt;pre class="code text"&gt;&lt;a name="rest_code_65de63fd1d1044099f16e5f2443d0d54-1"&gt;&lt;/a&gt;- master
+&lt;a name="rest_code_65de63fd1d1044099f16e5f2443d0d54-2"&gt;&lt;/a&gt;- source
 &lt;/pre&gt;&lt;p&gt;master 就是 GitHub Pages 的部份，而 source 則是放 Nikola 的設定檔以及文章的原始檔。
 現在 GitHub 預設放網頁的 branch 好像可以改成  gh-pages。不過改設定又是浩大工程，我以我就繼續沿用之前的 branch 了。
 另外 Nikola 現在應該也有部屬到 GitHub 的功能，所以下面的流程說不定可以弄個更簡潔。&lt;/p&gt;
