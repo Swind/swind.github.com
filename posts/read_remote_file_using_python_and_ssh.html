@@ -85,19 +85,19 @@ server log 沒有吐出不該出現的錯誤。</p>
 <h2>使用 paramiko</h2>
 <p><a class="reference external" href="https://github.com/paramiko/paramiko">paramiko</a> 是 Python 上處理 SSH2 通訊協定的 module，fabric 底層也是使用他。
 在這邊我則是使用他的 SFTP 的功能去開啟遠端的檔案。</p>
-<pre class="code python"><a name="rest_code_5ff8330d322942fda7cd746d9add5e1d-1"></a><span class="kn">import</span> <span class="nn">paramiko</span>
-<a name="rest_code_5ff8330d322942fda7cd746d9add5e1d-2"></a>
-<a name="rest_code_5ff8330d322942fda7cd746d9add5e1d-3"></a><span class="k">def</span> <span class="nf">sftp_open</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">open_type</span><span class="p">):</span>
-<a name="rest_code_5ff8330d322942fda7cd746d9add5e1d-4"></a>
-<a name="rest_code_5ff8330d322942fda7cd746d9add5e1d-5"></a>    <span class="n">transport</span> <span class="o">=</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">Transport</span><span class="p">((</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="p">))</span>
-<a name="rest_code_5ff8330d322942fda7cd746d9add5e1d-6"></a>    <span class="n">transport</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span> <span class="n">hostkey</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
-<a name="rest_code_5ff8330d322942fda7cd746d9add5e1d-7"></a>
-<a name="rest_code_5ff8330d322942fda7cd746d9add5e1d-8"></a>    <span class="n">sftp</span> <span class="o">=</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SFTPClient</span><span class="o">.</span><span class="n">from_transport</span><span class="p">(</span><span class="n">transport</span><span class="p">)</span>
-<a name="rest_code_5ff8330d322942fda7cd746d9add5e1d-9"></a>
-<a name="rest_code_5ff8330d322942fda7cd746d9add5e1d-10"></a>    <span class="k">return</span> <span class="n">sftp</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">open_type</span><span class="p">)</span>
+<pre class="code python"><a name="rest_code_6bd3e2739fab433cbaed06b073d9375a-1"></a><span class="kn">import</span> <span class="nn">paramiko</span>
+<a name="rest_code_6bd3e2739fab433cbaed06b073d9375a-2"></a>
+<a name="rest_code_6bd3e2739fab433cbaed06b073d9375a-3"></a><span class="k">def</span> <span class="nf">sftp_open</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">open_type</span><span class="p">):</span>
+<a name="rest_code_6bd3e2739fab433cbaed06b073d9375a-4"></a>
+<a name="rest_code_6bd3e2739fab433cbaed06b073d9375a-5"></a>    <span class="n">transport</span> <span class="o">=</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">Transport</span><span class="p">((</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="p">))</span>
+<a name="rest_code_6bd3e2739fab433cbaed06b073d9375a-6"></a>    <span class="n">transport</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span> <span class="n">hostkey</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+<a name="rest_code_6bd3e2739fab433cbaed06b073d9375a-7"></a>
+<a name="rest_code_6bd3e2739fab433cbaed06b073d9375a-8"></a>    <span class="n">sftp</span> <span class="o">=</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SFTPClient</span><span class="o">.</span><span class="n">from_transport</span><span class="p">(</span><span class="n">transport</span><span class="p">)</span>
+<a name="rest_code_6bd3e2739fab433cbaed06b073d9375a-9"></a>
+<a name="rest_code_6bd3e2739fab433cbaed06b073d9375a-10"></a>    <span class="k">return</span> <span class="n">sftp</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">open_type</span><span class="p">)</span>
 </pre>
 <p>在這邊我省略了 hostkey 的驗證部份</p>
-<pre class="code python"><a name="rest_code_98375f90519b404ea8ddb4adbbc4d23c-1"></a><span class="n">paramiko</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">load_host_keys</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s">'~/.ssh/known_hosts'</span><span class="p">))</span>
+<pre class="code python"><a name="rest_code_a6606ca70c22417fb7d27917d9a6d1d6-1"></a><span class="n">paramiko</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">load_host_keys</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s">'~/.ssh/known_hosts'</span><span class="p">))</span>
 </pre>
 <p>因為 paramiko 讀取 know_hosts 會花一小段時間。但是我這個連線會開開關關的非常頻繁，所以為了測試的順暢，我略過了這個驗證。</p>
 </div>
@@ -105,60 +105,60 @@ server log 沒有吐出不該出現的錯誤。</p>
 <h2>實現類似 tail 的功能</h2>
 <p>其實原理非常簡單，當透過 SFTP 開啟檔案之後，我們就可以任意對他做讀寫操作，當然也包括了 seek。
 所以我另外實做了一個 Tail 物件。</p>
-<pre class="code python"><a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-1"></a><span class="k">class</span> <span class="nc">Tail</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-2"></a>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-3"></a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-4"></a>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-9"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">file_path</span> <span class="o">=</span> <span class="n">file_path</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__lastposition</span> <span class="o">=</span> <span class="mi">0</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-11"></a>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-12"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">seek_to_end</span><span class="p">()</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-13"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">with_statement_log</span> <span class="o">=</span> <span class="s">""</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-14"></a>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-15"></a>    <span class="k">def</span> <span class="nf">__open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-16"></a>        <span class="c">#Open the file and record the last position</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-17"></a>        <span class="k">return</span> <span class="n">sftp_open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_path</span><span class="p">,</span> <span class="s">"r"</span><span class="p">)</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-18"></a>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-19"></a>    <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-20"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">seek_to_end</span><span class="p">()</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-21"></a>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-22"></a>    <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-23"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">with_statement_log</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-24"></a>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-25"></a>    <span class="k">def</span> <span class="nf">seek_to_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">read_file</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-26"></a>        <span class="n">server_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__open</span><span class="p">()</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-27"></a>        <span class="n">server_file</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__lastposition</span><span class="p">)</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-28"></a>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-29"></a>        <span class="n">result</span> <span class="o">=</span> <span class="s">""</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-30"></a>        <span class="k">if</span> <span class="n">read_file</span><span class="p">:</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-31"></a>            <span class="n">result</span> <span class="o">=</span> <span class="n">server_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-32"></a>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-33"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__lastposition</span> <span class="o">=</span> <span class="n">server_file</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-34"></a>        <span class="n">server_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-35"></a>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-36"></a>        <span class="k">return</span> <span class="n">result</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-37"></a>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-38"></a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<a name="rest_code_6bae26447bbe46c2bfe30638ac285afe-39"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">seek_to_end</span><span class="p">(</span><span class="n">read_file</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+<pre class="code python"><a name="rest_code_234bf181836542868c50135db1db7b27-1"></a><span class="k">class</span> <span class="nc">Tail</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-2"></a>
+<a name="rest_code_234bf181836542868c50135db1db7b27-3"></a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-4"></a>
+<a name="rest_code_234bf181836542868c50135db1db7b27-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-9"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">file_path</span> <span class="o">=</span> <span class="n">file_path</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__lastposition</span> <span class="o">=</span> <span class="mi">0</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-11"></a>
+<a name="rest_code_234bf181836542868c50135db1db7b27-12"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">seek_to_end</span><span class="p">()</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-13"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">with_statement_log</span> <span class="o">=</span> <span class="s">""</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-14"></a>
+<a name="rest_code_234bf181836542868c50135db1db7b27-15"></a>    <span class="k">def</span> <span class="nf">__open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-16"></a>        <span class="c">#Open the file and record the last position</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-17"></a>        <span class="k">return</span> <span class="n">sftp_open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_path</span><span class="p">,</span> <span class="s">"r"</span><span class="p">)</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-18"></a>
+<a name="rest_code_234bf181836542868c50135db1db7b27-19"></a>    <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-20"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">seek_to_end</span><span class="p">()</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-21"></a>
+<a name="rest_code_234bf181836542868c50135db1db7b27-22"></a>    <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-23"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">with_statement_log</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-24"></a>
+<a name="rest_code_234bf181836542868c50135db1db7b27-25"></a>    <span class="k">def</span> <span class="nf">seek_to_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">read_file</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-26"></a>        <span class="n">server_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__open</span><span class="p">()</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-27"></a>        <span class="n">server_file</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__lastposition</span><span class="p">)</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-28"></a>
+<a name="rest_code_234bf181836542868c50135db1db7b27-29"></a>        <span class="n">result</span> <span class="o">=</span> <span class="s">""</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-30"></a>        <span class="k">if</span> <span class="n">read_file</span><span class="p">:</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-31"></a>            <span class="n">result</span> <span class="o">=</span> <span class="n">server_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-32"></a>
+<a name="rest_code_234bf181836542868c50135db1db7b27-33"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">__lastposition</span> <span class="o">=</span> <span class="n">server_file</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-34"></a>        <span class="n">server_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-35"></a>
+<a name="rest_code_234bf181836542868c50135db1db7b27-36"></a>        <span class="k">return</span> <span class="n">result</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-37"></a>
+<a name="rest_code_234bf181836542868c50135db1db7b27-38"></a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a name="rest_code_234bf181836542868c50135db1db7b27-39"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">seek_to_end</span><span class="p">(</span><span class="n">read_file</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
 </pre>
 <p>其實整個原理很簡單，在建立 Tail 的時候，seek 到檔案的尾端，並且紀錄位置。
 在經過一些動作之後，想要取得檔案的增加部份，就是再從上次紀錄的尾端往後讀到底就好了。</p>
 <p>並且在這邊實做了 with statement ( __enter__ 與 __exit__ ) 來方便紀錄。</p>
 <p>使用方式會類似這樣</p>
-<pre class="code python"><a name="rest_code_0ae6198e634448c1bc9d4eb9183c37fc-1"></a><span class="n">test_file_path</span> <span class="o">=</span> <span class="s">"/tmp/test.log"</span>
-<a name="rest_code_0ae6198e634448c1bc9d4eb9183c37fc-2"></a><span class="nb">open</span><span class="p">(</span><span class="n">test_file_path</span><span class="p">,</span> <span class="s">'w'</span><span class="p">)</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-<a name="rest_code_0ae6198e634448c1bc9d4eb9183c37fc-3"></a>
-<a name="rest_code_0ae6198e634448c1bc9d4eb9183c37fc-4"></a><span class="n">tail_log</span> <span class="o">=</span> <span class="n">Tail</span><span class="p">(</span><span class="s">"127.0.0.1"</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="s">"root"</span><span class="p">,</span> <span class="s">"password"</span><span class="p">,</span> <span class="n">test_file_path</span><span class="p">)</span>
-<a name="rest_code_0ae6198e634448c1bc9d4eb9183c37fc-5"></a>
-<a name="rest_code_0ae6198e634448c1bc9d4eb9183c37fc-6"></a><span class="k">with</span> <span class="n">tail_log</span><span class="p">:</span>
-<a name="rest_code_0ae6198e634448c1bc9d4eb9183c37fc-7"></a>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">test_file_path</span><span class="p">,</span> <span class="s">"a"</span><span class="p">)</span> <span class="k">as</span> <span class="n">test_file</span><span class="p">:</span>
-<a name="rest_code_0ae6198e634448c1bc9d4eb9183c37fc-8"></a>            <span class="n">test_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">"appended text"</span><span class="p">)</span>
-<a name="rest_code_0ae6198e634448c1bc9d4eb9183c37fc-9"></a>
-<a name="rest_code_0ae6198e634448c1bc9d4eb9183c37fc-10"></a><span class="k">print</span> <span class="n">tail_log</span><span class="o">.</span><span class="n">with_statement_log</span>
+<pre class="code python"><a name="rest_code_87bdaebb7e854d3caca84965ab6a96ff-1"></a><span class="n">test_file_path</span> <span class="o">=</span> <span class="s">"/tmp/test.log"</span>
+<a name="rest_code_87bdaebb7e854d3caca84965ab6a96ff-2"></a><span class="nb">open</span><span class="p">(</span><span class="n">test_file_path</span><span class="p">,</span> <span class="s">'w'</span><span class="p">)</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<a name="rest_code_87bdaebb7e854d3caca84965ab6a96ff-3"></a>
+<a name="rest_code_87bdaebb7e854d3caca84965ab6a96ff-4"></a><span class="n">tail_log</span> <span class="o">=</span> <span class="n">Tail</span><span class="p">(</span><span class="s">"127.0.0.1"</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="s">"root"</span><span class="p">,</span> <span class="s">"password"</span><span class="p">,</span> <span class="n">test_file_path</span><span class="p">)</span>
+<a name="rest_code_87bdaebb7e854d3caca84965ab6a96ff-5"></a>
+<a name="rest_code_87bdaebb7e854d3caca84965ab6a96ff-6"></a><span class="k">with</span> <span class="n">tail_log</span><span class="p">:</span>
+<a name="rest_code_87bdaebb7e854d3caca84965ab6a96ff-7"></a>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">test_file_path</span><span class="p">,</span> <span class="s">"a"</span><span class="p">)</span> <span class="k">as</span> <span class="n">test_file</span><span class="p">:</span>
+<a name="rest_code_87bdaebb7e854d3caca84965ab6a96ff-8"></a>            <span class="n">test_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">"appended text"</span><span class="p">)</span>
+<a name="rest_code_87bdaebb7e854d3caca84965ab6a96ff-9"></a>
+<a name="rest_code_87bdaebb7e854d3caca84965ab6a96ff-10"></a><span class="k">print</span> <span class="n">tail_log</span><span class="o">.</span><span class="n">with_statement_log</span>
 </pre>
 <p>在 with statement 開始的時候會去 seek 到檔案最尾端，等離開 with statement 的時候，
 再去讀取到最尾端，並且除存在 with_statement_log。</p>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis (Python)</title><link>http://swind.code-life.info/</link><description></description><atom:link href="http://swind.code-life.info/categories/python.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Mon, 09 Mar 2015 05:32:49 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>使用 Python 透過 SSH 讀取遠端的檔案</title><link>http://swind.code-life.info/posts/read_remote_file_using_python_and_ssh.html</link><dc:creator>Swind</dc:creator><description>&lt;div class="section" id="tail"&gt;
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis (Python)</title><link>http://swind.code-life.info/</link><description></description><atom:link href="http://swind.code-life.info/categories/python.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Tue, 31 Mar 2015 15:42:07 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>使用 Python 透過 SSH 讀取遠端的檔案</title><link>http://swind.code-life.info/posts/read_remote_file_using_python_and_ssh.html</link><dc:creator>Swind</dc:creator><description>&lt;div class="section" id="tail"&gt;
 &lt;h2&gt;tail 遠端的檔案&lt;/h2&gt;
 &lt;p&gt;最近的自動化測試需要去做類似 tail 的動作來確認在執行 TestCase 的過程中，
 server log 沒有吐出不該出現的錯誤。&lt;/p&gt;
@@ -21,8 +21,8 @@ server log 沒有吐出不該出現的錯誤。&lt;/p&gt;
 &lt;p&gt;由於我的 GitHub 上面的網頁換了很多次系統 Octopress -&amp;gt; Pelican -&amp;gt; Nikola，在加上那時候對於 GitHub Pages 的設定不是很了解。
 所以 git 上的 branch 有點奇怪。&lt;/p&gt;
 &lt;p&gt;我目前的 branch 有兩個&lt;/p&gt;
-&lt;pre class="code text"&gt;&lt;a name="rest_code_46e86f907865493488dc1d239bbc16d2-1"&gt;&lt;/a&gt;- master
-&lt;a name="rest_code_46e86f907865493488dc1d239bbc16d2-2"&gt;&lt;/a&gt;- source
+&lt;pre class="code text"&gt;&lt;a name="rest_code_4a9d281d903a49ce868cc94bbaf72c31-1"&gt;&lt;/a&gt;- master
+&lt;a name="rest_code_4a9d281d903a49ce868cc94bbaf72c31-2"&gt;&lt;/a&gt;- source
 &lt;/pre&gt;&lt;p&gt;master 就是 GitHub Pages 的部份，而 source 則是放 Nikola 的設定檔以及文章的原始檔。
 現在 GitHub 預設放網頁的 branch 好像可以改成  gh-pages。不過改設定又是浩大工程，我以我就繼續沿用之前的 branch 了。
 另外 Nikola 現在應該也有部屬到 GitHub 的功能，所以下面的流程說不定可以弄個更簡潔。&lt;/p&gt;

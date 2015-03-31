@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis (Other)</title><link>http://swind.code-life.info/</link><description></description><atom:link href="http://swind.code-life.info/categories/other.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Mon, 09 Mar 2015 05:32:49 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Scala 使用 Play 筆記 (1)</title><link>http://swind.code-life.info/posts/play-note-1.html</link><dc:creator>Swind</dc:creator><description>&lt;div&gt;&lt;p&gt;會想要重拾 Scala 跟 Play 主要是因為看到了這篇文章&lt;/p&gt;
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis (Other)</title><link>http://swind.code-life.info/</link><description></description><atom:link href="http://swind.code-life.info/categories/other.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Tue, 31 Mar 2015 15:42:07 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Scala 使用 Play 筆記 (1)</title><link>http://swind.code-life.info/posts/play-note-1.html</link><dc:creator>Swind</dc:creator><description>&lt;div&gt;&lt;p&gt;會想要重拾 Scala 跟 Play 主要是因為看到了這篇文章&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="http://minipai.tumblr.com/post/41882685541/22k"&gt;怎麼設計22K?&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;因為覺得這個設計理念真的是太正面了 XDDD&lt;/p&gt;
 &lt;blockquote&gt;
@@ -31,7 +31,7 @@
 ( 如果有人有知道其他執行方式的話請跟我說 m(_ _)m )&lt;/p&gt;
 &lt;p&gt;一開始我很天真的覺得改成 nikola.py 就沒有問題了，但是在執行中 import 會出問題，因為 nikola 這個名字重複了 Orz。
 所以最後是多寫一個 nikola.bat&lt;/p&gt;
-&lt;pre class="code bash"&gt;&lt;a name="rest_code_e92c7dd7ecff45df941db94c91c61164-1"&gt;&lt;/a&gt;C:&lt;span class="se"&gt;\P&lt;/span&gt;ython27&lt;span class="se"&gt;\p&lt;/span&gt;ython.exe C:&lt;span class="se"&gt;\P&lt;/span&gt;ython27&lt;span class="se"&gt;\S&lt;/span&gt;cripts&lt;span class="se"&gt;\n&lt;/span&gt;ikola %1 %2 %3 %4
+&lt;pre class="code bash"&gt;&lt;a name="rest_code_f3a26180c7a1439c9b437ca991f7187b-1"&gt;&lt;/a&gt;C:&lt;span class="se"&gt;\P&lt;/span&gt;ython27&lt;span class="se"&gt;\p&lt;/span&gt;ython.exe C:&lt;span class="se"&gt;\P&lt;/span&gt;ython27&lt;span class="se"&gt;\S&lt;/span&gt;cripts&lt;span class="se"&gt;\n&lt;/span&gt;ikola %1 %2 %3 %4
 &lt;/pre&gt;&lt;p&gt;放在 Scripts 資料夾底下，來解決這個問題。&lt;/p&gt;
 &lt;p&gt;上面的 Script 因為我找不到 Windows 裡面代表所有傳入參數的符號，
 只好就土法煉鋼一個一個輸入，所以最多只能輸入四個參數。&lt;/p&gt;

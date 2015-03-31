@@ -82,16 +82,16 @@ go func()</blockquote>
 <p>至於要跟 goroutine 的溝通則是使用 channel。</p>
 <p>channel 目前我使用的感覺很像是 java 中的 blocking queue。
 他的宣告方式只要在一般宣告的時候加個 <strong>chan</strong> 的關鍵字就可以了。</p>
-<pre class="code go"><a name="rest_code_ffbfa9eda8da4fd9a9222b41ab24ba54-1"></a><span class="kd">var</span> <span class="nx">count</span> <span class="kd">chan</span> <span class="kt">int</span>
+<pre class="code go"><a name="rest_code_6f863c9fc86b4e10985955768705f86c-1"></a><span class="kd">var</span> <span class="nx">count</span> <span class="kd">chan</span> <span class="kt">int</span>
 </pre>
 <p>這樣就可以透過 &lt;- 賦值與取值</p>
-<pre class="code go"><a name="rest_code_55900ac50dec4beda40a0c75ba9c262d-1"></a><span class="c1">//將 i assign 給 count</span>
-<a name="rest_code_55900ac50dec4beda40a0c75ba9c262d-2"></a><span class="nx">count</span> <span class="o">&lt;-</span> <span class="nx">i</span>
-<a name="rest_code_55900ac50dec4beda40a0c75ba9c262d-3"></a><span class="c1">//從 count 取出值</span>
-<a name="rest_code_55900ac50dec4beda40a0c75ba9c262d-4"></a><span class="nx">value</span> <span class="o">:=</span> <span class="o">&lt;-</span> <span class="nx">count</span>
+<pre class="code go"><a name="rest_code_3da5bfc7b4374550818573ff5275ad21-1"></a><span class="c1">//將 i assign 給 count</span>
+<a name="rest_code_3da5bfc7b4374550818573ff5275ad21-2"></a><span class="nx">count</span> <span class="o">&lt;-</span> <span class="nx">i</span>
+<a name="rest_code_3da5bfc7b4374550818573ff5275ad21-3"></a><span class="c1">//從 count 取出值</span>
+<a name="rest_code_3da5bfc7b4374550818573ff5275ad21-4"></a><span class="nx">value</span> <span class="o">:=</span> <span class="o">&lt;-</span> <span class="nx">count</span>
 </pre>
 <p>而要決定 channel 可以放的數量則是可以透過</p>
-<pre class="code go"><a name="rest_code_a22f3b6959194b789739a2030d260f40-1"></a><span class="nx">count</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<pre class="code go"><a name="rest_code_a345fb837e7f4cd1bbd845c52bfad19d-1"></a><span class="nx">count</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 </pre>
 <p>的方式來決定。</p>
 <p>以上面的程式碼為例子，當 count 裡面沒有東西時，使用 &lt;- count 會 block 住直到有值寫入。
@@ -102,8 +102,8 @@ go func()</blockquote>
 <p>雖然後來使用了 goroutine 讓每一個 EPUB 電子書的轉換都可以平行處理，
 但是我發現 CPU 使用率卻依然只有 25 %。</p>
 <p>後來才發現是還要再設定 GOMAXPROCS 來讓 Go 知道要用幾個核心。</p>
-<pre class="code go"><a name="rest_code_6a6b01f50d764223bb8e52ba34cab376-1"></a><span class="c1">//透過 runtime.NumCPU() 取得 CPU 核心數</span>
-<a name="rest_code_6a6b01f50d764223bb8e52ba34cab376-2"></a><span class="nx">runtime</span><span class="p">.</span><span class="nx">GOMAXPROCS</span><span class="p">(</span><span class="nx">runtime</span><span class="p">.</span><span class="nx">NumCPU</span><span class="p">())</span>
+<pre class="code go"><a name="rest_code_b0c8a6dd405b47e5b2f4cc63b17854ea-1"></a><span class="c1">//透過 runtime.NumCPU() 取得 CPU 核心數</span>
+<a name="rest_code_b0c8a6dd405b47e5b2f4cc63b17854ea-2"></a><span class="nx">runtime</span><span class="p">.</span><span class="nx">GOMAXPROCS</span><span class="p">(</span><span class="nx">runtime</span><span class="p">.</span><span class="nx">NumCPU</span><span class="p">())</span>
 </pre>
 <p>這樣就終於看得到 CPU 使用率到 100% 了 ...</p>
 </div>
@@ -113,17 +113,17 @@ go func()</blockquote>
 <p>Go 另外一點讓我還蠻喜歡的就是，他的設計非常的實用。
 雖然還沒有很完整，但是一般開發常用的東西他都會幫你想到。
 例如寫在 test case 內的 benchmark。</p>
-<pre class="code go"><a name="rest_code_5cb073f7f0ec4733a794a8b900c89a57-1"></a><span class="kn">package</span> <span class="nx">main</span>
-<a name="rest_code_5cb073f7f0ec4733a794a8b900c89a57-2"></a>
-<a name="rest_code_5cb073f7f0ec4733a794a8b900c89a57-3"></a><span class="kn">import</span> <span class="p">(</span>
-<a name="rest_code_5cb073f7f0ec4733a794a8b900c89a57-4"></a>        <span class="s">"runtime"</span>
-<a name="rest_code_5cb073f7f0ec4733a794a8b900c89a57-5"></a>        <span class="s">"testing"</span>
-<a name="rest_code_5cb073f7f0ec4733a794a8b900c89a57-6"></a><span class="p">)</span>
-<a name="rest_code_5cb073f7f0ec4733a794a8b900c89a57-7"></a>
-<a name="rest_code_5cb073f7f0ec4733a794a8b900c89a57-8"></a><span class="kd">func</span> <span class="nx">BenchmarkConvertCore4</span><span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">B</span><span class="p">)</span> <span class="p">{</span>
-<a name="rest_code_5cb073f7f0ec4733a794a8b900c89a57-9"></a>        <span class="c1">// 4 代表使用的核心數</span>
-<a name="rest_code_5cb073f7f0ec4733a794a8b900c89a57-10"></a>        <span class="nx">executeConvert</span><span class="p">(</span><span class="s">"./testdata"</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-<a name="rest_code_5cb073f7f0ec4733a794a8b900c89a57-11"></a><span class="p">}</span>
+<pre class="code go"><a name="rest_code_dc8ddf7bac9240e8a0293dc2afb3d9c3-1"></a><span class="kn">package</span> <span class="nx">main</span>
+<a name="rest_code_dc8ddf7bac9240e8a0293dc2afb3d9c3-2"></a>
+<a name="rest_code_dc8ddf7bac9240e8a0293dc2afb3d9c3-3"></a><span class="kn">import</span> <span class="p">(</span>
+<a name="rest_code_dc8ddf7bac9240e8a0293dc2afb3d9c3-4"></a>        <span class="s">"runtime"</span>
+<a name="rest_code_dc8ddf7bac9240e8a0293dc2afb3d9c3-5"></a>        <span class="s">"testing"</span>
+<a name="rest_code_dc8ddf7bac9240e8a0293dc2afb3d9c3-6"></a><span class="p">)</span>
+<a name="rest_code_dc8ddf7bac9240e8a0293dc2afb3d9c3-7"></a>
+<a name="rest_code_dc8ddf7bac9240e8a0293dc2afb3d9c3-8"></a><span class="kd">func</span> <span class="nx">BenchmarkConvertCore4</span><span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">B</span><span class="p">)</span> <span class="p">{</span>
+<a name="rest_code_dc8ddf7bac9240e8a0293dc2afb3d9c3-9"></a>        <span class="c1">// 4 代表使用的核心數</span>
+<a name="rest_code_dc8ddf7bac9240e8a0293dc2afb3d9c3-10"></a>        <span class="nx">executeConvert</span><span class="p">(</span><span class="s">"./testdata"</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<a name="rest_code_dc8ddf7bac9240e8a0293dc2afb3d9c3-11"></a><span class="p">}</span>
 </pre>
 <p>測試結果</p>
 <p>使用四核心:</p>
