@@ -1,7 +1,7 @@
 .. title: 在 Python 使用 nanomsg
 .. slug: python-nanomsg
 .. date: 03/31/2015 10:36:25 PM UTC+08:00
-.. tags: python, draft 
+.. tags: python 
 .. link: 
 .. description: 
 .. type: text
@@ -12,7 +12,7 @@
 
 因為用膩了 Python 裡面的 Queue，並且幻想以後程式可以在不同的地方上執行。
 
-所以選擇了 `nanomsg`_ 雖然現在只是在 Process 間溝通，但是真要改成透過 http 的時候，
+所以選擇了 `nanomsg`_ 雖然現在只是在 Process 間溝通，但是真要改成透過網路溝通的時候，
 
 只需要改變 nanomsg 的 protocol 就可以了。
 
@@ -100,10 +100,74 @@ PAIR
     socket_client.connect(address)
     recieved = socket_client.recv()
 
+PUBSUB
+------------------------------------------------
 
+我對他的理解是跟 Observer pattern 一樣。
 
+PUB 是 Subject 的角色，而且他 SUB 就是 Observer，
+
+當 PUB 發送訊息的時候，只有有興趣的 Observer 會被通知。
+
+.. figure:: http://tim.dysinger.net/img/2013-09-16-getting-started-with-nanomsg/pubsub.png
+
+.. code:: python
+
+    from nanomsg import (
+        SUB,
+        PUB,
+        SUB_SUBSCRIBE,
+        Socket
+    )
+    
+    address = "inproc://address"
+    # Server
+    socket_server = Socket(PUB)
+    socket_server.bind(address)
+   
+    
+    # Client
+    socket_client = Socket(SUB)
+    socket_client.set_string_option(SUB, SUB_SUBSCRIBE, 'test')
+    socket_client.connect(address)
+    
+    # Send message
+    socket_server.send(b'ABC')
+    socket_server.send(b'test')
+    recieved = socket_client.recv()
+    
+    print recieved
+
+上面的範例中，socket_client 所收到的應該會是 test，因為在
+
+.. code:: python
+
+    socket_client.set_string_option(SUB, SUB_SUBSCRIBE, 'test')
+    
+有註冊了，只對於 test 開頭資訊的有興趣。
+
+如果要接收所有的訊息（例如傳送的資料是 binary 格式等）
+
+.. code:: python
+
+    socket_client.set_string_option(SUB, SUB_SUBSCRIBE, '')
+    
+這樣設定就可以了
+    
+.. figure:: https://dl.dropboxusercontent.com/u/15537823/Blog/kimiuso.jpg
+
+.. raw:: html
+   
+   <blockquote>
+   <p>四月は君の嘘</p>
+   </blockquote>
+   
+這個看的我胃超痛的 T_T
+
+不過是個好作品！
     
 .. _nanomsg: http://nanomsg.org/
 .. _nanomsg-python: https://github.com/tonysimpson/nanomsg-python
 .. _tests: https://github.com/tonysimpson/nanomsg-python/tree/master/tests
 .. _Getting Started with 'nanomsg': http://tim.dysinger.net/posts/2013-09-16-getting-started-with-nanomsg.html
+.. _Observer pattern: https://www.wikiwand.com/en/Observer_pattern
