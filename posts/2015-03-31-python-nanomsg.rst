@@ -1,7 +1,7 @@
 .. title: 在 Python 使用 nanomsg
 .. slug: python-nanomsg
 .. date: 03/31/2015 10:36:25 PM UTC+08:00
-.. tags: python 
+.. tags: Python 
 .. link: 
 .. description: 
 .. type: text
