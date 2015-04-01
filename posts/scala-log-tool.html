@@ -100,10 +100,10 @@ slf4s + slf4j + logback
 </configuration> -->
 <p>之後我還有多使用 <a class="reference external" href="https://github.com/weiglewilczek/slf4s">slf4s</a> 來讓 slf4j 的使用更有 Scala 的味道，不過其實也就只是多了一個 trait 讓你的 scala class 可以直接繼承，讓你省下一些麻煩
 例如：</p>
-<pre class="code scala"><a name="rest_code_e2f1ff73502c4c0e8f6c898c44b64e2e-1"></a><span class="k">class</span> <span class="nc">MyClazz</span> <span class="k">with</span> <span class="nc">Logging</span>
-<a name="rest_code_e2f1ff73502c4c0e8f6c898c44b64e2e-2"></a><span class="o">{</span>
-<a name="rest_code_e2f1ff73502c4c0e8f6c898c44b64e2e-3"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="o">(</span><span class="s">"Creator"</span><span class="o">)</span>
-<a name="rest_code_e2f1ff73502c4c0e8f6c898c44b64e2e-4"></a><span class="o">}</span>
+<pre class="code scala"><a name="rest_code_2be06e34088b4680884759deba56b065-1"></a><span class="k">class</span> <span class="nc">MyClazz</span> <span class="k">with</span> <span class="nc">Logging</span>
+<a name="rest_code_2be06e34088b4680884759deba56b065-2"></a><span class="o">{</span>
+<a name="rest_code_2be06e34088b4680884759deba56b065-3"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="o">(</span><span class="s">"Creator"</span><span class="o">)</span>
+<a name="rest_code_2be06e34088b4680884759deba56b065-4"></a><span class="o">}</span>
 </pre>
 <p>最後是額外找到的 <a class="reference external" href="http://www.ac.net.blog.163.com/blog/static/1364905620111023304126/">打一句log時間不到一納秒！完爆log4j、logback、slf4j</a> ，但是我沒有用因為還沒有效能上的需求，不過我有稍微看一下程式碼，加上下面留言者給的提示。
 在使用logger印出訊息之前，先進行 logger.isTraceEnabled、logger.isDebugEnable 等的判斷，就可以在編譯的時候進行最佳化。</p>

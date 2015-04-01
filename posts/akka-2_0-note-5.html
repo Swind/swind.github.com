@@ -83,63 +83,63 @@ MathJax.Hub.Config({
 </ol>
 <!-- TEASER_END --><div class="section" id="master-actor">
 <h2>Master Actor</h2>
-<pre class="code scala"><a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-1"></a><span class="cm">/*</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-2"></a><span class="cm"> *  Master Actor，負責整個工作運作流程的 Actor。</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-3"></a><span class="cm"> *  接收 Job、分派 Task 以及當發現 Worker Terminal 或者是全部 Task 都執行完畢之後。</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-4"></a><span class="cm"> *  將結果整理好之後回傳</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-5"></a><span class="cm"> */</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-6"></a>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-7"></a><span class="k">class</span> <span class="nc">Master</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-8"></a>  <span class="k">var</span> <span class="n">results</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">[</span><span class="kt">Int</span>, <span class="kt">Int</span><span class="o">]()</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-9"></a>  <span class="k">var</span> <span class="n">replyTo</span><span class="k">:</span> <span class="kt">ActorRef</span> <span class="o">=</span> <span class="k">_</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-10"></a>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-11"></a><span class="cm">/*</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-12"></a><span class="cm"> *  Router 這邊的 Router 種類是使用 RoundRobinRouter，</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-13"></a><span class="cm"> *  他會輪流將 Message 傳給底下的 Worker。</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-14"></a><span class="cm"> *  例如：若他底下有 5 個 Worker，那麼就會</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-15"></a><span class="cm"> *</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-16"></a><span class="cm"> *     Worker 1</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-17"></a><span class="cm"> *     Worker 2</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-18"></a><span class="cm"> *     ...</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-19"></a><span class="cm"> *     Worker 5</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-20"></a><span class="cm"> *     Worker 1</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-21"></a><span class="cm"> *</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-22"></a><span class="cm"> *  這樣的順序傳遞。</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-23"></a><span class="cm"> */</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-24"></a>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-25"></a>  <span class="k">val</span> <span class="n">router</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">Worker</span><span class="o">).</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-26"></a>    <span class="n">withRouter</span><span class="o">(</span><span class="nc">RoundRobinRouter</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-27"></a>      <span class="n">supervisorStrategy</span> <span class="k">=</span> <span class="nc">OneForOneStrategy</span><span class="o">(</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-28"></a>        <span class="n">maxNrOfRetries</span> <span class="k">=</span> <span class="mi">2</span><span class="o">)</span> <span class="o">{</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-29"></a>          <span class="k">case</span> <span class="k">_:</span> <span class="kt">IOException</span> <span class="o">=&gt;</span> <span class="nc">Restart</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-30"></a>        <span class="o">})),</span> <span class="n">name</span> <span class="k">=</span> <span class="s">"router"</span><span class="o">)</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-31"></a>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-32"></a>  <span class="n">router</span> <span class="o">!</span> <span class="nc">CurrentRoutees</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-33"></a>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-34"></a>  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-35"></a>    <span class="k">case</span> <span class="nc">RouterRoutees</span><span class="o">(</span><span class="n">routees</span><span class="o">)</span> <span class="k">=&gt;</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-36"></a>      <span class="n">routees</span> <span class="n">foreach</span> <span class="n">context</span><span class="o">.</span><span class="n">watch</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-37"></a>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-38"></a>    <span class="k">case</span> <span class="s">"start"</span> <span class="k">=&gt;</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-39"></a>      <span class="n">replyTo</span> <span class="k">=</span> <span class="n">sender</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-40"></a>      <span class="k">for</span> <span class="o">(</span><span class="n">id</span> <span class="k">←</span> <span class="mi">1</span> <span class="n">to</span> <span class="mi">10</span><span class="o">)</span> <span class="n">router</span> <span class="o">!</span> <span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="s">"22"</span><span class="o">)</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-41"></a>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-42"></a>    <span class="k">case</span> <span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">result</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=&gt;</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-43"></a>      <span class="n">results</span> <span class="o">+=</span> <span class="o">(</span><span class="n">id</span> <span class="o">-&gt;</span> <span class="n">result</span><span class="o">)</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-44"></a>      <span class="k">if</span> <span class="o">(</span><span class="n">results</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">10</span><span class="o">)</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-45"></a>        <span class="n">replyTo</span> <span class="o">!</span> <span class="n">results</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">sum</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-46"></a>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-47"></a>    <span class="k">case</span> <span class="nc">Terminated</span><span class="o">(</span><span class="n">actor</span><span class="o">)</span> <span class="k">=&gt;</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-48"></a>      <span class="n">replyTo</span> <span class="o">!</span> <span class="o">-</span><span class="mi">1</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-49"></a>      <span class="n">context</span><span class="o">.</span><span class="n">stop</span><span class="o">(</span><span class="n">self</span><span class="o">)</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-50"></a>  <span class="o">}</span>
-<a name="rest_code_f5af34f2527f4301972d2d6f191b14d0-51"></a><span class="o">}</span>
+<pre class="code scala"><a name="rest_code_b564a63ce01c4638b0393eab3094b69b-1"></a><span class="cm">/*</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-2"></a><span class="cm"> *  Master Actor，負責整個工作運作流程的 Actor。</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-3"></a><span class="cm"> *  接收 Job、分派 Task 以及當發現 Worker Terminal 或者是全部 Task 都執行完畢之後。</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-4"></a><span class="cm"> *  將結果整理好之後回傳</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-5"></a><span class="cm"> */</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-6"></a>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-7"></a><span class="k">class</span> <span class="nc">Master</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-8"></a>  <span class="k">var</span> <span class="n">results</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">[</span><span class="kt">Int</span>, <span class="kt">Int</span><span class="o">]()</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-9"></a>  <span class="k">var</span> <span class="n">replyTo</span><span class="k">:</span> <span class="kt">ActorRef</span> <span class="o">=</span> <span class="k">_</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-10"></a>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-11"></a><span class="cm">/*</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-12"></a><span class="cm"> *  Router 這邊的 Router 種類是使用 RoundRobinRouter，</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-13"></a><span class="cm"> *  他會輪流將 Message 傳給底下的 Worker。</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-14"></a><span class="cm"> *  例如：若他底下有 5 個 Worker，那麼就會</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-15"></a><span class="cm"> *</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-16"></a><span class="cm"> *     Worker 1</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-17"></a><span class="cm"> *     Worker 2</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-18"></a><span class="cm"> *     ...</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-19"></a><span class="cm"> *     Worker 5</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-20"></a><span class="cm"> *     Worker 1</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-21"></a><span class="cm"> *</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-22"></a><span class="cm"> *  這樣的順序傳遞。</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-23"></a><span class="cm"> */</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-24"></a>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-25"></a>  <span class="k">val</span> <span class="n">router</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">Worker</span><span class="o">).</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-26"></a>    <span class="n">withRouter</span><span class="o">(</span><span class="nc">RoundRobinRouter</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-27"></a>      <span class="n">supervisorStrategy</span> <span class="k">=</span> <span class="nc">OneForOneStrategy</span><span class="o">(</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-28"></a>        <span class="n">maxNrOfRetries</span> <span class="k">=</span> <span class="mi">2</span><span class="o">)</span> <span class="o">{</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-29"></a>          <span class="k">case</span> <span class="k">_:</span> <span class="kt">IOException</span> <span class="o">=&gt;</span> <span class="nc">Restart</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-30"></a>        <span class="o">})),</span> <span class="n">name</span> <span class="k">=</span> <span class="s">"router"</span><span class="o">)</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-31"></a>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-32"></a>  <span class="n">router</span> <span class="o">!</span> <span class="nc">CurrentRoutees</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-33"></a>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-34"></a>  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-35"></a>    <span class="k">case</span> <span class="nc">RouterRoutees</span><span class="o">(</span><span class="n">routees</span><span class="o">)</span> <span class="k">=&gt;</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-36"></a>      <span class="n">routees</span> <span class="n">foreach</span> <span class="n">context</span><span class="o">.</span><span class="n">watch</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-37"></a>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-38"></a>    <span class="k">case</span> <span class="s">"start"</span> <span class="k">=&gt;</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-39"></a>      <span class="n">replyTo</span> <span class="k">=</span> <span class="n">sender</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-40"></a>      <span class="k">for</span> <span class="o">(</span><span class="n">id</span> <span class="k">←</span> <span class="mi">1</span> <span class="n">to</span> <span class="mi">10</span><span class="o">)</span> <span class="n">router</span> <span class="o">!</span> <span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="s">"22"</span><span class="o">)</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-41"></a>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-42"></a>    <span class="k">case</span> <span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">result</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=&gt;</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-43"></a>      <span class="n">results</span> <span class="o">+=</span> <span class="o">(</span><span class="n">id</span> <span class="o">-&gt;</span> <span class="n">result</span><span class="o">)</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-44"></a>      <span class="k">if</span> <span class="o">(</span><span class="n">results</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">10</span><span class="o">)</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-45"></a>        <span class="n">replyTo</span> <span class="o">!</span> <span class="n">results</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">sum</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-46"></a>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-47"></a>    <span class="k">case</span> <span class="nc">Terminated</span><span class="o">(</span><span class="n">actor</span><span class="o">)</span> <span class="k">=&gt;</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-48"></a>      <span class="n">replyTo</span> <span class="o">!</span> <span class="o">-</span><span class="mi">1</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-49"></a>      <span class="n">context</span><span class="o">.</span><span class="n">stop</span><span class="o">(</span><span class="n">self</span><span class="o">)</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-50"></a>  <span class="o">}</span>
+<a name="rest_code_b564a63ce01c4638b0393eab3094b69b-51"></a><span class="o">}</span>
 </pre>
 <div class="section" id="id1">
 <h3>Master Actor 的初始化</h3>
 <p>上面的程式碼的註解有稍微介紹一下 Master 與 Router 的功能，這邊就針對程式碼的運作內容作些講解。</p>
 <p>首先我們先看到這段程式碼</p>
-<pre class="code scala"><a name="rest_code_9ace234d5d354e31bf1a600cd5b16e4a-1"></a><span class="n">router</span> <span class="o">!</span> <span class="nc">CurrentRoutees</span>
+<pre class="code scala"><a name="rest_code_a656dff9a4ff4ed7bb7f0f0210a8de8d-1"></a><span class="n">router</span> <span class="o">!</span> <span class="nc">CurrentRoutees</span>
 </pre>
 <p><strong>CurrentRoutess</strong> 這邊困擾了我一段時間，因為我在 Akka 的文件裡面並沒有看到這個物件的說明，且在 API Document 裡面我也沒有看到相關的介紹 Orz ...</p>
 <p>一直到仔細看 receive 裡面的內容之後才發現，這程式碼的功能是發一個 Message 給 Router，Router 在接收到這個訊息之後，
@@ -172,10 +172,10 @@ Main -&gt; Router -&gt; Worker Actor</blockquote>
 <p>Scatter 的部份就這麼簡單解決，但是下一個 Gather 的部份就比較麻煩了。
 理由很簡單。因為 Router 只有負責分派的部份，Worker Actor 回傳的對象是一開始發 Message 的 Actor，
 所以要另外針對回傳的 Message 作處理。下面的程式碼會在回傳的訊息累積到 10 個之後才將全部一起加總回傳。</p>
-<pre class="code scala"><a name="rest_code_10f5655f5f4742baad3678fbac5a6834-1"></a><span class="k">case</span> <span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">result</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=&gt;</span>
-<a name="rest_code_10f5655f5f4742baad3678fbac5a6834-2"></a>   <span class="n">results</span> <span class="o">+=</span> <span class="o">(</span><span class="n">id</span> <span class="o">-&gt;</span> <span class="n">result</span><span class="o">)</span>
-<a name="rest_code_10f5655f5f4742baad3678fbac5a6834-3"></a>   <span class="k">if</span> <span class="o">(</span><span class="n">results</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">10</span><span class="o">)</span>
-<a name="rest_code_10f5655f5f4742baad3678fbac5a6834-4"></a>     <span class="n">replyTo</span> <span class="o">!</span> <span class="n">results</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">sum</span>
+<pre class="code scala"><a name="rest_code_f321daa0850f4ac1ad9e03f77cb481fe-1"></a><span class="k">case</span> <span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">result</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=&gt;</span>
+<a name="rest_code_f321daa0850f4ac1ad9e03f77cb481fe-2"></a>   <span class="n">results</span> <span class="o">+=</span> <span class="o">(</span><span class="n">id</span> <span class="o">-&gt;</span> <span class="n">result</span><span class="o">)</span>
+<a name="rest_code_f321daa0850f4ac1ad9e03f77cb481fe-3"></a>   <span class="k">if</span> <span class="o">(</span><span class="n">results</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">10</span><span class="o">)</span>
+<a name="rest_code_f321daa0850f4ac1ad9e03f77cb481fe-4"></a>     <span class="n">replyTo</span> <span class="o">!</span> <span class="n">results</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">sum</span>
 </pre>
 <p>但是很明顯的，這樣還不足夠，如果同時間 Master Actor 接收到多個 Job，那麼要如何分辨 Worker Actor 所回傳的 Result 是哪個 Job 的？</p>
 <p>目前想到的解決方式有</p>
@@ -193,29 +193,29 @@ Main -&gt; Router -&gt; Worker Actor</blockquote>
 <h2>Worker Actor</h2>
 <p>這是在 Let it Crash 裡面 Worker Actor 的程式碼，他接收的 Message 型態很簡單只有一種 (id,s:String)，這是在 Scala 稱之為 Tuple 的物件。
 會有兩種是因為這個範例會模擬當 Worker Actor 執行發生 Exception 的情況。</p>
-<pre class="code scala"><a name="rest_code_08fc0113f0864d66acb3d396b8024f9a-1"></a><span class="k">class</span> <span class="nc">Worker</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
-<a name="rest_code_08fc0113f0864d66acb3d396b8024f9a-2"></a>  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
-<a name="rest_code_08fc0113f0864d66acb3d396b8024f9a-3"></a>    <span class="k">case</span> <span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">s</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">if</span> <span class="nc">Random</span><span class="o">.</span><span class="n">nextInt</span><span class="o">(</span><span class="mi">4</span><span class="o">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">=&gt;</span>
-<a name="rest_code_08fc0113f0864d66acb3d396b8024f9a-4"></a>      <span class="k">throw</span> <span class="k">new</span> <span class="nc">IOException</span><span class="o">(</span><span class="s">"failed"</span><span class="o">)</span>
-<a name="rest_code_08fc0113f0864d66acb3d396b8024f9a-5"></a>    <span class="k">case</span> <span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">s</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">=&gt;</span>
-<a name="rest_code_08fc0113f0864d66acb3d396b8024f9a-6"></a>      <span class="n">sender</span> <span class="o">!</span> <span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">s</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
-<a name="rest_code_08fc0113f0864d66acb3d396b8024f9a-7"></a>  <span class="o">}</span>
-<a name="rest_code_08fc0113f0864d66acb3d396b8024f9a-8"></a>
-<a name="rest_code_08fc0113f0864d66acb3d396b8024f9a-9"></a>  <span class="k">override</span> <span class="k">def</span> <span class="n">preRestart</span><span class="o">(</span>
-<a name="rest_code_08fc0113f0864d66acb3d396b8024f9a-10"></a>    <span class="n">reason</span><span class="k">:</span> <span class="kt">Throwable</span><span class="o">,</span> <span class="n">message</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Any</span><span class="o">])</span> <span class="o">{</span>
-<a name="rest_code_08fc0113f0864d66acb3d396b8024f9a-11"></a>    <span class="c1">// retry</span>
-<a name="rest_code_08fc0113f0864d66acb3d396b8024f9a-12"></a>    <span class="n">message</span> <span class="n">foreach</span> <span class="o">{</span> <span class="n">self</span> <span class="n">forward</span> <span class="k">_</span> <span class="o">}</span>
-<a name="rest_code_08fc0113f0864d66acb3d396b8024f9a-13"></a>  <span class="o">}</span>
-<a name="rest_code_08fc0113f0864d66acb3d396b8024f9a-14"></a><span class="o">}</span>
+<pre class="code scala"><a name="rest_code_9e29d58ba70041b9809b7306f4ebeb9f-1"></a><span class="k">class</span> <span class="nc">Worker</span> <span class="k">extends</span> <span class="nc">Actor</span> <span class="o">{</span>
+<a name="rest_code_9e29d58ba70041b9809b7306f4ebeb9f-2"></a>  <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+<a name="rest_code_9e29d58ba70041b9809b7306f4ebeb9f-3"></a>    <span class="k">case</span> <span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">s</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">if</span> <span class="nc">Random</span><span class="o">.</span><span class="n">nextInt</span><span class="o">(</span><span class="mi">4</span><span class="o">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">=&gt;</span>
+<a name="rest_code_9e29d58ba70041b9809b7306f4ebeb9f-4"></a>      <span class="k">throw</span> <span class="k">new</span> <span class="nc">IOException</span><span class="o">(</span><span class="s">"failed"</span><span class="o">)</span>
+<a name="rest_code_9e29d58ba70041b9809b7306f4ebeb9f-5"></a>    <span class="k">case</span> <span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">s</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">=&gt;</span>
+<a name="rest_code_9e29d58ba70041b9809b7306f4ebeb9f-6"></a>      <span class="n">sender</span> <span class="o">!</span> <span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">s</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+<a name="rest_code_9e29d58ba70041b9809b7306f4ebeb9f-7"></a>  <span class="o">}</span>
+<a name="rest_code_9e29d58ba70041b9809b7306f4ebeb9f-8"></a>
+<a name="rest_code_9e29d58ba70041b9809b7306f4ebeb9f-9"></a>  <span class="k">override</span> <span class="k">def</span> <span class="n">preRestart</span><span class="o">(</span>
+<a name="rest_code_9e29d58ba70041b9809b7306f4ebeb9f-10"></a>    <span class="n">reason</span><span class="k">:</span> <span class="kt">Throwable</span><span class="o">,</span> <span class="n">message</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Any</span><span class="o">])</span> <span class="o">{</span>
+<a name="rest_code_9e29d58ba70041b9809b7306f4ebeb9f-11"></a>    <span class="c1">// retry</span>
+<a name="rest_code_9e29d58ba70041b9809b7306f4ebeb9f-12"></a>    <span class="n">message</span> <span class="n">foreach</span> <span class="o">{</span> <span class="n">self</span> <span class="n">forward</span> <span class="k">_</span> <span class="o">}</span>
+<a name="rest_code_9e29d58ba70041b9809b7306f4ebeb9f-13"></a>  <span class="o">}</span>
+<a name="rest_code_9e29d58ba70041b9809b7306f4ebeb9f-14"></a><span class="o">}</span>
 </pre>
 <p>比較有趣的是 preRestart ，這可以跟前面 Master Actor 內的 Router 一起看一下。</p>
-<pre class="code scala"><a name="rest_code_427ffc84fff24c839050570c696493d0-1"></a><span class="k">val</span> <span class="n">router</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">Worker</span><span class="o">).</span>
-<a name="rest_code_427ffc84fff24c839050570c696493d0-2"></a>    <span class="n">withRouter</span><span class="o">(</span>
-<a name="rest_code_427ffc84fff24c839050570c696493d0-3"></a>    <span class="nc">RoundRobinRouter</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span>
-<a name="rest_code_427ffc84fff24c839050570c696493d0-4"></a>      <span class="n">supervisorStrategy</span> <span class="k">=</span> <span class="nc">OneForOneStrategy</span><span class="o">(</span>
-<a name="rest_code_427ffc84fff24c839050570c696493d0-5"></a>        <span class="n">maxNrOfRetries</span> <span class="k">=</span> <span class="mi">2</span><span class="o">)</span> <span class="o">{</span>
-<a name="rest_code_427ffc84fff24c839050570c696493d0-6"></a>          <span class="k">case</span> <span class="k">_:</span> <span class="kt">IOException</span> <span class="o">=&gt;</span> <span class="nc">Restart</span>
-<a name="rest_code_427ffc84fff24c839050570c696493d0-7"></a>        <span class="o">})),</span> <span class="n">name</span> <span class="k">=</span> <span class="s">"router"</span><span class="o">)</span>
+<pre class="code scala"><a name="rest_code_516d1a26e6304a669a8c2186fa4d917b-1"></a><span class="k">val</span> <span class="n">router</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">Worker</span><span class="o">).</span>
+<a name="rest_code_516d1a26e6304a669a8c2186fa4d917b-2"></a>    <span class="n">withRouter</span><span class="o">(</span>
+<a name="rest_code_516d1a26e6304a669a8c2186fa4d917b-3"></a>    <span class="nc">RoundRobinRouter</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span>
+<a name="rest_code_516d1a26e6304a669a8c2186fa4d917b-4"></a>      <span class="n">supervisorStrategy</span> <span class="k">=</span> <span class="nc">OneForOneStrategy</span><span class="o">(</span>
+<a name="rest_code_516d1a26e6304a669a8c2186fa4d917b-5"></a>        <span class="n">maxNrOfRetries</span> <span class="k">=</span> <span class="mi">2</span><span class="o">)</span> <span class="o">{</span>
+<a name="rest_code_516d1a26e6304a669a8c2186fa4d917b-6"></a>          <span class="k">case</span> <span class="k">_:</span> <span class="kt">IOException</span> <span class="o">=&gt;</span> <span class="nc">Restart</span>
+<a name="rest_code_516d1a26e6304a669a8c2186fa4d917b-7"></a>        <span class="o">})),</span> <span class="n">name</span> <span class="k">=</span> <span class="s">"router"</span><span class="o">)</span>
 </pre>
 <p>上面的 OneForOneStrategy 是 Akka 的特產，他可以設定 Supervisor（就是該 Actor 的管理者，例如 Worker Actor 的 supervisor 是 Router）</p>
 <p>對於他底下 Actor 的應對策略。這邊是設定當 Worker Actor 有丟出 IOException 的時候，所採取的應對是將該 Worker Actor Restart。

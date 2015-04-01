@@ -28,14 +28,14 @@ MathJax.Hub.Config({
 <meta property="og:description" content="這幾個月，難得有東西可以完全照自己的意思亂寫（因為開發者只有我一個）
 所以就開始測試一些只有聽過得工具。
 因為用膩了 Python 裡面的 Queue，並且幻想以後程式可以在不同的地方上執行。
-所以選擇了 nanomsg 雖然現在只是在 Process 間溝通，但是真要改成透過 http 的時候，
+所以選擇了 nanomsg 雖然現在只是在 Process 間溝通，但是真要改成透過網路溝通的時候，
 只需要改變 nanomsg 的 protocol 就可以了。
 
 
-安裝 nanomsg wrappe">
+安裝 nanomsg wrapper ">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2015-03-31T22:36:25+08:00">
-<meta property="article:tag" content="python">
+<meta property="article:tag" content="Python">
 </head>
 <body>
     <section class="social"><ul>
@@ -65,7 +65,7 @@ MathJax.Hub.Config({
         <div itemprop="keywords" class="tags">
         <ul>
         Tags : 
-           <li><a class="tag p-category" href="../categories/python.html" rel="tag">python</a></li>
+           <li><a class="tag p-category" href="../categories/python.html" rel="tag">Python</a></li>
         </ul>
 </div>
 
@@ -75,7 +75,7 @@ MathJax.Hub.Config({
 <p>這幾個月，難得有東西可以完全照自己的意思亂寫（因為開發者只有我一個）</p>
 <p>所以就開始測試一些只有聽過得工具。</p>
 <p>因為用膩了 Python 裡面的 Queue，並且幻想以後程式可以在不同的地方上執行。</p>
-<p>所以選擇了 <a class="reference external" href="http://nanomsg.org/">nanomsg</a> 雖然現在只是在 Process 間溝通，但是真要改成透過 http 的時候，</p>
+<p>所以選擇了 <a class="reference external" href="http://nanomsg.org/">nanomsg</a> 雖然現在只是在 Process 間溝通，但是真要改成透過網路溝通的時候，</p>
 <p>只需要改變 nanomsg 的 protocol 就可以了。</p>
 <!-- TEASER_END -->
 <div class="section" id="nanomsg-wrapper-for-python">
@@ -84,10 +84,10 @@ MathJax.Hub.Config({
 <p>其中 Python 推薦的是 <a class="reference external" href="https://github.com/tonysimpson/nanomsg-python">nanomsg-python</a></p>
 <p>但是 nanomsg-python 沒有辦法透過 pip 或者是 easy-install 安裝，</p>
 <p>所以必須手動 clone repository 執行 setup.py 來安裝。</p>
-<pre class="code bash"><a name="rest_code_ac00ac024c1744468e0dddd645f76523-1"></a>clone https://github.com/tonysimpson/nanomsg-python.git
-<a name="rest_code_ac00ac024c1744468e0dddd645f76523-2"></a><span class="nb">cd </span>nanomsg-python
-<a name="rest_code_ac00ac024c1744468e0dddd645f76523-3"></a>python setup.py build_ext
-<a name="rest_code_ac00ac024c1744468e0dddd645f76523-4"></a>python setup.py install
+<pre class="code bash"><a name="rest_code_ff10e5cc211f4b3aa33aa382745ade53-1"></a>clone https://github.com/tonysimpson/nanomsg-python.git
+<a name="rest_code_ff10e5cc211f4b3aa33aa382745ade53-2"></a><span class="nb">cd </span>nanomsg-python
+<a name="rest_code_ff10e5cc211f4b3aa33aa382745ade53-3"></a>python setup.py build_ext
+<a name="rest_code_ff10e5cc211f4b3aa33aa382745ade53-4"></a>python setup.py install
 </pre>
 <p>不過 nanomsg-python 沒有什麼文件，基本上 nanomsg 的界面他都有包裝出來。</p>
 <p>但是除此之外，他自己還有做更高一階的 API，可以參考 nanomsg-python 的 <a class="reference external" href="https://github.com/tonysimpson/nanomsg-python/tree/master/tests">tests</a></p>
@@ -102,14 +102,14 @@ MathJax.Hub.Config({
 <li>TCP</li>
 </ol>
 <p>這三種 protocols 的 address 長的樣子分別是</p>
-<pre class="code bash"><a name="rest_code_c45e8044cd164830a95a8524d8715be8-1"></a><span class="c"># INPROC</span>
-<a name="rest_code_c45e8044cd164830a95a8524d8715be8-2"></a>inproc://address
-<a name="rest_code_c45e8044cd164830a95a8524d8715be8-3"></a>
-<a name="rest_code_c45e8044cd164830a95a8524d8715be8-4"></a><span class="c"># IPC</span>
-<a name="rest_code_c45e8044cd164830a95a8524d8715be8-5"></a>ipc:///tmp/address
-<a name="rest_code_c45e8044cd164830a95a8524d8715be8-6"></a>
-<a name="rest_code_c45e8044cd164830a95a8524d8715be8-7"></a><span class="c"># TCP</span>
-<a name="rest_code_c45e8044cd164830a95a8524d8715be8-8"></a>tcp://*:5555
+<pre class="code bash"><a name="rest_code_7ca7eee118844b8f87a1e6fdfc6b5520-1"></a><span class="c"># INPROC</span>
+<a name="rest_code_7ca7eee118844b8f87a1e6fdfc6b5520-2"></a>inproc://address
+<a name="rest_code_7ca7eee118844b8f87a1e6fdfc6b5520-3"></a>
+<a name="rest_code_7ca7eee118844b8f87a1e6fdfc6b5520-4"></a><span class="c"># IPC</span>
+<a name="rest_code_7ca7eee118844b8f87a1e6fdfc6b5520-5"></a>ipc:///tmp/address
+<a name="rest_code_7ca7eee118844b8f87a1e6fdfc6b5520-6"></a>
+<a name="rest_code_7ca7eee118844b8f87a1e6fdfc6b5520-7"></a><span class="c"># TCP</span>
+<a name="rest_code_7ca7eee118844b8f87a1e6fdfc6b5520-8"></a>tcp://*:5555
 </pre>
 </div>
 <div class="section" id="nanomsg-python-pair-pubsub">
@@ -124,31 +124,83 @@ MathJax.Hub.Config({
 <div class="figure">
 <img alt="http://tim.dysinger.net/img/2013-09-16-getting-started-with-nanomsg/pipeline.png" src="http://tim.dysinger.net/img/2013-09-16-getting-started-with-nanomsg/pipeline.png">
 </div>
-<pre class="code python"><a name="rest_code_ab4f23bc9da040dfa3379a502c1037a1-1"></a><span class="kn">from</span> <span class="nn">nanomsg</span> <span class="kn">import</span> <span class="p">(</span>
-<a name="rest_code_ab4f23bc9da040dfa3379a502c1037a1-2"></a>    <span class="n">PAIR</span><span class="p">,</span>
-<a name="rest_code_ab4f23bc9da040dfa3379a502c1037a1-3"></a>    <span class="n">Socket</span>
-<a name="rest_code_ab4f23bc9da040dfa3379a502c1037a1-4"></a><span class="p">)</span>
-<a name="rest_code_ab4f23bc9da040dfa3379a502c1037a1-5"></a>
-<a name="rest_code_ab4f23bc9da040dfa3379a502c1037a1-6"></a><span class="n">address</span> <span class="o">=</span> <span class="s">"inproc://address"</span>
-<a name="rest_code_ab4f23bc9da040dfa3379a502c1037a1-7"></a><span class="c"># Server</span>
-<a name="rest_code_ab4f23bc9da040dfa3379a502c1037a1-8"></a><span class="n">socket_server</span> <span class="o">=</span> <span class="n">Socket</span><span class="p">(</span><span class="n">PAIR</span><span class="p">)</span>
-<a name="rest_code_ab4f23bc9da040dfa3379a502c1037a1-9"></a><span class="n">socket_server</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
-<a name="rest_code_ab4f23bc9da040dfa3379a502c1037a1-10"></a><span class="n">socket_server</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">b</span><span class="s">'ABC'</span><span class="p">)</span>
-<a name="rest_code_ab4f23bc9da040dfa3379a502c1037a1-11"></a>
-<a name="rest_code_ab4f23bc9da040dfa3379a502c1037a1-12"></a><span class="c"># Client</span>
-<a name="rest_code_ab4f23bc9da040dfa3379a502c1037a1-13"></a><span class="n">socket_client</span> <span class="o">=</span> <span class="n">Socket</span><span class="p">(</span><span class="n">PAIR</span><span class="p">)</span>
-<a name="rest_code_ab4f23bc9da040dfa3379a502c1037a1-14"></a><span class="n">socket_client</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
-<a name="rest_code_ab4f23bc9da040dfa3379a502c1037a1-15"></a><span class="n">recieved</span> <span class="o">=</span> <span class="n">socket_client</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+<pre class="code python"><a name="rest_code_cf4f9d5f44cf4e2684f93ab72d296bf7-1"></a><span class="kn">from</span> <span class="nn">nanomsg</span> <span class="kn">import</span> <span class="p">(</span>
+<a name="rest_code_cf4f9d5f44cf4e2684f93ab72d296bf7-2"></a>    <span class="n">PAIR</span><span class="p">,</span>
+<a name="rest_code_cf4f9d5f44cf4e2684f93ab72d296bf7-3"></a>    <span class="n">Socket</span>
+<a name="rest_code_cf4f9d5f44cf4e2684f93ab72d296bf7-4"></a><span class="p">)</span>
+<a name="rest_code_cf4f9d5f44cf4e2684f93ab72d296bf7-5"></a>
+<a name="rest_code_cf4f9d5f44cf4e2684f93ab72d296bf7-6"></a><span class="n">address</span> <span class="o">=</span> <span class="s">"inproc://address"</span>
+<a name="rest_code_cf4f9d5f44cf4e2684f93ab72d296bf7-7"></a><span class="c"># Server</span>
+<a name="rest_code_cf4f9d5f44cf4e2684f93ab72d296bf7-8"></a><span class="n">socket_server</span> <span class="o">=</span> <span class="n">Socket</span><span class="p">(</span><span class="n">PAIR</span><span class="p">)</span>
+<a name="rest_code_cf4f9d5f44cf4e2684f93ab72d296bf7-9"></a><span class="n">socket_server</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
+<a name="rest_code_cf4f9d5f44cf4e2684f93ab72d296bf7-10"></a><span class="n">socket_server</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">b</span><span class="s">'ABC'</span><span class="p">)</span>
+<a name="rest_code_cf4f9d5f44cf4e2684f93ab72d296bf7-11"></a>
+<a name="rest_code_cf4f9d5f44cf4e2684f93ab72d296bf7-12"></a><span class="c"># Client</span>
+<a name="rest_code_cf4f9d5f44cf4e2684f93ab72d296bf7-13"></a><span class="n">socket_client</span> <span class="o">=</span> <span class="n">Socket</span><span class="p">(</span><span class="n">PAIR</span><span class="p">)</span>
+<a name="rest_code_cf4f9d5f44cf4e2684f93ab72d296bf7-14"></a><span class="n">socket_client</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
+<a name="rest_code_cf4f9d5f44cf4e2684f93ab72d296bf7-15"></a><span class="n">recieved</span> <span class="o">=</span> <span class="n">socket_client</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
 </pre>
+</div>
+<div class="section" id="pubsub">
+<h3>PUBSUB</h3>
+<p>我對他的理解是跟 Observer pattern 一樣。</p>
+<p>PUB 是 Subject 的角色，而且他 SUB 就是 Observer，</p>
+<p>當 PUB 發送訊息的時候，只有有興趣的 Observer 會被通知。</p>
+<div class="figure">
+<img alt="http://tim.dysinger.net/img/2013-09-16-getting-started-with-nanomsg/pubsub.png" src="http://tim.dysinger.net/img/2013-09-16-getting-started-with-nanomsg/pubsub.png">
+</div>
+<pre class="code python"><a name="rest_code_ff376d188ab948538fb341b017ebe225-1"></a><span class="kn">from</span> <span class="nn">nanomsg</span> <span class="kn">import</span> <span class="p">(</span>
+<a name="rest_code_ff376d188ab948538fb341b017ebe225-2"></a>    <span class="n">SUB</span><span class="p">,</span>
+<a name="rest_code_ff376d188ab948538fb341b017ebe225-3"></a>    <span class="n">PUB</span><span class="p">,</span>
+<a name="rest_code_ff376d188ab948538fb341b017ebe225-4"></a>    <span class="n">SUB_SUBSCRIBE</span><span class="p">,</span>
+<a name="rest_code_ff376d188ab948538fb341b017ebe225-5"></a>    <span class="n">Socket</span>
+<a name="rest_code_ff376d188ab948538fb341b017ebe225-6"></a><span class="p">)</span>
+<a name="rest_code_ff376d188ab948538fb341b017ebe225-7"></a>
+<a name="rest_code_ff376d188ab948538fb341b017ebe225-8"></a><span class="n">address</span> <span class="o">=</span> <span class="s">"inproc://address"</span>
+<a name="rest_code_ff376d188ab948538fb341b017ebe225-9"></a><span class="c"># Server</span>
+<a name="rest_code_ff376d188ab948538fb341b017ebe225-10"></a><span class="n">socket_server</span> <span class="o">=</span> <span class="n">Socket</span><span class="p">(</span><span class="n">PUB</span><span class="p">)</span>
+<a name="rest_code_ff376d188ab948538fb341b017ebe225-11"></a><span class="n">socket_server</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
+<a name="rest_code_ff376d188ab948538fb341b017ebe225-12"></a>
+<a name="rest_code_ff376d188ab948538fb341b017ebe225-13"></a>
+<a name="rest_code_ff376d188ab948538fb341b017ebe225-14"></a><span class="c"># Client</span>
+<a name="rest_code_ff376d188ab948538fb341b017ebe225-15"></a><span class="n">socket_client</span> <span class="o">=</span> <span class="n">Socket</span><span class="p">(</span><span class="n">SUB</span><span class="p">)</span>
+<a name="rest_code_ff376d188ab948538fb341b017ebe225-16"></a><span class="n">socket_client</span><span class="o">.</span><span class="n">set_string_option</span><span class="p">(</span><span class="n">SUB</span><span class="p">,</span> <span class="n">SUB_SUBSCRIBE</span><span class="p">,</span> <span class="s">'test'</span><span class="p">)</span>
+<a name="rest_code_ff376d188ab948538fb341b017ebe225-17"></a><span class="n">socket_client</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
+<a name="rest_code_ff376d188ab948538fb341b017ebe225-18"></a>
+<a name="rest_code_ff376d188ab948538fb341b017ebe225-19"></a><span class="c"># Send message</span>
+<a name="rest_code_ff376d188ab948538fb341b017ebe225-20"></a><span class="n">socket_server</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">b</span><span class="s">'ABC'</span><span class="p">)</span>
+<a name="rest_code_ff376d188ab948538fb341b017ebe225-21"></a><span class="n">socket_server</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">b</span><span class="s">'test'</span><span class="p">)</span>
+<a name="rest_code_ff376d188ab948538fb341b017ebe225-22"></a><span class="n">recieved</span> <span class="o">=</span> <span class="n">socket_client</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+<a name="rest_code_ff376d188ab948538fb341b017ebe225-23"></a>
+<a name="rest_code_ff376d188ab948538fb341b017ebe225-24"></a><span class="k">print</span> <span class="n">recieved</span>
+</pre>
+<p>上面的範例中，socket_client 所收到的應該會是 test，因為在</p>
+<pre class="code python"><a name="rest_code_5dffd79153084416bfd593ef18b664f5-1"></a><span class="n">socket_client</span><span class="o">.</span><span class="n">set_string_option</span><span class="p">(</span><span class="n">SUB</span><span class="p">,</span> <span class="n">SUB_SUBSCRIBE</span><span class="p">,</span> <span class="s">'test'</span><span class="p">)</span>
+</pre>
+<p>有註冊了，只對於 test 開頭資訊的有興趣。</p>
+<p>如果要接收所有的訊息（例如傳送的資料是 binary 格式等）</p>
+<pre class="code python"><a name="rest_code_2db9b52102814ff1a8faf83a19a047f7-1"></a><span class="n">socket_client</span><span class="o">.</span><span class="n">set_string_option</span><span class="p">(</span><span class="n">SUB</span><span class="p">,</span> <span class="n">SUB_SUBSCRIBE</span><span class="p">,</span> <span class="s">''</span><span class="p">)</span>
+</pre>
+<p>這樣設定就可以了</p>
+<div class="figure">
+<img alt="https://dl.dropboxusercontent.com/u/15537823/Blog/kimiuso.jpg" src="https://dl.dropboxusercontent.com/u/15537823/Blog/kimiuso.jpg">
+</div>
+<blockquote>
+<p>四月は君の嘘</p>
+</blockquote>
+<p>這個看的我胃超痛的 T_T</p>
+<p>不過是個好作品！</p>
 </div>
 </div>
 </div>
         </div>
         
-
-            
-        
-        <div id="disqus_thread"></div>
+        <ul class="pager">
+<li class="previous">
+                <a href="create-vagrant-box.html" rel="prev" title="自製 Vagrant Box">Previous post</a>
+            </li>
+        </ul>
+<div id="disqus_thread"></div>
         <script>
         var disqus_shortname ="swindgithub",
             disqus_url="http://swind.code-life.info/posts/python-nanomsg.html",

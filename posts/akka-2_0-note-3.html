@@ -81,15 +81,15 @@ Execution Contexts
 <h2>Execution Contexts</h2>
 <p>因為 Future 除了跟 Actor 配合使用之外，也可以直接使用。</p>
 <p>例如前面與 Actor 配合使用的例子scala</p>
-<pre class="code scala"><a name="rest_code_1dd9c2a3d06d4fde8759b394c192e335-1"></a><span class="k">val</span> <span class="n">list</span> <span class="k">=</span> <span class="nc">List</span><span class="o">[</span><span class="kt">String</span><span class="o">](</span><span class="s">"Tony"</span><span class="o">,</span><span class="s">"Lion"</span><span class="o">,</span><span class="s">"Teddy"</span><span class="o">,</span><span class="s">"Brain"</span><span class="o">,</span><span class="s">"Jess"</span><span class="o">,</span><span class="s">"Kay"</span><span class="o">,</span><span class="s">"Michael"</span><span class="o">)</span>
-<a name="rest_code_1dd9c2a3d06d4fde8759b394c192e335-2"></a><span class="k">val</span> <span class="n">listOfFutures</span> <span class="k">=</span> <span class="n">list</span> <span class="n">map</span> <span class="o">{</span>
-<a name="rest_code_1dd9c2a3d06d4fde8759b394c192e335-3"></a>   <span class="n">name</span> <span class="k">=&gt;</span>
-<a name="rest_code_1dd9c2a3d06d4fde8759b394c192e335-4"></a>      <span class="o">(</span><span class="n">countActor</span> <span class="o">?</span> <span class="n">name</span><span class="o">).</span><span class="n">mapTo</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span>
-<a name="rest_code_1dd9c2a3d06d4fde8759b394c192e335-5"></a><span class="o">}</span>
-<a name="rest_code_1dd9c2a3d06d4fde8759b394c192e335-6"></a><span class="k">val</span> <span class="n">futureList</span> <span class="k">=</span> <span class="nc">Future</span><span class="o">.</span><span class="n">sequence</span><span class="o">(</span><span class="n">listOfFutures</span><span class="o">)</span>
+<pre class="code scala"><a name="rest_code_669ffb0f33724a63a536ce982d8507d1-1"></a><span class="k">val</span> <span class="n">list</span> <span class="k">=</span> <span class="nc">List</span><span class="o">[</span><span class="kt">String</span><span class="o">](</span><span class="s">"Tony"</span><span class="o">,</span><span class="s">"Lion"</span><span class="o">,</span><span class="s">"Teddy"</span><span class="o">,</span><span class="s">"Brain"</span><span class="o">,</span><span class="s">"Jess"</span><span class="o">,</span><span class="s">"Kay"</span><span class="o">,</span><span class="s">"Michael"</span><span class="o">)</span>
+<a name="rest_code_669ffb0f33724a63a536ce982d8507d1-2"></a><span class="k">val</span> <span class="n">listOfFutures</span> <span class="k">=</span> <span class="n">list</span> <span class="n">map</span> <span class="o">{</span>
+<a name="rest_code_669ffb0f33724a63a536ce982d8507d1-3"></a>   <span class="n">name</span> <span class="k">=&gt;</span>
+<a name="rest_code_669ffb0f33724a63a536ce982d8507d1-4"></a>      <span class="o">(</span><span class="n">countActor</span> <span class="o">?</span> <span class="n">name</span><span class="o">).</span><span class="n">mapTo</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span>
+<a name="rest_code_669ffb0f33724a63a536ce982d8507d1-5"></a><span class="o">}</span>
+<a name="rest_code_669ffb0f33724a63a536ce982d8507d1-6"></a><span class="k">val</span> <span class="n">futureList</span> <span class="k">=</span> <span class="nc">Future</span><span class="o">.</span><span class="n">sequence</span><span class="o">(</span><span class="n">listOfFutures</span><span class="o">)</span>
 </pre>
 <p>其實可以改成這樣:</p>
-<pre class="code scala"><a name="rest_code_794b595fca034152b924f11893cc4a29-1"></a><span class="k">val</span> <span class="n">futureList</span> <span class="k">=</span> <span class="nc">Future</span><span class="o">.</span><span class="n">sequence</span><span class="o">(</span><span class="n">list</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">name</span> <span class="k">=&gt;</span> <span class="nc">Future</span><span class="o">(</span><span class="n">name</span><span class="o">.</span><span class="n">length</span><span class="o">)))</span>
+<pre class="code scala"><a name="rest_code_ca5786cddcbc4c7387cab2ddf520e8f3-1"></a><span class="k">val</span> <span class="n">futureList</span> <span class="k">=</span> <span class="nc">Future</span><span class="o">.</span><span class="n">sequence</span><span class="o">(</span><span class="n">list</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">name</span> <span class="k">=&gt;</span> <span class="nc">Future</span><span class="o">(</span><span class="n">name</span><span class="o">.</span><span class="n">length</span><span class="o">)))</span>
 </pre>
 <p>因此在使用 Future 之前必須要設定 ExecutionContext 讓 Future 可用來執行工作。</p>
 <dl class="docutils">
@@ -106,18 +106,18 @@ Execution Contexts
 <p>而在 Akka 裡面所有的 Dispatcher 都是繼承自 ExecutionContext
 所以要設定這個也不太花時間。</p>
 <p>如果要使用 Future 的是一個 Actor，那麼只要直接設定 Actor 的 dispatcher 就可以了。</p>
-<pre class="code scala"><a name="rest_code_d81deae04321406e9c0000a1c655d39a-1"></a><span class="k">class</span> <span class="nc">MyActor</span> <span class="k">extends</span> <span class="nc">Actor</span><span class="o">{</span>
-<a name="rest_code_d81deae04321406e9c0000a1c655d39a-2"></a><span class="k">implicit</span> <span class="k">val</span> <span class="n">defaultDispatch</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">dispatcher</span>
-<a name="rest_code_d81deae04321406e9c0000a1c655d39a-3"></a><span class="o">.</span>
-<a name="rest_code_d81deae04321406e9c0000a1c655d39a-4"></a><span class="o">.</span>
-<a name="rest_code_d81deae04321406e9c0000a1c655d39a-5"></a><span class="o">.</span>
-<a name="rest_code_d81deae04321406e9c0000a1c655d39a-6"></a><span class="o">}</span>
+<pre class="code scala"><a name="rest_code_d51771fb83b84803a3afb0a0cf2ec5f2-1"></a><span class="k">class</span> <span class="nc">MyActor</span> <span class="k">extends</span> <span class="nc">Actor</span><span class="o">{</span>
+<a name="rest_code_d51771fb83b84803a3afb0a0cf2ec5f2-2"></a><span class="k">implicit</span> <span class="k">val</span> <span class="n">defaultDispatch</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">dispatcher</span>
+<a name="rest_code_d51771fb83b84803a3afb0a0cf2ec5f2-3"></a><span class="o">.</span>
+<a name="rest_code_d51771fb83b84803a3afb0a0cf2ec5f2-4"></a><span class="o">.</span>
+<a name="rest_code_d51771fb83b84803a3afb0a0cf2ec5f2-5"></a><span class="o">.</span>
+<a name="rest_code_d51771fb83b84803a3afb0a0cf2ec5f2-6"></a><span class="o">}</span>
 </pre>
 <p>至於為什麼要使用 implicit 呢？因為 Future 的 Function 中 dispatcher 都是用 implicit 的型態，
 所以如果沒有傳參數給他的時候，他會自動在這個 scope 裡面找尋是否有宣告成 implicit 的 ExecutionContext 變數。</p>
 <p>如果使用 Future 的地方不是在 Actor 內，或不想使用 Actor 的 dispatch。那麼可以自己建立 Java 的 Executor ，並且將他轉成 ExecutionContext。</p>
-<pre class="code scala"><a name="rest_code_d691d298cb9944ba9c217380e6e26b13-1"></a><span class="k">val</span> <span class="n">es</span> <span class="k">=</span> <span class="nc">Executors</span><span class="o">.</span><span class="n">newFixedThreadPool</span><span class="o">(</span><span class="n">threadSize</span><span class="o">)</span>             <span class="c1">//Java Executor</span>
-<a name="rest_code_d691d298cb9944ba9c217380e6e26b13-2"></a><span class="k">implicit</span> <span class="k">val</span> <span class="n">ec</span> <span class="k">=</span> <span class="nc">ExecutionContext</span><span class="o">.</span><span class="n">fromExecutorService</span><span class="o">(</span><span class="n">es</span><span class="o">)</span>
+<pre class="code scala"><a name="rest_code_63ba4c1cb80245ab9eec453e86ecb827-1"></a><span class="k">val</span> <span class="n">es</span> <span class="k">=</span> <span class="nc">Executors</span><span class="o">.</span><span class="n">newFixedThreadPool</span><span class="o">(</span><span class="n">threadSize</span><span class="o">)</span>             <span class="c1">//Java Executor</span>
+<a name="rest_code_63ba4c1cb80245ab9eec453e86ecb827-2"></a><span class="k">implicit</span> <span class="k">val</span> <span class="n">ec</span> <span class="k">=</span> <span class="nc">ExecutionContext</span><span class="o">.</span><span class="n">fromExecutorService</span><span class="o">(</span><span class="n">es</span><span class="o">)</span>
 </pre>
 <p>這樣在使用 Future 的時候他就會自動去找 ExecutionContext 來執行。</p>
 </div>
@@ -127,7 +127,7 @@ Execution Contexts
 <p>Future 用 <strong>recover</strong> 與 <strong>recoverWith</strong> 來處理 Future 執行過程中的所丟出的 Exception。</p>
 <p>使用方式非常的簡單，寫起來也蠻漂亮的，只要在建立 Future 時使用 recover 或 recoverWith 並且加入要處理的例外就好了。</p>
 <p>例如</p>
-<pre class="code scala"><a name="rest_code_42d92c6a472e451e97f7a46539a0b939-1"></a><span class="nc">Future</span><span class="o">(</span><span class="n">parsePage</span><span class="o">(</span><span class="n">pageNumber</span><span class="o">))</span> <span class="n">recover</span> <span class="o">{</span> <span class="k">case</span> <span class="n">e</span><span class="k">:</span><span class="kt">Exception</span> <span class="o">=&gt;</span> <span class="nc">List</span><span class="o">[</span><span class="kt">Post</span><span class="o">]()</span> <span class="o">}</span>
+<pre class="code scala"><a name="rest_code_935c266ba759467c8ef1c92829ccd7d0-1"></a><span class="nc">Future</span><span class="o">(</span><span class="n">parsePage</span><span class="o">(</span><span class="n">pageNumber</span><span class="o">))</span> <span class="n">recover</span> <span class="o">{</span> <span class="k">case</span> <span class="n">e</span><span class="k">:</span><span class="kt">Exception</span> <span class="o">=&gt;</span> <span class="nc">List</span><span class="o">[</span><span class="kt">Post</span><span class="o">]()</span> <span class="o">}</span>
 </pre>
 <p>上面表示當我執行 parsePage 時如果發生任何 Excetpion 那麼就回傳一個空的 list。</p>
 <p>而 recover 與 recoverWith 的差別就在於，recoverWith 內的 Function 要回傳的型態是 Future[Int] 而 recover 則是 Int。</p>

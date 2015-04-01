@@ -109,9 +109,9 @@ EPUBConverter Source Code
 <h3>for 迴圈</h3>
 <p>寫習慣了 Scala，看到 for 迴圈就很自然的會去找是否有 for-each 的語法。
 在 Go 裡面如果要尋訪 slice 或 map 等容器裡面的每一個元素，使用的是 for + range</p>
-<pre class="code go"><a name="rest_code_f189823531cb4a7c89575eec470c655a-1"></a><span class="k">for</span> <span class="nx">index</span><span class="p">,</span> <span class="nx">element</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">slice</span> <span class="p">{</span>
-<a name="rest_code_f189823531cb4a7c89575eec470c655a-2"></a>        <span class="o">...</span>
-<a name="rest_code_f189823531cb4a7c89575eec470c655a-3"></a><span class="p">}</span>
+<pre class="code go"><a name="rest_code_ffeecf0708d0452797d382ce60064081-1"></a><span class="k">for</span> <span class="nx">index</span><span class="p">,</span> <span class="nx">element</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">slice</span> <span class="p">{</span>
+<a name="rest_code_ffeecf0708d0452797d382ce60064081-2"></a>        <span class="o">...</span>
+<a name="rest_code_ffeecf0708d0452797d382ce60064081-3"></a><span class="p">}</span>
 </pre>
 <p>由於 Go 支援多個回傳值，所以 for 後面的 <strong>index</strong> 與 <strong>element</strong> 是會隨著 range 後面所接的對象而改變的。
 例如是 map 的話，那麼回傳值就會是 key, value。</p>
@@ -123,17 +123,17 @@ EPUBConverter Source Code
 <div class="section" id="id3">
 <h3>讀檔與寫檔</h3>
 <p>先來段程式碼</p>
-<pre class="code go"><a name="rest_code_1b881a33cf1f4f818e2b582b0814f004-1"></a><span class="k">for</span> <span class="p">{</span>
-<a name="rest_code_1b881a33cf1f4f818e2b582b0814f004-2"></a>        <span class="k">if</span> <span class="nx">length</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">reader</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">part</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-<a name="rest_code_1b881a33cf1f4f818e2b582b0814f004-3"></a>                <span class="k">break</span>
-<a name="rest_code_1b881a33cf1f4f818e2b582b0814f004-4"></a>        <span class="p">}</span>
-<a name="rest_code_1b881a33cf1f4f818e2b582b0814f004-5"></a>
-<a name="rest_code_1b881a33cf1f4f818e2b582b0814f004-6"></a>        <span class="k">if</span> <span class="nx">length</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">{</span>
-<a name="rest_code_1b881a33cf1f4f818e2b582b0814f004-7"></a>                <span class="nx">f</span><span class="p">.</span><span class="nx">Write</span><span class="p">(</span><span class="nx">part</span><span class="p">[:</span><span class="nx">length</span><span class="p">])</span>
-<a name="rest_code_1b881a33cf1f4f818e2b582b0814f004-8"></a>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-<a name="rest_code_1b881a33cf1f4f818e2b582b0814f004-9"></a>                <span class="k">break</span>
-<a name="rest_code_1b881a33cf1f4f818e2b582b0814f004-10"></a>        <span class="p">}</span>
-<a name="rest_code_1b881a33cf1f4f818e2b582b0814f004-11"></a><span class="p">}</span>
+<pre class="code go"><a name="rest_code_30563dda1f6e425d935386857086d4fb-1"></a><span class="k">for</span> <span class="p">{</span>
+<a name="rest_code_30563dda1f6e425d935386857086d4fb-2"></a>        <span class="k">if</span> <span class="nx">length</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">reader</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">part</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+<a name="rest_code_30563dda1f6e425d935386857086d4fb-3"></a>                <span class="k">break</span>
+<a name="rest_code_30563dda1f6e425d935386857086d4fb-4"></a>        <span class="p">}</span>
+<a name="rest_code_30563dda1f6e425d935386857086d4fb-5"></a>
+<a name="rest_code_30563dda1f6e425d935386857086d4fb-6"></a>        <span class="k">if</span> <span class="nx">length</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">{</span>
+<a name="rest_code_30563dda1f6e425d935386857086d4fb-7"></a>                <span class="nx">f</span><span class="p">.</span><span class="nx">Write</span><span class="p">(</span><span class="nx">part</span><span class="p">[:</span><span class="nx">length</span><span class="p">])</span>
+<a name="rest_code_30563dda1f6e425d935386857086d4fb-8"></a>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a name="rest_code_30563dda1f6e425d935386857086d4fb-9"></a>                <span class="k">break</span>
+<a name="rest_code_30563dda1f6e425d935386857086d4fb-10"></a>        <span class="p">}</span>
+<a name="rest_code_30563dda1f6e425d935386857086d4fb-11"></a><span class="p">}</span>
 </pre>
 <p>在 C、C++、Java、Scala 等語言基本上在 Write 的 function 中，都會有一個參數是用來帶要寫的長度。
 可是 Go 沒有 T_T，所以這段程式碼在剛寫好得時候寫了一堆垃圾資料進去。因為每次都把整個 buffer 寫入。</p>

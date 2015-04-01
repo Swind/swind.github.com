@@ -82,7 +82,7 @@ MathJax.Hub.Config({
 <h2>環境準備</h2>
 <p><a class="reference external" href="https://github.com/spray/spray/tree/release-1.0-M2/examples/spray-can/">spray-can 的範例</a> 已經有建立好一個簡單的 HttpServer 了，
 所以我們先將 Spray 從 Github 上 Clone 下來。</p>
-<pre class="code bash"><a name="rest_code_517404df7d9e4860be40e550236f4b87-1"></a>git clone git://github.com/spray/spray.git
+<pre class="code bash"><a name="rest_code_0d3e780e78da4d718c4f2ca68e4e2451-1"></a>git clone git://github.com/spray/spray.git
 </pre>
 <p>然後複製出 spray/examples/spray-can/simple-http-server。
 接著在 simple-http-server 底下，建立 build.sbt 讓 SBT 去 include 所需要的 Library。</p>
@@ -94,41 +94,41 @@ package-dist 可以協助我們將 Project 所需要的 Library 與程式本身�
 <blockquote>
 EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipsCreateSrc.Resource</blockquote>
 <p>則是針對 sbteclipse 做的設定，讓 plugin 在產生 eclipse project 的時候可以將 src/main/resources 也加入 source folder。</p>
-<pre class="code scala"><a name="rest_code_715c0de279cf48549567722488985210-1"></a><span class="c1">//Start - For package-dist</span>
-<a name="rest_code_715c0de279cf48549567722488985210-2"></a><span class="k">import</span> <span class="nn">com.twitter.sbt._</span>
-<a name="rest_code_715c0de279cf48549567722488985210-3"></a>
-<a name="rest_code_715c0de279cf48549567722488985210-4"></a><span class="n">seq</span><span class="o">(</span><span class="nc">PackageDist</span><span class="o">.</span><span class="n">newSettings</span><span class="k">:</span> <span class="k">_</span><span class="kt">*</span><span class="o">)</span>
-<a name="rest_code_715c0de279cf48549567722488985210-5"></a>
-<a name="rest_code_715c0de279cf48549567722488985210-6"></a><span class="n">seq</span><span class="o">(</span><span class="nc">GitProject</span><span class="o">.</span><span class="n">gitSettings</span><span class="k">:</span> <span class="k">_</span><span class="kt">*</span><span class="o">)</span>
-<a name="rest_code_715c0de279cf48549567722488985210-7"></a>
-<a name="rest_code_715c0de279cf48549567722488985210-8"></a><span class="n">packageDistZipName</span> <span class="o">:=</span> <span class="s">"DictionaryServer.zip"</span>
-<a name="rest_code_715c0de279cf48549567722488985210-9"></a><span class="c1">//End - For package-dist</span>
-<a name="rest_code_715c0de279cf48549567722488985210-10"></a>
-<a name="rest_code_715c0de279cf48549567722488985210-11"></a><span class="n">organization</span> <span class="o">:=</span> <span class="s">"cc.spray"</span>
-<a name="rest_code_715c0de279cf48549567722488985210-12"></a>
-<a name="rest_code_715c0de279cf48549567722488985210-13"></a><span class="n">name</span> <span class="o">:=</span> <span class="s">"DictionaryServer"</span>
-<a name="rest_code_715c0de279cf48549567722488985210-14"></a>
-<a name="rest_code_715c0de279cf48549567722488985210-15"></a><span class="n">mainClass</span> <span class="n">in</span> <span class="o">(</span><span class="nc">Compile</span><span class="o">,</span> <span class="n">packageBin</span><span class="o">)</span> <span class="o">:=</span> <span class="nc">Some</span><span class="o">(</span><span class="s">"cc.spray.example.Main"</span><span class="o">)</span>
-<a name="rest_code_715c0de279cf48549567722488985210-16"></a>
-<a name="rest_code_715c0de279cf48549567722488985210-17"></a><span class="n">version</span> <span class="o">:=</span> <span class="s">"0.1.0-SNAPSHOT"</span>
-<a name="rest_code_715c0de279cf48549567722488985210-18"></a>
-<a name="rest_code_715c0de279cf48549567722488985210-19"></a><span class="n">scalaVersion</span> <span class="o">:=</span> <span class="s">"2.9.2"</span>
-<a name="rest_code_715c0de279cf48549567722488985210-20"></a>
-<a name="rest_code_715c0de279cf48549567722488985210-21"></a><span class="n">resolvers</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
-<a name="rest_code_715c0de279cf48549567722488985210-22"></a><span class="s">"Typesafe repo"</span> <span class="n">at</span> <span class="s">"http://repo.typesafe.com/typesafe/releases/"</span><span class="o">,</span>
-<a name="rest_code_715c0de279cf48549567722488985210-23"></a><span class="s">"spray repo"</span> <span class="n">at</span> <span class="s">"http://repo.spray.cc/"</span>
-<a name="rest_code_715c0de279cf48549567722488985210-24"></a><span class="o">)</span>
-<a name="rest_code_715c0de279cf48549567722488985210-25"></a>
-<a name="rest_code_715c0de279cf48549567722488985210-26"></a><span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
-<a name="rest_code_715c0de279cf48549567722488985210-27"></a>    <span class="s">"com.typesafe.akka"</span> <span class="o">%</span> <span class="s">"akka-actor"</span> <span class="o">%</span> <span class="s">"2.0.3"</span><span class="o">,</span>
-<a name="rest_code_715c0de279cf48549567722488985210-28"></a>    <span class="s">"cc.spray"</span> <span class="o">%</span> <span class="s">"spray-server"</span> <span class="o">%</span> <span class="s">"1.0-M2"</span><span class="o">,</span>
-<a name="rest_code_715c0de279cf48549567722488985210-29"></a>    <span class="s">"cc.spray"</span> <span class="o">%</span> <span class="s">"spray-can"</span> <span class="o">%</span> <span class="s">"1.0-M2"</span><span class="o">,</span>
-<a name="rest_code_715c0de279cf48549567722488985210-30"></a>    <span class="s">"org.slf4j"</span> <span class="o">%</span> <span class="s">"slf4j-api"</span> <span class="o">%</span> <span class="s">"1.6.6"</span><span class="o">,</span>
-<a name="rest_code_715c0de279cf48549567722488985210-31"></a>    <span class="s">"ch.qos.logback"</span> <span class="o">%</span> <span class="s">"logback-classic"</span> <span class="o">%</span> <span class="s">"1.0.7"</span>
-<a name="rest_code_715c0de279cf48549567722488985210-32"></a><span class="o">)</span>
-<a name="rest_code_715c0de279cf48549567722488985210-33"></a>
-<a name="rest_code_715c0de279cf48549567722488985210-34"></a><span class="c1">//sbteclipse setting</span>
-<a name="rest_code_715c0de279cf48549567722488985210-35"></a><span class="nc">EclipseKeys</span><span class="o">.</span><span class="n">createSrc</span> <span class="o">:=</span> <span class="nc">EclipseCreateSrc</span><span class="o">.</span><span class="nc">Default</span> <span class="o">+</span> <span class="nc">EclipseCreateSrc</span><span class="o">.</span><span class="nc">Resource</span>
+<pre class="code scala"><a name="rest_code_23186473bab94e17a17ec3e8894eec32-1"></a><span class="c1">//Start - For package-dist</span>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-2"></a><span class="k">import</span> <span class="nn">com.twitter.sbt._</span>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-3"></a>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-4"></a><span class="n">seq</span><span class="o">(</span><span class="nc">PackageDist</span><span class="o">.</span><span class="n">newSettings</span><span class="k">:</span> <span class="k">_</span><span class="kt">*</span><span class="o">)</span>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-5"></a>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-6"></a><span class="n">seq</span><span class="o">(</span><span class="nc">GitProject</span><span class="o">.</span><span class="n">gitSettings</span><span class="k">:</span> <span class="k">_</span><span class="kt">*</span><span class="o">)</span>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-7"></a>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-8"></a><span class="n">packageDistZipName</span> <span class="o">:=</span> <span class="s">"DictionaryServer.zip"</span>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-9"></a><span class="c1">//End - For package-dist</span>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-10"></a>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-11"></a><span class="n">organization</span> <span class="o">:=</span> <span class="s">"cc.spray"</span>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-12"></a>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-13"></a><span class="n">name</span> <span class="o">:=</span> <span class="s">"DictionaryServer"</span>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-14"></a>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-15"></a><span class="n">mainClass</span> <span class="n">in</span> <span class="o">(</span><span class="nc">Compile</span><span class="o">,</span> <span class="n">packageBin</span><span class="o">)</span> <span class="o">:=</span> <span class="nc">Some</span><span class="o">(</span><span class="s">"cc.spray.example.Main"</span><span class="o">)</span>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-16"></a>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-17"></a><span class="n">version</span> <span class="o">:=</span> <span class="s">"0.1.0-SNAPSHOT"</span>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-18"></a>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-19"></a><span class="n">scalaVersion</span> <span class="o">:=</span> <span class="s">"2.9.2"</span>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-20"></a>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-21"></a><span class="n">resolvers</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-22"></a><span class="s">"Typesafe repo"</span> <span class="n">at</span> <span class="s">"http://repo.typesafe.com/typesafe/releases/"</span><span class="o">,</span>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-23"></a><span class="s">"spray repo"</span> <span class="n">at</span> <span class="s">"http://repo.spray.cc/"</span>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-24"></a><span class="o">)</span>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-25"></a>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-26"></a><span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-27"></a>    <span class="s">"com.typesafe.akka"</span> <span class="o">%</span> <span class="s">"akka-actor"</span> <span class="o">%</span> <span class="s">"2.0.3"</span><span class="o">,</span>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-28"></a>    <span class="s">"cc.spray"</span> <span class="o">%</span> <span class="s">"spray-server"</span> <span class="o">%</span> <span class="s">"1.0-M2"</span><span class="o">,</span>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-29"></a>    <span class="s">"cc.spray"</span> <span class="o">%</span> <span class="s">"spray-can"</span> <span class="o">%</span> <span class="s">"1.0-M2"</span><span class="o">,</span>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-30"></a>    <span class="s">"org.slf4j"</span> <span class="o">%</span> <span class="s">"slf4j-api"</span> <span class="o">%</span> <span class="s">"1.6.6"</span><span class="o">,</span>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-31"></a>    <span class="s">"ch.qos.logback"</span> <span class="o">%</span> <span class="s">"logback-classic"</span> <span class="o">%</span> <span class="s">"1.0.7"</span>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-32"></a><span class="o">)</span>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-33"></a>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-34"></a><span class="c1">//sbteclipse setting</span>
+<a name="rest_code_23186473bab94e17a17ec3e8894eec32-35"></a><span class="nc">EclipseKeys</span><span class="o">.</span><span class="n">createSrc</span> <span class="o">:=</span> <span class="nc">EclipseCreateSrc</span><span class="o">.</span><span class="nc">Default</span> <span class="o">+</span> <span class="nc">EclipseCreateSrc</span><span class="o">.</span><span class="nc">Resource</span>
 </pre>
 <p>這邊注意一下 Spray 的版本問題，現在最新的 Example 程式碼是針對最新版本的 spray，但他們還沒有正式 release，
 並且他們還換了 package name 等，所以我都是使用 1.0-M2 的版本，當然 Library 也是使用 1.0-M2。</p>
@@ -141,32 +141,32 @@ EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipsCreateSrc.Resource</bl
 接下來將 IoWorker Actor 以及 Service Actor 傳入 HttpServer Actor並啟動 Http Server。
 之後透過發送一個 HttpServer.Bind 的 Message 給 Server 設定 IP 與 Port。
 這樣就完成了 Server 的啟動與設定了。</p>
-<pre class="code scala"><a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-1"></a><span class="c1">// we need an ActorSystem to host our application in</span>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-2"></a><span class="k">val</span> <span class="n">system</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">(</span><span class="s">"SimpleHttpServer"</span><span class="o">)</span>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-3"></a>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-4"></a><span class="c1">// the handler actor replies to incoming HttpRequests</span>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-5"></a><span class="k">val</span> <span class="n">handler</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">TestService</span><span class="o">])</span>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-6"></a>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-7"></a><span class="c1">// every spray-can HttpServer (and HttpClient) needs an IoWorker for low-level network IO</span>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-8"></a><span class="c1">// (but several servers and/or clients can share one)</span>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-9"></a><span class="k">val</span> <span class="n">ioWorker</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">IoWorker</span><span class="o">(</span><span class="n">system</span><span class="o">).</span><span class="n">start</span><span class="o">()</span>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-10"></a>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-11"></a><span class="c1">// create and start the spray-can HttpServer, telling it that we want requests to be</span>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-12"></a><span class="c1">// handled by our singleton handler</span>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-13"></a><span class="k">val</span> <span class="n">server</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-14"></a><span class="n">props</span> <span class="k">=</span> <span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">HttpServer</span><span class="o">(</span><span class="n">ioWorker</span><span class="o">,</span> <span class="nc">MessageHandlerDispatch</span><span class="o">.</span><span class="nc">SingletonHandler</span><span class="o">(</span><span class="n">handler</span><span class="o">))),</span>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-15"></a><span class="n">name</span> <span class="k">=</span> <span class="s">"http-server"</span>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-16"></a><span class="o">)</span>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-17"></a>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-18"></a><span class="c1">// a running HttpServer can be bound, unbound and rebound</span>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-19"></a><span class="c1">// initially to need to tell it where to bind to</span>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-20"></a><span class="n">server</span> <span class="o">!</span> <span class="nc">HttpServer</span><span class="o">.</span><span class="nc">Bind</span><span class="o">(</span><span class="s">"localhost"</span><span class="o">,</span> <span class="mi">8080</span><span class="o">)</span>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-21"></a>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-22"></a><span class="c1">// finally we drop the main thread but hook the shutdown of</span>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-23"></a><span class="c1">// our IoWorker into the shutdown of the applications ActorSystem</span>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-24"></a><span class="n">system</span><span class="o">.</span><span class="n">registerOnTermination</span> <span class="o">{</span>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-25"></a><span class="n">ioWorker</span><span class="o">.</span><span class="n">stop</span><span class="o">()</span>
-<a name="rest_code_e5deeadfb6d940c88d6a8efd797ac816-26"></a><span class="o">}</span>
+<pre class="code scala"><a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-1"></a><span class="c1">// we need an ActorSystem to host our application in</span>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-2"></a><span class="k">val</span> <span class="n">system</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">(</span><span class="s">"SimpleHttpServer"</span><span class="o">)</span>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-3"></a>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-4"></a><span class="c1">// the handler actor replies to incoming HttpRequests</span>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-5"></a><span class="k">val</span> <span class="n">handler</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span><span class="nc">Props</span><span class="o">[</span><span class="kt">TestService</span><span class="o">])</span>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-6"></a>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-7"></a><span class="c1">// every spray-can HttpServer (and HttpClient) needs an IoWorker for low-level network IO</span>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-8"></a><span class="c1">// (but several servers and/or clients can share one)</span>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-9"></a><span class="k">val</span> <span class="n">ioWorker</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">IoWorker</span><span class="o">(</span><span class="n">system</span><span class="o">).</span><span class="n">start</span><span class="o">()</span>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-10"></a>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-11"></a><span class="c1">// create and start the spray-can HttpServer, telling it that we want requests to be</span>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-12"></a><span class="c1">// handled by our singleton handler</span>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-13"></a><span class="k">val</span> <span class="n">server</span> <span class="k">=</span> <span class="n">system</span><span class="o">.</span><span class="n">actorOf</span><span class="o">(</span>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-14"></a><span class="n">props</span> <span class="k">=</span> <span class="nc">Props</span><span class="o">(</span><span class="k">new</span> <span class="nc">HttpServer</span><span class="o">(</span><span class="n">ioWorker</span><span class="o">,</span> <span class="nc">MessageHandlerDispatch</span><span class="o">.</span><span class="nc">SingletonHandler</span><span class="o">(</span><span class="n">handler</span><span class="o">))),</span>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-15"></a><span class="n">name</span> <span class="k">=</span> <span class="s">"http-server"</span>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-16"></a><span class="o">)</span>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-17"></a>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-18"></a><span class="c1">// a running HttpServer can be bound, unbound and rebound</span>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-19"></a><span class="c1">// initially to need to tell it where to bind to</span>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-20"></a><span class="n">server</span> <span class="o">!</span> <span class="nc">HttpServer</span><span class="o">.</span><span class="nc">Bind</span><span class="o">(</span><span class="s">"localhost"</span><span class="o">,</span> <span class="mi">8080</span><span class="o">)</span>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-21"></a>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-22"></a><span class="c1">// finally we drop the main thread but hook the shutdown of</span>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-23"></a><span class="c1">// our IoWorker into the shutdown of the applications ActorSystem</span>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-24"></a><span class="n">system</span><span class="o">.</span><span class="n">registerOnTermination</span> <span class="o">{</span>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-25"></a><span class="n">ioWorker</span><span class="o">.</span><span class="n">stop</span><span class="o">()</span>
+<a name="rest_code_99d55a7d5afc4463858c9c9cd61aec7c-26"></a><span class="o">}</span>
 </pre>
 </div>
 <div class="section" id="service">
@@ -174,34 +174,34 @@ EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipsCreateSrc.Resource</bl
 <div class="section" id="http-request">
 <h3>處理 Http Request</h3>
 <p>提供 Service 的 Actor 會接收到 HttpRequest 的 Message，HttpRequest 的內容如下。</p>
-<pre class="code scala"><a name="rest_code_d4be4d8a2ff84db6b943465798b39ae3-1"></a><span class="k">case</span> <span class="k">class</span> <span class="nc">HttpRequest</span><span class="o">(</span>
-<a name="rest_code_d4be4d8a2ff84db6b943465798b39ae3-2"></a>            <span class="n">method</span>   <span class="k">:</span> <span class="kt">HttpMethod</span> <span class="o">=</span> <span class="nc">HttpMethods</span><span class="o">.</span><span class="nc">GET</span><span class="o">,</span>
-<a name="rest_code_d4be4d8a2ff84db6b943465798b39ae3-3"></a>            <span class="n">uri</span>      <span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">"/"</span><span class="o">,</span>
-<a name="rest_code_d4be4d8a2ff84db6b943465798b39ae3-4"></a>            <span class="n">headers</span>  <span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">HttpHeader</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Nil</span><span class="o">,</span>
-<a name="rest_code_d4be4d8a2ff84db6b943465798b39ae3-5"></a>            <span class="n">content</span>  <span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">HttpContent</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">,</span>
-<a name="rest_code_d4be4d8a2ff84db6b943465798b39ae3-6"></a>            <span class="n">protocol</span> <span class="k">:</span> <span class="kt">HttpProtocol</span> <span class="o">=</span> <span class="n">`HTTP/1.1`</span><span class="o">)</span>
+<pre class="code scala"><a name="rest_code_65827207501a46d3897ca1ad9c2f09af-1"></a><span class="k">case</span> <span class="k">class</span> <span class="nc">HttpRequest</span><span class="o">(</span>
+<a name="rest_code_65827207501a46d3897ca1ad9c2f09af-2"></a>            <span class="n">method</span>   <span class="k">:</span> <span class="kt">HttpMethod</span> <span class="o">=</span> <span class="nc">HttpMethods</span><span class="o">.</span><span class="nc">GET</span><span class="o">,</span>
+<a name="rest_code_65827207501a46d3897ca1ad9c2f09af-3"></a>            <span class="n">uri</span>      <span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">"/"</span><span class="o">,</span>
+<a name="rest_code_65827207501a46d3897ca1ad9c2f09af-4"></a>            <span class="n">headers</span>  <span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">HttpHeader</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Nil</span><span class="o">,</span>
+<a name="rest_code_65827207501a46d3897ca1ad9c2f09af-5"></a>            <span class="n">content</span>  <span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">HttpContent</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">,</span>
+<a name="rest_code_65827207501a46d3897ca1ad9c2f09af-6"></a>            <span class="n">protocol</span> <span class="k">:</span> <span class="kt">HttpProtocol</span> <span class="o">=</span> <span class="n">`HTTP/1.1`</span><span class="o">)</span>
 </pre>
 <p>然後就可以利用 match 來處理各種不同的 HttpRequest，
 例如有連線到 <a class="reference external" href="http://localhost:8080/">http://localhost:8080/</a> 的 GET 請求，
 就會對應到第一個 HttpRequest "/"。</p>
-<pre class="code scala"><a name="rest_code_66222fa254e647b098e8ee0b5f8bd22d-1"></a><span class="k">protected</span> <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
-<a name="rest_code_66222fa254e647b098e8ee0b5f8bd22d-2"></a>
-<a name="rest_code_66222fa254e647b098e8ee0b5f8bd22d-3"></a>    <span class="k">case</span> <span class="nc">HttpRequest</span><span class="o">(</span><span class="nc">GET</span><span class="o">,</span> <span class="s">"/"</span><span class="o">,</span> <span class="k">_</span><span class="o">,</span> <span class="k">_</span><span class="o">,</span> <span class="k">_</span><span class="o">)</span> <span class="k">=&gt;</span>
-<a name="rest_code_66222fa254e647b098e8ee0b5f8bd22d-4"></a>        <span class="n">sender</span> <span class="o">!</span> <span class="n">index</span>
-<a name="rest_code_66222fa254e647b098e8ee0b5f8bd22d-5"></a>
-<a name="rest_code_66222fa254e647b098e8ee0b5f8bd22d-6"></a>    <span class="k">case</span> <span class="nc">HttpRequest</span><span class="o">(</span><span class="nc">GET</span><span class="o">,</span> <span class="s">"/ping"</span><span class="o">,</span> <span class="k">_</span><span class="o">,</span> <span class="k">_</span><span class="o">,</span> <span class="k">_</span><span class="o">)</span> <span class="k">=&gt;</span>
-<a name="rest_code_66222fa254e647b098e8ee0b5f8bd22d-7"></a>        <span class="n">sender</span> <span class="o">!</span> <span class="n">response</span><span class="o">(</span><span class="s">"PONG!"</span><span class="o">)</span>
-<a name="rest_code_66222fa254e647b098e8ee0b5f8bd22d-8"></a>
-<a name="rest_code_66222fa254e647b098e8ee0b5f8bd22d-9"></a>    <span class="k">case</span> <span class="nc">HttpRequest</span><span class="o">(</span><span class="nc">GET</span><span class="o">,</span> <span class="s">"/stats"</span><span class="o">,</span> <span class="k">_</span><span class="o">,</span> <span class="k">_</span><span class="o">,</span> <span class="k">_</span><span class="o">)</span> <span class="k">=&gt;</span>
-<a name="rest_code_66222fa254e647b098e8ee0b5f8bd22d-10"></a>        <span class="k">val</span> <span class="n">client</span> <span class="k">=</span> <span class="n">sender</span>
-<a name="rest_code_66222fa254e647b098e8ee0b5f8bd22d-11"></a>        <span class="n">context</span><span class="o">.</span><span class="n">actorFor</span><span class="o">(</span><span class="s">"../http-server"</span><span class="o">).</span><span class="n">ask</span><span class="o">(</span><span class="nc">HttpServer</span><span class="o">.</span><span class="nc">GetStats</span><span class="o">)(</span><span class="mf">1.</span><span class="n">second</span><span class="o">).</span><span class="n">onSuccess</span> <span class="o">{</span>
-<a name="rest_code_66222fa254e647b098e8ee0b5f8bd22d-12"></a>
-<a name="rest_code_66222fa254e647b098e8ee0b5f8bd22d-13"></a>    <span class="k">case</span> <span class="n">x</span><span class="k">:</span> <span class="kt">HttpServer.Stats</span> <span class="o">=&gt;</span> <span class="n">client</span> <span class="o">!</span> <span class="n">statsPresentation</span><span class="o">(</span><span class="n">x</span><span class="o">)</span>
-<a name="rest_code_66222fa254e647b098e8ee0b5f8bd22d-14"></a>    <span class="o">}</span>
-<a name="rest_code_66222fa254e647b098e8ee0b5f8bd22d-15"></a><span class="o">.</span>
-<a name="rest_code_66222fa254e647b098e8ee0b5f8bd22d-16"></a><span class="o">.</span>
-<a name="rest_code_66222fa254e647b098e8ee0b5f8bd22d-17"></a><span class="o">.</span>
-<a name="rest_code_66222fa254e647b098e8ee0b5f8bd22d-18"></a><span class="o">}</span>
+<pre class="code scala"><a name="rest_code_d608ea6c334a4a0ba4fa58aa7a0990b3-1"></a><span class="k">protected</span> <span class="k">def</span> <span class="n">receive</span> <span class="k">=</span> <span class="o">{</span>
+<a name="rest_code_d608ea6c334a4a0ba4fa58aa7a0990b3-2"></a>
+<a name="rest_code_d608ea6c334a4a0ba4fa58aa7a0990b3-3"></a>    <span class="k">case</span> <span class="nc">HttpRequest</span><span class="o">(</span><span class="nc">GET</span><span class="o">,</span> <span class="s">"/"</span><span class="o">,</span> <span class="k">_</span><span class="o">,</span> <span class="k">_</span><span class="o">,</span> <span class="k">_</span><span class="o">)</span> <span class="k">=&gt;</span>
+<a name="rest_code_d608ea6c334a4a0ba4fa58aa7a0990b3-4"></a>        <span class="n">sender</span> <span class="o">!</span> <span class="n">index</span>
+<a name="rest_code_d608ea6c334a4a0ba4fa58aa7a0990b3-5"></a>
+<a name="rest_code_d608ea6c334a4a0ba4fa58aa7a0990b3-6"></a>    <span class="k">case</span> <span class="nc">HttpRequest</span><span class="o">(</span><span class="nc">GET</span><span class="o">,</span> <span class="s">"/ping"</span><span class="o">,</span> <span class="k">_</span><span class="o">,</span> <span class="k">_</span><span class="o">,</span> <span class="k">_</span><span class="o">)</span> <span class="k">=&gt;</span>
+<a name="rest_code_d608ea6c334a4a0ba4fa58aa7a0990b3-7"></a>        <span class="n">sender</span> <span class="o">!</span> <span class="n">response</span><span class="o">(</span><span class="s">"PONG!"</span><span class="o">)</span>
+<a name="rest_code_d608ea6c334a4a0ba4fa58aa7a0990b3-8"></a>
+<a name="rest_code_d608ea6c334a4a0ba4fa58aa7a0990b3-9"></a>    <span class="k">case</span> <span class="nc">HttpRequest</span><span class="o">(</span><span class="nc">GET</span><span class="o">,</span> <span class="s">"/stats"</span><span class="o">,</span> <span class="k">_</span><span class="o">,</span> <span class="k">_</span><span class="o">,</span> <span class="k">_</span><span class="o">)</span> <span class="k">=&gt;</span>
+<a name="rest_code_d608ea6c334a4a0ba4fa58aa7a0990b3-10"></a>        <span class="k">val</span> <span class="n">client</span> <span class="k">=</span> <span class="n">sender</span>
+<a name="rest_code_d608ea6c334a4a0ba4fa58aa7a0990b3-11"></a>        <span class="n">context</span><span class="o">.</span><span class="n">actorFor</span><span class="o">(</span><span class="s">"../http-server"</span><span class="o">).</span><span class="n">ask</span><span class="o">(</span><span class="nc">HttpServer</span><span class="o">.</span><span class="nc">GetStats</span><span class="o">)(</span><span class="mf">1.</span><span class="n">second</span><span class="o">).</span><span class="n">onSuccess</span> <span class="o">{</span>
+<a name="rest_code_d608ea6c334a4a0ba4fa58aa7a0990b3-12"></a>
+<a name="rest_code_d608ea6c334a4a0ba4fa58aa7a0990b3-13"></a>    <span class="k">case</span> <span class="n">x</span><span class="k">:</span> <span class="kt">HttpServer.Stats</span> <span class="o">=&gt;</span> <span class="n">client</span> <span class="o">!</span> <span class="n">statsPresentation</span><span class="o">(</span><span class="n">x</span><span class="o">)</span>
+<a name="rest_code_d608ea6c334a4a0ba4fa58aa7a0990b3-14"></a>    <span class="o">}</span>
+<a name="rest_code_d608ea6c334a4a0ba4fa58aa7a0990b3-15"></a><span class="o">.</span>
+<a name="rest_code_d608ea6c334a4a0ba4fa58aa7a0990b3-16"></a><span class="o">.</span>
+<a name="rest_code_d608ea6c334a4a0ba4fa58aa7a0990b3-17"></a><span class="o">.</span>
+<a name="rest_code_d608ea6c334a4a0ba4fa58aa7a0990b3-18"></a><span class="o">}</span>
 </pre>
 </div>
 <div class="section" id="http-response">
@@ -209,25 +209,25 @@ EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipsCreateSrc.Resource</bl
 <p>Response 的內容也非常好設定，以剛剛送回 sender 的 index 為例子，
 Spray 使用一個 HttpResonse 的 case class 來代表 Response 的內容。
 只要設定好 headers、body 與 status 就可以傳送回去 Sender 了。</p>
-<pre class="code scala"><a name="rest_code_c1f126503ff943fd8134218cfc938af0-1"></a><span class="k">lazy</span> <span class="k">val</span> <span class="n">index</span> <span class="k">=</span> <span class="nc">HttpResponse</span><span class="o">(</span>
-<a name="rest_code_c1f126503ff943fd8134218cfc938af0-2"></a><span class="n">headers</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="nc">HttpHeader</span><span class="o">(</span><span class="s">"Content-Type"</span><span class="o">,</span> <span class="s">"text/html"</span><span class="o">)),</span>
-<a name="rest_code_c1f126503ff943fd8134218cfc938af0-3"></a><span class="n">body</span> <span class="k">=</span>
-<a name="rest_code_c1f126503ff943fd8134218cfc938af0-4"></a>  <span class="o">&lt;</span><span class="n">html</span><span class="o">&gt;</span>
-<a name="rest_code_c1f126503ff943fd8134218cfc938af0-5"></a>    <span class="o">&lt;</span><span class="n">body</span><span class="o">&gt;</span>
-<a name="rest_code_c1f126503ff943fd8134218cfc938af0-6"></a>      <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="nc">Say</span> <span class="n">hello</span> <span class="n">to</span> <span class="o">&lt;</span><span class="n">i</span><span class="o">&gt;</span><span class="n">spray</span><span class="o">-</span><span class="n">can</span><span class="o">&lt;/</span><span class="n">i</span><span class="o">&gt;!&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-<a name="rest_code_c1f126503ff943fd8134218cfc938af0-7"></a>      <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nc">Defined</span> <span class="n">resources</span><span class="o">:&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-<a name="rest_code_c1f126503ff943fd8134218cfc938af0-8"></a>      <span class="o">&lt;</span><span class="n">ul</span><span class="o">&gt;</span>
-<a name="rest_code_c1f126503ff943fd8134218cfc938af0-9"></a>        <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">"/ping"</span><span class="o">&gt;/</span><span class="n">ping</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
-<a name="rest_code_c1f126503ff943fd8134218cfc938af0-10"></a>        <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">"/search"</span><span class="o">&gt;/</span><span class="n">search</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
-<a name="rest_code_c1f126503ff943fd8134218cfc938af0-11"></a>        <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">"/stats"</span><span class="o">&gt;/</span><span class="n">stats</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
-<a name="rest_code_c1f126503ff943fd8134218cfc938af0-12"></a>        <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">"/crash"</span><span class="o">&gt;/</span><span class="n">crash</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
-<a name="rest_code_c1f126503ff943fd8134218cfc938af0-13"></a>        <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">"/timeout"</span><span class="o">&gt;/</span><span class="n">timeout</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
-<a name="rest_code_c1f126503ff943fd8134218cfc938af0-14"></a>        <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">"/timeout/timeout"</span><span class="o">&gt;/</span><span class="n">timeout</span><span class="o">/</span><span class="n">timeout</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
-<a name="rest_code_c1f126503ff943fd8134218cfc938af0-15"></a>        <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">"/stop"</span><span class="o">&gt;/</span><span class="n">stop</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
-<a name="rest_code_c1f126503ff943fd8134218cfc938af0-16"></a>      <span class="o">&lt;/</span><span class="n">ul</span><span class="o">&gt;</span>
-<a name="rest_code_c1f126503ff943fd8134218cfc938af0-17"></a>    <span class="o">&lt;/</span><span class="n">body</span><span class="o">&gt;</span>
-<a name="rest_code_c1f126503ff943fd8134218cfc938af0-18"></a>  <span class="o">&lt;/</span><span class="n">html</span><span class="o">&gt;.</span><span class="n">toString</span><span class="o">.</span><span class="n">getBytes</span><span class="o">(</span><span class="s">"ISO-8859-1"</span><span class="o">),</span>
-<a name="rest_code_c1f126503ff943fd8134218cfc938af0-19"></a><span class="n">status</span> <span class="k">=</span> <span class="mi">200</span><span class="o">)</span>
+<pre class="code scala"><a name="rest_code_3e11b59d00a244288a18994e5403ab04-1"></a><span class="k">lazy</span> <span class="k">val</span> <span class="n">index</span> <span class="k">=</span> <span class="nc">HttpResponse</span><span class="o">(</span>
+<a name="rest_code_3e11b59d00a244288a18994e5403ab04-2"></a><span class="n">headers</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="nc">HttpHeader</span><span class="o">(</span><span class="s">"Content-Type"</span><span class="o">,</span> <span class="s">"text/html"</span><span class="o">)),</span>
+<a name="rest_code_3e11b59d00a244288a18994e5403ab04-3"></a><span class="n">body</span> <span class="k">=</span>
+<a name="rest_code_3e11b59d00a244288a18994e5403ab04-4"></a>  <span class="o">&lt;</span><span class="n">html</span><span class="o">&gt;</span>
+<a name="rest_code_3e11b59d00a244288a18994e5403ab04-5"></a>    <span class="o">&lt;</span><span class="n">body</span><span class="o">&gt;</span>
+<a name="rest_code_3e11b59d00a244288a18994e5403ab04-6"></a>      <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="nc">Say</span> <span class="n">hello</span> <span class="n">to</span> <span class="o">&lt;</span><span class="n">i</span><span class="o">&gt;</span><span class="n">spray</span><span class="o">-</span><span class="n">can</span><span class="o">&lt;/</span><span class="n">i</span><span class="o">&gt;!&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+<a name="rest_code_3e11b59d00a244288a18994e5403ab04-7"></a>      <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nc">Defined</span> <span class="n">resources</span><span class="o">:&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+<a name="rest_code_3e11b59d00a244288a18994e5403ab04-8"></a>      <span class="o">&lt;</span><span class="n">ul</span><span class="o">&gt;</span>
+<a name="rest_code_3e11b59d00a244288a18994e5403ab04-9"></a>        <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">"/ping"</span><span class="o">&gt;/</span><span class="n">ping</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+<a name="rest_code_3e11b59d00a244288a18994e5403ab04-10"></a>        <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">"/search"</span><span class="o">&gt;/</span><span class="n">search</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+<a name="rest_code_3e11b59d00a244288a18994e5403ab04-11"></a>        <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">"/stats"</span><span class="o">&gt;/</span><span class="n">stats</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+<a name="rest_code_3e11b59d00a244288a18994e5403ab04-12"></a>        <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">"/crash"</span><span class="o">&gt;/</span><span class="n">crash</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+<a name="rest_code_3e11b59d00a244288a18994e5403ab04-13"></a>        <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">"/timeout"</span><span class="o">&gt;/</span><span class="n">timeout</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+<a name="rest_code_3e11b59d00a244288a18994e5403ab04-14"></a>        <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">"/timeout/timeout"</span><span class="o">&gt;/</span><span class="n">timeout</span><span class="o">/</span><span class="n">timeout</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+<a name="rest_code_3e11b59d00a244288a18994e5403ab04-15"></a>        <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">"/stop"</span><span class="o">&gt;/</span><span class="n">stop</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+<a name="rest_code_3e11b59d00a244288a18994e5403ab04-16"></a>      <span class="o">&lt;/</span><span class="n">ul</span><span class="o">&gt;</span>
+<a name="rest_code_3e11b59d00a244288a18994e5403ab04-17"></a>    <span class="o">&lt;/</span><span class="n">body</span><span class="o">&gt;</span>
+<a name="rest_code_3e11b59d00a244288a18994e5403ab04-18"></a>  <span class="o">&lt;/</span><span class="n">html</span><span class="o">&gt;.</span><span class="n">toString</span><span class="o">.</span><span class="n">getBytes</span><span class="o">(</span><span class="s">"ISO-8859-1"</span><span class="o">),</span>
+<a name="rest_code_3e11b59d00a244288a18994e5403ab04-19"></a><span class="n">status</span> <span class="k">=</span> <span class="mi">200</span><span class="o">)</span>
 </pre>
 </div>
 </div>

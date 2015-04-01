@@ -92,46 +92,46 @@ MathJax.Hub.Config({
 我覺的非常適合放在測試的之中進行操作。</p>
 <p><a class="reference external" href="http://bottlepy.org/docs/dev/index.html">Bottle</a> 的語法與使用方式也非常的直覺,  REST API 最基本要測試的情況就是 GET, POST, PUT 與 DELETE。
 這幾種功能要在 Bottle 裡面表達的話就只要</p>
-<pre class="code python"><a name="rest_code_d1c9f72b9cb94dc089920788c8e2049c-1"></a><span class="nd">@get</span><span class="p">(</span><span class="s">"item"</span><span class="p">)</span>
-<a name="rest_code_d1c9f72b9cb94dc089920788c8e2049c-2"></a><span class="k">def</span> <span class="nf">get_item</span><span class="p">():</span>
-<a name="rest_code_d1c9f72b9cb94dc089920788c8e2049c-3"></a>    <span class="k">return</span> <span class="s">"get_item"</span>
-<a name="rest_code_d1c9f72b9cb94dc089920788c8e2049c-4"></a>
-<a name="rest_code_d1c9f72b9cb94dc089920788c8e2049c-5"></a><span class="nd">@put</span><span class="p">(</span><span class="s">"item"</span><span class="p">)</span>
-<a name="rest_code_d1c9f72b9cb94dc089920788c8e2049c-6"></a><span class="k">def</span> <span class="nf">put_item</span><span class="p">():</span>
-<a name="rest_code_d1c9f72b9cb94dc089920788c8e2049c-7"></a>    <span class="k">return</span> <span class="s">"put_item"</span>
-<a name="rest_code_d1c9f72b9cb94dc089920788c8e2049c-8"></a>
-<a name="rest_code_d1c9f72b9cb94dc089920788c8e2049c-9"></a><span class="nd">@post</span><span class="p">(</span><span class="s">"item"</span><span class="p">)</span>
-<a name="rest_code_d1c9f72b9cb94dc089920788c8e2049c-10"></a><span class="k">def</span> <span class="nf">post_item</span><span class="p">():</span>
-<a name="rest_code_d1c9f72b9cb94dc089920788c8e2049c-11"></a>    <span class="k">return</span> <span class="s">"post_item"</span>
-<a name="rest_code_d1c9f72b9cb94dc089920788c8e2049c-12"></a>
-<a name="rest_code_d1c9f72b9cb94dc089920788c8e2049c-13"></a><span class="nd">@delete</span><span class="p">(</span><span class="s">"item"</span><span class="p">)</span>
-<a name="rest_code_d1c9f72b9cb94dc089920788c8e2049c-14"></a><span class="k">def</span> <span class="nf">delete_item</span><span class="p">():</span>
-<a name="rest_code_d1c9f72b9cb94dc089920788c8e2049c-15"></a>    <span class="k">return</span> <span class="s">"delete_item"</span>
+<pre class="code python"><a name="rest_code_bb093b85294e431b80f1eddc99c6c070-1"></a><span class="nd">@get</span><span class="p">(</span><span class="s">"item"</span><span class="p">)</span>
+<a name="rest_code_bb093b85294e431b80f1eddc99c6c070-2"></a><span class="k">def</span> <span class="nf">get_item</span><span class="p">():</span>
+<a name="rest_code_bb093b85294e431b80f1eddc99c6c070-3"></a>    <span class="k">return</span> <span class="s">"get_item"</span>
+<a name="rest_code_bb093b85294e431b80f1eddc99c6c070-4"></a>
+<a name="rest_code_bb093b85294e431b80f1eddc99c6c070-5"></a><span class="nd">@put</span><span class="p">(</span><span class="s">"item"</span><span class="p">)</span>
+<a name="rest_code_bb093b85294e431b80f1eddc99c6c070-6"></a><span class="k">def</span> <span class="nf">put_item</span><span class="p">():</span>
+<a name="rest_code_bb093b85294e431b80f1eddc99c6c070-7"></a>    <span class="k">return</span> <span class="s">"put_item"</span>
+<a name="rest_code_bb093b85294e431b80f1eddc99c6c070-8"></a>
+<a name="rest_code_bb093b85294e431b80f1eddc99c6c070-9"></a><span class="nd">@post</span><span class="p">(</span><span class="s">"item"</span><span class="p">)</span>
+<a name="rest_code_bb093b85294e431b80f1eddc99c6c070-10"></a><span class="k">def</span> <span class="nf">post_item</span><span class="p">():</span>
+<a name="rest_code_bb093b85294e431b80f1eddc99c6c070-11"></a>    <span class="k">return</span> <span class="s">"post_item"</span>
+<a name="rest_code_bb093b85294e431b80f1eddc99c6c070-12"></a>
+<a name="rest_code_bb093b85294e431b80f1eddc99c6c070-13"></a><span class="nd">@delete</span><span class="p">(</span><span class="s">"item"</span><span class="p">)</span>
+<a name="rest_code_bb093b85294e431b80f1eddc99c6c070-14"></a><span class="k">def</span> <span class="nf">delete_item</span><span class="p">():</span>
+<a name="rest_code_bb093b85294e431b80f1eddc99c6c070-15"></a>    <span class="k">return</span> <span class="s">"delete_item"</span>
 </pre>
 <p>除此之外, Python 的 Decorator 是可以直接呼叫的。
 所以像上面 get, put, post 與 delete 等於</p>
-<pre class="code python"><a name="rest_code_4efc836fa4264609bef77062d530b2f7-1"></a><span class="k">def</span> <span class="nf">get_item</span><span class="p">():</span>
-<a name="rest_code_4efc836fa4264609bef77062d530b2f7-2"></a>    <span class="k">return</span> <span class="s">"get_item"</span>
-<a name="rest_code_4efc836fa4264609bef77062d530b2f7-3"></a>
-<a name="rest_code_4efc836fa4264609bef77062d530b2f7-4"></a><span class="k">def</span> <span class="nf">put_item</span><span class="p">():</span>
-<a name="rest_code_4efc836fa4264609bef77062d530b2f7-5"></a>    <span class="k">return</span> <span class="s">"put_item"</span>
-<a name="rest_code_4efc836fa4264609bef77062d530b2f7-6"></a>
-<a name="rest_code_4efc836fa4264609bef77062d530b2f7-7"></a><span class="k">def</span> <span class="nf">post_item</span><span class="p">():</span>
-<a name="rest_code_4efc836fa4264609bef77062d530b2f7-8"></a>    <span class="k">return</span> <span class="s">"post_item"</span>
-<a name="rest_code_4efc836fa4264609bef77062d530b2f7-9"></a>
-<a name="rest_code_4efc836fa4264609bef77062d530b2f7-10"></a><span class="k">def</span> <span class="nf">delete_item</span><span class="p">():</span>
-<a name="rest_code_4efc836fa4264609bef77062d530b2f7-11"></a>    <span class="k">return</span> <span class="s">"delete_item"</span>
-<a name="rest_code_4efc836fa4264609bef77062d530b2f7-12"></a>
-<a name="rest_code_4efc836fa4264609bef77062d530b2f7-13"></a><span class="n">get</span><span class="p">(</span><span class="s">"item"</span><span class="p">)(</span><span class="n">get_item</span><span class="p">)</span>
-<a name="rest_code_4efc836fa4264609bef77062d530b2f7-14"></a><span class="n">put</span><span class="p">(</span><span class="s">"item"</span><span class="p">)(</span><span class="n">put_item</span><span class="p">)</span>
-<a name="rest_code_4efc836fa4264609bef77062d530b2f7-15"></a><span class="n">delete</span><span class="p">(</span><span class="s">"item"</span><span class="p">)(</span><span class="n">delete_item</span><span class="p">)</span>
-<a name="rest_code_4efc836fa4264609bef77062d530b2f7-16"></a><span class="n">post</span><span class="p">(</span><span class="s">"item"</span><span class="p">)(</span><span class="n">post_item</span><span class="p">)</span>
+<pre class="code python"><a name="rest_code_41da1a2810c7410da832f9d5f84cda4a-1"></a><span class="k">def</span> <span class="nf">get_item</span><span class="p">():</span>
+<a name="rest_code_41da1a2810c7410da832f9d5f84cda4a-2"></a>    <span class="k">return</span> <span class="s">"get_item"</span>
+<a name="rest_code_41da1a2810c7410da832f9d5f84cda4a-3"></a>
+<a name="rest_code_41da1a2810c7410da832f9d5f84cda4a-4"></a><span class="k">def</span> <span class="nf">put_item</span><span class="p">():</span>
+<a name="rest_code_41da1a2810c7410da832f9d5f84cda4a-5"></a>    <span class="k">return</span> <span class="s">"put_item"</span>
+<a name="rest_code_41da1a2810c7410da832f9d5f84cda4a-6"></a>
+<a name="rest_code_41da1a2810c7410da832f9d5f84cda4a-7"></a><span class="k">def</span> <span class="nf">post_item</span><span class="p">():</span>
+<a name="rest_code_41da1a2810c7410da832f9d5f84cda4a-8"></a>    <span class="k">return</span> <span class="s">"post_item"</span>
+<a name="rest_code_41da1a2810c7410da832f9d5f84cda4a-9"></a>
+<a name="rest_code_41da1a2810c7410da832f9d5f84cda4a-10"></a><span class="k">def</span> <span class="nf">delete_item</span><span class="p">():</span>
+<a name="rest_code_41da1a2810c7410da832f9d5f84cda4a-11"></a>    <span class="k">return</span> <span class="s">"delete_item"</span>
+<a name="rest_code_41da1a2810c7410da832f9d5f84cda4a-12"></a>
+<a name="rest_code_41da1a2810c7410da832f9d5f84cda4a-13"></a><span class="n">get</span><span class="p">(</span><span class="s">"item"</span><span class="p">)(</span><span class="n">get_item</span><span class="p">)</span>
+<a name="rest_code_41da1a2810c7410da832f9d5f84cda4a-14"></a><span class="n">put</span><span class="p">(</span><span class="s">"item"</span><span class="p">)(</span><span class="n">put_item</span><span class="p">)</span>
+<a name="rest_code_41da1a2810c7410da832f9d5f84cda4a-15"></a><span class="n">delete</span><span class="p">(</span><span class="s">"item"</span><span class="p">)(</span><span class="n">delete_item</span><span class="p">)</span>
+<a name="rest_code_41da1a2810c7410da832f9d5f84cda4a-16"></a><span class="n">post</span><span class="p">(</span><span class="s">"item"</span><span class="p">)(</span><span class="n">post_item</span><span class="p">)</span>
 </pre>
 <p>透過 Bottle 我們就可以很簡單的建立我們想要回傳的內容</p>
 <p>那麼，如果是想要測試 error 的情況呢？</p>
-<pre class="code python"><a name="rest_code_13676e3f807d431eb4d18cce89353341-1"></a><span class="nd">@get</span><span class="p">(</span><span class="s">"item"</span><span class="p">)</span>
-<a name="rest_code_13676e3f807d431eb4d18cce89353341-2"></a><span class="k">def</span> <span class="nf">get_item</span><span class="p">():</span>
-<a name="rest_code_13676e3f807d431eb4d18cce89353341-3"></a>    <span class="n">abort</span><span class="p">(</span><span class="mi">401</span><span class="p">,</span> <span class="s">"Access denied"</span><span class="p">)</span>
+<pre class="code python"><a name="rest_code_79feb3548a264f3faef7310117bc7575-1"></a><span class="nd">@get</span><span class="p">(</span><span class="s">"item"</span><span class="p">)</span>
+<a name="rest_code_79feb3548a264f3faef7310117bc7575-2"></a><span class="k">def</span> <span class="nf">get_item</span><span class="p">():</span>
+<a name="rest_code_79feb3548a264f3faef7310117bc7575-3"></a>    <span class="n">abort</span><span class="p">(</span><span class="mi">401</span><span class="p">,</span> <span class="s">"Access denied"</span><span class="p">)</span>
 </pre>
 <p>這樣就可以任意產生我們想要的資料給 CLI 進行測試了。</p>
 </div>
@@ -141,85 +141,85 @@ MathJax.Hub.Config({
 由於 Bottle 本身的啟動方式，並沒有提供結束的方法。
 所以這部份我是參考 <a class="reference external" href="http://stackoverflow.com/questions/11282218/bottle-web-framework-how-to-stop">Bottle web framework - How to stop</a>
 回到 Python 本身的 WSGI Server 去做處理。</p>
-<pre class="code python"><a name="rest_code_dcf87a507bb444aaaa6b6cfe5da6eed8-1"></a><span class="kn">from</span> <span class="nn">bottle</span> <span class="kn">import</span> <span class="n">Bottle</span><span class="p">,</span> <span class="n">ServerAdapter</span>
-<a name="rest_code_dcf87a507bb444aaaa6b6cfe5da6eed8-2"></a>
-<a name="rest_code_dcf87a507bb444aaaa6b6cfe5da6eed8-3"></a><span class="k">class</span> <span class="nc">MockRESTServer</span><span class="p">(</span><span class="n">ServerAdapter</span><span class="p">):</span>
-<a name="rest_code_dcf87a507bb444aaaa6b6cfe5da6eed8-4"></a>    <span class="n">server</span> <span class="o">=</span> <span class="bp">None</span>
-<a name="rest_code_dcf87a507bb444aaaa6b6cfe5da6eed8-5"></a>
-<a name="rest_code_dcf87a507bb444aaaa6b6cfe5da6eed8-6"></a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
-<a name="rest_code_dcf87a507bb444aaaa6b6cfe5da6eed8-7"></a>        <span class="kn">from</span> <span class="nn">wsgiref.simple_server</span> <span class="kn">import</span> <span class="n">make_server</span><span class="p">,</span> <span class="n">WSGIRequestHandler</span>
-<a name="rest_code_dcf87a507bb444aaaa6b6cfe5da6eed8-8"></a>
-<a name="rest_code_dcf87a507bb444aaaa6b6cfe5da6eed8-9"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">quiet</span><span class="p">:</span>
-<a name="rest_code_dcf87a507bb444aaaa6b6cfe5da6eed8-10"></a>            <span class="k">class</span> <span class="nc">QuietHandler</span><span class="p">(</span><span class="n">WSGIRequestHandler</span><span class="p">):</span>
-<a name="rest_code_dcf87a507bb444aaaa6b6cfe5da6eed8-11"></a>                <span class="k">def</span> <span class="nf">log_request</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span> <span class="k">pass</span>
-<a name="rest_code_dcf87a507bb444aaaa6b6cfe5da6eed8-12"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">'handler_class'</span><span class="p">]</span> <span class="o">=</span> <span class="n">QuietHandler</span>
-<a name="rest_code_dcf87a507bb444aaaa6b6cfe5da6eed8-13"></a>
-<a name="rest_code_dcf87a507bb444aaaa6b6cfe5da6eed8-14"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="n">make_server</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">)</span>
-<a name="rest_code_dcf87a507bb444aaaa6b6cfe5da6eed8-15"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
-<a name="rest_code_dcf87a507bb444aaaa6b6cfe5da6eed8-16"></a>
-<a name="rest_code_dcf87a507bb444aaaa6b6cfe5da6eed8-17"></a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<a name="rest_code_dcf87a507bb444aaaa6b6cfe5da6eed8-18"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+<pre class="code python"><a name="rest_code_30927551a9a442258d25943f4d4d7ca7-1"></a><span class="kn">from</span> <span class="nn">bottle</span> <span class="kn">import</span> <span class="n">Bottle</span><span class="p">,</span> <span class="n">ServerAdapter</span>
+<a name="rest_code_30927551a9a442258d25943f4d4d7ca7-2"></a>
+<a name="rest_code_30927551a9a442258d25943f4d4d7ca7-3"></a><span class="k">class</span> <span class="nc">MockRESTServer</span><span class="p">(</span><span class="n">ServerAdapter</span><span class="p">):</span>
+<a name="rest_code_30927551a9a442258d25943f4d4d7ca7-4"></a>    <span class="n">server</span> <span class="o">=</span> <span class="bp">None</span>
+<a name="rest_code_30927551a9a442258d25943f4d4d7ca7-5"></a>
+<a name="rest_code_30927551a9a442258d25943f4d4d7ca7-6"></a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
+<a name="rest_code_30927551a9a442258d25943f4d4d7ca7-7"></a>        <span class="kn">from</span> <span class="nn">wsgiref.simple_server</span> <span class="kn">import</span> <span class="n">make_server</span><span class="p">,</span> <span class="n">WSGIRequestHandler</span>
+<a name="rest_code_30927551a9a442258d25943f4d4d7ca7-8"></a>
+<a name="rest_code_30927551a9a442258d25943f4d4d7ca7-9"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">quiet</span><span class="p">:</span>
+<a name="rest_code_30927551a9a442258d25943f4d4d7ca7-10"></a>            <span class="k">class</span> <span class="nc">QuietHandler</span><span class="p">(</span><span class="n">WSGIRequestHandler</span><span class="p">):</span>
+<a name="rest_code_30927551a9a442258d25943f4d4d7ca7-11"></a>                <span class="k">def</span> <span class="nf">log_request</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span> <span class="k">pass</span>
+<a name="rest_code_30927551a9a442258d25943f4d4d7ca7-12"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">'handler_class'</span><span class="p">]</span> <span class="o">=</span> <span class="n">QuietHandler</span>
+<a name="rest_code_30927551a9a442258d25943f4d4d7ca7-13"></a>
+<a name="rest_code_30927551a9a442258d25943f4d4d7ca7-14"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="n">make_server</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">)</span>
+<a name="rest_code_30927551a9a442258d25943f4d4d7ca7-15"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
+<a name="rest_code_30927551a9a442258d25943f4d4d7ca7-16"></a>
+<a name="rest_code_30927551a9a442258d25943f4d4d7ca7-17"></a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a name="rest_code_30927551a9a442258d25943f4d4d7ca7-18"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
 </pre>
 <p>另外，由於我們公司的 REST API 是透過 https 來存取的，
 所以這邊另外參考 <a class="reference external" href="http://www.socouldanyone.com/2014/01/bottle-with-ssl.html">SSL encryption in python bottle</a> 做的加上 SSL 的版本。</p>
 <p>並且先產生 SSL certificate</p>
-<pre class="code text"><a name="rest_code_fa0fefc2a5d94a3d9af325b340612a7d-1"></a>openssl req -new -x509 -keyout testcase.pem -out testcase.pem -days 365 -nodes
+<pre class="code text"><a name="rest_code_88ff9e8a5d96446480ebb0684573c16a-1"></a>openssl req -new -x509 -keyout testcase.pem -out testcase.pem -days 365 -nodes
 </pre>
-<pre class="code python"><a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-1"></a><span class="kn">from</span> <span class="nn">bottle</span> <span class="kn">import</span> <span class="n">Bottle</span><span class="p">,</span> <span class="n">ServerAdapter</span>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-2"></a>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-3"></a><span class="k">class</span> <span class="nc">MockRESTServer</span><span class="p">(</span><span class="n">ServerAdapter</span><span class="p">):</span>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-4"></a>    <span class="n">server</span> <span class="o">=</span> <span class="bp">None</span>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-5"></a>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-6"></a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-7"></a>        <span class="kn">from</span> <span class="nn">wsgiref.simple_server</span> <span class="kn">import</span> <span class="n">make_server</span><span class="p">,</span> <span class="n">WSGIRequestHandler</span>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-8"></a>        <span class="kn">import</span> <span class="nn">ssl</span>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-9"></a>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-10"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">quiet</span><span class="p">:</span>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-11"></a>            <span class="k">class</span> <span class="nc">QuietHandler</span><span class="p">(</span><span class="n">WSGIRequestHandler</span><span class="p">):</span>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-12"></a>                <span class="k">def</span> <span class="nf">log_request</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span> <span class="k">pass</span>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-13"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">'handler_class'</span><span class="p">]</span> <span class="o">=</span> <span class="n">QuietHandler</span>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-14"></a>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-15"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="n">make_server</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">)</span>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-16"></a>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-17"></a>        <span class="c">#Wrap the socket</span>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-18"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">socket</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">wrap_socket</span><span class="p">(</span>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-19"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">socket</span><span class="p">,</span>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-20"></a>            <span class="n">certfile</span><span class="o">=</span><span class="s">"testcase.pem"</span><span class="p">,</span>    <span class="c">#path to certificate</span>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-21"></a>            <span class="n">server_side</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-22"></a>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-23"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-24"></a>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-25"></a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-26"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
-<a name="rest_code_422fb9f9ba1d45a59b7866f539a1e9bc-27"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<pre class="code python"><a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-1"></a><span class="kn">from</span> <span class="nn">bottle</span> <span class="kn">import</span> <span class="n">Bottle</span><span class="p">,</span> <span class="n">ServerAdapter</span>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-2"></a>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-3"></a><span class="k">class</span> <span class="nc">MockRESTServer</span><span class="p">(</span><span class="n">ServerAdapter</span><span class="p">):</span>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-4"></a>    <span class="n">server</span> <span class="o">=</span> <span class="bp">None</span>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-5"></a>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-6"></a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-7"></a>        <span class="kn">from</span> <span class="nn">wsgiref.simple_server</span> <span class="kn">import</span> <span class="n">make_server</span><span class="p">,</span> <span class="n">WSGIRequestHandler</span>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-8"></a>        <span class="kn">import</span> <span class="nn">ssl</span>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-9"></a>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-10"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">quiet</span><span class="p">:</span>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-11"></a>            <span class="k">class</span> <span class="nc">QuietHandler</span><span class="p">(</span><span class="n">WSGIRequestHandler</span><span class="p">):</span>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-12"></a>                <span class="k">def</span> <span class="nf">log_request</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span> <span class="k">pass</span>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-13"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s">'handler_class'</span><span class="p">]</span> <span class="o">=</span> <span class="n">QuietHandler</span>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-14"></a>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-15"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="n">make_server</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">)</span>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-16"></a>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-17"></a>        <span class="c">#Wrap the socket</span>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-18"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">socket</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">wrap_socket</span><span class="p">(</span>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-19"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">socket</span><span class="p">,</span>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-20"></a>            <span class="n">certfile</span><span class="o">=</span><span class="s">"testcase.pem"</span><span class="p">,</span>    <span class="c">#path to certificate</span>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-21"></a>            <span class="n">server_side</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-22"></a>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-23"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-24"></a>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-25"></a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-26"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+<a name="rest_code_3d0e816af60441aa835d1d6bc3d7c1cb-27"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre>
 <p>最後，讓 testcase setUp 啟動 Server, tearDown 的時候結束 Server 就可以了。</p>
-<pre class="code python"><a name="rest_code_a25240ed8483446cb967cbd957bdaf40-1"></a><span class="k">class</span> <span class="nc">TestServerHandlers</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-2"></a>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-3"></a>    <span class="n">server</span> <span class="o">=</span> <span class="bp">None</span>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-4"></a>    <span class="n">thread</span> <span class="o">=</span> <span class="bp">None</span>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-5"></a>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-6"></a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-7"></a>        <span class="n">app</span> <span class="o">=</span> <span class="n">Bottle</span><span class="p">()</span>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="n">MockRESTServer</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">"127.0.0.1"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8357</span><span class="p">)</span>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-9"></a>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-10"></a>        <span class="nd">@app.get</span><span class="p">(</span><span class="s">"/hello_world"</span><span class="p">)</span>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-11"></a>        <span class="k">def</span> <span class="nf">hello_world</span><span class="p">():</span>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-12"></a>            <span class="n">resp</span> <span class="o">=</span><span class="s">'{"hello":"world"}'</span>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-13"></a>            <span class="k">return</span> <span class="n">resp</span>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-14"></a>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-15"></a>        <span class="k">def</span> <span class="nf">start_server</span><span class="p">():</span>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-16"></a>            <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">server</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="p">)</span>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-17"></a>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-18"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">start_server</span><span class="p">)</span>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-19"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-20"></a>        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-21"></a>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-22"></a>    <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-23"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-24"></a>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-25"></a>    <span class="k">def</span> <span class="nf">test_case_1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<a name="rest_code_a25240ed8483446cb967cbd957bdaf40-26"></a>        <span class="k">pass</span>
+<pre class="code python"><a name="rest_code_e0632856954846dd802f13adc03bd017-1"></a><span class="k">class</span> <span class="nc">TestServerHandlers</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-2"></a>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-3"></a>    <span class="n">server</span> <span class="o">=</span> <span class="bp">None</span>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-4"></a>    <span class="n">thread</span> <span class="o">=</span> <span class="bp">None</span>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-5"></a>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-6"></a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-7"></a>        <span class="n">app</span> <span class="o">=</span> <span class="n">Bottle</span><span class="p">()</span>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="n">MockRESTServer</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">"127.0.0.1"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8357</span><span class="p">)</span>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-9"></a>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-10"></a>        <span class="nd">@app.get</span><span class="p">(</span><span class="s">"/hello_world"</span><span class="p">)</span>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-11"></a>        <span class="k">def</span> <span class="nf">hello_world</span><span class="p">():</span>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-12"></a>            <span class="n">resp</span> <span class="o">=</span><span class="s">'{"hello":"world"}'</span>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-13"></a>            <span class="k">return</span> <span class="n">resp</span>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-14"></a>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-15"></a>        <span class="k">def</span> <span class="nf">start_server</span><span class="p">():</span>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-16"></a>            <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">server</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="p">)</span>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-17"></a>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-18"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">start_server</span><span class="p">)</span>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-19"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-20"></a>        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-21"></a>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-22"></a>    <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-23"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-24"></a>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-25"></a>    <span class="k">def</span> <span class="nf">test_case_1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a name="rest_code_e0632856954846dd802f13adc03bd017-26"></a>        <span class="k">pass</span>
 </pre>
 <p>中間會去 sleep(0.5) 是我發現如果我的 testcase 失敗的太快，或者太快結束。會導致 server 還沒有啟動結束，就停止
 而導致 testcase 卡住無法繼續執行下去。
@@ -228,9 +228,9 @@ MathJax.Hub.Config({
 <p>Update 2014.06.06</p>
 <p>在增加 https 的支援之後，沒有去 close socket ( 大概 Orz ) 所以 Server 沒有完全關閉，導致下個 TestCase 無法正常啟動。
 因此多增加了</p>
-<pre class="code python"><a name="rest_code_e90df8c3c1cd4e42a5e64d486f05d1ed-1"></a><span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<a name="rest_code_e90df8c3c1cd4e42a5e64d486f05d1ed-2"></a>   <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
-<a name="rest_code_e90df8c3c1cd4e42a5e64d486f05d1ed-3"></a>   <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<pre class="code python"><a name="rest_code_f4370a8b55744902b6936fd5ae094c0a-1"></a><span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a name="rest_code_f4370a8b55744902b6936fd5ae094c0a-2"></a>   <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+<a name="rest_code_f4370a8b55744902b6936fd5ae094c0a-3"></a>   <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre>
 <p>在 stop 的 function 裡面</p>
 <div class="figure">
