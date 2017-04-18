@@ -1,16 +1,17 @@
 +++
 categories = ["program"]
 date = "2017-04-12T14:40:30+08:00"
-description = "Create a python3 docker image with adb"
+description = "這是我用來執行 Android 測試用的..."
 draft = false 
 tags = ["python", "docker", "adb"]
-title = "Create a python3 docker image with adb"
+title = "建立可以執行 python3 與 adb 指令的 docker images"
 toc = true
 +++
 
 # Python3 + adb
 
-這個 Image 使用 Alpine Linux Image 安裝了 Python3 與 ADB。整體大小約 9x MB，用於執行 Python3 撰寫的 Android 測試。
+這個 Image 使用 Alpine Linux Image 安裝了 Python3 與 ADB。
+整體大小約 9x MB，用於執行 Python3 撰寫的 Android 測試。
 
 整個 `Dockerfile` 是各家 Dockerfile 的大雜燴。感謝 
 

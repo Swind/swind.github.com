@@ -3,3 +3,4 @@ output
 .*.swp
 cache
 *.pyc
+public
