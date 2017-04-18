@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Program on Corleonis</title>
+    <link>https://swind.code-life.info/categories/program/index.xml</link>
+    <description>Recent content in Program on Corleonis</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-tw</language>
+    <atom:link href="https://swind.code-life.info/categories/program/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Create a python3 docker image with adb</title>
+      <link>https://swind.code-life.info/post/docker-python3-adb/</link>
+      <pubDate>Wed, 12 Apr 2017 14:40:30 +0800</pubDate>
+      
+      <guid>https://swind.code-life.info/post/docker-python3-adb/</guid>
+      <description>&lt;h1 id=&#34;python3-adb&#34;&gt;Python3 + adb&lt;/h1&gt;
+
+&lt;p&gt;這個 Image 使用 Alpine Linux Image 安裝了 Python3 與 ADB。整體大小約 9x MB，用於執行 Python3 撰寫的 Android 測試。&lt;/p&gt;
+
+&lt;p&gt;整個 &lt;code&gt;Dockerfile&lt;/code&gt; 是各家 Dockerfile 的大雜燴。感謝&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/frol/docker-alpine-python3&#34;&gt;frol/docker-alpine-python3&lt;/a&gt;,&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/sorccu/docker-adb&#34;&gt;sorccu/docker-adb&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/cdrx/docker-pyinstaller&#34;&gt;cdrx/docker-pyinstaller&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;使用方式&#34;&gt;使用方式&lt;/h2&gt;
+
+&lt;h3 id=&#34;執行-adb&#34;&gt;執行 ADB&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span&gt;&lt;/span&gt;docker run --rm -ti --net host swind/docker-python3-adb adb devices
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code&gt;sorccu/docker-adb&lt;/code&gt; 的 container 內容本來是預設會啟動 &lt;code&gt;adb server&lt;/code&gt;，但這部份被我拿掉了。
+因為我想讓 container 內的 adb 可以直接跟 Host 的 adb server 溝通。
+所以在執行的時候要增加 &lt;code&gt;--net host&lt;/code&gt; 讓 container 內的 adb 與 Host 的 adb server 可以直接連線。&lt;/p&gt;
+
+&lt;h3 id=&#34;執行-python3-程式&#34;&gt;執行 Python3 程式&lt;/h3&gt;
+
+&lt;p&gt;使用這個 image 進行 build 的時候，會自動載入 &lt;code&gt;requirements.txt&lt;/code&gt; 並且安裝（也就是 Dockerfile 中 &lt;code&gt;ONBUILD&lt;/code&gt; 的部份）。
+並且在執行的時候預設 &lt;code&gt;WORKDIR&lt;/code&gt; 的路徑是 &lt;code&gt;/code&lt;/code&gt;，所以需要使用 &lt;code&gt;-v&lt;/code&gt; 將要執行的 Python project 掛載到 &lt;code&gt;/code&lt;/code&gt;。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span&gt;&lt;/span&gt;docker run -v &lt;span class=&#34;s2&#34;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;pwd&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;:/code&amp;quot;&lt;/span&gt; --rm -ti --net host swind/docker-python3-adb python3 helloworld.py 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;os&lt;/span&gt;
+&lt;span class=&#34;k&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;quot;Hello World&amp;quot;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id=&#34;license&#34;&gt;License&lt;/h3&gt;
+
+&lt;p&gt;See &lt;a href=&#34;LICENSE&#34;&gt;LICENSE&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

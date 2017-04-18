@@ -1,0 +1,38 @@
+baseurl = "https://swind.code-life.info/"
+languageCode = "zh-tw"
+title = "Corleonis"
+
+paginate = 5 # Number of posts to show before paginating
+
+theme = "after-dark" # Uncomment to use as default theme
+
+enableRobotsTXT = true # Suggested, enable robots.txt file
+googleAnalytics = "UA-42855873-1" # Optional, add tracking Id for analytics
+disqusShortname = "swindgithub" # Optional, add Disqus shortname for comments
+SectionPagesMenu = "main" # Enable menu system for lazy bloggers
+footnoteReturnLinkContents = "↩" # Provides a nicer footnote return link
+
+pygmentsuseclasses = true
+pygmentscodefences = true
+pygmentsstyle = "monokai"
+
+[params]
+  description = "" # Suggested, controls default description meta
+  author = "Swind" # Optional, controls author name display on posts
+  hide_author = false # Optional, set true to hide author name on posts
+  show_menu = true # Optional, set true to enable section menu
+  powered_by = false # Optional, set false to disable credits
+  images = [] # Suggested, controls default Open Graph images
+  theme_variant = "" # Optional, for use to overriding default theme
+
+[[menu.main]]
+  name = "Home"
+  weight = 1
+  identifier = "home"
+  url = "/"
+
+[[menu.main]]
+  name = "Posts"
+  weight = 2 
+  identifier = "post"
+  url = "/post/"
