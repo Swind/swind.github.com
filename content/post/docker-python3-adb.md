@@ -21,6 +21,11 @@ toc = true
 
 <!--more-->
 
+# 原始碼與 Docker Image
+
+- [Github: swind/docker-python3-adb](https://github.com/Swind/docker-python3-adb)
+- [Docker-Hub: swind/docker-python3-adb](https://hub.docker.com/r/swind/docker-python3-adb)
+
 ## 使用方式
 
 ### 執行 ADB
