@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Corleonis</title>
-    <link>https://swind.code-life.info/post/index.xml</link>
+    <link>https://swind.github.io/post/index.xml</link>
     <description>Recent content in Posts on Corleonis</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
     <lastBuildDate>Wed, 12 Jul 2017 10:46:29 +0800</lastBuildDate>
-    <atom:link href="https://swind.code-life.info/post/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://swind.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>使用 adb 來追蹤查看 APP 的網路流量</title>
-      <link>https://swind.code-life.info/post/use-adb-to-track-the-network-statistics/</link>
+      <link>https://swind.github.io/post/use-adb-to-track-the-network-statistics/</link>
       <pubDate>Wed, 12 Jul 2017 10:46:29 +0800</pubDate>
       
-      <guid>https://swind.code-life.info/post/use-adb-to-track-the-network-statistics/</guid>
+      <guid>https://swind.github.io/post/use-adb-to-track-the-network-statistics/</guid>
       <description>&lt;h2 id=&#34;使用-proc-底下的資訊&#34;&gt;使用 /proc 底下的資訊&lt;/h2&gt;
 
 &lt;p&gt;雖然 Android 7 之後似乎一般應用程式已經沒有辦法存取 &lt;code&gt;/proc&lt;/code&gt; 底下的東西了。
@@ -182,10 +182,10 @@ wlan0 0x0 10096 1 15659531 414473
     
     <item>
       <title>ADB 傳輸格式的筆記</title>
-      <link>https://swind.code-life.info/post/adb/</link>
+      <link>https://swind.github.io/post/adb/</link>
       <pubDate>Tue, 11 Jul 2017 10:46:29 +0800</pubDate>
       
-      <guid>https://swind.code-life.info/post/adb/</guid>
+      <guid>https://swind.github.io/post/adb/</guid>
       <description>&lt;p&gt;緩慢補充中&amp;hellip;&lt;/p&gt;
 
 &lt;h2 id=&#34;adb-傳輸格式&#34;&gt;ADB 傳輸格式&lt;/h2&gt;
@@ -269,10 +269,10 @@ wlan0 0x0 10096 1 15659531 414473
     
     <item>
       <title>使用 docker 與 docker-compose 啟動 Jenkins</title>
-      <link>https://swind.code-life.info/post/jenkins-html-report/</link>
+      <link>https://swind.github.io/post/jenkins-html-report/</link>
       <pubDate>Tue, 18 Apr 2017 11:51:34 +0800</pubDate>
       
-      <guid>https://swind.code-life.info/post/jenkins-html-report/</guid>
+      <guid>https://swind.github.io/post/jenkins-html-report/</guid>
       <description>&lt;h2 id=&#34;docker-hub-jenkins&#34;&gt;Docker Hub - Jenkins&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://hub.docker.com/_/jenkins/&#34;&gt;Docker Hub -Jenkins&lt;/a&gt; 上其實文章已經很完整了。
@@ -330,10 +330,10 @@ services:
     
     <item>
       <title>建立可以執行 python3 與 adb 指令的 docker images</title>
-      <link>https://swind.code-life.info/post/docker-python3-adb/</link>
+      <link>https://swind.github.io/post/docker-python3-adb/</link>
       <pubDate>Wed, 12 Apr 2017 14:40:30 +0800</pubDate>
       
-      <guid>https://swind.code-life.info/post/docker-python3-adb/</guid>
+      <guid>https://swind.github.io/post/docker-python3-adb/</guid>
       <description>&lt;h2 id=&#34;python3-adb&#34;&gt;Python3 + adb&lt;/h2&gt;
 
 &lt;p&gt;這個 Image 使用 Alpine Linux Image 安裝了 Python3 與 ADB。

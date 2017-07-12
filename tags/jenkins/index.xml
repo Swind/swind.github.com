@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Jenkins on Corleonis</title>
-    <link>https://swind.code-life.info/tags/jenkins/index.xml</link>
+    <link>https://swind.github.io/tags/jenkins/index.xml</link>
     <description>Recent content in Jenkins on Corleonis</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
-    <atom:link href="https://swind.code-life.info/tags/jenkins/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://swind.github.io/tags/jenkins/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>使用 docker 與 docker-compose 啟動 Jenkins</title>
-      <link>https://swind.code-life.info/post/jenkins-html-report/</link>
+      <link>https://swind.github.io/post/jenkins-html-report/</link>
       <pubDate>Tue, 18 Apr 2017 11:51:34 +0800</pubDate>
       
-      <guid>https://swind.code-life.info/post/jenkins-html-report/</guid>
+      <guid>https://swind.github.io/post/jenkins-html-report/</guid>
       <description>&lt;h2 id=&#34;docker-hub-jenkins&#34;&gt;Docker Hub - Jenkins&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://hub.docker.com/_/jenkins/&#34;&gt;Docker Hub -Jenkins&lt;/a&gt; 上其實文章已經很完整了。

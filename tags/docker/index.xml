@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Docker on Corleonis</title>
-    <link>https://swind.code-life.info/tags/docker/index.xml</link>
+    <link>https://swind.github.io/tags/docker/index.xml</link>
     <description>Recent content in Docker on Corleonis</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
-    <atom:link href="https://swind.code-life.info/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://swind.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>使用 docker 與 docker-compose 啟動 Jenkins</title>
-      <link>https://swind.code-life.info/post/jenkins-html-report/</link>
+      <link>https://swind.github.io/post/jenkins-html-report/</link>
       <pubDate>Tue, 18 Apr 2017 11:51:34 +0800</pubDate>
       
-      <guid>https://swind.code-life.info/post/jenkins-html-report/</guid>
+      <guid>https://swind.github.io/post/jenkins-html-report/</guid>
       <description>&lt;h2 id=&#34;docker-hub-jenkins&#34;&gt;Docker Hub - Jenkins&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://hub.docker.com/_/jenkins/&#34;&gt;Docker Hub -Jenkins&lt;/a&gt; 上其實文章已經很完整了。
@@ -71,10 +71,10 @@ services:
     
     <item>
       <title>建立可以執行 python3 與 adb 指令的 docker images</title>
-      <link>https://swind.code-life.info/post/docker-python3-adb/</link>
+      <link>https://swind.github.io/post/docker-python3-adb/</link>
       <pubDate>Wed, 12 Apr 2017 14:40:30 +0800</pubDate>
       
-      <guid>https://swind.code-life.info/post/docker-python3-adb/</guid>
+      <guid>https://swind.github.io/post/docker-python3-adb/</guid>
       <description>&lt;h2 id=&#34;python3-adb&#34;&gt;Python3 + adb&lt;/h2&gt;
 
 &lt;p&gt;這個 Image 使用 Alpine Linux Image 安裝了 Python3 與 ADB。
