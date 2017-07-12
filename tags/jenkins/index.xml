@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Jenkins on Corleonis</title>
+    <link>https://swind.code-life.info/tags/jenkins/index.xml</link>
+    <description>Recent content in Jenkins on Corleonis</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-tw</language>
+    <atom:link href="https://swind.code-life.info/tags/jenkins/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>使用 docker 與 docker-compose 啟動 Jenkins</title>
+      <link>https://swind.code-life.info/post/jenkins-html-report/</link>
+      <pubDate>Tue, 18 Apr 2017 11:51:34 +0800</pubDate>
+      
+      <guid>https://swind.code-life.info/post/jenkins-html-report/</guid>
+      <description>&lt;h2 id=&#34;docker-hub-jenkins&#34;&gt;Docker Hub - Jenkins&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://hub.docker.com/_/jenkins/&#34;&gt;Docker Hub -Jenkins&lt;/a&gt; 上其實文章已經很完整了。
+這邊只是把我整理成 docker-compose 的過程紀錄一下。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;在-docker-jenkins-內使用-docker&#34;&gt;在 Docker Jenkins 內使用 Docker&lt;/h2&gt;
+
+&lt;p&gt;有點饒舌，但是其實就只是要讓 Jenkins 的 Master 可以使用 Docker 指令而已。
+當然更好的作法是使用 &lt;code&gt;Slave&lt;/code&gt; 外部也就是 Host 的機器上負責需要使用 Docker 的 Job。&lt;/p&gt;
+
+&lt;p&gt;所以這邊紀錄的不是很正統的執行方式。&lt;/p&gt;
+
+&lt;h3 id=&#34;在-jenkins-docker-image-裡面安裝-docker-compose-指令&#34;&gt;在 Jenkins docker image 裡面安裝 docker-compose 指令&lt;/h3&gt;
+
+&lt;p&gt;建立一個新的 &lt;code&gt;Dockerfile&lt;/code&gt; 來建立新的包含 Docker 與 docker-compose 指令的 Jenkins Images。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;FROM jenkins:latest
+
+USER root
+RUN apt-get update
+RUN apt-get install -y sudo
+RUN rm -rf /var/lib/apt/lists/*
+RUN echo &amp;quot;jenkins ALL=NOPASSWD: ALL&amp;quot; &amp;gt;&amp;gt; /etc/sudoers
+RUN curl -L &amp;quot;https://github.com/docker/compose/releases/download/1.11.2/docker-compose-$(uname -s)-$(uname -m)&amp;quot; -o /usr/local/bin/docker-compose
+RUN ls /usr/local/bin
+RUN chmod +x /usr/local/bin/docker-compose
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;啟動-jenkins-的-docker-compose-yml&#34;&gt;啟動 Jenkins 的 docker-compose.yml&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;version: &#39;2&#39;
+services:
+  jenkins:
+    build: . 
+    ports:
+      - &amp;quot;80:8080&amp;quot;
+      - &amp;quot;50000:50000&amp;quot;
+    volumes:
+      - ./jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker 
+    environment:
+      - JAVA_OPTS=&#39;-Dhudson.model.DirectoryBrowserSupport.CSP=&amp;quot;&amp;quot;&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;這個設定檔的重點只有在 &lt;code&gt;/var/run/docker.sock:/var/run/docker.sock&lt;/code&gt; 與 &lt;code&gt;/usr/bin/docker:/usr/bin/docker&lt;/code&gt;。
+由於 docker daemon 並不是執行在 container 裡面，並且在 container 裡面在啟動一個 container 怎麼想都不合理。&lt;/p&gt;
+
+&lt;p&gt;所以這邊的作法其實是把 Host 的 Docker 環境塞進去 Container 裡面讓他可以操作而已。&lt;/p&gt;
+
+&lt;p&gt;之後這個 Container 裡面的 Master 應該就可以使用 Docker 與 docker-compose 指令了&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

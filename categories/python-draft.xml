@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Corleonis (Python draft)</title><link>http://swind.code-life.info/</link><description></description><language>en</language><lastBuildDate>Mon, 21 Jul 2014 03:43:40 GMT</lastBuildDate><generator>http://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Python logging 筆記</title><link>http://swind.code-life.info/posts/python_logging_note.html</link><dc:creator>Swind</dc:creator><description>&lt;p&gt;因為之前都偷懶使用 print 直接輸出一些 debug 訊息，沒有好好的進行分類。
-所以最後程式在執行的時候，看到了很多垃圾訊息，阻礙了開發。&lt;/p&gt;
-&lt;p&gt;尤其是之前都偷懶直接用 basicConfig 去設定，所以連第三方 package 的 log 都印出來了 Orz，
-因此想順便藉這個機會好好弄清楚 Python 裡面 logging 的使用方式。&lt;/p&gt;
-&lt;p&gt;&lt;a href="http://swind.code-life.info/posts/python_logging_note.html"&gt;Read more…&lt;/a&gt; (1 min remaining to read)&lt;/p&gt;</description><category>Python draft</category><guid>http://swind.code-life.info/posts/python_logging_note.html</guid><pubDate>Sat, 19 Jul 2014 12:45:37 GMT</pubDate></item></channel></rss>

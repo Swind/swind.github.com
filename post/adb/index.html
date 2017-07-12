@@ -5,17 +5,20 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Categories</title>
-  <meta property="og:title" content="Categories" />
-  <meta name="twitter:title" content="Categories" />
+  <title>ADB 傳輸格式的筆記</title>
+  <meta property="og:title" content="ADB 傳輸格式的筆記" />
+  <meta name="twitter:title" content="ADB 傳輸格式的筆記" />
+  <meta name="description" content="ADB 的傳輸格式">
+  <meta property="og:description" content="ADB 的傳輸格式">
+  <meta name="twitter:description" content="ADB 的傳輸格式">
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://swind.code-life.info/categories/" />
+  <meta property="og:url" content="https://swind.code-life.info/post/adb/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Corleonis" />
 
   <meta name="generator" content="Hugo 0.19" />
-  <link rel="canonical" href="https://swind.code-life.info/categories/" />
+  <link rel="canonical" href="https://swind.code-life.info/post/adb/" />
   <link rel="alternate" href="https://swind.code-life.info/index.xml" type="application/rss+xml" title="Corleonis">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -149,9 +152,16 @@ ga('send', 'pageview');
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="page-heading">
-              <h1>Categories</h1>
+            <div class="post-heading">
+              <h1>ADB 傳輸格式的筆記</h1>
                 
+                
+                  <span class="post-meta">
+  Posted on July 11, 2017
+  
+</span>
+
+
                 
             </div>
           </div>
@@ -162,20 +172,109 @@ ga('send', 'pageview');
 
 
     
-  
-  <div class="container" role="main">
-    <article class="post-preview">
-      <div class="list-group col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3">
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>緩慢補充中&hellip;</p>
+
+<h2 id="adb-傳輸格式">ADB 傳輸格式</h2>
+
+<p>ADB 的傳輸內容大致上可以分為幾類</p>
+
+<ol>
+<li>host</li>
+<li>host-serial</li>
+<li>host-transport</li>
+</ol>
+
+<p></p>
+
+<p>當你想透過 ADB 對某個 Device 下指令的時候，需要先使用 <code>host:transport:{serialno}</code> 來切換目標。
+而 <code>host</code> 底下的指令則是針對 ADB Server 的指令，所以不需要進行 <code>host:transport</code>。</p>
+
+<h3 id="host">host</h3>
+
+<h4 id="connect">connect</h4>
+
+<p><code>host:connect:{host}:{port}</code></p>
+
+<p>e.g.</p>
+
+<p><code>host:connect:192.168.1.63:5555</code></p>
+
+<h4 id="devices">devices</h4>
+
+<p><code>host:devices</code></p>
+
+<h4 id="disconnect">disconnect</h4>
+
+<p><code>host:disconnect:{hostla}:{port}</code></p>
+
+<h4 id="kill">kill</h4>
+
+<p><code>host:kill</code>`</p>
+
+<h4 id="track-devices">track-devices</h4>
+
+<h3 id="transport">transport</h3>
+
+<h3 id="version">version</h3>
+
+<p>整個 Protocol 的指令一共有以下幾種</p>
+
+<pre><code class="language-python">class Protocol:
+    OKAY = 'OKAY'
+    FAIL = 'FAIL'
+    STAT = 'STAT'
+    LIST = 'LIST'
+    DENT = 'DENT'
+    RECV = 'RECV'
+    DATA = 'DATA'
+    DONE = 'DONE'
+    SEND = 'SEND'
+    QUIT = 'QUIT'
+
+    @staticmethod
+    def decode_length(length):
+        return int(length, 16)
+
+    @staticmethod
+    def encode_length(length):
+        return &quot;{0:04X}&quot;.format(length)
+
+    @staticmethod
+    def encode_data(data):
+        b_data = data.encode('utf-8')
+        b_length = Protocol.encode_length(len(b_data)).encode('utf-8')
+        return b&quot;&quot;.join([b_length, b_data])
+</code></pre>
+
+<h1 id="參考資料">參考資料</h1>
+
+<ol>
+<li><a href="https://github.com/openstf/adbkit">adbkit</a></li>
+</ol>
+      </article>
+
+      <ul class="pager blog-pager">
+        
+          <li class="previous">
+            <a href="https://swind.code-life.info/post/jenkins-html-report/" data-toggle="tooltip" data-placement="top" title="使用 docker 與 docker-compose 啟動 Jenkins">&larr; Previous Post</a>
+          </li>
+        
+        
+          <li class="next">
+            <a href="https://swind.code-life.info/post/use-adb-to-track-the-network-statistics/" data-toggle="tooltip" data-placement="top" title="使用 adb 來追蹤查看 APP 的網路流量">Next Post &rarr;</a>
+          </li>
+        
+      </ul>
+
       
-      <a href="https://swind.code-life.info/categories/program" class="list-group-item">
-          program<span class="badge">3</span></a>
-      
-      <a href="https://swind.code-life.info/categories/jenkins" class="list-group-item">
-          jenkins<span class="badge">1</span></a>
-      
-      </div>
-    </article>
+
+    </div>
   </div>
+</div>
 
     <footer>
   <div class="container">

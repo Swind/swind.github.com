@@ -5,17 +5,20 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Corleonis</title>
-  <meta property="og:title" content="Corleonis" />
-  <meta name="twitter:title" content="Corleonis" />
+  <title>使用 adb 來追蹤查看 APP 的網路流量</title>
+  <meta property="og:title" content="使用 adb 來追蹤查看 APP 的網路流量" />
+  <meta name="twitter:title" content="使用 adb 來追蹤查看 APP 的網路流量" />
+  <meta name="description" content="使用 adb 來追蹤查看 APP 的網路流量">
+  <meta property="og:description" content="使用 adb 來追蹤查看 APP 的網路流量">
+  <meta name="twitter:description" content="使用 adb 來追蹤查看 APP 的網路流量">
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://swind.code-life.info/" />
+  <meta property="og:url" content="https://swind.code-life.info/post/use-adb-to-track-the-network-statistics/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Corleonis" />
 
   <meta name="generator" content="Hugo 0.19" />
-  <link rel="canonical" href="https://swind.code-life.info/" />
+  <link rel="canonical" href="https://swind.code-life.info/post/use-adb-to-track-the-network-statistics/" />
   <link rel="alternate" href="https://swind.code-life.info/index.xml" type="application/rss+xml" title="Corleonis">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -149,9 +152,16 @@ ga('send', 'pageview');
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="page-heading">
-              <h1>Corleonis</h1>
+            <div class="post-heading">
+              <h1>使用 adb 來追蹤查看 APP 的網路流量</h1>
                 
+                
+                  <span class="post-meta">
+  Posted on July 12, 2017
+  
+</span>
+
+
                 
             </div>
           </div>
@@ -162,29 +172,11 @@ ga('send', 'pageview');
 
 
     
-  <div role="main" class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        
-
-        <div class="posts-list">
-          
-          
-            <article class="post-preview">
-              <a href="https://swind.code-life.info/post/use-adb-to-track-the-network-statistics/">
-                <h2 class="post-title">使用 adb 來追蹤查看 APP 的網路流量</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on July 12, 2017
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <h2 id="使用-proc-底下的資訊">使用 /proc 底下的資訊</h2>
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h2 id="使用-proc-底下的資訊">使用 /proc 底下的資訊</h2>
 
 <p>雖然 Android 7 之後似乎一般應用程式已經沒有辦法存取 <code>/proc</code> 底下的東西了。
 但是使用 ADB 的話還是沒有問題的。</p>
@@ -199,151 +191,170 @@ ga('send', 'pageview');
 <p><code>tcp_rcv</code> 與 <code>tcp_snd</code> 分別所紀錄的是該 uid 所使用的 <code>TCP</code> 傳輸量（注意 <code>UDP</code> 並不包含在內)</p>
 
 <p></p>
-                  <a href="https://swind.code-life.info/post/use-adb-to-track-the-network-statistics/" class="post-read-more">[Read More]</a>
-                
-              </div>
 
-              
-                <span class="post-meta">
-                
-                  #<a href="https://swind.code-life.info/tags/android">android</a>&nbsp;
-                
-                  #<a href="https://swind.code-life.info/tags/adb">adb</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://swind.code-life.info/post/adb/">
-                <h2 class="post-title">ADB 傳輸格式的筆記</h2>
-                
-              </a>
+<h2 id="取得-app-的-uid">取得 APP 的 uid</h2>
 
-              <span class="post-meta">
-  Posted on July 11, 2017
-  
-</span>
+<p>取得 APP 的 uid 比較方便的方式有兩種</p>
 
-
-              <div class="post-entry">
-                
-                  <p>緩慢補充中&hellip;</p>
-
-<h2 id="adb-傳輸格式">ADB 傳輸格式</h2>
-
-<p>ADB 的傳輸內容大致上可以分為幾類</p>
+<h3 id="啟動-app-透過-ps-取得-pid-再從-proc-來查詢-uid">啟動 APP 透過 ps 取得 pid 再從 /proc 來查詢 uid</h3>
 
 <ol>
-<li>host</li>
-<li>host-serial</li>
-<li>host-transport</li>
+<li>啟動 APP</li>
+<li>執行 <code>adb shell ps | grep {app 的 package 關鍵字}</code>，例如 <code>adb shell ps | grep chrome</code> 就可以查詢到 Chrome 的 <code>pid</code></li>
 </ol>
 
-<p></p>
-                  <a href="https://swind.code-life.info/post/adb/" class="post-read-more">[Read More]</a>
-                
-              </div>
+<pre><code class="language-bash">&gt; adb shell ps | grep chrome
 
-              
-                <span class="post-meta">
-                
-                  #<a href="https://swind.code-life.info/tags/android">android</a>&nbsp;
-                
-                  #<a href="https://swind.code-life.info/tags/adb">adb</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://swind.code-life.info/post/jenkins-html-report/">
-                <h2 class="post-title">使用 docker 與 docker-compose 啟動 Jenkins</h2>
-                
-              </a>
+u0_a96    25910 460   1089096 104992 sys_epoll_ 00000000 S com.android.chrome
+u0_a96    25960 460   1011240 65940 sys_epoll_ 00000000 S com.android.chrome:privileged_process0
+u0_i1     26047 460   1045356 65916 sys_epoll_ 00000000 S com.android.chrome:sandboxed_process0
+</code></pre>
 
-              <span class="post-meta">
-  Posted on April 18, 2017
-  
-</span>
+<p>我們只要使用只有 <code>package name</code> 的 <code>pid</code> 就可以了。以此為例，就是 <code>25910</code></p>
 
+<ol>
+<li>透過 <code>adb shell cat /proc/{pid}/status</code> 查詢 <code>uid</code></li>
+</ol>
 
-              <div class="post-entry">
-                
-                  <h2 id="docker-hub-jenkins">Docker Hub - Jenkins</h2>
+<pre><code class="language-bash">&gt; adb shell cat /proc/25910/status
 
-<p><a href="https://hub.docker.com/_/jenkins/">Docker Hub -Jenkins</a> 上其實文章已經很完整了。
-這邊只是把我整理成 docker-compose 的過程紀錄一下。</p>
+ Name:   .android.chrome
+State:  S (sleeping)
+Tgid:   25910
+Pid:    25910
+PPid:   460
+TracerPid:      0
+Uid:    10096   10096   10096   10096
+Gid:    10096   10096   10096   10096
+FDSize: 256
+Groups: 3003 9997 50096
+VmPeak:  1590940 kB
+VmSize:  1068072 kB
+VmLck:         0 kB
+VmPin:         0 kB
+VmHWM:    130672 kB
+VmRSS:    114316 kB
+VmData:   180240 kB
+VmStk:      8192 kB
+VmExe:        20 kB
+VmLib:    107956 kB
+VmPTE:       424 kB
+VmSwap:        0 kB
+Threads:        49
+SigQ:   0/11726
+SigPnd: 0000000000000000
+ShdPnd: 0000000000000000
+SigBlk: 0000000000001204
+SigIgn: 0000000000000000
+SigCgt: 00000002000094f8
+CapInh: 0000000000000000
+CapPrm: 0000000000000000
+CapEff: 0000000000000000
+CapBnd: fffffff000000000
+Cpus_allowed:   f
+Cpus_allowed_list:      0-3
+voluntary_ctxt_switches:        171855
+nonvoluntary_ctxt_switches:     22283
+</code></pre>
 
-<p></p>
-                  <a href="https://swind.code-life.info/post/jenkins-html-report/" class="post-read-more">[Read More]</a>
-                
-              </div>
+<p>從上面 <code>Uid</code> 欄位可以得知 Chrome 的 <code>uid</code> 是 <code>10096</code></p>
 
-              
-                <span class="post-meta">
-                
-                  #<a href="https://swind.code-life.info/tags/jenkins">jenkins</a>&nbsp;
-                
-                  #<a href="https://swind.code-life.info/tags/html">html</a>&nbsp;
-                
-                  #<a href="https://swind.code-life.info/tags/docker">docker</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://swind.code-life.info/post/docker-python3-adb/">
-                <h2 class="post-title">建立可以執行 python3 與 adb 指令的 docker images</h2>
-                
-              </a>
+<h3 id="透過-dumpsys-與-package-name-查詢">透過 dumpsys 與 package name 查詢</h3>
 
-              <span class="post-meta">
-  Posted on April 12, 2017
-  
-</span>
+<p><code>adb shell &quot;dumpsys package {package 名稱} | grep userId&quot;</code></p>
 
+<pre><code class="language-bash">&gt; adb shell &quot;dumpsys package com.android.chrome | grep userId&quot;
 
-              <div class="post-entry">
-                
-                  <h2 id="python3-adb">Python3 + adb</h2>
+    userId=10096
+</code></pre>
 
-<p>這個 Image 使用 Alpine Linux Image 安裝了 Python3 與 ADB。
-整體大小約 9x MB，用於執行 Python3 撰寫的 Android 測試。</p>
+<h2 id="透過-proc-uid-stat-uid-查詢-tcp-的傳輸量">透過 <code>/proc/uid_stat/{uid}</code> 查詢 TCP 的傳輸量</h2>
 
-<p>整個 <code>Dockerfile</code> 是各家 Dockerfile 的大雜燴。感謝</p>
+<p><strong>透過 TCP 送出的流量 (bytes)</strong></p>
 
-<ul>
-<li><a href="https://github.com/frol/docker-alpine-python3">frol/docker-alpine-python3</a>,</li>
-<li><a href="https://github.com/sorccu/docker-adb">sorccu/docker-adb</a></li>
-<li><a href="https://github.com/cdrx/docker-pyinstaller">cdrx/docker-pyinstaller</a></li>
-</ul>
+<pre><code class="language-bash">&gt; adb shell cat /proc/uid_stat/10096/tcp_snd
 
-<p></p>
-                  <a href="https://swind.code-life.info/post/docker-python3-adb/" class="post-read-more">[Read More]</a>
-                
-              </div>
+11120
+</code></pre>
 
-              
-                <span class="post-meta">
-                
-                  #<a href="https://swind.code-life.info/tags/python">python</a>&nbsp;
-                
-                  #<a href="https://swind.code-life.info/tags/docker">docker</a>&nbsp;
-                
-                  #<a href="https://swind.code-life.info/tags/adb">adb</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-        </div>
+<p><strong>透過 TCP 接收的流量 (bytes)</strong></p>
 
+<pre><code class="language-bash">&gt; adb shell cat /proc/uid_stat/10096/tcp_rcv
+
+597160
+</code></pre>
+
+<h2 id="透過-proc-net-xt-qtaguid-stats-查詢傳輸量">透過 <code>/proc/net/xt_qtaguid/stats</code> 查詢傳輸量</h2>
+
+<p>有些 Device 沒有 <code>uid_stat</code> (例如 Galaxy S8+) 所以另外一個方法就是使用 <code>xt_qtaguid</code> 來查詢。
+這個方法一樣要使用到 <code>uid</code>, 指令為</p>
+
+<p><code>adb shell cat /proc/net/xt_qtaguid/stats | grep {uid}</code></p>
+
+<p>e.g.</p>
+
+<pre><code class="language-bash">&gt; adb shell cat /proc/net/xt_qtaguid/stats | grep 10029
+
+72 tun0 0x0 10229 0 1627251 1728 123455 1525 1627251 1728 0 0 0 0 123455 1525 0 0 0 0
+73 tun0 0x0 10229 1 341358394 381688 21708316 286335 341358394 381688 0 0 0 0 21381218 281971 327098 4364 0 0
+288 wlan0 0x0 10229 0 387926 4640 506630 4639 387926 4640 0 0 0 0 506630 4639 0 0 0 0
+289 wlan0 0x0 10229 1 63445949 170110 13704545 156389 63445949 170110 0 0 0 0 13572037 154582 132508 1807 0 0
+488 wlan0 0xffffff0400000000 10229 0 18079 17 1444 14 18079 17 0 0 0 0 1444 14 0 0 0 0
+489 wlan0 0xffffff0400000000 10229 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+504 lo 0x0 10229 0 17712 372 12376 238 17712 372 0 0 0 0 12376 238 0 0 0 0
+505 lo 0x0 10229 1 297993712 91716 298233535 92271 297993712 91716 0 0 0 0 298233535 92271 0 0 0 0
+</code></pre>
+
+<p>以空白作為分隔，每一欄的數值所代表的意思為</p>
+
+<p><code>idx iface acct_tag_hex uid_tag_int cnt_set rx_bytes rx_packets tx_bytes tx_packets rx_tcp_bytes rx_tcp_packets rx_udp_bytes rx_udp_packets rx_other_bytes rx_other_packets tx_t cp_bytes tx_tcp_packets tx_udp_bytes tx_udp_packets tx_other_bytes tx_other_packets</code></p>
+
+<p>我們所需要的只有 <code>tx_bytes</code> 與 <code>rx_bytes</code></p>
+
+<p>如果只有需要 TCP/UDP 的話也可以順便查詢 <code>tx_udp_bytes</code> 或 <code>tx_tcp_bytes</code> 與 <code>rx_udp_bytes</code> 或 <code>rx_tcp_bytes</code>。</p>
+
+<p>所以修改一下剛剛的指令，增加 <code>cut</code> 來取得我所想要的欄位</p>
+
+<p><code>adb shell cat /proc/net/xt_qtaguid/stats | grep {uid} | cut -d &quot; &quot; -f 2,3,4,5,6,8</code></p>
+
+<pre><code>&gt; adb shell cat /proc/net/xt_qtaguid/stats | grep 10229 | cut -d &quot; &quot; -f 2,3,4,5,6,8
+
+wlan0 0x0 10096 0 0 0
+wlan0 0x0 10096 1 15659531 414473
+</code></pre>
+
+<ol>
+<li><code>iface</code> 代表所使用的網路界面，例如 <code>tun0</code> 應該就是 VPN</li>
+<li><code>acct_tag_hex</code> 開發人員可以使用 <code>TrafficStats.setThreadStatsTag</code> 標記某個 Thread，這樣之後就可以在 xt_qtaguid 裡面依照 <code>acct_tag_hex</code> 來區分是哪個 Thread 所使用的流量。</li>
+<li><code>uid</code></li>
+<li><code>cnt_set</code> 0 代表 APP 的背景程式， 1 代表 APP 的前景程式</li>
+<li><code>rx_bytes</code> 代表所接收的 bytes 數</li>
+<li><code>tx_bytes</code> 代表送出去的 bytes 數</li>
+</ol>
+
+<h2 id="參考資料">參考資料</h2>
+
+<ol>
+<li><a href="https://stackoverflow.com/questions/12904809/tracking-an-applications-network-statistics-netstats-using-adb">Tracking an application&rsquo;s network statistics (netstats) using ADB</a></li>
+<li><a href="http://www.cnblogs.com/FallenHWer/p/3359359.html">Android 獲得 UID 的三個辦法</a></li>
+<li><a href="http://www.voidcn.com/blog/focusjava/article/p-6152550.html">Android 流量優化(一): 模塊化流量統計</a></li>
+</ol>
+      </article>
+
+      <ul class="pager blog-pager">
         
-      </div>
+          <li class="previous">
+            <a href="https://swind.code-life.info/post/adb/" data-toggle="tooltip" data-placement="top" title="ADB 傳輸格式的筆記">&larr; Previous Post</a>
+          </li>
+        
+        
+      </ul>
+
+      
+
     </div>
   </div>
+</div>
 
     <footer>
   <div class="container">

@@ -5,17 +5,17 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Categories</title>
-  <meta property="og:title" content="Categories" />
-  <meta name="twitter:title" content="Categories" />
+  <title>Android</title>
+  <meta property="og:title" content="Android" />
+  <meta name="twitter:title" content="Android" />
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://swind.code-life.info/categories/" />
+  <meta property="og:url" content="https://swind.code-life.info/tags/android/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Corleonis" />
 
   <meta name="generator" content="Hugo 0.19" />
-  <link rel="canonical" href="https://swind.code-life.info/categories/" />
+  <link rel="canonical" href="https://swind.code-life.info/tags/android/" />
   <link rel="alternate" href="https://swind.code-life.info/index.xml" type="application/rss+xml" title="Corleonis">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -133,26 +133,14 @@ ga('send', 'pageview');
 
 
     
-  
-  
-  
-
-
-
-
-  
-
   <header class="header-section ">
-    
     <div class="intro-header no-img">
-      
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="page-heading">
-              <h1>Categories</h1>
-                
-                
+              <h1>#Android</h1>
+              <hr class="small">
             </div>
           </div>
         </div>
@@ -160,21 +148,101 @@ ga('send', 'pageview');
     </div>
   </header>
 
-
     
-  
   <div class="container" role="main">
-    <article class="post-preview">
-      <div class="list-group col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3">
-      
-      <a href="https://swind.code-life.info/categories/program" class="list-group-item">
-          program<span class="badge">3</span></a>
-      
-      <a href="https://swind.code-life.info/categories/jenkins" class="list-group-item">
-          jenkins<span class="badge">1</span></a>
-      
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        
+        <div class="posts-list">
+          
+            <article class="post-preview">
+              <a href="https://swind.code-life.info/post/use-adb-to-track-the-network-statistics/">
+                <h2 class="post-title">使用 adb 來追蹤查看 APP 的網路流量</h2>
+    
+                
+              </a>
+    
+              <p class="post-meta">
+                Posted on July 12, 2017
+              </p>
+              <div class="post-entry">
+                
+                  <h2 id="使用-proc-底下的資訊">使用 /proc 底下的資訊</h2>
+
+<p>雖然 Android 7 之後似乎一般應用程式已經沒有辦法存取 <code>/proc</code> 底下的東西了。
+但是使用 ADB 的話還是沒有問題的。</p>
+
+<p>這次我們使用的目標是</p>
+
+<ol>
+<li><code>/proc/uid_stat/{uid}/tcp_rcv</code></li>
+<li><code>/proc/uid_stat/{uid}/tcp_snd</code></li>
+</ol>
+
+<p><code>tcp_rcv</code> 與 <code>tcp_snd</code> 分別所紀錄的是該 uid 所使用的 <code>TCP</code> 傳輸量（注意 <code>UDP</code> 並不包含在內)</p>
+
+<p></p>
+                  <a href="https://swind.code-life.info/post/use-adb-to-track-the-network-statistics/" class="post-read-more">[Read More]</a>
+                
+              </div>
+    
+              
+                <span class="post-meta">
+                  
+                    #<a href="https://swind.code-life.info/tags/android">android</a>&nbsp;
+                  
+                    #<a href="https://swind.code-life.info/tags/adb">adb</a>&nbsp;
+                  
+                </span>
+              
+    
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://swind.code-life.info/post/adb/">
+                <h2 class="post-title">ADB 傳輸格式的筆記</h2>
+    
+                
+              </a>
+    
+              <p class="post-meta">
+                Posted on July 11, 2017
+              </p>
+              <div class="post-entry">
+                
+                  <p>緩慢補充中&hellip;</p>
+
+<h2 id="adb-傳輸格式">ADB 傳輸格式</h2>
+
+<p>ADB 的傳輸內容大致上可以分為幾類</p>
+
+<ol>
+<li>host</li>
+<li>host-serial</li>
+<li>host-transport</li>
+</ol>
+
+<p></p>
+                  <a href="https://swind.code-life.info/post/adb/" class="post-read-more">[Read More]</a>
+                
+              </div>
+    
+              
+                <span class="post-meta">
+                  
+                    #<a href="https://swind.code-life.info/tags/android">android</a>&nbsp;
+                  
+                    #<a href="https://swind.code-life.info/tags/adb">adb</a>&nbsp;
+                  
+                </span>
+              
+    
+            </article>
+          
+        </div>
+        
       </div>
-    </article>
+    </div>
   </div>
 
     <footer>

@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Program on Corleonis</title>
+    <link>https://swind.code-life.info/categories/program/index.xml</link>
+    <description>Recent content in Program on Corleonis</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-tw</language>
+    <atom:link href="https://swind.code-life.info/categories/program/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>使用 adb 來追蹤查看 APP 的網路流量</title>
+      <link>https://swind.code-life.info/post/use-adb-to-track-the-network-statistics/</link>
+      <pubDate>Wed, 12 Jul 2017 10:46:29 +0800</pubDate>
+      
+      <guid>https://swind.code-life.info/post/use-adb-to-track-the-network-statistics/</guid>
+      <description>&lt;h2 id=&#34;使用-proc-底下的資訊&#34;&gt;使用 /proc 底下的資訊&lt;/h2&gt;
+
+&lt;p&gt;雖然 Android 7 之後似乎一般應用程式已經沒有辦法存取 &lt;code&gt;/proc&lt;/code&gt; 底下的東西了。
+但是使用 ADB 的話還是沒有問題的。&lt;/p&gt;
+
+&lt;p&gt;這次我們使用的目標是&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;/proc/uid_stat/{uid}/tcp_rcv&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/proc/uid_stat/{uid}/tcp_snd&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;code&gt;tcp_rcv&lt;/code&gt; 與 &lt;code&gt;tcp_snd&lt;/code&gt; 分別所紀錄的是該 uid 所使用的 &lt;code&gt;TCP&lt;/code&gt; 傳輸量（注意 &lt;code&gt;UDP&lt;/code&gt; 並不包含在內)&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;取得-app-的-uid&#34;&gt;取得 APP 的 uid&lt;/h2&gt;
+
+&lt;p&gt;取得 APP 的 uid 比較方便的方式有兩種&lt;/p&gt;
+
+&lt;h3 id=&#34;啟動-app-透過-ps-取得-pid-再從-proc-來查詢-uid&#34;&gt;啟動 APP 透過 ps 取得 pid 再從 /proc 來查詢 uid&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;啟動 APP&lt;/li&gt;
+&lt;li&gt;執行 &lt;code&gt;adb shell ps | grep {app 的 package 關鍵字}&lt;/code&gt;，例如 &lt;code&gt;adb shell ps | grep chrome&lt;/code&gt; 就可以查詢到 Chrome 的 &lt;code&gt;pid&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;&amp;gt; adb shell ps | grep chrome
+
+u0_a96    25910 460   1089096 104992 sys_epoll_ 00000000 S com.android.chrome
+u0_a96    25960 460   1011240 65940 sys_epoll_ 00000000 S com.android.chrome:privileged_process0
+u0_i1     26047 460   1045356 65916 sys_epoll_ 00000000 S com.android.chrome:sandboxed_process0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;我們只要使用只有 &lt;code&gt;package name&lt;/code&gt; 的 &lt;code&gt;pid&lt;/code&gt; 就可以了。以此為例，就是 &lt;code&gt;25910&lt;/code&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;透過 &lt;code&gt;adb shell cat /proc/{pid}/status&lt;/code&gt; 查詢 &lt;code&gt;uid&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;&amp;gt; adb shell cat /proc/25910/status
+
+ Name:   .android.chrome
+State:  S (sleeping)
+Tgid:   25910
+Pid:    25910
+PPid:   460
+TracerPid:      0
+Uid:    10096   10096   10096   10096
+Gid:    10096   10096   10096   10096
+FDSize: 256
+Groups: 3003 9997 50096
+VmPeak:  1590940 kB
+VmSize:  1068072 kB
+VmLck:         0 kB
+VmPin:         0 kB
+VmHWM:    130672 kB
+VmRSS:    114316 kB
+VmData:   180240 kB
+VmStk:      8192 kB
+VmExe:        20 kB
+VmLib:    107956 kB
+VmPTE:       424 kB
+VmSwap:        0 kB
+Threads:        49
+SigQ:   0/11726
+SigPnd: 0000000000000000
+ShdPnd: 0000000000000000
+SigBlk: 0000000000001204
+SigIgn: 0000000000000000
+SigCgt: 00000002000094f8
+CapInh: 0000000000000000
+CapPrm: 0000000000000000
+CapEff: 0000000000000000
+CapBnd: fffffff000000000
+Cpus_allowed:   f
+Cpus_allowed_list:      0-3
+voluntary_ctxt_switches:        171855
+nonvoluntary_ctxt_switches:     22283
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;從上面 &lt;code&gt;Uid&lt;/code&gt; 欄位可以得知 Chrome 的 &lt;code&gt;uid&lt;/code&gt; 是 &lt;code&gt;10096&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;透過-dumpsys-與-package-name-查詢&#34;&gt;透過 dumpsys 與 package name 查詢&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;adb shell &amp;quot;dumpsys package {package 名稱} | grep userId&amp;quot;&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;&amp;gt; adb shell &amp;quot;dumpsys package com.android.chrome | grep userId&amp;quot;
+
+    userId=10096
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;透過-proc-uid-stat-uid-查詢-tcp-的傳輸量&#34;&gt;透過 &lt;code&gt;/proc/uid_stat/{uid}&lt;/code&gt; 查詢 TCP 的傳輸量&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;透過 TCP 送出的流量 (bytes)&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;&amp;gt; adb shell cat /proc/uid_stat/10096/tcp_snd
+
+11120
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;透過 TCP 接收的流量 (bytes)&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;&amp;gt; adb shell cat /proc/uid_stat/10096/tcp_rcv
+
+597160
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;透過-proc-net-xt-qtaguid-stats-查詢傳輸量&#34;&gt;透過 &lt;code&gt;/proc/net/xt_qtaguid/stats&lt;/code&gt; 查詢傳輸量&lt;/h2&gt;
+
+&lt;p&gt;有些 Device 沒有 &lt;code&gt;uid_stat&lt;/code&gt; (例如 Galaxy S8+) 所以另外一個方法就是使用 &lt;code&gt;xt_qtaguid&lt;/code&gt; 來查詢。
+這個方法一樣要使用到 &lt;code&gt;uid&lt;/code&gt;, 指令為&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;adb shell cat /proc/net/xt_qtaguid/stats | grep {uid}&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;e.g.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;&amp;gt; adb shell cat /proc/net/xt_qtaguid/stats | grep 10029
+
+72 tun0 0x0 10229 0 1627251 1728 123455 1525 1627251 1728 0 0 0 0 123455 1525 0 0 0 0
+73 tun0 0x0 10229 1 341358394 381688 21708316 286335 341358394 381688 0 0 0 0 21381218 281971 327098 4364 0 0
+288 wlan0 0x0 10229 0 387926 4640 506630 4639 387926 4640 0 0 0 0 506630 4639 0 0 0 0
+289 wlan0 0x0 10229 1 63445949 170110 13704545 156389 63445949 170110 0 0 0 0 13572037 154582 132508 1807 0 0
+488 wlan0 0xffffff0400000000 10229 0 18079 17 1444 14 18079 17 0 0 0 0 1444 14 0 0 0 0
+489 wlan0 0xffffff0400000000 10229 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+504 lo 0x0 10229 0 17712 372 12376 238 17712 372 0 0 0 0 12376 238 0 0 0 0
+505 lo 0x0 10229 1 297993712 91716 298233535 92271 297993712 91716 0 0 0 0 298233535 92271 0 0 0 0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;以空白作為分隔，每一欄的數值所代表的意思為&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;idx iface acct_tag_hex uid_tag_int cnt_set rx_bytes rx_packets tx_bytes tx_packets rx_tcp_bytes rx_tcp_packets rx_udp_bytes rx_udp_packets rx_other_bytes rx_other_packets tx_t cp_bytes tx_tcp_packets tx_udp_bytes tx_udp_packets tx_other_bytes tx_other_packets&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;我們所需要的只有 &lt;code&gt;tx_bytes&lt;/code&gt; 與 &lt;code&gt;rx_bytes&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;如果只有需要 TCP/UDP 的話也可以順便查詢 &lt;code&gt;tx_udp_bytes&lt;/code&gt; 或 &lt;code&gt;tx_tcp_bytes&lt;/code&gt; 與 &lt;code&gt;rx_udp_bytes&lt;/code&gt; 或 &lt;code&gt;rx_tcp_bytes&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;所以修改一下剛剛的指令，增加 &lt;code&gt;cut&lt;/code&gt; 來取得我所想要的欄位&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;adb shell cat /proc/net/xt_qtaguid/stats | grep {uid} | cut -d &amp;quot; &amp;quot; -f 2,3,4,5,6,8&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; adb shell cat /proc/net/xt_qtaguid/stats | grep 10229 | cut -d &amp;quot; &amp;quot; -f 2,3,4,5,6,8
+
+wlan0 0x0 10096 0 0 0
+wlan0 0x0 10096 1 15659531 414473
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;iface&lt;/code&gt; 代表所使用的網路界面，例如 &lt;code&gt;tun0&lt;/code&gt; 應該就是 VPN&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;acct_tag_hex&lt;/code&gt; 開發人員可以使用 &lt;code&gt;TrafficStats.setThreadStatsTag&lt;/code&gt; 標記某個 Thread，這樣之後就可以在 xt_qtaguid 裡面依照 &lt;code&gt;acct_tag_hex&lt;/code&gt; 來區分是哪個 Thread 所使用的流量。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;uid&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cnt_set&lt;/code&gt; 0 代表 APP 的背景程式， 1 代表 APP 的前景程式&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;rx_bytes&lt;/code&gt; 代表所接收的 bytes 數&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;tx_bytes&lt;/code&gt; 代表送出去的 bytes 數&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;參考資料&#34;&gt;參考資料&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://stackoverflow.com/questions/12904809/tracking-an-applications-network-statistics-netstats-using-adb&#34;&gt;Tracking an application&amp;rsquo;s network statistics (netstats) using ADB&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.cnblogs.com/FallenHWer/p/3359359.html&#34;&gt;Android 獲得 UID 的三個辦法&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.voidcn.com/blog/focusjava/article/p-6152550.html&#34;&gt;Android 流量優化(一): 模塊化流量統計&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>ADB 傳輸格式的筆記</title>
+      <link>https://swind.code-life.info/post/adb/</link>
+      <pubDate>Tue, 11 Jul 2017 10:46:29 +0800</pubDate>
+      
+      <guid>https://swind.code-life.info/post/adb/</guid>
+      <description>&lt;p&gt;緩慢補充中&amp;hellip;&lt;/p&gt;
+
+&lt;h2 id=&#34;adb-傳輸格式&#34;&gt;ADB 傳輸格式&lt;/h2&gt;
+
+&lt;p&gt;ADB 的傳輸內容大致上可以分為幾類&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;host&lt;/li&gt;
+&lt;li&gt;host-serial&lt;/li&gt;
+&lt;li&gt;host-transport&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;當你想透過 ADB 對某個 Device 下指令的時候，需要先使用 &lt;code&gt;host:transport:{serialno}&lt;/code&gt; 來切換目標。
+而 &lt;code&gt;host&lt;/code&gt; 底下的指令則是針對 ADB Server 的指令，所以不需要進行 &lt;code&gt;host:transport&lt;/code&gt;。&lt;/p&gt;
+
+&lt;h3 id=&#34;host&#34;&gt;host&lt;/h3&gt;
+
+&lt;h4 id=&#34;connect&#34;&gt;connect&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;host:connect:{host}:{port}&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;e.g.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;host:connect:192.168.1.63:5555&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;devices&#34;&gt;devices&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;host:devices&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;disconnect&#34;&gt;disconnect&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;host:disconnect:{hostla}:{port}&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;kill&#34;&gt;kill&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;host:kill&lt;/code&gt;`&lt;/p&gt;
+
+&lt;h4 id=&#34;track-devices&#34;&gt;track-devices&lt;/h4&gt;
+
+&lt;h3 id=&#34;transport&#34;&gt;transport&lt;/h3&gt;
+
+&lt;h3 id=&#34;version&#34;&gt;version&lt;/h3&gt;
+
+&lt;p&gt;整個 Protocol 的指令一共有以下幾種&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;class Protocol:
+    OKAY = &#39;OKAY&#39;
+    FAIL = &#39;FAIL&#39;
+    STAT = &#39;STAT&#39;
+    LIST = &#39;LIST&#39;
+    DENT = &#39;DENT&#39;
+    RECV = &#39;RECV&#39;
+    DATA = &#39;DATA&#39;
+    DONE = &#39;DONE&#39;
+    SEND = &#39;SEND&#39;
+    QUIT = &#39;QUIT&#39;
+
+    @staticmethod
+    def decode_length(length):
+        return int(length, 16)
+
+    @staticmethod
+    def encode_length(length):
+        return &amp;quot;{0:04X}&amp;quot;.format(length)
+
+    @staticmethod
+    def encode_data(data):
+        b_data = data.encode(&#39;utf-8&#39;)
+        b_length = Protocol.encode_length(len(b_data)).encode(&#39;utf-8&#39;)
+        return b&amp;quot;&amp;quot;.join([b_length, b_data])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;參考資料&#34;&gt;參考資料&lt;/h1&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/openstf/adbkit&#34;&gt;adbkit&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>建立可以執行 python3 與 adb 指令的 docker images</title>
+      <link>https://swind.code-life.info/post/docker-python3-adb/</link>
+      <pubDate>Wed, 12 Apr 2017 14:40:30 +0800</pubDate>
+      
+      <guid>https://swind.code-life.info/post/docker-python3-adb/</guid>
+      <description>&lt;h2 id=&#34;python3-adb&#34;&gt;Python3 + adb&lt;/h2&gt;
+
+&lt;p&gt;這個 Image 使用 Alpine Linux Image 安裝了 Python3 與 ADB。
+整體大小約 9x MB，用於執行 Python3 撰寫的 Android 測試。&lt;/p&gt;
+
+&lt;p&gt;整個 &lt;code&gt;Dockerfile&lt;/code&gt; 是各家 Dockerfile 的大雜燴。感謝&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/frol/docker-alpine-python3&#34;&gt;frol/docker-alpine-python3&lt;/a&gt;,&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/sorccu/docker-adb&#34;&gt;sorccu/docker-adb&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/cdrx/docker-pyinstaller&#34;&gt;cdrx/docker-pyinstaller&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;原始碼與-docker-image&#34;&gt;原始碼與 Docker Image&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/Swind/docker-python3-adb&#34;&gt;Github: swind/docker-python3-adb&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://hub.docker.com/r/swind/docker-python3-adb&#34;&gt;Docker-Hub: swind/docker-python3-adb&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;使用方式&#34;&gt;使用方式&lt;/h3&gt;
+
+&lt;h4 id=&#34;執行-adb&#34;&gt;執行 ADB&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;docker run --rm -ti --net host swind/docker-python3-adb adb devices
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;sorccu/docker-adb&lt;/code&gt; 的 container 內容本來是預設會啟動 &lt;code&gt;adb server&lt;/code&gt;，但這部份被我拿掉了。
+因為我想讓 container 內的 adb 可以直接跟 Host 的 adb server 溝通。
+所以在執行的時候要增加 &lt;code&gt;--net host&lt;/code&gt; 讓 container 內的 adb 與 Host 的 adb server 可以直接連線。&lt;/p&gt;
+
+&lt;h4 id=&#34;執行-python3-程式&#34;&gt;執行 Python3 程式&lt;/h4&gt;
+
+&lt;p&gt;使用這個 image 進行 build 的時候，會自動載入 &lt;code&gt;requirements.txt&lt;/code&gt; 並且安裝（也就是 Dockerfile 中 &lt;code&gt;ONBUILD&lt;/code&gt; 的部份）。
+並且在執行的時候預設 &lt;code&gt;WORKDIR&lt;/code&gt; 的路徑是 &lt;code&gt;/code&lt;/code&gt;，所以需要使用 &lt;code&gt;-v&lt;/code&gt; 將要執行的 Python project 掛載到 &lt;code&gt;/code&lt;/code&gt;。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;docker run -v &amp;quot;$(pwd):/code&amp;quot; --rm -ti --net host swind/docker-python3-adb python3 helloworld.py 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import os
+print(&amp;quot;Hello World&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;license&#34;&gt;License&lt;/h4&gt;
+
+&lt;p&gt;See &lt;a href=&#34;LICENSE&#34;&gt;LICENSE&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

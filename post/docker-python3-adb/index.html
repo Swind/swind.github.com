@@ -5,17 +5,20 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Categories</title>
-  <meta property="og:title" content="Categories" />
-  <meta name="twitter:title" content="Categories" />
+  <title>建立可以執行 python3 與 adb 指令的 docker images</title>
+  <meta property="og:title" content="建立可以執行 python3 與 adb 指令的 docker images" />
+  <meta name="twitter:title" content="建立可以執行 python3 與 adb 指令的 docker images" />
+  <meta name="description" content="這是我用來執行 Android 測試用的...">
+  <meta property="og:description" content="這是我用來執行 Android 測試用的...">
+  <meta name="twitter:description" content="這是我用來執行 Android 測試用的...">
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://swind.code-life.info/categories/" />
+  <meta property="og:url" content="https://swind.code-life.info/post/docker-python3-adb/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Corleonis" />
 
   <meta name="generator" content="Hugo 0.19" />
-  <link rel="canonical" href="https://swind.code-life.info/categories/" />
+  <link rel="canonical" href="https://swind.code-life.info/post/docker-python3-adb/" />
   <link rel="alternate" href="https://swind.code-life.info/index.xml" type="application/rss+xml" title="Corleonis">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -149,9 +152,16 @@ ga('send', 'pageview');
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="page-heading">
-              <h1>Categories</h1>
+            <div class="post-heading">
+              <h1>建立可以執行 python3 與 adb 指令的 docker images</h1>
                 
+                
+                  <span class="post-meta">
+  Posted on April 12, 2017
+  
+</span>
+
+
                 
             </div>
           </div>
@@ -162,20 +172,74 @@ ga('send', 'pageview');
 
 
     
-  
-  <div class="container" role="main">
-    <article class="post-preview">
-      <div class="list-group col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3">
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <h2 id="python3-adb">Python3 + adb</h2>
+
+<p>這個 Image 使用 Alpine Linux Image 安裝了 Python3 與 ADB。
+整體大小約 9x MB，用於執行 Python3 撰寫的 Android 測試。</p>
+
+<p>整個 <code>Dockerfile</code> 是各家 Dockerfile 的大雜燴。感謝</p>
+
+<ul>
+<li><a href="https://github.com/frol/docker-alpine-python3">frol/docker-alpine-python3</a>,</li>
+<li><a href="https://github.com/sorccu/docker-adb">sorccu/docker-adb</a></li>
+<li><a href="https://github.com/cdrx/docker-pyinstaller">cdrx/docker-pyinstaller</a></li>
+</ul>
+
+<p></p>
+
+<h2 id="原始碼與-docker-image">原始碼與 Docker Image</h2>
+
+<ul>
+<li><a href="https://github.com/Swind/docker-python3-adb">Github: swind/docker-python3-adb</a></li>
+<li><a href="https://hub.docker.com/r/swind/docker-python3-adb">Docker-Hub: swind/docker-python3-adb</a></li>
+</ul>
+
+<h3 id="使用方式">使用方式</h3>
+
+<h4 id="執行-adb">執行 ADB</h4>
+
+<pre><code class="language-sh">docker run --rm -ti --net host swind/docker-python3-adb adb devices
+</code></pre>
+
+<p><code>sorccu/docker-adb</code> 的 container 內容本來是預設會啟動 <code>adb server</code>，但這部份被我拿掉了。
+因為我想讓 container 內的 adb 可以直接跟 Host 的 adb server 溝通。
+所以在執行的時候要增加 <code>--net host</code> 讓 container 內的 adb 與 Host 的 adb server 可以直接連線。</p>
+
+<h4 id="執行-python3-程式">執行 Python3 程式</h4>
+
+<p>使用這個 image 進行 build 的時候，會自動載入 <code>requirements.txt</code> 並且安裝（也就是 Dockerfile 中 <code>ONBUILD</code> 的部份）。
+並且在執行的時候預設 <code>WORKDIR</code> 的路徑是 <code>/code</code>，所以需要使用 <code>-v</code> 將要執行的 Python project 掛載到 <code>/code</code>。</p>
+
+<pre><code class="language-sh">docker run -v &quot;$(pwd):/code&quot; --rm -ti --net host swind/docker-python3-adb python3 helloworld.py 
+</code></pre>
+
+<pre><code class="language-python">import os
+print(&quot;Hello World&quot;)
+</code></pre>
+
+<h4 id="license">License</h4>
+
+<p>See <a href="LICENSE">LICENSE</a>.</p>
+      </article>
+
+      <ul class="pager blog-pager">
+        
+        
+          <li class="next">
+            <a href="https://swind.code-life.info/post/jenkins-html-report/" data-toggle="tooltip" data-placement="top" title="使用 docker 與 docker-compose 啟動 Jenkins">Next Post &rarr;</a>
+          </li>
+        
+      </ul>
+
       
-      <a href="https://swind.code-life.info/categories/program" class="list-group-item">
-          program<span class="badge">3</span></a>
-      
-      <a href="https://swind.code-life.info/categories/jenkins" class="list-group-item">
-          jenkins<span class="badge">1</span></a>
-      
-      </div>
-    </article>
+
+    </div>
   </div>
+</div>
 
     <footer>
   <div class="container">
