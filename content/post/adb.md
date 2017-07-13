@@ -9,7 +9,38 @@ title = "ADB 傳輸格式的筆記"
 
 緩慢補充中...
 
+<!--more-->
+
 ## ADB 傳輸格式
+
+在傳送指令給 `ADB Server` 的時候，
+需要在開頭使用 4 個 16進位的數字表示後面要傳遞的資料長度。
+
+例如要列出所有 Devices 的時候，
+所使用的指令是 `host:devices`。
+所以加上長度資訊就會變成 `000Chost:devices`。
+
+`host:devices` 是 12 個字所以用 16 進位表示長度就是 `000C`。
+
+下面是 Python 負責轉換指令的範例程式碼
+
+```python
+def encode(cmd):
+  length = "{0:04X}{}".format(len(cmd))
+  return "{}{}".format(length, cmd)
+
+if __name__ == "__main__":
+  print(encode("host:devices"))
+```
+
+而 ADB Server 在收到指令之後，會立刻回傳一個長度為 4 bytes 的結果。
+這個結果指的是**傳送指令的結果**，而不是執行指令的結果。
+如果接收指令沒有任何問題的話，會回傳 `OKAY`。
+
+如果前 4 個 bytes 不是 `OKAY` 的話，
+那麼他後面就會帶著 Error Message，要記得把他一起讀完。
+
+## ADB 的指令
 
 ADB 的傳輸內容大致上可以分為幾類
 
@@ -17,7 +48,6 @@ ADB 的傳輸內容大致上可以分為幾類
 2. host-serial
 3. host-transport
 
-<!--more-->
 
 當你想透過 ADB 對某個 Device 下指令的時候，需要先使用 `host:transport:{serialno}` 來切換目標。
 而 `host` 底下的指令則是針對 ADB Server 的指令，所以不需要進行 `host:transport`。
