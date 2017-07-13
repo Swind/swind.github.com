@@ -1,32 +1,26 @@
-# blacklist
 dist: trusty
-
 branches:
   except:
-    - master
-
+  - master
 addons:
   apt:
     packages:
-      - python-pygments
-
+    - python-pygments
 before_script:
 - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 - git config --global user.name "Swind (via Travis-CI)"
 - git config --global user.email "swind@code-life.info"
 - rm -rf public
-- git clone --quiet https://${GH_TOKEN}@github.com/Swind/swind.github.com -b master public > /dev/null
-
+- git clone --quiet https://${GH_TOKEN}@github.com/Swind/swind.github.com -b master
+  public > /dev/null
 script:
-- ./bin/hugo 
-
+- "./bin/hugo"
 after_success:
-- cd public 
+- cd public
 - git add .
 - git status
 - git commit -m "[ci skip] Update output from Travis CI"
 - git push origin master
-
 env:
   global:
-    secure: bgD+Q7LIpym+pEmrL2+Ro3VfCLhSOGddRDcDXQoA6wAoL7ZIlXeVSgh2Q/iLy1SlEwIVhA+M9wPCDXbhRgWT54/qgDofwutLTmGZCU2ACN3XH4ZVfrqP13FdQ/+qiSRyOBnlmqPlxnDt6gHI7aRpC0fsBLIFiwWYpLDuqhWK2LU=
+    secure: dQ+EVg2w6Q83L+Fpt+7txxLsI2CRADJzZlpJ3V7/QNCDuRV0QKMmt/kwrleZtfmqNaVlaoE58ZIW4IdxiNbvs2ttxCeI/DEbTiLIjwZf0ZOnH+dJrsslbanHWRoxRhyFirUAHbWyFsqdC7zmO7LH0lXErEt1HyK03icZIQWEbLw=
