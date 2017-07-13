@@ -187,7 +187,37 @@ wlan0 0x0 10096 1 15659531 414473
       <guid>https://swind.github.io/post/adb/</guid>
       <description>&lt;p&gt;緩慢補充中&amp;hellip;&lt;/p&gt;
 
+&lt;p&gt;&lt;/p&gt;
+
 &lt;h2 id=&#34;adb-傳輸格式&#34;&gt;ADB 傳輸格式&lt;/h2&gt;
+
+&lt;p&gt;在傳送指令給 &lt;code&gt;ADB Server&lt;/code&gt; 的時候，
+需要在開頭使用 4 個 16進位的數字表示後面要傳遞的資料長度。&lt;/p&gt;
+
+&lt;p&gt;例如要列出所有 Devices 的時候，
+所使用的指令是 &lt;code&gt;host:devices&lt;/code&gt;。
+所以加上長度資訊就會變成 &lt;code&gt;000Chost:devices&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;host:devices&lt;/code&gt; 是 12 個字所以用 16 進位表示長度就是 &lt;code&gt;000C&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;下面是 Python 負責轉換指令的範例程式碼&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def encode(cmd):
+  length = &amp;quot;{0:04X}{}&amp;quot;.format(len(cmd))
+  return &amp;quot;{}{}&amp;quot;.format(length, cmd)
+
+if __name__ == &amp;quot;__main__&amp;quot;:
+  print(encode(&amp;quot;host:devices&amp;quot;))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;而 ADB Server 在收到指令之後，會立刻回傳一個長度為 4 bytes 的結果。
+這個結果指的是&lt;strong&gt;傳送指令的結果&lt;/strong&gt;，而不是執行指令的結果。
+如果接收指令沒有任何問題的話，會回傳 &lt;code&gt;OKAY&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;如果前 4 個 bytes 不是 &lt;code&gt;OKAY&lt;/code&gt; 的話，
+那麼他後面就會帶著 Error Message，要記得把他一起讀完。&lt;/p&gt;
+
+&lt;h2 id=&#34;adb-的指令&#34;&gt;ADB 的指令&lt;/h2&gt;
 
 &lt;p&gt;ADB 的傳輸內容大致上可以分為幾類&lt;/p&gt;
 
@@ -196,8 +226,6 @@ wlan0 0x0 10096 1 15659531 414473
 &lt;li&gt;host-serial&lt;/li&gt;
 &lt;li&gt;host-transport&lt;/li&gt;
 &lt;/ol&gt;
-
-&lt;p&gt;&lt;/p&gt;
 
 &lt;p&gt;當你想透過 ADB 對某個 Device 下指令的時候，需要先使用 &lt;code&gt;host:transport:{serialno}&lt;/code&gt; 來切換目標。
 而 &lt;code&gt;host&lt;/code&gt; 底下的指令則是針對 ADB Server 的指令，所以不需要進行 &lt;code&gt;host:transport&lt;/code&gt;。&lt;/p&gt;
