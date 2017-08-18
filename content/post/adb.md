@@ -34,7 +34,7 @@ if __name__ == "__main__":
 ```
 
 而 ADB Server 在收到指令之後，會立刻回傳一個長度為 4 bytes 的結果。
-這個結果指的是**傳送指令的結果**，而不是執行指令的結果。
+這個結果指的是**傳送指令的結果**，而不是**執行指令的結果**。
 如果接收指令沒有任何問題的話，會回傳 `OKAY`。
 
 如果前 4 個 bytes 不是 `OKAY` 的話，
@@ -56,6 +56,8 @@ ADB 的傳輸內容大致上可以分為幾類
 
 #### connect
 
+讓 ADB Server 連線到位於 {host}:{port} 的 Device ( 需要設定 Device 讓他的 Adb daemon 可以透過網路連接 )
+
 `host:connect:{host}:{port}`
 
 e.g.
@@ -64,21 +66,34 @@ e.g.
 
 #### devices
 
+列出所有 Devices，也就是 `adb devices`
+
 `host:devices`
 
 #### disconnect 
+
+中斷與某台 Device 的連線
 
 `host:disconnect:{hostla}:{port}`
 
 #### kill
 
-`host:kill``
+叫 Adb Service 自殺
+
+`host:kill`
 
 #### track-devices
 
+`host:track-devices`
 
+將這個連線轉為專門 track devices 的連線，當 ADB Server 發現有 Device 被新增/移除的時候。
+就會將最新的 Device List 傳送過來。
 
-### transport
+#### transport
+
+`host:track-devices:<serial-number>`
+
+transport 中最重要的指令，跟 ADB Service 說之後將這條連線的指令全都送到 `serial-number` 這台機器或者模擬器上面。
 
 ### version
 
@@ -116,3 +131,5 @@ class Protocol:
 # 參考資料
 
 1. [adbkit](https://github.com/openstf/adbkit)
+2. [adb protocol](https://android.googlesource.com/platform/system/core/+/master/adb/protocol.txt)
+3. [adb services](https://android.googlesource.com/platform/system/core/+/master/adb/SERVICES.TXT)
