@@ -212,7 +212,7 @@ if __name__ == &amp;quot;__main__&amp;quot;:
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;而 ADB Server 在收到指令之後，會立刻回傳一個長度為 4 bytes 的結果。
-這個結果指的是&lt;strong&gt;傳送指令的結果&lt;/strong&gt;，而不是執行指令的結果。
+這個結果指的是&lt;strong&gt;傳送指令的結果&lt;/strong&gt;，而不是&lt;strong&gt;執行指令的結果&lt;/strong&gt;。
 如果接收指令沒有任何問題的話，會回傳 &lt;code&gt;OKAY&lt;/code&gt;。&lt;/p&gt;
 
 &lt;p&gt;如果前 4 個 bytes 不是 &lt;code&gt;OKAY&lt;/code&gt; 的話，
@@ -235,6 +235,8 @@ if __name__ == &amp;quot;__main__&amp;quot;:
 
 &lt;h4 id=&#34;connect&#34;&gt;connect&lt;/h4&gt;
 
+&lt;p&gt;讓 ADB Server 連線到位於 {host}:{port} 的 Device ( 需要設定 Device 讓他的 Adb daemon 可以透過網路連接 )&lt;/p&gt;
+
 &lt;p&gt;&lt;code&gt;host:connect:{host}:{port}&lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;e.g.&lt;/p&gt;
@@ -243,19 +245,34 @@ if __name__ == &amp;quot;__main__&amp;quot;:
 
 &lt;h4 id=&#34;devices&#34;&gt;devices&lt;/h4&gt;
 
+&lt;p&gt;列出所有 Devices，也就是 &lt;code&gt;adb devices&lt;/code&gt;&lt;/p&gt;
+
 &lt;p&gt;&lt;code&gt;host:devices&lt;/code&gt;&lt;/p&gt;
 
 &lt;h4 id=&#34;disconnect&#34;&gt;disconnect&lt;/h4&gt;
+
+&lt;p&gt;中斷與某台 Device 的連線&lt;/p&gt;
 
 &lt;p&gt;&lt;code&gt;host:disconnect:{hostla}:{port}&lt;/code&gt;&lt;/p&gt;
 
 &lt;h4 id=&#34;kill&#34;&gt;kill&lt;/h4&gt;
 
-&lt;p&gt;&lt;code&gt;host:kill&lt;/code&gt;`&lt;/p&gt;
+&lt;p&gt;叫 Adb Service 自殺&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;host:kill&lt;/code&gt;&lt;/p&gt;
 
 &lt;h4 id=&#34;track-devices&#34;&gt;track-devices&lt;/h4&gt;
 
-&lt;h3 id=&#34;transport&#34;&gt;transport&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;host:track-devices&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;將這個連線轉為專門 track devices 的連線，當 ADB Server 發現有 Device 被新增/移除的時候。
+就會將最新的 Device List 傳送過來。&lt;/p&gt;
+
+&lt;h4 id=&#34;transport&#34;&gt;transport&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;host:track-devices:&amp;lt;serial-number&amp;gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;transport 中最重要的指令，跟 ADB Service 說之後將這條連線的指令全都送到 &lt;code&gt;serial-number&lt;/code&gt; 這台機器或者模擬器上面。&lt;/p&gt;
 
 &lt;h3 id=&#34;version&#34;&gt;version&lt;/h3&gt;
 
@@ -292,6 +309,8 @@ if __name__ == &amp;quot;__main__&amp;quot;:
 
 &lt;ol&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/openstf/adbkit&#34;&gt;adbkit&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://android.googlesource.com/platform/system/core/+/master/adb/protocol.txt&#34;&gt;adb protocol&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://android.googlesource.com/platform/system/core/+/master/adb/SERVICES.TXT&#34;&gt;adb services&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;</description>
     </item>
     

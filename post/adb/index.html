@@ -202,7 +202,7 @@ if __name__ == &quot;__main__&quot;:
 </code></pre>
 
 <p>而 ADB Server 在收到指令之後，會立刻回傳一個長度為 4 bytes 的結果。
-這個結果指的是<strong>傳送指令的結果</strong>，而不是執行指令的結果。
+這個結果指的是<strong>傳送指令的結果</strong>，而不是<strong>執行指令的結果</strong>。
 如果接收指令沒有任何問題的話，會回傳 <code>OKAY</code>。</p>
 
 <p>如果前 4 個 bytes 不是 <code>OKAY</code> 的話，
@@ -225,6 +225,8 @@ if __name__ == &quot;__main__&quot;:
 
 <h4 id="connect">connect</h4>
 
+<p>讓 ADB Server 連線到位於 {host}:{port} 的 Device ( 需要設定 Device 讓他的 Adb daemon 可以透過網路連接 )</p>
+
 <p><code>host:connect:{host}:{port}</code></p>
 
 <p>e.g.</p>
@@ -233,19 +235,34 @@ if __name__ == &quot;__main__&quot;:
 
 <h4 id="devices">devices</h4>
 
+<p>列出所有 Devices，也就是 <code>adb devices</code></p>
+
 <p><code>host:devices</code></p>
 
 <h4 id="disconnect">disconnect</h4>
+
+<p>中斷與某台 Device 的連線</p>
 
 <p><code>host:disconnect:{hostla}:{port}</code></p>
 
 <h4 id="kill">kill</h4>
 
-<p><code>host:kill</code>`</p>
+<p>叫 Adb Service 自殺</p>
+
+<p><code>host:kill</code></p>
 
 <h4 id="track-devices">track-devices</h4>
 
-<h3 id="transport">transport</h3>
+<p><code>host:track-devices</code></p>
+
+<p>將這個連線轉為專門 track devices 的連線，當 ADB Server 發現有 Device 被新增/移除的時候。
+就會將最新的 Device List 傳送過來。</p>
+
+<h4 id="transport">transport</h4>
+
+<p><code>host:track-devices:&lt;serial-number&gt;</code></p>
+
+<p>transport 中最重要的指令，跟 ADB Service 說之後將這條連線的指令全都送到 <code>serial-number</code> 這台機器或者模擬器上面。</p>
 
 <h3 id="version">version</h3>
 
@@ -282,6 +299,8 @@ if __name__ == &quot;__main__&quot;:
 
 <ol>
 <li><a href="https://github.com/openstf/adbkit">adbkit</a></li>
+<li><a href="https://android.googlesource.com/platform/system/core/+/master/adb/protocol.txt">adb protocol</a></li>
+<li><a href="https://android.googlesource.com/platform/system/core/+/master/adb/SERVICES.TXT">adb services</a></li>
 </ol>
       </article>
 
