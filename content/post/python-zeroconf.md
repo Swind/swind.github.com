@@ -1,11 +1,9 @@
 +++
-draft = true
-description = ""
+title = "python-zeroconf 範例"
 tags = ["python","zeroconf"]
 categories = ["python"]
 date = "2017-09-11T13:55:48+08:00"
-draft=true
-title = "python-zeroconf 範例"
+draft=false
 description = "python-zeroconf client/server 範例"
 +++
 
@@ -14,9 +12,11 @@ description = "python-zeroconf client/server 範例"
 zeroconf ( Zero configuration networking )，主要透過 mDNS ( Multicast DNS ) 與 DNS-SD ( DNS Service Discovery ) 來實現。
 而 [python-zeroconf](https://github.com/jstasiak/python-zeroconf) 就是 `zeroconf` 的 **純 Python** 實現。
 
+<!--more-->
+
 在 Apple 的機器上的實做就是 `Bonjour`。
 
-而 Linux 則是 Avachi
+而 Linux 則是 `Avachi`
 
 關於 `zeroconf` 詳細的介紹可以參考 [设备发现之Bonjour协议原理分享](http://bbs.mico.io/card/1236)
 
