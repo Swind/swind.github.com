@@ -5,17 +5,17 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Python</title>
-  <meta property="og:title" content="Python" />
-  <meta name="twitter:title" content="Python" />
+  <title>Zeroconf</title>
+  <meta property="og:title" content="Zeroconf" />
+  <meta name="twitter:title" content="Zeroconf" />
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://swind.github.io/tags/python/" />
+  <meta property="og:url" content="https://swind.github.io/tags/zeroconf/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Corleonis" />
 
   <meta name="generator" content="Hugo 0.19" />
-  <link rel="canonical" href="https://swind.github.io/tags/python/" />
+  <link rel="canonical" href="https://swind.github.io/tags/zeroconf/" />
   <link rel="alternate" href="https://swind.github.io/index.xml" type="application/rss+xml" title="Corleonis">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -139,7 +139,7 @@ ga('send', 'pageview');
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="page-heading">
-              <h1>#Python</h1>
+              <h1>#Zeroconf</h1>
               <hr class="small">
             </div>
           </div>
@@ -154,71 +154,6 @@ ga('send', 'pageview');
       <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
         
         <div class="posts-list">
-          
-            <article class="post-preview">
-              <a href="https://swind.github.io/post/devpi/">
-                <h2 class="post-title">用 devpi 建立私有的 pypi server</h2>
-    
-                
-              </a>
-    
-              <p class="post-meta">
-                Posted on September 20, 2017
-              </p>
-              <div class="post-entry">
-                
-                  
-
-<p>簡短作個筆記</p>
-
-<h1 id="dockerfile">Dockerfile</h1>
-
-<p><a href="https://github.com/Swind/docker-devpi">docker-devpi</a> fork 自 <a href="https://github.com/saily/openshift-devpi">saily/openshift-devpi</a>
-不過如果可以的話我希望有機會可以改用 <code>alpine</code>。</p>
-
-<pre><code class="language-yaml">FROM python:3.6
-
-ENV DEVPI_SERVERDIR=/mnt/server \
-    DEVPI_CLIENTDIR=/mnt/client \
-    DEVPI_MIRROR_CACHE_EXPIRY=86400
-
-COPY [&quot;requirements.txt&quot;, &quot;logger_cfg.json&quot;, &quot;run.sh&quot;, &quot;/&quot;]
-
-RUN pip install --no-cache-dir -r /requirements.txt &amp;&amp; \
-    rm /requirements.txt
-
-VOLUME /mnt
-EXPOSE 3141
-
-CMD &quot;/run.sh&quot;
-</code></pre>
-
-<p>CMD 所執行的 <code>run.sh</code> 在 repository 裡面有。</p>
-
-<h1 id="pip-conf">pip.conf</h1>
-
-<p>將<code>ip</code>, <code>port</code> 與 <code>path</code> 替換成自家 server 的位置。</p>
-
-<pre><code class="language-config">[global]
-index-url = http://{ip}:{port}/{path}/+simple/
-trusted-host = {ip} 
-
-[search]
-index = http://{ip}:{port}/cloudmosa/dev/
-</code></pre>
-
-                
-              </div>
-    
-              
-                <span class="post-meta">
-                  
-                    #<a href="https://swind.github.io/tags/python">python</a>&nbsp;
-                  
-                </span>
-              
-    
-            </article>
           
             <article class="post-preview">
               <a href="https://swind.github.io/post/python-zeroconf/">
@@ -249,50 +184,6 @@ from zeroconf import ServiceInfo, Zeroconf import socket import logging logger =
                     #<a href="https://swind.github.io/tags/python">python</a>&nbsp;
                   
                     #<a href="https://swind.github.io/tags/zeroconf">zeroconf</a>&nbsp;
-                  
-                </span>
-              
-    
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://swind.github.io/post/docker-python3-adb/">
-                <h2 class="post-title">建立可以執行 python3 與 adb 指令的 docker images</h2>
-    
-                
-              </a>
-    
-              <p class="post-meta">
-                Posted on April 12, 2017
-              </p>
-              <div class="post-entry">
-                
-                  <h2 id="python3-adb">Python3 + adb</h2>
-
-<p>這個 Image 使用 Alpine Linux Image 安裝了 Python3 與 ADB。
-整體大小約 9x MB，用於執行 Python3 撰寫的 Android 測試。</p>
-
-<p>整個 <code>Dockerfile</code> 是各家 Dockerfile 的大雜燴。感謝</p>
-
-<ul>
-<li><a href="https://github.com/frol/docker-alpine-python3">frol/docker-alpine-python3</a>,</li>
-<li><a href="https://github.com/sorccu/docker-adb">sorccu/docker-adb</a></li>
-<li><a href="https://github.com/cdrx/docker-pyinstaller">cdrx/docker-pyinstaller</a></li>
-</ul>
-
-<p></p>
-                  <a href="https://swind.github.io/post/docker-python3-adb/" class="post-read-more">[Read More]</a>
-                
-              </div>
-    
-              
-                <span class="post-meta">
-                  
-                    #<a href="https://swind.github.io/tags/python">python</a>&nbsp;
-                  
-                    #<a href="https://swind.github.io/tags/docker">docker</a>&nbsp;
-                  
-                    #<a href="https://swind.github.io/tags/adb">adb</a>&nbsp;
                   
                 </span>
               

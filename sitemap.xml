@@ -2,6 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://swind.github.io/post/devpi/</loc>
+    <lastmod>2017-09-20T11:16:26+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://swind.github.io/post/python-zeroconf/</loc>
+    <lastmod>2017-09-11T13:55:48+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://swind.github.io/post/use-adb-to-track-the-network-statistics/</loc>
     <lastmod>2017-07-12T10:46:29+08:00</lastmod>
   </url>
@@ -19,6 +29,12 @@
   <url>
     <loc>https://swind.github.io/post/docker-python3-adb/</loc>
     <lastmod>2017-04-12T14:40:30+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://swind.github.io/categories/</loc>
+    <lastmod>2017-09-20T11:16:26+08:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
@@ -40,7 +56,7 @@
   
   <url>
     <loc>https://swind.github.io/</loc>
-    <lastmod>2017-07-12T10:46:29+08:00</lastmod>
+    <lastmod>2017-09-20T11:16:26+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -70,7 +86,7 @@
   
   <url>
     <loc>https://swind.github.io/post/</loc>
-    <lastmod>2017-07-12T10:46:29+08:00</lastmod>
+    <lastmod>2017-09-20T11:16:26+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -82,12 +98,24 @@
   
   <url>
     <loc>https://swind.github.io/tags/python/</loc>
-    <lastmod>2017-04-12T14:40:30+08:00</lastmod>
+    <lastmod>2017-09-20T11:16:26+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://swind.github.io/categories/python/</loc>
+    <lastmod>2017-09-11T13:55:48+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://swind.github.io/tags/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://swind.github.io/tags/zeroconf/</loc>
+    <lastmod>2017-09-11T13:55:48+08:00</lastmod>
     <priority>0</priority>
   </url>
   

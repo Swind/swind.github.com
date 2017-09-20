@@ -6,8 +6,257 @@
     <description>Recent content in Posts on Corleonis</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
-    <lastBuildDate>Wed, 12 Jul 2017 10:46:29 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 20 Sep 2017 11:16:26 +0800</lastBuildDate>
     <atom:link href="https://swind.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>用 devpi 建立私有的 pypi server</title>
+      <link>https://swind.github.io/post/devpi/</link>
+      <pubDate>Wed, 20 Sep 2017 11:16:26 +0800</pubDate>
+      
+      <guid>https://swind.github.io/post/devpi/</guid>
+      <description>
+
+&lt;p&gt;簡短作個筆記&lt;/p&gt;
+
+&lt;h1 id=&#34;dockerfile&#34;&gt;Dockerfile&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/Swind/docker-devpi&#34;&gt;docker-devpi&lt;/a&gt; fork 自 &lt;a href=&#34;https://github.com/saily/openshift-devpi&#34;&gt;saily/openshift-devpi&lt;/a&gt;
+不過如果可以的話我希望有機會可以改用 &lt;code&gt;alpine&lt;/code&gt;。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;FROM python:3.6
+
+ENV DEVPI_SERVERDIR=/mnt/server \
+    DEVPI_CLIENTDIR=/mnt/client \
+    DEVPI_MIRROR_CACHE_EXPIRY=86400
+
+COPY [&amp;quot;requirements.txt&amp;quot;, &amp;quot;logger_cfg.json&amp;quot;, &amp;quot;run.sh&amp;quot;, &amp;quot;/&amp;quot;]
+
+RUN pip install --no-cache-dir -r /requirements.txt &amp;amp;&amp;amp; \
+    rm /requirements.txt
+
+VOLUME /mnt
+EXPOSE 3141
+
+CMD &amp;quot;/run.sh&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;CMD 所執行的 &lt;code&gt;run.sh&lt;/code&gt; 在 repository 裡面有。&lt;/p&gt;
+
+&lt;h1 id=&#34;pip-conf&#34;&gt;pip.conf&lt;/h1&gt;
+
+&lt;p&gt;將&lt;code&gt;ip&lt;/code&gt;, &lt;code&gt;port&lt;/code&gt; 與 &lt;code&gt;path&lt;/code&gt; 替換成自家 server 的位置。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-config&#34;&gt;[global]
+index-url = http://{ip}:{port}/{path}/+simple/
+trusted-host = {ip} 
+
+[search]
+index = http://{ip}:{port}/cloudmosa/dev/
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>python-zeroconf 範例</title>
+      <link>https://swind.github.io/post/python-zeroconf/</link>
+      <pubDate>Mon, 11 Sep 2017 13:55:48 +0800</pubDate>
+      
+      <guid>https://swind.github.io/post/python-zeroconf/</guid>
+      <description>
+
+&lt;h1 id=&#34;zeroconf&#34;&gt;zeroconf&lt;/h1&gt;
+
+&lt;p&gt;zeroconf ( Zero configuration networking )，主要透過 mDNS ( Multicast DNS ) 與 DNS-SD ( DNS Service Discovery ) 來實現。
+而 &lt;a href=&#34;https://github.com/jstasiak/python-zeroconf&#34;&gt;python-zeroconf&lt;/a&gt; 就是 &lt;code&gt;zeroconf&lt;/code&gt; 的 &lt;strong&gt;純 Python&lt;/strong&gt; 實現。&lt;/p&gt;
+
+&lt;p&gt;在 Apple 的機器上的實做就是 &lt;code&gt;Bonjour&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;而 Linux 則是 &lt;code&gt;Avachi&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;關於 &lt;code&gt;zeroconf&lt;/code&gt; 詳細的介紹可以參考 &lt;a href=&#34;http://bbs.mico.io/card/1236&#34;&gt;设备发现之Bonjour协议原理分享&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;server&#34;&gt;Server&lt;/h1&gt;
+
+&lt;p&gt;&lt;code&gt;python-zeroconf&lt;/code&gt; 的 &lt;code&gt;README.md&lt;/code&gt; 裡面雖然沒有提到 &lt;code&gt;mDNS&lt;/code&gt; 的部份，但是其實在 &lt;a href=&#34;https://github.com/jstasiak/python-zeroconf/blob/master/examples/registration.py&#34;&gt;examples&lt;/a&gt;
+有個簡單的範例。&lt;/p&gt;
+
+&lt;p&gt;下面是稍微整理一下 &lt;code&gt;examples&lt;/code&gt; 裡面的範例&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from zeroconf import ServiceInfo, Zeroconf
+import socket
+
+import logging 
+
+logger = logging.getLogger(__name__)
+
+class Server:
+    def __init__(self, name, address, port, desc):
+        self.zeroconf = Zeroconf()
+        self.name = name
+
+        desc = {
+            &#39;description&#39;: desc 
+        }
+
+        self.info = ServiceInfo(type_=&amp;quot;_http._tcp.local.&amp;quot;,
+                           name=&amp;quot;{}._http._tcp.local.&amp;quot;.format(name),
+                           address=socket.inet_aton(address), 
+                           port=port, 
+                           weight=0, 
+                           priority=0, 
+                           properties=desc)
+
+
+    def register(self):
+        self.zeroconf.register_service(self.info)
+
+    def unregister(self):
+        self.zeroconf.unregister_service(self.info)
+
+    def close(self):
+        self.zeroconf.close()
+
+
+if __name__ == &amp;quot;__main__&amp;quot;:
+    server = Server(
+        name=&amp;quot;_testwebsite&amp;quot;, 
+        address=&amp;quot;127.0.0.1&amp;quot;,
+        port=9999, 
+        desc=&amp;quot;0.0.1&amp;quot;)
+
+    server.register()
+
+    import time
+    try:
+        time.sleep(600)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        server.unregister()
+        server.close()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;主要要看的就只有 &lt;code&gt;ServiceInfo&lt;/code&gt; 跟呼叫 &lt;code&gt;zeroconf.register_service&lt;/code&gt; 的部份而已&lt;/p&gt;
+
+&lt;h1 id=&#34;client&#34;&gt;Client&lt;/h1&gt;
+
+&lt;p&gt;Client 的部份一樣有 &lt;a href=&#34;https://github.com/jstasiak/python-zeroconf/blob/master/examples/browser.py&#34;&gt;examples&lt;/a&gt; 可以參考。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from zeroconf import ServiceBrowser, ServiceStateChange, Zeroconf
+from threading import Event
+import socket
+import time
+
+import logging
+logger = logging.getLogger(&amp;quot;chatroom&amp;quot;)
+
+class Service:
+    ADDED = &amp;quot;added&amp;quot;
+    REMOVED = &amp;quot;removed&amp;quot;
+
+    def __init__(self, zeroconf, service_type, name, state_change):
+        self.state = None
+        self.name = name
+        self.zeroconf = zeroconf
+
+        self._update_info(service_type, name)
+        self._state_change(state_change)
+
+    def _update_info(self, service_type, name):
+        info = self.zeroconf.get_service_info(service_type, name)
+
+        self.address = socket.inet_ntoa(info.address)
+        self.port = info.port
+
+        self.weight = info.weight
+        self.priority = info.priority
+
+        self.server_name = info.server
+
+        if info.properties:
+            self.version = info.properties.get(&amp;quot;version&amp;quot;)
+        else:
+            self.version = None
+
+    def __str__(self):
+        return &amp;quot;[{}] {}:{} {}&amp;quot;.format(self.state, self.address, self.port, self.name)
+
+
+    def _state_change(self, state_change):
+        if state_change is ServiceStateChange.Added:
+            self.state = self.ADDED
+        elif state_change is ServiceStateChange.Removed:
+            self.state = self.REMOVED
+
+
+class Browser:
+    def __init__(self):
+        self.zeroconf = Zeroconf()
+        self.handlers = []
+
+        self.services = {}
+
+    def list(self):
+        return self.services.values()
+
+    def get(self, name):
+        return self.services.get(name)
+
+    def wait(self, name):
+        event = Event()
+
+        def wait_handler(service):
+            if name == service.name:
+                event.set()
+                self.unregister_handler(wait_handler)
+
+        self.register_handler(wait_handler)
+
+        if name in self.services:
+            event.set()
+            self.unregister_handler(wait_handler)
+
+        return event
+
+    def handler(self, zeroconf, service_type, name, state_change):
+        service = Service(zeroconf, service_type, name, state_change)
+
+        if service.state == service.ADDED:
+            self.services[name] = service
+        else:
+            del self.services[name]
+
+        for handler in self.handlers:
+            handler(service)
+
+    def register_handler(self, handler):
+        self.handlers.append(handler)
+
+    def unregister_handler(self, handler):
+        self.handlers.remove(handler)
+
+    def start(self):
+        self.browser = ServiceBrowser(self.zeroconf, &amp;quot;_tcp.local.&amp;quot;, handlers=[self.handler])
+
+    def close(self):
+        self.zeroconf.close()
+
+if __name__ == &amp;quot;__main__&amp;quot;:
+    browser = Browser()
+
+    def handler(state):
+        print(state)
+
+    browser.register_handlers(handler)
+    browser.start()
+
+    time.sleep(600)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;比較不一樣的是，&lt;code&gt;ServiceBrowser&lt;/code&gt; 會建立一個 &lt;code&gt;Thread&lt;/code&gt; 去取得資訊，並且當有 state 變化的時候（ADDED 或 REMOVED) 時，呼叫註冊的 handlers。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>使用 adb 來追蹤查看 APP 的網路流量</title>

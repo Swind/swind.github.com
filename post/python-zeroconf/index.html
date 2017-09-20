@@ -5,17 +5,20 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Python</title>
-  <meta property="og:title" content="Python" />
-  <meta name="twitter:title" content="Python" />
+  <title>python-zeroconf 範例</title>
+  <meta property="og:title" content="python-zeroconf 範例" />
+  <meta name="twitter:title" content="python-zeroconf 範例" />
+  <meta name="description" content="python-zeroconf client/server 範例">
+  <meta property="og:description" content="python-zeroconf client/server 範例">
+  <meta name="twitter:description" content="python-zeroconf client/server 範例">
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://swind.github.io/tags/python/" />
+  <meta property="og:url" content="https://swind.github.io/post/python-zeroconf/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Corleonis" />
 
   <meta name="generator" content="Hugo 0.19" />
-  <link rel="canonical" href="https://swind.github.io/tags/python/" />
+  <link rel="canonical" href="https://swind.github.io/post/python-zeroconf/" />
   <link rel="alternate" href="https://swind.github.io/index.xml" type="application/rss+xml" title="Corleonis">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -133,14 +136,33 @@ ga('send', 'pageview');
 
 
     
+  
+  
+  
+
+
+
+
+  
+
   <header class="header-section ">
+    
     <div class="intro-header no-img">
+      
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="page-heading">
-              <h1>#Python</h1>
-              <hr class="small">
+            <div class="post-heading">
+              <h1>python-zeroconf 範例</h1>
+                
+                
+                  <span class="post-meta">
+  Posted on September 11, 2017
+  
+</span>
+
+
+                
             </div>
           </div>
         </div>
@@ -148,162 +170,225 @@ ga('send', 'pageview');
     </div>
   </header>
 
+
     
-  <div class="container" role="main">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
         
-        <div class="posts-list">
-          
-            <article class="post-preview">
-              <a href="https://swind.github.io/post/devpi/">
-                <h2 class="post-title">用 devpi 建立私有的 pypi server</h2>
-    
-                
-              </a>
-    
-              <p class="post-meta">
-                Posted on September 20, 2017
-              </p>
-              <div class="post-entry">
-                
-                  
 
-<p>簡短作個筆記</p>
+<h1 id="zeroconf">zeroconf</h1>
 
-<h1 id="dockerfile">Dockerfile</h1>
+<p>zeroconf ( Zero configuration networking )，主要透過 mDNS ( Multicast DNS ) 與 DNS-SD ( DNS Service Discovery ) 來實現。
+而 <a href="https://github.com/jstasiak/python-zeroconf">python-zeroconf</a> 就是 <code>zeroconf</code> 的 <strong>純 Python</strong> 實現。</p>
 
-<p><a href="https://github.com/Swind/docker-devpi">docker-devpi</a> fork 自 <a href="https://github.com/saily/openshift-devpi">saily/openshift-devpi</a>
-不過如果可以的話我希望有機會可以改用 <code>alpine</code>。</p>
+<p>在 Apple 的機器上的實做就是 <code>Bonjour</code>。</p>
 
-<pre><code class="language-yaml">FROM python:3.6
+<p>而 Linux 則是 <code>Avachi</code></p>
 
-ENV DEVPI_SERVERDIR=/mnt/server \
-    DEVPI_CLIENTDIR=/mnt/client \
-    DEVPI_MIRROR_CACHE_EXPIRY=86400
+<p>關於 <code>zeroconf</code> 詳細的介紹可以參考 <a href="http://bbs.mico.io/card/1236">设备发现之Bonjour协议原理分享</a></p>
 
-COPY [&quot;requirements.txt&quot;, &quot;logger_cfg.json&quot;, &quot;run.sh&quot;, &quot;/&quot;]
+<h1 id="server">Server</h1>
 
-RUN pip install --no-cache-dir -r /requirements.txt &amp;&amp; \
-    rm /requirements.txt
+<p><code>python-zeroconf</code> 的 <code>README.md</code> 裡面雖然沒有提到 <code>mDNS</code> 的部份，但是其實在 <a href="https://github.com/jstasiak/python-zeroconf/blob/master/examples/registration.py">examples</a>
+有個簡單的範例。</p>
 
-VOLUME /mnt
-EXPOSE 3141
+<p>下面是稍微整理一下 <code>examples</code> 裡面的範例</p>
 
-CMD &quot;/run.sh&quot;
+<pre><code class="language-python">from zeroconf import ServiceInfo, Zeroconf
+import socket
+
+import logging 
+
+logger = logging.getLogger(__name__)
+
+class Server:
+    def __init__(self, name, address, port, desc):
+        self.zeroconf = Zeroconf()
+        self.name = name
+
+        desc = {
+            'description': desc 
+        }
+
+        self.info = ServiceInfo(type_=&quot;_http._tcp.local.&quot;,
+                           name=&quot;{}._http._tcp.local.&quot;.format(name),
+                           address=socket.inet_aton(address), 
+                           port=port, 
+                           weight=0, 
+                           priority=0, 
+                           properties=desc)
+
+
+    def register(self):
+        self.zeroconf.register_service(self.info)
+
+    def unregister(self):
+        self.zeroconf.unregister_service(self.info)
+
+    def close(self):
+        self.zeroconf.close()
+
+
+if __name__ == &quot;__main__&quot;:
+    server = Server(
+        name=&quot;_testwebsite&quot;, 
+        address=&quot;127.0.0.1&quot;,
+        port=9999, 
+        desc=&quot;0.0.1&quot;)
+
+    server.register()
+
+    import time
+    try:
+        time.sleep(600)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        server.unregister()
+        server.close()
 </code></pre>
 
-<p>CMD 所執行的 <code>run.sh</code> 在 repository 裡面有。</p>
+<p>主要要看的就只有 <code>ServiceInfo</code> 跟呼叫 <code>zeroconf.register_service</code> 的部份而已</p>
 
-<h1 id="pip-conf">pip.conf</h1>
+<h1 id="client">Client</h1>
 
-<p>將<code>ip</code>, <code>port</code> 與 <code>path</code> 替換成自家 server 的位置。</p>
+<p>Client 的部份一樣有 <a href="https://github.com/jstasiak/python-zeroconf/blob/master/examples/browser.py">examples</a> 可以參考。</p>
 
-<pre><code class="language-config">[global]
-index-url = http://{ip}:{port}/{path}/+simple/
-trusted-host = {ip} 
+<pre><code class="language-python">from zeroconf import ServiceBrowser, ServiceStateChange, Zeroconf
+from threading import Event
+import socket
+import time
 
-[search]
-index = http://{ip}:{port}/cloudmosa/dev/
+import logging
+logger = logging.getLogger(&quot;chatroom&quot;)
+
+class Service:
+    ADDED = &quot;added&quot;
+    REMOVED = &quot;removed&quot;
+
+    def __init__(self, zeroconf, service_type, name, state_change):
+        self.state = None
+        self.name = name
+        self.zeroconf = zeroconf
+
+        self._update_info(service_type, name)
+        self._state_change(state_change)
+
+    def _update_info(self, service_type, name):
+        info = self.zeroconf.get_service_info(service_type, name)
+
+        self.address = socket.inet_ntoa(info.address)
+        self.port = info.port
+
+        self.weight = info.weight
+        self.priority = info.priority
+
+        self.server_name = info.server
+
+        if info.properties:
+            self.version = info.properties.get(&quot;version&quot;)
+        else:
+            self.version = None
+
+    def __str__(self):
+        return &quot;[{}] {}:{} {}&quot;.format(self.state, self.address, self.port, self.name)
+
+
+    def _state_change(self, state_change):
+        if state_change is ServiceStateChange.Added:
+            self.state = self.ADDED
+        elif state_change is ServiceStateChange.Removed:
+            self.state = self.REMOVED
+
+
+class Browser:
+    def __init__(self):
+        self.zeroconf = Zeroconf()
+        self.handlers = []
+
+        self.services = {}
+
+    def list(self):
+        return self.services.values()
+
+    def get(self, name):
+        return self.services.get(name)
+
+    def wait(self, name):
+        event = Event()
+
+        def wait_handler(service):
+            if name == service.name:
+                event.set()
+                self.unregister_handler(wait_handler)
+
+        self.register_handler(wait_handler)
+
+        if name in self.services:
+            event.set()
+            self.unregister_handler(wait_handler)
+
+        return event
+
+    def handler(self, zeroconf, service_type, name, state_change):
+        service = Service(zeroconf, service_type, name, state_change)
+
+        if service.state == service.ADDED:
+            self.services[name] = service
+        else:
+            del self.services[name]
+
+        for handler in self.handlers:
+            handler(service)
+
+    def register_handler(self, handler):
+        self.handlers.append(handler)
+
+    def unregister_handler(self, handler):
+        self.handlers.remove(handler)
+
+    def start(self):
+        self.browser = ServiceBrowser(self.zeroconf, &quot;_tcp.local.&quot;, handlers=[self.handler])
+
+    def close(self):
+        self.zeroconf.close()
+
+if __name__ == &quot;__main__&quot;:
+    browser = Browser()
+
+    def handler(state):
+        print(state)
+
+    browser.register_handlers(handler)
+    browser.start()
+
+    time.sleep(600)
 </code></pre>
 
-                
-              </div>
-    
-              
-                <span class="post-meta">
-                  
-                    #<a href="https://swind.github.io/tags/python">python</a>&nbsp;
-                  
-                </span>
-              
-    
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://swind.github.io/post/python-zeroconf/">
-                <h2 class="post-title">python-zeroconf 範例</h2>
-    
-                
-              </a>
-    
-              <p class="post-meta">
-                Posted on September 11, 2017
-              </p>
-              <div class="post-entry">
-                
-                  zeroconf zeroconf ( Zero configuration networking )，主要透過 mDNS ( Multicast DNS ) 與 DNS-SD ( DNS Service Discovery ) 來實現。 而 python-zeroconf 就是 zeroconf 的 純 Python 實現。
-在 Apple 的機器上的實做就是 Bonjour。
-而 Linux 則是 Avachi
-關於 zeroconf 詳細的介紹可以參考 设备发现之Bonjour协议原理分享
-Server python-zeroconf 的 README.md 裡面雖然沒有提到 mDNS 的部份，但是其實在 examples 有個簡單的範例。
-下面是稍微整理一下 examples 裡面的範例
-from zeroconf import ServiceInfo, Zeroconf import socket import logging logger = logging.getLogger(__name__) class Server: def __init__(self, name, address, port, desc): self.
-                  <a href="https://swind.github.io/post/python-zeroconf/" class="post-read-more">[Read More]</a>
-                
-              </div>
-    
-              
-                <span class="post-meta">
-                  
-                    #<a href="https://swind.github.io/tags/python">python</a>&nbsp;
-                  
-                    #<a href="https://swind.github.io/tags/zeroconf">zeroconf</a>&nbsp;
-                  
-                </span>
-              
-    
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://swind.github.io/post/docker-python3-adb/">
-                <h2 class="post-title">建立可以執行 python3 與 adb 指令的 docker images</h2>
-    
-                
-              </a>
-    
-              <p class="post-meta">
-                Posted on April 12, 2017
-              </p>
-              <div class="post-entry">
-                
-                  <h2 id="python3-adb">Python3 + adb</h2>
+<p>比較不一樣的是，<code>ServiceBrowser</code> 會建立一個 <code>Thread</code> 去取得資訊，並且當有 state 變化的時候（ADDED 或 REMOVED) 時，呼叫註冊的 handlers。</p>
 
-<p>這個 Image 使用 Alpine Linux Image 安裝了 Python3 與 ADB。
-整體大小約 9x MB，用於執行 Python3 撰寫的 Android 測試。</p>
+      </article>
 
-<p>整個 <code>Dockerfile</code> 是各家 Dockerfile 的大雜燴。感謝</p>
-
-<ul>
-<li><a href="https://github.com/frol/docker-alpine-python3">frol/docker-alpine-python3</a>,</li>
-<li><a href="https://github.com/sorccu/docker-adb">sorccu/docker-adb</a></li>
-<li><a href="https://github.com/cdrx/docker-pyinstaller">cdrx/docker-pyinstaller</a></li>
-</ul>
-
-<p></p>
-                  <a href="https://swind.github.io/post/docker-python3-adb/" class="post-read-more">[Read More]</a>
-                
-              </div>
-    
-              
-                <span class="post-meta">
-                  
-                    #<a href="https://swind.github.io/tags/python">python</a>&nbsp;
-                  
-                    #<a href="https://swind.github.io/tags/docker">docker</a>&nbsp;
-                  
-                    #<a href="https://swind.github.io/tags/adb">adb</a>&nbsp;
-                  
-                </span>
-              
-    
-            </article>
-          
-        </div>
+      <ul class="pager blog-pager">
         
-      </div>
+          <li class="previous">
+            <a href="https://swind.github.io/post/use-adb-to-track-the-network-statistics/" data-toggle="tooltip" data-placement="top" title="使用 adb 來追蹤查看 APP 的網路流量">&larr; Previous Post</a>
+          </li>
+        
+        
+          <li class="next">
+            <a href="https://swind.github.io/post/devpi/" data-toggle="tooltip" data-placement="top" title="用 devpi 建立私有的 pypi server">Next Post &rarr;</a>
+          </li>
+        
+      </ul>
+
+      
+
     </div>
   </div>
+</div>
 
     <footer>
   <div class="container">

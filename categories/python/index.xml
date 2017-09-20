@@ -2,59 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Python on Corleonis</title>
-    <link>https://swind.github.io/tags/python/index.xml</link>
+    <link>https://swind.github.io/categories/python/index.xml</link>
     <description>Recent content in Python on Corleonis</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
-    <atom:link href="https://swind.github.io/tags/python/index.xml" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>用 devpi 建立私有的 pypi server</title>
-      <link>https://swind.github.io/post/devpi/</link>
-      <pubDate>Wed, 20 Sep 2017 11:16:26 +0800</pubDate>
-      
-      <guid>https://swind.github.io/post/devpi/</guid>
-      <description>
-
-&lt;p&gt;簡短作個筆記&lt;/p&gt;
-
-&lt;h1 id=&#34;dockerfile&#34;&gt;Dockerfile&lt;/h1&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/Swind/docker-devpi&#34;&gt;docker-devpi&lt;/a&gt; fork 自 &lt;a href=&#34;https://github.com/saily/openshift-devpi&#34;&gt;saily/openshift-devpi&lt;/a&gt;
-不過如果可以的話我希望有機會可以改用 &lt;code&gt;alpine&lt;/code&gt;。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;FROM python:3.6
-
-ENV DEVPI_SERVERDIR=/mnt/server \
-    DEVPI_CLIENTDIR=/mnt/client \
-    DEVPI_MIRROR_CACHE_EXPIRY=86400
-
-COPY [&amp;quot;requirements.txt&amp;quot;, &amp;quot;logger_cfg.json&amp;quot;, &amp;quot;run.sh&amp;quot;, &amp;quot;/&amp;quot;]
-
-RUN pip install --no-cache-dir -r /requirements.txt &amp;amp;&amp;amp; \
-    rm /requirements.txt
-
-VOLUME /mnt
-EXPOSE 3141
-
-CMD &amp;quot;/run.sh&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;CMD 所執行的 &lt;code&gt;run.sh&lt;/code&gt; 在 repository 裡面有。&lt;/p&gt;
-
-&lt;h1 id=&#34;pip-conf&#34;&gt;pip.conf&lt;/h1&gt;
-
-&lt;p&gt;將&lt;code&gt;ip&lt;/code&gt;, &lt;code&gt;port&lt;/code&gt; 與 &lt;code&gt;path&lt;/code&gt; 替換成自家 server 的位置。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-config&#34;&gt;[global]
-index-url = http://{ip}:{port}/{path}/+simple/
-trusted-host = {ip} 
-
-[search]
-index = http://{ip}:{port}/cloudmosa/dev/
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
+    <atom:link href="https://swind.github.io/categories/python/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>python-zeroconf 範例</title>
@@ -255,62 +207,6 @@ if __name__ == &amp;quot;__main__&amp;quot;:
 
 &lt;p&gt;比較不一樣的是，&lt;code&gt;ServiceBrowser&lt;/code&gt; 會建立一個 &lt;code&gt;Thread&lt;/code&gt; 去取得資訊，並且當有 state 變化的時候（ADDED 或 REMOVED) 時，呼叫註冊的 handlers。&lt;/p&gt;
 </description>
-    </item>
-    
-    <item>
-      <title>建立可以執行 python3 與 adb 指令的 docker images</title>
-      <link>https://swind.github.io/post/docker-python3-adb/</link>
-      <pubDate>Wed, 12 Apr 2017 14:40:30 +0800</pubDate>
-      
-      <guid>https://swind.github.io/post/docker-python3-adb/</guid>
-      <description>&lt;h2 id=&#34;python3-adb&#34;&gt;Python3 + adb&lt;/h2&gt;
-
-&lt;p&gt;這個 Image 使用 Alpine Linux Image 安裝了 Python3 與 ADB。
-整體大小約 9x MB，用於執行 Python3 撰寫的 Android 測試。&lt;/p&gt;
-
-&lt;p&gt;整個 &lt;code&gt;Dockerfile&lt;/code&gt; 是各家 Dockerfile 的大雜燴。感謝&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/frol/docker-alpine-python3&#34;&gt;frol/docker-alpine-python3&lt;/a&gt;,&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/sorccu/docker-adb&#34;&gt;sorccu/docker-adb&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/cdrx/docker-pyinstaller&#34;&gt;cdrx/docker-pyinstaller&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;原始碼與-docker-image&#34;&gt;原始碼與 Docker Image&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/Swind/docker-python3-adb&#34;&gt;Github: swind/docker-python3-adb&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://hub.docker.com/r/swind/docker-python3-adb&#34;&gt;Docker-Hub: swind/docker-python3-adb&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;使用方式&#34;&gt;使用方式&lt;/h3&gt;
-
-&lt;h4 id=&#34;執行-adb&#34;&gt;執行 ADB&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;docker run --rm -ti --net host swind/docker-python3-adb adb devices
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;sorccu/docker-adb&lt;/code&gt; 的 container 內容本來是預設會啟動 &lt;code&gt;adb server&lt;/code&gt;，但這部份被我拿掉了。
-因為我想讓 container 內的 adb 可以直接跟 Host 的 adb server 溝通。
-所以在執行的時候要增加 &lt;code&gt;--net host&lt;/code&gt; 讓 container 內的 adb 與 Host 的 adb server 可以直接連線。&lt;/p&gt;
-
-&lt;h4 id=&#34;執行-python3-程式&#34;&gt;執行 Python3 程式&lt;/h4&gt;
-
-&lt;p&gt;使用這個 image 進行 build 的時候，會自動載入 &lt;code&gt;requirements.txt&lt;/code&gt; 並且安裝（也就是 Dockerfile 中 &lt;code&gt;ONBUILD&lt;/code&gt; 的部份）。
-並且在執行的時候預設 &lt;code&gt;WORKDIR&lt;/code&gt; 的路徑是 &lt;code&gt;/code&lt;/code&gt;，所以需要使用 &lt;code&gt;-v&lt;/code&gt; 將要執行的 Python project 掛載到 &lt;code&gt;/code&lt;/code&gt;。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;docker run -v &amp;quot;$(pwd):/code&amp;quot; --rm -ti --net host swind/docker-python3-adb python3 helloworld.py 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import os
-print(&amp;quot;Hello World&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;license&#34;&gt;License&lt;/h4&gt;
-
-&lt;p&gt;See &lt;a href=&#34;LICENSE&#34;&gt;LICENSE&lt;/a&gt;.&lt;/p&gt;</description>
     </item>
     
   </channel>

@@ -156,6 +156,106 @@ ga('send', 'pageview');
         <div class="posts-list">
           
             <article class="post-preview">
+              <a href="https://swind.github.io/post/devpi/">
+                <h2 class="post-title">用 devpi 建立私有的 pypi server</h2>
+    
+                
+              </a>
+    
+              <p class="post-meta">
+                Posted on September 20, 2017
+              </p>
+              <div class="post-entry">
+                
+                  
+
+<p>簡短作個筆記</p>
+
+<h1 id="dockerfile">Dockerfile</h1>
+
+<p><a href="https://github.com/Swind/docker-devpi">docker-devpi</a> fork 自 <a href="https://github.com/saily/openshift-devpi">saily/openshift-devpi</a>
+不過如果可以的話我希望有機會可以改用 <code>alpine</code>。</p>
+
+<pre><code class="language-yaml">FROM python:3.6
+
+ENV DEVPI_SERVERDIR=/mnt/server \
+    DEVPI_CLIENTDIR=/mnt/client \
+    DEVPI_MIRROR_CACHE_EXPIRY=86400
+
+COPY [&quot;requirements.txt&quot;, &quot;logger_cfg.json&quot;, &quot;run.sh&quot;, &quot;/&quot;]
+
+RUN pip install --no-cache-dir -r /requirements.txt &amp;&amp; \
+    rm /requirements.txt
+
+VOLUME /mnt
+EXPOSE 3141
+
+CMD &quot;/run.sh&quot;
+</code></pre>
+
+<p>CMD 所執行的 <code>run.sh</code> 在 repository 裡面有。</p>
+
+<h1 id="pip-conf">pip.conf</h1>
+
+<p>將<code>ip</code>, <code>port</code> 與 <code>path</code> 替換成自家 server 的位置。</p>
+
+<pre><code class="language-config">[global]
+index-url = http://{ip}:{port}/{path}/+simple/
+trusted-host = {ip} 
+
+[search]
+index = http://{ip}:{port}/cloudmosa/dev/
+</code></pre>
+
+                
+              </div>
+    
+              
+                <span class="post-meta">
+                  
+                    #<a href="https://swind.github.io/tags/python">python</a>&nbsp;
+                  
+                </span>
+              
+    
+            </article>
+          
+            <article class="post-preview">
+              <a href="https://swind.github.io/post/python-zeroconf/">
+                <h2 class="post-title">python-zeroconf 範例</h2>
+    
+                
+              </a>
+    
+              <p class="post-meta">
+                Posted on September 11, 2017
+              </p>
+              <div class="post-entry">
+                
+                  zeroconf zeroconf ( Zero configuration networking )，主要透過 mDNS ( Multicast DNS ) 與 DNS-SD ( DNS Service Discovery ) 來實現。 而 python-zeroconf 就是 zeroconf 的 純 Python 實現。
+在 Apple 的機器上的實做就是 Bonjour。
+而 Linux 則是 Avachi
+關於 zeroconf 詳細的介紹可以參考 设备发现之Bonjour协议原理分享
+Server python-zeroconf 的 README.md 裡面雖然沒有提到 mDNS 的部份，但是其實在 examples 有個簡單的範例。
+下面是稍微整理一下 examples 裡面的範例
+from zeroconf import ServiceInfo, Zeroconf import socket import logging logger = logging.getLogger(__name__) class Server: def __init__(self, name, address, port, desc): self.
+                  <a href="https://swind.github.io/post/python-zeroconf/" class="post-read-more">[Read More]</a>
+                
+              </div>
+    
+              
+                <span class="post-meta">
+                  
+                    #<a href="https://swind.github.io/tags/python">python</a>&nbsp;
+                  
+                    #<a href="https://swind.github.io/tags/zeroconf">zeroconf</a>&nbsp;
+                  
+                </span>
+              
+    
+            </article>
+          
+            <article class="post-preview">
               <a href="https://swind.github.io/post/use-adb-to-track-the-network-statistics/">
                 <h2 class="post-title">使用 adb 來追蹤查看 APP 的網路流量</h2>
     
