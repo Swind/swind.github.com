@@ -14,12 +14,12 @@
       <pubDate>Mon, 11 Sep 2017 13:55:48 +0800</pubDate>
       
       <guid>https://swind.github.io/post/python-zeroconf/</guid>
-      <description>
-
-&lt;h1 id=&#34;zeroconf&#34;&gt;zeroconf&lt;/h1&gt;
+      <description>&lt;h1 id=&#34;zeroconf&#34;&gt;zeroconf&lt;/h1&gt;
 
 &lt;p&gt;zeroconf ( Zero configuration networking )，主要透過 mDNS ( Multicast DNS ) 與 DNS-SD ( DNS Service Discovery ) 來實現。
 而 &lt;a href=&#34;https://github.com/jstasiak/python-zeroconf&#34;&gt;python-zeroconf&lt;/a&gt; 就是 &lt;code&gt;zeroconf&lt;/code&gt; 的 &lt;strong&gt;純 Python&lt;/strong&gt; 實現。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
 
 &lt;p&gt;在 Apple 的機器上的實做就是 &lt;code&gt;Bonjour&lt;/code&gt;。&lt;/p&gt;
 
@@ -205,8 +205,7 @@ if __name__ == &amp;quot;__main__&amp;quot;:
     time.sleep(600)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;比較不一樣的是，&lt;code&gt;ServiceBrowser&lt;/code&gt; 會建立一個 &lt;code&gt;Thread&lt;/code&gt; 去取得資訊，並且當有 state 變化的時候（ADDED 或 REMOVED) 時，呼叫註冊的 handlers。&lt;/p&gt;
-</description>
+&lt;p&gt;比較不一樣的是，&lt;code&gt;ServiceBrowser&lt;/code&gt; 會建立一個 &lt;code&gt;Thread&lt;/code&gt; 去取得資訊，並且當有 state 變化的時候（ADDED 或 REMOVED) 時，呼叫註冊的 handlers。&lt;/p&gt;</description>
     </item>
     
   </channel>

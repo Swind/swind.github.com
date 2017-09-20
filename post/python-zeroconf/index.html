@@ -176,12 +176,12 @@ ga('send', 'pageview');
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<h1 id="zeroconf">zeroconf</h1>
+        <h1 id="zeroconf">zeroconf</h1>
 
 <p>zeroconf ( Zero configuration networking )，主要透過 mDNS ( Multicast DNS ) 與 DNS-SD ( DNS Service Discovery ) 來實現。
 而 <a href="https://github.com/jstasiak/python-zeroconf">python-zeroconf</a> 就是 <code>zeroconf</code> 的 <strong>純 Python</strong> 實現。</p>
+
+<p></p>
 
 <p>在 Apple 的機器上的實做就是 <code>Bonjour</code>。</p>
 
@@ -368,7 +368,6 @@ if __name__ == &quot;__main__&quot;:
 </code></pre>
 
 <p>比較不一樣的是，<code>ServiceBrowser</code> 會建立一個 <code>Thread</code> 去取得資訊，並且當有 state 變化的時候（ADDED 或 REMOVED) 時，呼叫註冊的 handlers。</p>
-
       </article>
 
       <ul class="pager blog-pager">
