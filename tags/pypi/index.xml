@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pypi on Corleonis</title>
+    <link>https://swind.github.io/tags/pypi/index.xml</link>
+    <description>Recent content in Pypi on Corleonis</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-tw</language>
+    <atom:link href="https://swind.github.io/tags/pypi/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>用 devpi 建立私有的 pypi server</title>
+      <link>https://swind.github.io/post/devpi/</link>
+      <pubDate>Wed, 20 Sep 2017 11:16:26 +0800</pubDate>
+      
+      <guid>https://swind.github.io/post/devpi/</guid>
+      <description>
+
+&lt;p&gt;簡短作個筆記&lt;/p&gt;
+
+&lt;h1 id=&#34;dockerfile&#34;&gt;Dockerfile&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/Swind/docker-devpi&#34;&gt;docker-devpi&lt;/a&gt; fork 自 &lt;a href=&#34;https://github.com/saily/openshift-devpi&#34;&gt;saily/openshift-devpi&lt;/a&gt;
+不過如果可以的話我希望有機會可以改用 &lt;code&gt;alpine&lt;/code&gt;。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;FROM python:3.6
+
+ENV DEVPI_SERVERDIR=/mnt/server \
+    DEVPI_CLIENTDIR=/mnt/client \
+    DEVPI_MIRROR_CACHE_EXPIRY=86400
+
+COPY [&amp;quot;requirements.txt&amp;quot;, &amp;quot;logger_cfg.json&amp;quot;, &amp;quot;run.sh&amp;quot;, &amp;quot;/&amp;quot;]
+
+RUN pip install --no-cache-dir -r /requirements.txt &amp;amp;&amp;amp; \
+    rm /requirements.txt
+
+VOLUME /mnt
+EXPOSE 3141
+
+CMD &amp;quot;/run.sh&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;CMD 所執行的 &lt;code&gt;run.sh&lt;/code&gt; 在 repository 裡面有。&lt;/p&gt;
+
+&lt;h1 id=&#34;pip-conf&#34;&gt;pip.conf&lt;/h1&gt;
+
+&lt;p&gt;將&lt;code&gt;ip&lt;/code&gt;, &lt;code&gt;port&lt;/code&gt; 與 &lt;code&gt;path&lt;/code&gt; 替換成自家 server 的位置。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-config&#34;&gt;[global]
+index-url = http://{ip}:{port}/{path}/+simple/
+trusted-host = {ip} 
+
+[search]
+index = http://{ip}:{port}/cloudmosa/dev/
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

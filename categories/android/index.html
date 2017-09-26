@@ -5,17 +5,17 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Corleonis</title>
-  <meta property="og:title" content="Corleonis" />
-  <meta name="twitter:title" content="Corleonis" />
+  <title>Android</title>
+  <meta property="og:title" content="Android" />
+  <meta name="twitter:title" content="Android" />
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://swind.github.io/" />
+  <meta property="og:url" content="https://swind.github.io/categories/android/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Corleonis" />
 
   <meta name="generator" content="Hugo 0.19" />
-  <link rel="canonical" href="https://swind.github.io/" />
+  <link rel="canonical" href="https://swind.github.io/categories/android/" />
   <link rel="alternate" href="https://swind.github.io/index.xml" type="application/rss+xml" title="Corleonis">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -133,26 +133,14 @@ ga('send', 'pageview');
 
 
     
-  
-  
-  
-
-
-
-
-  
-
   <header class="header-section ">
-    
     <div class="intro-header no-img">
-      
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="page-heading">
-              <h1>Corleonis</h1>
-                
-                
+              <h1>#Android</h1>
+              <hr class="small">
             </div>
           </div>
         </div>
@@ -160,28 +148,23 @@ ga('send', 'pageview');
     </div>
   </header>
 
-
     
-  <div role="main" class="container">
+  <div class="container" role="main">
     <div class="row">
       <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
         
-
         <div class="posts-list">
-          
           
             <article class="post-preview">
               <a href="https://swind.github.io/post/android_cpu_usage_by_adb/">
                 <h2 class="post-title">使用 ADB 來監控 APP 的 CPU 使用量</h2>
+    
                 
               </a>
-
-              <span class="post-meta">
-  Posted on September 26, 2017
-  
-</span>
-
-
+    
+              <p class="post-meta">
+                Posted on September 26, 2017
+              </p>
               <div class="post-entry">
                 
                   <p>其實在 <code>Linux</code> 上監控 CPU 的方法在 <code>Android</code> 上面也可以用，並且這些方法在很多人的 Blog 與 StackOverflow 也被討論到爛掉了。
@@ -191,135 +174,31 @@ ga('send', 'pageview');
                   <a href="https://swind.github.io/post/android_cpu_usage_by_adb/" class="post-read-more">[Read More]</a>
                 
               </div>
-
+    
               
                 <span class="post-meta">
-                
-                  #<a href="https://swind.github.io/tags/android">android</a>&nbsp;
-                
-                  #<a href="https://swind.github.io/tags/adb">adb</a>&nbsp;
-                
-                  #<a href="https://swind.github.io/tags/python">python</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://swind.github.io/post/devpi/">
-                <h2 class="post-title">用 devpi 建立私有的 pypi server</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on September 20, 2017
-  
-</span>
-
-
-              <div class="post-entry">
-                
                   
-
-<p>簡短作個筆記</p>
-
-<h1 id="dockerfile">Dockerfile</h1>
-
-<p><a href="https://github.com/Swind/docker-devpi">docker-devpi</a> fork 自 <a href="https://github.com/saily/openshift-devpi">saily/openshift-devpi</a>
-不過如果可以的話我希望有機會可以改用 <code>alpine</code>。</p>
-
-<pre><code class="language-yaml">FROM python:3.6
-
-ENV DEVPI_SERVERDIR=/mnt/server \
-    DEVPI_CLIENTDIR=/mnt/client \
-    DEVPI_MIRROR_CACHE_EXPIRY=86400
-
-COPY [&quot;requirements.txt&quot;, &quot;logger_cfg.json&quot;, &quot;run.sh&quot;, &quot;/&quot;]
-
-RUN pip install --no-cache-dir -r /requirements.txt &amp;&amp; \
-    rm /requirements.txt
-
-VOLUME /mnt
-EXPOSE 3141
-
-CMD &quot;/run.sh&quot;
-</code></pre>
-
-<p>CMD 所執行的 <code>run.sh</code> 在 repository 裡面有。</p>
-
-<h1 id="pip-conf">pip.conf</h1>
-
-<p>將<code>ip</code>, <code>port</code> 與 <code>path</code> 替換成自家 server 的位置。</p>
-
-<pre><code class="language-config">[global]
-index-url = http://{ip}:{port}/{path}/+simple/
-trusted-host = {ip} 
-
-[search]
-index = http://{ip}:{port}/cloudmosa/dev/
-</code></pre>
-
-                
-              </div>
-
-              
-                <span class="post-meta">
-                
-                  #<a href="https://swind.github.io/tags/python">python</a>&nbsp;
-                
-                  #<a href="https://swind.github.io/tags/pypi">pypi</a>&nbsp;
-                
+                    #<a href="https://swind.github.io/tags/android">android</a>&nbsp;
+                  
+                    #<a href="https://swind.github.io/tags/adb">adb</a>&nbsp;
+                  
+                    #<a href="https://swind.github.io/tags/python">python</a>&nbsp;
+                  
                 </span>
               
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://swind.github.io/post/python-zeroconf/">
-                <h2 class="post-title">python-zeroconf 範例</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on September 11, 2017
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <h1 id="zeroconf">zeroconf</h1>
-
-<p>zeroconf ( Zero configuration networking )，主要透過 mDNS ( Multicast DNS ) 與 DNS-SD ( DNS Service Discovery ) 來實現。
-而 <a href="https://github.com/jstasiak/python-zeroconf">python-zeroconf</a> 就是 <code>zeroconf</code> 的 <strong>純 Python</strong> 實現。</p>
-
-<p></p>
-                  <a href="https://swind.github.io/post/python-zeroconf/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                
-                  #<a href="https://swind.github.io/tags/python">python</a>&nbsp;
-                
-                  #<a href="https://swind.github.io/tags/zeroconf">zeroconf</a>&nbsp;
-                
-                </span>
-              
+    
             </article>
           
             <article class="post-preview">
               <a href="https://swind.github.io/post/use-adb-to-track-the-network-statistics/">
                 <h2 class="post-title">使用 adb 來追蹤查看 APP 的網路流量</h2>
+    
                 
               </a>
-
-              <span class="post-meta">
-  Posted on July 12, 2017
-  
-</span>
-
-
+    
+              <p class="post-meta">
+                Posted on July 12, 2017
+              </p>
               <div class="post-entry">
                 
                   <h2 id="使用-proc-底下的資訊">使用 /proc 底下的資訊</h2>
@@ -340,30 +219,29 @@ index = http://{ip}:{port}/cloudmosa/dev/
                   <a href="https://swind.github.io/post/use-adb-to-track-the-network-statistics/" class="post-read-more">[Read More]</a>
                 
               </div>
-
+    
               
                 <span class="post-meta">
-                
-                  #<a href="https://swind.github.io/tags/android">android</a>&nbsp;
-                
-                  #<a href="https://swind.github.io/tags/adb">adb</a>&nbsp;
-                
+                  
+                    #<a href="https://swind.github.io/tags/android">android</a>&nbsp;
+                  
+                    #<a href="https://swind.github.io/tags/adb">adb</a>&nbsp;
+                  
                 </span>
               
+    
             </article>
           
             <article class="post-preview">
               <a href="https://swind.github.io/post/adb/">
                 <h2 class="post-title">ADB 傳輸格式的筆記</h2>
+    
                 
               </a>
-
-              <span class="post-meta">
-  Posted on July 11, 2017
-  
-</span>
-
-
+    
+              <p class="post-meta">
+                Posted on July 11, 2017
+              </p>
               <div class="post-entry">
                 
                   <p>緩慢補充中&hellip;</p>
@@ -372,102 +250,20 @@ index = http://{ip}:{port}/cloudmosa/dev/
                   <a href="https://swind.github.io/post/adb/" class="post-read-more">[Read More]</a>
                 
               </div>
-
+    
               
                 <span class="post-meta">
-                
-                  #<a href="https://swind.github.io/tags/android">android</a>&nbsp;
-                
-                  #<a href="https://swind.github.io/tags/adb">adb</a>&nbsp;
-                
+                  
+                    #<a href="https://swind.github.io/tags/android">android</a>&nbsp;
+                  
+                    #<a href="https://swind.github.io/tags/adb">adb</a>&nbsp;
+                  
                 </span>
               
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://swind.github.io/post/jenkins-html-report/">
-                <h2 class="post-title">使用 docker 與 docker-compose 啟動 Jenkins</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on April 18, 2017
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <h2 id="docker-hub-jenkins">Docker Hub - Jenkins</h2>
-
-<p><a href="https://hub.docker.com/_/jenkins/">Docker Hub -Jenkins</a> 上其實文章已經很完整了。
-這邊只是把我整理成 docker-compose 的過程紀錄一下。</p>
-
-<p></p>
-                  <a href="https://swind.github.io/post/jenkins-html-report/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                
-                  #<a href="https://swind.github.io/tags/jenkins">jenkins</a>&nbsp;
-                
-                  #<a href="https://swind.github.io/tags/html">html</a>&nbsp;
-                
-                  #<a href="https://swind.github.io/tags/docker">docker</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://swind.github.io/post/docker-python3-adb/">
-                <h2 class="post-title">建立可以執行 python3 與 adb 指令的 docker images</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on April 12, 2017
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <h2 id="python3-adb">Python3 + adb</h2>
-
-<p>這個 Image 使用 Alpine Linux Image 安裝了 Python3 與 ADB。
-整體大小約 9x MB，用於執行 Python3 撰寫的 Android 測試。</p>
-
-<p>整個 <code>Dockerfile</code> 是各家 Dockerfile 的大雜燴。感謝</p>
-
-<ul>
-<li><a href="https://github.com/frol/docker-alpine-python3">frol/docker-alpine-python3</a>,</li>
-<li><a href="https://github.com/sorccu/docker-adb">sorccu/docker-adb</a></li>
-<li><a href="https://github.com/cdrx/docker-pyinstaller">cdrx/docker-pyinstaller</a></li>
-</ul>
-
-<p></p>
-                  <a href="https://swind.github.io/post/docker-python3-adb/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                
-                  #<a href="https://swind.github.io/tags/python">python</a>&nbsp;
-                
-                  #<a href="https://swind.github.io/tags/docker">docker</a>&nbsp;
-                
-                  #<a href="https://swind.github.io/tags/adb">adb</a>&nbsp;
-                
-                </span>
-              
+    
             </article>
           
         </div>
-
         
       </div>
     </div>

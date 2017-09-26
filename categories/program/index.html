@@ -156,73 +156,66 @@ ga('send', 'pageview');
         <div class="posts-list">
           
             <article class="post-preview">
-              <a href="https://swind.github.io/post/use-adb-to-track-the-network-statistics/">
-                <h2 class="post-title">使用 adb 來追蹤查看 APP 的網路流量</h2>
+              <a href="https://swind.github.io/post/devpi/">
+                <h2 class="post-title">用 devpi 建立私有的 pypi server</h2>
     
                 
               </a>
     
               <p class="post-meta">
-                Posted on July 12, 2017
+                Posted on September 20, 2017
               </p>
               <div class="post-entry">
                 
-                  <h2 id="使用-proc-底下的資訊">使用 /proc 底下的資訊</h2>
+                  
 
-<p>雖然 Android 7 之後似乎一般應用程式已經沒有辦法存取 <code>/proc</code> 底下的東西了。
-但是使用 ADB 的話還是沒有問題的。</p>
+<p>簡短作個筆記</p>
 
-<p>這次我們使用的目標是</p>
+<h1 id="dockerfile">Dockerfile</h1>
 
-<ol>
-<li><code>/proc/uid_stat/{uid}/tcp_rcv</code></li>
-<li><code>/proc/uid_stat/{uid}/tcp_snd</code></li>
-</ol>
+<p><a href="https://github.com/Swind/docker-devpi">docker-devpi</a> fork 自 <a href="https://github.com/saily/openshift-devpi">saily/openshift-devpi</a>
+不過如果可以的話我希望有機會可以改用 <code>alpine</code>。</p>
 
-<p><code>tcp_rcv</code> 與 <code>tcp_snd</code> 分別所紀錄的是該 uid 所使用的 <code>TCP</code> 傳輸量（注意 <code>UDP</code> 並不包含在內)</p>
+<pre><code class="language-yaml">FROM python:3.6
 
-<p></p>
-                  <a href="https://swind.github.io/post/use-adb-to-track-the-network-statistics/" class="post-read-more">[Read More]</a>
+ENV DEVPI_SERVERDIR=/mnt/server \
+    DEVPI_CLIENTDIR=/mnt/client \
+    DEVPI_MIRROR_CACHE_EXPIRY=86400
+
+COPY [&quot;requirements.txt&quot;, &quot;logger_cfg.json&quot;, &quot;run.sh&quot;, &quot;/&quot;]
+
+RUN pip install --no-cache-dir -r /requirements.txt &amp;&amp; \
+    rm /requirements.txt
+
+VOLUME /mnt
+EXPOSE 3141
+
+CMD &quot;/run.sh&quot;
+</code></pre>
+
+<p>CMD 所執行的 <code>run.sh</code> 在 repository 裡面有。</p>
+
+<h1 id="pip-conf">pip.conf</h1>
+
+<p>將<code>ip</code>, <code>port</code> 與 <code>path</code> 替換成自家 server 的位置。</p>
+
+<pre><code class="language-config">[global]
+index-url = http://{ip}:{port}/{path}/+simple/
+trusted-host = {ip} 
+
+[search]
+index = http://{ip}:{port}/cloudmosa/dev/
+</code></pre>
+
                 
               </div>
     
               
                 <span class="post-meta">
                   
-                    #<a href="https://swind.github.io/tags/android">android</a>&nbsp;
+                    #<a href="https://swind.github.io/tags/python">python</a>&nbsp;
                   
-                    #<a href="https://swind.github.io/tags/adb">adb</a>&nbsp;
-                  
-                </span>
-              
-    
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://swind.github.io/post/adb/">
-                <h2 class="post-title">ADB 傳輸格式的筆記</h2>
-    
-                
-              </a>
-    
-              <p class="post-meta">
-                Posted on July 11, 2017
-              </p>
-              <div class="post-entry">
-                
-                  <p>緩慢補充中&hellip;</p>
-
-<p></p>
-                  <a href="https://swind.github.io/post/adb/" class="post-read-more">[Read More]</a>
-                
-              </div>
-    
-              
-                <span class="post-meta">
-                  
-                    #<a href="https://swind.github.io/tags/android">android</a>&nbsp;
-                  
-                    #<a href="https://swind.github.io/tags/adb">adb</a>&nbsp;
+                    #<a href="https://swind.github.io/tags/pypi">pypi</a>&nbsp;
                   
                 </span>
               
