@@ -2,7 +2,7 @@
 draft = false 
 description = "ADB 的傳輸格式"
 tags = ["android","adb"]
-categories = ["program"]
+categories = ["android"]
 date = "2017-07-11T10:46:29+08:00"
 title = "ADB 傳輸格式的筆記"
 +++

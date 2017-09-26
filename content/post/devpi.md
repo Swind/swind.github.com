@@ -1,7 +1,7 @@
 +++
 title = "用 devpi 建立私有的 pypi server"
-tags = ["python"]
-categories = [""]
+tags = ["python", "pypi"]
+categories = ["program"]
 draft = false 
 description = "用 devpi 建立私有的 pypi server"
 date = "2017-09-20T11:16:26+08:00"

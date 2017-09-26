@@ -2,7 +2,7 @@
 draft = false 
 description = "使用 adb 來追蹤查看 APP 的網路流量"
 tags = ["android","adb"]
-categories = ["program"]
+categories = ["android"]
 date = "2017-07-12T10:46:29+08:00"
 title = "使用 adb 來追蹤查看 APP 的網路流量"
 +++
