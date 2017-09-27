@@ -1,6 +1,6 @@
 +++
 categories = ["Python parameter to property"]
-draft = true
+draft = false
 description = "Python parameter to property"
 date = "2017-09-27T15:25:07+08:00"
 title = "parameter_to_property"
