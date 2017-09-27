@@ -185,8 +185,8 @@ ga('send', 'pageview');
 
 <h2 id="在-docker-jenkins-內使用-docker">在 Docker Jenkins 內使用 Docker</h2>
 
-<p>有點饒舌，但是其實就只是要讓 Jenkins 的 Master 可以使用 Docker 指令而已。
-當然更好的作法是使用 <code>Slave</code> 外部也就是 Host 的機器上負責需要使用 Docker 的 Job。</p>
+<p>有點饒舌，但是其實就只是要讓 Docker Jenkins 的 Master ( 這個 Master 是跑在 Docker 裡面的 ) 可以使用 Docker 指令而已。
+當然更好的作法是使用 <code>Slave</code> 負責需要使用 Docker 的 Job。</p>
 
 <p>所以這邊紀錄的不是很正統的執行方式。</p>
 
@@ -224,7 +224,7 @@ services:
 </code></pre>
 
 <p>這個設定檔的重點只有在 <code>/var/run/docker.sock:/var/run/docker.sock</code> 與 <code>/usr/bin/docker:/usr/bin/docker</code>。
-由於 docker daemon 並不是執行在 container 裡面，並且在 container 裡面在啟動一個 container 怎麼想都不合理。</p>
+由於 docker daemon 並不是執行在 container 裡面，並且在 container 裡面再啟動一個 container 怎麼想都不合理。</p>
 
 <p>所以這邊的作法其實是把 Host 的 Docker 環境塞進去 Container 裡面讓他可以操作而已。</p>
 

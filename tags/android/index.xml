@@ -189,8 +189,7 @@ u0_a174   11458 460   1781352 365668 sys_epoll_ 00000000 S com.android.chrome
       <guid>https://swind.github.io/post/use-adb-to-track-the-network-statistics/</guid>
       <description>&lt;h2 id=&#34;使用-proc-底下的資訊&#34;&gt;使用 /proc 底下的資訊&lt;/h2&gt;
 
-&lt;p&gt;雖然 Android 7 之後似乎一般應用程式已經沒有辦法存取 &lt;code&gt;/proc&lt;/code&gt; 底下的東西了。
-但是使用 ADB 的話還是沒有問題的。&lt;/p&gt;
+&lt;p&gt;雖然 Android 7 之後似乎一般應用程式已經沒有辦法存取 &lt;code&gt;/proc&lt;/code&gt; 底下的東西了。 但是使用 ADB 的話還是沒有問題的。&lt;/p&gt;
 
 &lt;p&gt;這次我們使用的目標是&lt;/p&gt;
 
