@@ -11,7 +11,7 @@ tags = ["python"]
 
 <!--more-->
 
-# d(text="Settings").long_click() and d(text="Settings").long_click.bottomright()
+# Parameter to Property
 
 在 Python package `uiautomator` 的說明文件裡面可以看到這個有趣的語法被大量使用。
 
@@ -79,28 +79,69 @@ def param_to_property(*props, **kwprops):
 與這個 decorator 的使用範例
 
 ```
- @property
-    def wait(self):
-        '''
-        Waits for the current application to idle or window update event occurs.
-        Usage:
-        d.wait.idle(timeout=1000)
-        d.wait.update(timeout=1000, package_name="com.android.settings")
-        '''
-        @param_to_property(action=["idle", "update"])
-        def _wait(action, timeout=1000, package_name=None):
-            if timeout / 1000 + 5 > int(os.environ.get("JSONRPC_TIMEOUT", 90)):
-                http_timeout = timeout / 1000 + 5
-            else:
-                http_timeout = int(os.environ.get("JSONRPC_TIMEOUT", 90))
-            if action == "idle":
-                return self.server.jsonrpc_wrap(timeout=http_timeout).waitForIdle(timeout)
-            elif action == "update":
-                return self.server.jsonrpc_wrap(timeout=http_timeout).waitForWindowUpdate(package_name, timeout)
-        return _wait
+@property
+def wait(self):
+    '''
+    Wait until the ui object gone or exist.
+    Usage:
+    d(text="Clock").wait.gone()  # wait until it's gone.
+    d(text="Settings").wait.exists() # wait until it appears.
+    '''
+    @param_to_property(action=["exists", "gone"])
+    def _wait(action, timeout=3000):
+        if timeout / 1000 + 5 > int(os.environ.get("JSONRPC_TIMEOUT", 90)):
+            http_timeout = timeout / 1000 + 5
+        else:
+            http_timeout = int(os.environ.get("JSONRPC_TIMEOUT", 90))
+        method = self.device.server.jsonrpc_wrap(
+            timeout=http_timeout
+        ).waitUntilGone if action == "gone" else self.device.server.jsonrpc_wrap(timeout=http_timeout).waitForExists
+        return method(self.selector, timeout)
+    return _wait
 ```
 
 `param_to_property` 內的 `Wrapper` 基本上 `__call__` 的部份就如預期，沒有什麼意外, 但是可以注意一下 `self.kwargs` 與 `self.args` 的部份。
 
 另外比較重要的就是在 `__getattr__` 與 `param_to_property` 初始化的部份。
 
+舉例來說
+
+```python
+@param_to_property(action=["exists", "gone"])
+def _wait(action, timeout=3000):
+```
+
+在使用 `@param_to_property` 的時候，所帶的參數會被存入 `props` 與 `kwprops`。
+以這邊的例子就是 `kwprops` 會等於 
+
+```python
+{
+    "action": ["exists", "gone"]
+}
+```
+
+當呼叫 `d(text="Settings").wait.gone(timeout=1000)` 的時候，
+第一個 `.wait` 其實 `@param_to_property` 所回傳的 `Wrapper`。
+
+所以 `wait.gone` 的部分會呼叫
+
+```
+def __getattr__(self, attr):
+    if kwprops:
+        for prop_name, prop_values in kwprops.items():
+            if attr in prop_values and prop_name not in self.kwargs:
+                self.kwargs[prop_name] = attr
+                return self
+    elif attr in props:
+        self.args.append(attr)
+        return self
+    raise AttributeError("%s parameter is duplicated or not allowed!" % attr)
+```
+
+而 `attr` 的值就是 `"gone"`, 然後執行結果就是會以 key 為 `action` value 為 `gone` 的形式儲存在 `self.kwargs`。
+( 因為 `gone` 有在 prop_values 中，並且 `action` 也還沒有被儲存過。)
+
+然後最後在回傳一次 `Wrapper` 本身，以便使用者繼續呼叫。
+
+也就是其實這個 `decorator` 可以想像成將取得 `property` 的動作, 轉換成值儲存起來。
+最後在 `__call__` 的時候再將這些參數合併起來傳給真正要處理的 function。
