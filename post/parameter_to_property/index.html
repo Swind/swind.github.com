@@ -5,20 +5,20 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>使用 ADB 來監控 APP 的 CPU 使用量</title>
-  <meta property="og:title" content="使用 ADB 來監控 APP 的 CPU 使用量" />
-  <meta name="twitter:title" content="使用 ADB 來監控 APP 的 CPU 使用量" />
-  <meta name="description" content="使用 ADB 來監控 APP 的 CPU 使用量">
-  <meta property="og:description" content="使用 ADB 來監控 APP 的 CPU 使用量">
-  <meta name="twitter:description" content="使用 ADB 來監控 APP 的 CPU 使用量">
+  <title>parameter_to_property</title>
+  <meta property="og:title" content="parameter_to_property" />
+  <meta name="twitter:title" content="parameter_to_property" />
+  <meta name="description" content="Python parameter to property">
+  <meta property="og:description" content="Python parameter to property">
+  <meta name="twitter:description" content="Python parameter to property">
   <meta name="author" content=""/>
   <meta name="twitter:card" content="summary" />
-  <meta property="og:url" content="https://swind.github.io/post/android_cpu_usage_by_adb/" />
+  <meta property="og:url" content="https://swind.github.io/post/parameter_to_property/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Corleonis" />
 
   <meta name="generator" content="Hugo 0.19" />
-  <link rel="canonical" href="https://swind.github.io/post/android_cpu_usage_by_adb/" />
+  <link rel="canonical" href="https://swind.github.io/post/parameter_to_property/" />
   <link rel="alternate" href="https://swind.github.io/index.xml" type="application/rss+xml" title="Corleonis">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -153,11 +153,11 @@ ga('send', 'pageview');
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
-              <h1>使用 ADB 來監控 APP 的 CPU 使用量</h1>
+              <h1>parameter_to_property</h1>
                 
                 
                   <span class="post-meta">
-  Posted on September 26, 2017
+  Posted on September 27, 2017
   
 </span>
 
@@ -176,183 +176,149 @@ ga('send', 'pageview');
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p>其實在 <code>Linux</code> 上監控 CPU 的方法在 <code>Android</code> 上面也可以用，並且這些方法在很多人的 Blog 與 StackOverflow 也被討論到爛掉了。
-這邊主要是紀錄如何使用 <code>adb</code> 與 <code>/proc</code> 取得 <code>Process</code> 與 <code>Thread</code> 的 CPU 資訊。</p>
+        <p>在 Python package <a href="https://github.com/xiaocong/uiautomator">uiautomator</a> 看到的有趣寫法</p>
 
 <p></p>
 
-<h1 id="整體的-cpu-使用量">整體的 CPU 使用量</h1>
+<h1 id="parameter-to-property">Parameter to Property</h1>
 
-<p>要取得整個 Device 的 CPU 資訊的話，可以透過 <code>/proc/stat</code>。</p>
-
-<p>使用指令 <code>adb shell cat /proc/stat</code> 會看到</p>
-
-<pre><code>cpu  1286215 71763 779091 4271301 16007 9 16100 0 0 0
-cpu0 560338 33626 409552 2845856 9346 0 12458 0 0 0
-cpu1 80441 6912 40265 146206 1396 4 379 0 0 0
-cpu2 174491 9981 89521 383939 1992 3 838 0 0 0
-cpu3 470945 21244 239753 895300 3273 2 2425 0 0 0
-intr 56252464 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 11183406 0 0 0 0 0 0 0 0 0 0 0 0 0 165872 1 0 0 0 0 0 2426472 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2184 8 5 0 10 0 0 0 2025880 0 0 0 0 0 0 0 0 0 0 384654 0 0 0 0 5 689 3 2 3 0 0 0 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 2283211 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 91049 1142156 0 0 4891 0 0 0 0 60 0 6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 632514 0 12 0 0 0 0 0 5607578 0 0 0 0 0 0 365 0 0 0 36028 5 0 2027914 2134764 0 0 0 0 0 0 0 0 0 2043721 0 5 0 0 0 0 748 263 0 0 0 1584739 0 0 75 0 0 0 0 0 0 0 0 0 0 0 0 11817 0 0 0 0 0 207 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 7067 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 10 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 3 0 0 0 0 0 0 0 0 0 0 0 0 0 2 2 16 0 0 0 0 86 0 0 0 0 0 0 0 0 0 0 0 5062 481 1198 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 100 215 12 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-ctxt 198100180
-btime 1506325560
-processes 344110
-procs_running 1
-procs_blocked 0
-softirq 30624059 14285 6147433 22588 1777078 14285 14285 400466 3969871 2347 18261421
-</code></pre>
-
-<p>像密碼表一樣的資訊，不過我們可以只著重在第一行的 <code>cpu</code> 即可。</p>
-
-<pre><code>cpu  1286215 71763 779091 4271301 16007 9 16100 0 0 0
-</code></pre>
-
-<p>每個欄位代表的意思是</p>
-
-<table>
-<thead>
-<tr>
-<th></th>
-<th>user</th>
-<th>nice</th>
-<th>system</th>
-<th>idle</th>
-<th>iowait</th>
-<th>irq</th>
-<th>softirq</th>
-<th>stealstolen</th>
-<th>guest</th>
-<th>guest_nice</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>cpu</td>
-<td>1286215</td>
-<td>71763</td>
-<td>779091</td>
-<td>4271301</td>
-<td>16007</td>
-<td>9</td>
-<td>16100</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-</tr>
-</tbody>
-</table>
-
-<p>這些數字都是從 Device 啟動之後的累計值, 單位是 <code>jiffies</code>，
-因此計算在某段時間內的值的話。
-就必須在起始跟結束的時候都呼叫一次 <code>adb shell cat /proc/stat</code>，
-並且把所有得到的數字相減。</p>
+<p>在 Python package <code>uiautomator</code> 的說明文件裡面可以看到這個有趣的語法被大量使用。</p>
 
 <p>例如</p>
 
-<p>開始的時候取得</p>
-
-<pre><code>cpu  1430106 74780 838424 4391260 16309 9 16780 0 0 0
+<pre><code># long click on the center of the specific ui object
+d(text=&quot;Settings&quot;).long_click()
+# long click on the bottomright corner of the specific ui object
+d(text=&quot;Settings&quot;).long_click.bottomright()
+# long click on the topleft corner of the specific ui object
+d(text=&quot;Settings&quot;).long_click.topleft()
 </code></pre>
 
-<p>結束的時候取得</p>
+<p>或</p>
 
-<pre><code>cpu  1431109 74806 838854 4392567 16313 9 16783 0 0 0
+<pre><code># wait until the ui object appears
+d(text=&quot;Settings&quot;).wait.exists(timeout=3000)
+# wait until the ui object gone
+d(text=&quot;Settings&quot;).wait.gone(timeout=1000)
 </code></pre>
 
-<p>那麼這段時間總共是 <code>2773 jiffies</code></p>
+<p>本來覺的應該就只是 <code>long_click</code> 或者 <code>wait</code> 本身就是一個實做了 <code>__call__</code> 與其他 function 的物件。
+只是有點費工而已。</p>
 
-<pre><code># after - before
-(1431109 + 74806 + 838854 + 4392567 + 16313 + 9 + 16783 + 0 + 0 + 0) - (1430106 + 74780 + 838424 + 4391260 + 16309 + 9 + 16780 + 0 + 0 + 0) 
-= 2773
+<p>但是之前有機會看了一下 uiautomator 的原始碼才發現，他是使用 python decorator 來實做的。</p>
+
+<pre><code>def param_to_property(*props, **kwprops):
+    if props and kwprops:
+        raise SyntaxError(&quot;Can not set both props and kwprops at the same time.&quot;)
+
+    class Wrapper(object):
+
+        def __init__(self, func):
+            self.func = func
+            self.kwargs, self.args = {}, []
+
+        def __getattr__(self, attr):
+            if kwprops:
+                for prop_name, prop_values in kwprops.items():
+                    if attr in prop_values and prop_name not in self.kwargs:
+                        self.kwargs[prop_name] = attr
+                        return self
+            elif attr in props:
+                self.args.append(attr)
+                return self
+            raise AttributeError(&quot;%s parameter is duplicated or not allowed!&quot; % attr)
+
+        def __call__(self, *args, **kwargs):
+            if kwprops:
+                kwargs.update(self.kwargs)
+                self.kwargs = {}
+                return self.func(*args, **kwargs)
+            else:
+                new_args, self.args = self.args + list(args), []
+                return self.func(*new_args, **kwargs)
+    return Wrapper
+
 </code></pre>
 
-<h1 id="process-的-cpu-使用率">Process 的 CPU 使用率</h1>
+<p><a href="https://github.com/xiaocong/uiautomator/blob/master/uiautomator/__init__.py">原始碼連結</a></p>
 
-<p>有了整體之後，再來就是針對 <code>Process</code> , 計算 <code>Process</code> 之前需要先取得 <code>Process</code> 的 <code>PID</code>。
-最簡單的方法就是使用 <code>ps</code> 來取得。</p>
+<p>與這個 decorator 的使用範例</p>
 
-<pre><code>adb shell ps | grep {package name}
-
-u0_a174   11458 460   1781352 365668 sys_epoll_ 00000000 S com.android.chrome
+<pre><code>@property
+def wait(self):
+    '''
+    Wait until the ui object gone or exist.
+    Usage:
+    d(text=&quot;Clock&quot;).wait.gone()  # wait until it's gone.
+    d(text=&quot;Settings&quot;).wait.exists() # wait until it appears.
+    '''
+    @param_to_property(action=[&quot;exists&quot;, &quot;gone&quot;])
+    def _wait(action, timeout=3000):
+        if timeout / 1000 + 5 &gt; int(os.environ.get(&quot;JSONRPC_TIMEOUT&quot;, 90)):
+            http_timeout = timeout / 1000 + 5
+        else:
+            http_timeout = int(os.environ.get(&quot;JSONRPC_TIMEOUT&quot;, 90))
+        method = self.device.server.jsonrpc_wrap(
+            timeout=http_timeout
+        ).waitUntilGone if action == &quot;gone&quot; else self.device.server.jsonrpc_wrap(timeout=http_timeout).waitForExists
+        return method(self.selector, timeout)
+    return _wait
 </code></pre>
 
-<p>第二個 <code>11458</code> 就是 <code>PID</code></p>
+<p><code>param_to_property</code> 內的 <code>Wrapper</code> 基本上 <code>__call__</code> 的部份就如預期，沒有什麼意外, 但是可以注意一下 <code>self.kwargs</code> 與 <code>self.args</code> 的部份。</p>
 
-<p>有了 PID 之後, 就可以透過 <code>/proc/{PID}/stat</code> 取得 Process 的 CPU 使用時間</p>
+<p>另外比較重要的就是在 <code>__getattr__</code> 與 <code>param_to_property</code> 初始化的部份。</p>
 
-<pre><code>adb shell cat /proc/11458/stat
+<p>舉例來說</p>
 
-11458 (mosa.puffinFree) S 460 460 0 0 -1 4194624 13380248 0 334 0 120663 47337 0 0 16 -4 133 0 9367583 1535365120 62981 4294967295 1 1 0 0 0 0 4612 0 38648 4294967295 0 0 17 3 0 0 0 0 0 0 0
+<pre><code class="language-python">@param_to_property(action=[&quot;exists&quot;, &quot;gone&quot;])
+def _wait(action, timeout=3000):
 </code></pre>
 
-<p>Process 的資料量明顯的多很多，可以參考 <a href="http://man7.org/linux/man-pages/man5/proc.5.html">PROC(5)</a> 中的 <code>/proc/[pid]/stat</code> 來取得每個欄位的意思。
-這邊我們只要注意第 14 跟第 15 個。</p>
+<p>在使用 <code>@param_to_property</code> 的時候，所帶的參數會被存入 <code>props</code> 與 <code>kwprops</code>。
+以這邊的例子就是 <code>kwprops</code> 會等於</p>
 
-<pre><code> (14) utime  %lu
-        Amount of time that this process has been scheduled
-        in user mode, measured in clock ticks (divide by
-        sysconf(_SC_CLK_TCK)).  This includes guest time,
-        guest_time (time spent running a virtual CPU, see
-        below), so that applications that are not aware of
-        the guest time field do not lose that time from
-        their calculations.
-
-(15) stime  %lu
-        Amount of time that this process has been scheduled
-        in kernel mode, measured in clock ticks (divide by
-        sysconf(_SC_CLK_TCK)).
+<pre><code class="language-python">{
+    &quot;action&quot;: [&quot;exists&quot;, &quot;gone&quot;]
+}
 </code></pre>
 
-<p>將這兩個值相加就是 <code>到目前為止</code> Process 所使用的 CPU 時間。
-所以跟前面一樣，需要在開始與結束各取一次，並且<strong>相減</strong>。</p>
+<p>當呼叫 <code>d(text=&quot;Settings&quot;).wait.gone(timeout=1000)</code> 的時候，
+第一個 <code>.wait</code> 其實 <code>@param_to_property</code> 所回傳的 <code>Wrapper</code>。</p>
 
-<h1 id="thread">Thread</h1>
+<p>所以 <code>wait.gone</code> 的部分會呼叫</p>
 
-<p>在 <code>/proc/{PID}/task</code> 底下會有一堆名稱是數字的資料夾</p>
-
-<pre><code>adb shell ls /proc/11458/task
-
-10143
-11458
-11463
-11465
-11466
-11468
-.
-.
-.
+<pre><code>def __getattr__(self, attr):
+    if kwprops:
+        for prop_name, prop_values in kwprops.items():
+            if attr in prop_values and prop_name not in self.kwargs:
+                self.kwargs[prop_name] = attr
+                return self
+    elif attr in props:
+        self.args.append(attr)
+        return self
+    raise AttributeError(&quot;%s parameter is duplicated or not allowed!&quot; % attr)
 </code></pre>
 
-<p>每個數字都是這個 Process 底下 Thread 的 <code>tid</code>, 在這些資料夾裡面也有一個 <code>stat</code> 的檔案。
-所以跟 Process 一樣只要使用</p>
+<p>而 <code>attr</code> 的值就是 <code>&quot;gone&quot;</code>, 然後執行結果就是會以 key 為 <code>action</code> value 為 <code>gone</code> 的形式儲存在 <code>self.kwargs</code>。
+( 因為 <code>gone</code> 有在 prop_values 中，並且 <code>action</code> 也還沒有被儲存過。)</p>
 
-<pre><code>adb shell cat /proc/11458/task/10143/stat
+<p>然後最後在回傳一次 <code>Wrapper</code> 本身，以便使用者繼續呼叫。</p>
 
-10143 (OkHttp Connecti) S 460 460 0 0 -1 4194368 267 0 0 0 0 1 0 0 20 0 129 0 9491883 1599287296 67669 4294967295 1 1 0 0 0 0 4612 0 38648 4294967295 0 0 -1 3 0 0 0 0 0 0 0 0
-</code></pre>
+<p>也就是其實這個 <code>decorator</code> 可以想像成將取得 <code>property</code> 的動作, 轉換成值儲存起來。
+最後在 <code>__call__</code> 的時候再將這些參數合併起來傳給真正要處理的 function。</p>
 
-<p>就會取得跟 Process 一樣格式的內容，我們一樣需要注意 <code>utime</code> 與 <code>stime</code> 但是除此之外還需要注意一個部份。
-就是第一個欄位的 tid <code>10143</code> 與 thread name <code>(OkHttp Connecti)</code>。
-由於 thread name 可能會重複，但是 tid 會不相同，所以最好是將 tid 與 thread name 合成一個 key 比較不容易統計錯誤。</p>
+<p>我之所以會覺得有趣是因為這種寫法某種程度上的改寫了語法的概念，但是好或者不好我也不是很清楚。</p>
 
-<p>將這兩個值相加就是 <code>到目前為止</code> Thread 所使用的 CPU 時間。
-所以跟前面一樣，需要在開始與結束各取一次，並且<strong>相減</strong>。</p>
-
-<h1 id="cpu-使用率">CPU 使用率</h1>
-
-<p>就將前面透過 <code>/proc/stat</code> 取得的值當分母，去計算 Process 與個 Thread 的百分比就可以了。</p>
+<p>所以做個筆記，說不定哪一天我會遇到用這個方法超合適的情況。</p>
       </article>
 
       <ul class="pager blog-pager">
         
           <li class="previous">
-            <a href="https://swind.github.io/post/devpi/" data-toggle="tooltip" data-placement="top" title="用 devpi 建立私有的 pypi server">&larr; Previous Post</a>
+            <a href="https://swind.github.io/post/android_cpu_usage_by_adb/" data-toggle="tooltip" data-placement="top" title="使用 ADB 來監控 APP 的 CPU 使用量">&larr; Previous Post</a>
           </li>
         
-        
-          <li class="next">
-            <a href="https://swind.github.io/post/parameter_to_property/" data-toggle="tooltip" data-placement="top" title="parameter_to_property">Next Post &rarr;</a>
-          </li>
         
       </ul>
 
@@ -362,9 +328,9 @@ u0_a174   11458 460   1781352 365668 sys_epoll_ 00000000 S com.android.chrome
             <div id="disqus_thread"></div>
 <script type="text/javascript">
     var disqus_shortname = 'corleonis';
-    var disqus_identifier = 'https:\/\/swind.github.io\/post\/android_cpu_usage_by_adb\/';
-    var disqus_title = '使用 ADB 來監控 APP 的 CPU 使用量';
-    var disqus_url = 'https:\/\/swind.github.io\/post\/android_cpu_usage_by_adb\/';
+    var disqus_identifier = 'https:\/\/swind.github.io\/post\/parameter_to_property\/';
+    var disqus_title = 'parameter_to_property';
+    var disqus_url = 'https:\/\/swind.github.io\/post\/parameter_to_property\/';
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

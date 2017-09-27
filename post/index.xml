@@ -6,8 +6,151 @@
     <description>Recent content in Posts on Corleonis</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
-    <lastBuildDate>Tue, 26 Sep 2017 17:53:21 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 27 Sep 2017 15:25:07 +0800</lastBuildDate>
     <atom:link href="https://swind.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>parameter_to_property</title>
+      <link>https://swind.github.io/post/parameter_to_property/</link>
+      <pubDate>Wed, 27 Sep 2017 15:25:07 +0800</pubDate>
+      
+      <guid>https://swind.github.io/post/parameter_to_property/</guid>
+      <description>&lt;p&gt;在 Python package &lt;a href=&#34;https://github.com/xiaocong/uiautomator&#34;&gt;uiautomator&lt;/a&gt; 看到的有趣寫法&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;parameter-to-property&#34;&gt;Parameter to Property&lt;/h1&gt;
+
+&lt;p&gt;在 Python package &lt;code&gt;uiautomator&lt;/code&gt; 的說明文件裡面可以看到這個有趣的語法被大量使用。&lt;/p&gt;
+
+&lt;p&gt;例如&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# long click on the center of the specific ui object
+d(text=&amp;quot;Settings&amp;quot;).long_click()
+# long click on the bottomright corner of the specific ui object
+d(text=&amp;quot;Settings&amp;quot;).long_click.bottomright()
+# long click on the topleft corner of the specific ui object
+d(text=&amp;quot;Settings&amp;quot;).long_click.topleft()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;或&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# wait until the ui object appears
+d(text=&amp;quot;Settings&amp;quot;).wait.exists(timeout=3000)
+# wait until the ui object gone
+d(text=&amp;quot;Settings&amp;quot;).wait.gone(timeout=1000)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;本來覺的應該就只是 &lt;code&gt;long_click&lt;/code&gt; 或者 &lt;code&gt;wait&lt;/code&gt; 本身就是一個實做了 &lt;code&gt;__call__&lt;/code&gt; 與其他 function 的物件。
+只是有點費工而已。&lt;/p&gt;
+
+&lt;p&gt;但是之前有機會看了一下 uiautomator 的原始碼才發現，他是使用 python decorator 來實做的。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def param_to_property(*props, **kwprops):
+    if props and kwprops:
+        raise SyntaxError(&amp;quot;Can not set both props and kwprops at the same time.&amp;quot;)
+
+    class Wrapper(object):
+
+        def __init__(self, func):
+            self.func = func
+            self.kwargs, self.args = {}, []
+
+        def __getattr__(self, attr):
+            if kwprops:
+                for prop_name, prop_values in kwprops.items():
+                    if attr in prop_values and prop_name not in self.kwargs:
+                        self.kwargs[prop_name] = attr
+                        return self
+            elif attr in props:
+                self.args.append(attr)
+                return self
+            raise AttributeError(&amp;quot;%s parameter is duplicated or not allowed!&amp;quot; % attr)
+
+        def __call__(self, *args, **kwargs):
+            if kwprops:
+                kwargs.update(self.kwargs)
+                self.kwargs = {}
+                return self.func(*args, **kwargs)
+            else:
+                new_args, self.args = self.args + list(args), []
+                return self.func(*new_args, **kwargs)
+    return Wrapper
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/xiaocong/uiautomator/blob/master/uiautomator/__init__.py&#34;&gt;原始碼連結&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;與這個 decorator 的使用範例&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@property
+def wait(self):
+    &#39;&#39;&#39;
+    Wait until the ui object gone or exist.
+    Usage:
+    d(text=&amp;quot;Clock&amp;quot;).wait.gone()  # wait until it&#39;s gone.
+    d(text=&amp;quot;Settings&amp;quot;).wait.exists() # wait until it appears.
+    &#39;&#39;&#39;
+    @param_to_property(action=[&amp;quot;exists&amp;quot;, &amp;quot;gone&amp;quot;])
+    def _wait(action, timeout=3000):
+        if timeout / 1000 + 5 &amp;gt; int(os.environ.get(&amp;quot;JSONRPC_TIMEOUT&amp;quot;, 90)):
+            http_timeout = timeout / 1000 + 5
+        else:
+            http_timeout = int(os.environ.get(&amp;quot;JSONRPC_TIMEOUT&amp;quot;, 90))
+        method = self.device.server.jsonrpc_wrap(
+            timeout=http_timeout
+        ).waitUntilGone if action == &amp;quot;gone&amp;quot; else self.device.server.jsonrpc_wrap(timeout=http_timeout).waitForExists
+        return method(self.selector, timeout)
+    return _wait
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;param_to_property&lt;/code&gt; 內的 &lt;code&gt;Wrapper&lt;/code&gt; 基本上 &lt;code&gt;__call__&lt;/code&gt; 的部份就如預期，沒有什麼意外, 但是可以注意一下 &lt;code&gt;self.kwargs&lt;/code&gt; 與 &lt;code&gt;self.args&lt;/code&gt; 的部份。&lt;/p&gt;
+
+&lt;p&gt;另外比較重要的就是在 &lt;code&gt;__getattr__&lt;/code&gt; 與 &lt;code&gt;param_to_property&lt;/code&gt; 初始化的部份。&lt;/p&gt;
+
+&lt;p&gt;舉例來說&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;@param_to_property(action=[&amp;quot;exists&amp;quot;, &amp;quot;gone&amp;quot;])
+def _wait(action, timeout=3000):
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在使用 &lt;code&gt;@param_to_property&lt;/code&gt; 的時候，所帶的參數會被存入 &lt;code&gt;props&lt;/code&gt; 與 &lt;code&gt;kwprops&lt;/code&gt;。
+以這邊的例子就是 &lt;code&gt;kwprops&lt;/code&gt; 會等於&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;{
+    &amp;quot;action&amp;quot;: [&amp;quot;exists&amp;quot;, &amp;quot;gone&amp;quot;]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;當呼叫 &lt;code&gt;d(text=&amp;quot;Settings&amp;quot;).wait.gone(timeout=1000)&lt;/code&gt; 的時候，
+第一個 &lt;code&gt;.wait&lt;/code&gt; 其實 &lt;code&gt;@param_to_property&lt;/code&gt; 所回傳的 &lt;code&gt;Wrapper&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;所以 &lt;code&gt;wait.gone&lt;/code&gt; 的部分會呼叫&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def __getattr__(self, attr):
+    if kwprops:
+        for prop_name, prop_values in kwprops.items():
+            if attr in prop_values and prop_name not in self.kwargs:
+                self.kwargs[prop_name] = attr
+                return self
+    elif attr in props:
+        self.args.append(attr)
+        return self
+    raise AttributeError(&amp;quot;%s parameter is duplicated or not allowed!&amp;quot; % attr)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;而 &lt;code&gt;attr&lt;/code&gt; 的值就是 &lt;code&gt;&amp;quot;gone&amp;quot;&lt;/code&gt;, 然後執行結果就是會以 key 為 &lt;code&gt;action&lt;/code&gt; value 為 &lt;code&gt;gone&lt;/code&gt; 的形式儲存在 &lt;code&gt;self.kwargs&lt;/code&gt;。
+( 因為 &lt;code&gt;gone&lt;/code&gt; 有在 prop_values 中，並且 &lt;code&gt;action&lt;/code&gt; 也還沒有被儲存過。)&lt;/p&gt;
+
+&lt;p&gt;然後最後在回傳一次 &lt;code&gt;Wrapper&lt;/code&gt; 本身，以便使用者繼續呼叫。&lt;/p&gt;
+
+&lt;p&gt;也就是其實這個 &lt;code&gt;decorator&lt;/code&gt; 可以想像成將取得 &lt;code&gt;property&lt;/code&gt; 的動作, 轉換成值儲存起來。
+最後在 &lt;code&gt;__call__&lt;/code&gt; 的時候再將這些參數合併起來傳給真正要處理的 function。&lt;/p&gt;
+
+&lt;p&gt;我之所以會覺得有趣是因為這種寫法某種程度上的改寫了語法的概念，但是好或者不好我也不是很清楚。&lt;/p&gt;
+
+&lt;p&gt;所以做個筆記，說不定哪一天我會遇到用這個方法超合適的情況。&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>使用 ADB 來監控 APP 的 CPU 使用量</title>
