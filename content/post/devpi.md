@@ -36,6 +36,8 @@ CMD 所執行的 `run.sh` 在 repository 裡面有。
 
 # pip.conf
 
+`pip.conf` 的位置在 `~/.pip/pip.conf`
+
 將`ip`, `port` 與 `path` 替換成自家 server 的位置。
 
 ```config
@@ -46,3 +48,45 @@ trusted-host = {ip}
 [search]
 index = http://{ip}:{port}/cloudmosa/dev/
 ```
+
+# devpi client 指令說明
+
+參考 devpi 官網的 [Quickstart: uploading, testing, pushing releases](https://devpi.net/docs/devpi/devpi/stable/%2Bd/index.html)
+
+## 安裝 devpi client
+
+```sh
+pip install -U devpi-client
+```
+
+## 指定 devpi server
+
+```sh
+devpi use http://localhost:3141
+```
+
+```
+using server: http://localhost:3141/ (not logged in)
+no current index: type 'devpi use -l' to discover indices
+~/.pydistutils.cfg     : http://localhost:4040/alice/dev/+simple/
+~/.pip/pip.conf        : http://localhost:4040/alice/dev/+simple/
+~/.buildout/default.cfg: http://localhost:4040/alice/dev/+simple/
+always-set-cfg: no
+```
+
+## 建立 User 與 Login
+
+```sh
+devpi user -c testuser password=123
+devpi login testuser --password=123
+```
+
+## 建立與指定要使用的 index
+
+我記得我在這邊有遇到權限的問題，看起來使用者權限的部份還需要詳細讀一下文件。
+
+```sh
+devpi index -c dev bases=root/pypi
+devpi use testuser/dev
+```
+
