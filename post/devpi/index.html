@@ -206,6 +206,8 @@ CMD &quot;/run.sh&quot;
 
 <h1 id="pip-conf">pip.conf</h1>
 
+<p><code>pip.conf</code> 的位置在 <code>~/.pip/pip.conf</code></p>
+
 <p>將<code>ip</code>, <code>port</code> 與 <code>path</code> 替換成自家 server 的位置。</p>
 
 <pre><code class="language-config">[global]
@@ -214,6 +216,42 @@ trusted-host = {ip}
 
 [search]
 index = http://{ip}:{port}/cloudmosa/dev/
+</code></pre>
+
+<h1 id="devpi-client-指令說明">devpi client 指令說明</h1>
+
+<p>參考 devpi 官網的 <a href="https://devpi.net/docs/devpi/devpi/stable/%2Bd/index.html">Quickstart: uploading, testing, pushing releases</a></p>
+
+<h2 id="安裝-devpi-client">安裝 devpi client</h2>
+
+<pre><code class="language-sh">pip install -U devpi-client
+</code></pre>
+
+<h2 id="指定-devpi-server">指定 devpi server</h2>
+
+<pre><code class="language-sh">devpi use http://localhost:3141
+</code></pre>
+
+<pre><code>using server: http://localhost:3141/ (not logged in)
+no current index: type 'devpi use -l' to discover indices
+~/.pydistutils.cfg     : http://localhost:4040/alice/dev/+simple/
+~/.pip/pip.conf        : http://localhost:4040/alice/dev/+simple/
+~/.buildout/default.cfg: http://localhost:4040/alice/dev/+simple/
+always-set-cfg: no
+</code></pre>
+
+<h2 id="建立-user-與-login">建立 User 與 Login</h2>
+
+<pre><code class="language-sh">devpi user -c testuser password=123
+devpi login testuser --password=123
+</code></pre>
+
+<h2 id="建立與指定要使用的-index">建立與指定要使用的 index</h2>
+
+<p>我記得我在這邊有遇到權限的問題，看起來使用者權限的部份還需要詳細讀一下文件。</p>
+
+<pre><code class="language-sh">devpi index -c dev bases=root/pypi
+devpi use testuser/dev
 </code></pre>
 
       </article>

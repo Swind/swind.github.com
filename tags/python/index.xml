@@ -360,6 +360,8 @@ CMD &amp;quot;/run.sh&amp;quot;
 
 &lt;h1 id=&#34;pip-conf&#34;&gt;pip.conf&lt;/h1&gt;
 
+&lt;p&gt;&lt;code&gt;pip.conf&lt;/code&gt; 的位置在 &lt;code&gt;~/.pip/pip.conf&lt;/code&gt;&lt;/p&gt;
+
 &lt;p&gt;將&lt;code&gt;ip&lt;/code&gt;, &lt;code&gt;port&lt;/code&gt; 與 &lt;code&gt;path&lt;/code&gt; 替換成自家 server 的位置。&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-config&#34;&gt;[global]
@@ -368,6 +370,42 @@ trusted-host = {ip}
 
 [search]
 index = http://{ip}:{port}/cloudmosa/dev/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;devpi-client-指令說明&#34;&gt;devpi client 指令說明&lt;/h1&gt;
+
+&lt;p&gt;參考 devpi 官網的 &lt;a href=&#34;https://devpi.net/docs/devpi/devpi/stable/%2Bd/index.html&#34;&gt;Quickstart: uploading, testing, pushing releases&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;安裝-devpi-client&#34;&gt;安裝 devpi client&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;pip install -U devpi-client
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;指定-devpi-server&#34;&gt;指定 devpi server&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;devpi use http://localhost:3141
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;using server: http://localhost:3141/ (not logged in)
+no current index: type &#39;devpi use -l&#39; to discover indices
+~/.pydistutils.cfg     : http://localhost:4040/alice/dev/+simple/
+~/.pip/pip.conf        : http://localhost:4040/alice/dev/+simple/
+~/.buildout/default.cfg: http://localhost:4040/alice/dev/+simple/
+always-set-cfg: no
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;建立-user-與-login&#34;&gt;建立 User 與 Login&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;devpi user -c testuser password=123
+devpi login testuser --password=123
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;建立與指定要使用的-index&#34;&gt;建立與指定要使用的 index&lt;/h2&gt;
+
+&lt;p&gt;我記得我在這邊有遇到權限的問題，看起來使用者權限的部份還需要詳細讀一下文件。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;devpi index -c dev bases=root/pypi
+devpi use testuser/dev
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
