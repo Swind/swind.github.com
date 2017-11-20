@@ -15,6 +15,8 @@ date = "2017-09-20T11:16:26+08:00"
 [docker-devpi](https://github.com/Swind/docker-devpi) fork 自 [saily/openshift-devpi](https://github.com/saily/openshift-devpi)
 不過如果可以的話我希望有機會可以改用 `alpine`。
 
+<!--more--> 
+
 ```yaml
 FROM python:3.6
 
