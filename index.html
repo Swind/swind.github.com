@@ -249,12 +249,14 @@ ga('send', 'pageview');
 
               <div class="post-entry">
                 
-                  簡短作個筆記
-Dockerfile docker-devpi fork 自 saily/openshift-devpi 不過如果可以的話我希望有機會可以改用 alpine。
-FROM python:3.6 ENV DEVPI_SERVERDIR=/mnt/server \ DEVPI_CLIENTDIR=/mnt/client \ DEVPI_MIRROR_CACHE_EXPIRY=86400 COPY [&quot;requirements.txt&quot;, &quot;logger_cfg.json&quot;, &quot;run.sh&quot;, &quot;/&quot;] RUN pip install --no-cache-dir -r /requirements.txt &amp;&amp; \ rm /requirements.txt VOLUME /mnt EXPOSE 3141 CMD &quot;/run.sh&quot;  CMD 所執行的 run.sh 在 repository 裡面有。
-pip.conf pip.conf 的位置在 ~/.pip/pip.conf
-將ip, port 與 path 替換成自家 server 的位置。
-[global] index-url = http://{ip}:{port}/{path}/+simple/ trusted-host = {ip} [search] index = http://{ip}:{port}/cloudmosa/dev/  devpi client 指令說明 參考 devpi 官網的 Quickstart: uploading, testing, pushing releases
+                  <p>簡短作個筆記</p>
+
+<h1 id="dockerfile">Dockerfile</h1>
+
+<p><a href="https://github.com/Swind/docker-devpi">docker-devpi</a> fork 自 <a href="https://github.com/saily/openshift-devpi">saily/openshift-devpi</a>
+不過如果可以的話我希望有機會可以改用 <code>alpine</code>。</p>
+
+<p></p>
                   <a href="https://swind.github.io/post/devpi/" class="post-read-more">[Read More]</a>
                 
               </div>

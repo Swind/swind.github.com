@@ -14,14 +14,14 @@
       <pubDate>Wed, 20 Sep 2017 11:16:26 +0800</pubDate>
       
       <guid>https://swind.github.io/post/devpi/</guid>
-      <description>
-
-&lt;p&gt;簡短作個筆記&lt;/p&gt;
+      <description>&lt;p&gt;簡短作個筆記&lt;/p&gt;
 
 &lt;h1 id=&#34;dockerfile&#34;&gt;Dockerfile&lt;/h1&gt;
 
 &lt;p&gt;&lt;a href=&#34;https://github.com/Swind/docker-devpi&#34;&gt;docker-devpi&lt;/a&gt; fork 自 &lt;a href=&#34;https://github.com/saily/openshift-devpi&#34;&gt;saily/openshift-devpi&lt;/a&gt;
 不過如果可以的話我希望有機會可以改用 &lt;code&gt;alpine&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;FROM python:3.6
 
@@ -90,8 +90,7 @@ devpi login testuser --password=123
 
 &lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;devpi index -c dev bases=root/pypi
 devpi use testuser/dev
-&lt;/code&gt;&lt;/pre&gt;
-</description>
+&lt;/code&gt;&lt;/pre&gt;</description>
     </item>
     
   </channel>

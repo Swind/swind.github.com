@@ -176,14 +176,14 @@ ga('send', 'pageview');
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        
-
-<p>簡短作個筆記</p>
+        <p>簡短作個筆記</p>
 
 <h1 id="dockerfile">Dockerfile</h1>
 
 <p><a href="https://github.com/Swind/docker-devpi">docker-devpi</a> fork 自 <a href="https://github.com/saily/openshift-devpi">saily/openshift-devpi</a>
 不過如果可以的話我希望有機會可以改用 <code>alpine</code>。</p>
+
+<p></p>
 
 <pre><code class="language-yaml">FROM python:3.6
 
@@ -253,7 +253,6 @@ devpi login testuser --password=123
 <pre><code class="language-sh">devpi index -c dev bases=root/pypi
 devpi use testuser/dev
 </code></pre>
-
       </article>
 
       <ul class="pager blog-pager">
